@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+*.py text eol=lf
+*.md text eol=lf
+
+# 保留 raw sample 数据的原始字节（避免行尾自动转换导致校验和不一致）
+datasets/*/raw/*/*.csv -text
