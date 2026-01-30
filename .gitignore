@@ -6,7 +6,9 @@ __pycache__/
 
 Data/
 
-outputs/
+outputs/*
+!outputs/population_relaxation/
+!outputs/population_relaxation/**
 
 output/
 output_*/

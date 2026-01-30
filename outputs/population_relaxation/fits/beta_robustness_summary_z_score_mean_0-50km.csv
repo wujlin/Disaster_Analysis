@@ -1,0 +1,2 @@
+distance_bin,metric,min_hours,max_hours,n_points,n_restarts,n_success,success_rate,best_tau,best_beta,best_C,beta_median,beta_p25,beta_p75,beta_gt_1_rate
+0-50km,z_score_mean,8.0,,279,300,300,1.0,250.09534537091193,1.6818846173667934,1.449408925087776,1.6820229645068814,1.6817495996459586,1.6821147916201373,1.0
