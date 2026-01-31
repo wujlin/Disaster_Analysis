@@ -19,6 +19,8 @@ import os
 from pathlib import Path
 from typing import Dict, Iterator, Optional
 
+os.environ.setdefault("MPLCONFIGDIR", str(Path(os.environ.get("TMPDIR", "/tmp")) / "matplotlib"))
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as pe
@@ -95,6 +97,8 @@ def paper_rcparams(style: PaperStyle | None = None) -> Dict[str, object]:
     os.environ.setdefault("OMP_NUM_THREADS", "1")
     os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
     os.environ.setdefault("MKL_NUM_THREADS", "1")
+    # Matplotlib 缓存目录：某些沙盒/只读 HOME 环境下，默认 ~/.matplotlib 不可写会导致反复重建缓存。
+    os.environ.setdefault("MPLCONFIGDIR", str(Path(os.environ.get("TMPDIR", "/tmp")) / "matplotlib"))
 
     return {
         "font.family": font_family,

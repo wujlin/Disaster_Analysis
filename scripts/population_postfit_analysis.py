@@ -93,10 +93,11 @@ def main() -> None:
         "exponential": ps.OKABE_ITO["blue"],
         "stretched_exp": ps.OKABE_ITO["vermillion"],
         "power_law": ps.OKABE_ITO["gray"],
+        "log": ps.OKABE_ITO["bluish_green"],
     }
 
-    # τ(r)：仅对有 tau 的模型作图（并默认跳过开区间 bin）
-    tau_df = df[df["tau"].notna() & df["mid_km"].notna()].copy()
+    # τ(r)：只对“tau 具有可比物理含义”的模型作图（默认不画 log）
+    tau_df = df[df["tau"].notna() & df["mid_km"].notna() & df["model"].isin(["exponential", "stretched_exp"])].copy()
     if args.open_ended_mid_km is None:
         tau_df = tau_df[~tau_df["is_open_ended"]]
 
@@ -141,7 +142,8 @@ def main() -> None:
         plt.close(fig)
 
     # C(r)：新稳态偏移（offset）
-    c_df = df[df["C"].notna() & df["mid_km"].notna()].copy()
+    # 注意：log 模型的 C 是 t=0 截距，不是渐近新稳态，因此默认排除。
+    c_df = df[df["C"].notna() & df["mid_km"].notna() & df["model"].isin(["exponential", "stretched_exp", "power_law"])].copy()
     if args.open_ended_mid_km is None:
         c_df = c_df[~c_df["is_open_ended"]]
 
@@ -165,4 +167,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
