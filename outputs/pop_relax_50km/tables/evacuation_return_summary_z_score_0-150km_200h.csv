@@ -1,0 +1,2 @@
+metric,distance_range,min_hours,max_hours,n_points,t_min,y_min,t_end,y_end,return_time_ge0,recovery_fraction_end
+z_score,0-150km,0.0,200.0,26,8.0,-0.7766887418265802,200.0,1.263478673793948,40.0,2.6267503386524678

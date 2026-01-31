@@ -13,8 +13,29 @@
 ## 复现命令（全量数据）
 
 ```bash
-python scripts/population_relaxation.py --output-dir outputs/pop_relax_50km --bin-width-km 50 --max-bin-km 1000
+# 1) 先用新代码重跑聚合表（会生成包含 n_baseline_sum / n_crisis_sum 等列的新 CSV）
+python scripts/population_relaxation.py \
+  --data-root <FULL_DATA_ROOT> \
+  --output-dir outputs/pop_relax_50km \
+  --bin-width-km 50 --max-bin-km 1000
 
+# 2) P0：z_score vs φ 对比图
+python scripts/zscore_phi_compare.py \
+  --ts-csv outputs/pop_relax_50km/tables/population_relaxation_by_distance.csv \
+  --output-root outputs/pop_relax_50km
+
+# 3) P0：0-150km、前 200h 疏散-回流
+python scripts/evacuation_return.py \
+  --ts-csv outputs/pop_relax_50km/tables/population_relaxation_by_distance.csv \
+  --output-root outputs/pop_relax_50km \
+  --metric z_score --max-distance-km 150 --max-hours 200
+
+# 4) P1：baseline / crisis 绝对量时间序列
+python scripts/baseline_crisis_timeseries.py \
+  --ts-csv outputs/pop_relax_50km/tables/population_relaxation_by_distance.csv \
+  --output-root outputs/pop_relax_50km
+
+# 5) 机制分区（regime map + 边界 + bootstrap 胜率）
 python scripts/regime_differentiation.py \
   --ts-csv outputs/pop_relax_50km/tables/population_relaxation_by_distance.csv \
   --output-root outputs/pop_relax_50km \
@@ -22,4 +43,3 @@ python scripts/regime_differentiation.py \
   --n-bootstrap 300 \
   --open-ended-right-km 1300
 ```
-
