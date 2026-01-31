@@ -1,0 +1,9 @@
+boundary_km,left_bin,left_model,right_bin,right_model
+150.0,100-150km,stretched_exp,150-200km,exponential
+200.0,150-200km,exponential,200-250km,log
+350.0,300-350km,log,350-400km,stretched_exp
+550.0,500-550km,stretched_exp,550-600km,log
+600.0,550-600km,log,600-650km,stretched_exp
+850.0,800-850km,stretched_exp,850-900km,log
+900.0,850-900km,log,900-950km,stretched_exp
+1000.0,950-1000km,stretched_exp,1000km+,log

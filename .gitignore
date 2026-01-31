@@ -9,6 +9,8 @@ Data/
 outputs/*
 !outputs/population_relaxation/
 !outputs/population_relaxation/**
+!outputs/pop_relax_50km/
+!outputs/pop_relax_50km/**
 
 output/
 output_*/
