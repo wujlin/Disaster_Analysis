@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -72,6 +73,14 @@ def summarize_by_distance(
     n_baseline = pd.to_numeric(df["n_baseline"], errors="coerce")
     n_crisis = pd.to_numeric(df["n_crisis"], errors="coerce")
     z = pd.to_numeric(df["z_score"], errors="coerce")
+    if "percent_change" in df.columns:
+        pct = pd.to_numeric(df["percent_change"], errors="coerce")
+    else:
+        pct = pd.Series(np.nan, index=df.index)
+    if "n_difference" in df.columns:
+        n_diff = pd.to_numeric(df["n_difference"], errors="coerce")
+    else:
+        n_diff = pd.Series(np.nan, index=df.index)
 
     phi = (n_crisis - n_baseline) / (n_baseline + cfg.epsilon)
 
@@ -81,6 +90,8 @@ def summarize_by_distance(
     df = df.assign(
         z_score=z,
         phi=phi,
+        percent_change=pct,
+        n_difference=n_diff,
         z_clip_pos=z_clip_pos,
         z_clip_neg=z_clip_neg,
     )
@@ -94,6 +105,12 @@ def summarize_by_distance(
             phi_mean=("phi", "mean"),
             phi_std=("phi", "std"),
             phi_count=("phi", "count"),
+            percent_change_mean=("percent_change", "mean"),
+            percent_change_std=("percent_change", "std"),
+            percent_change_count=("percent_change", "count"),
+            n_difference_mean=("n_difference", "mean"),
+            n_difference_std=("n_difference", "std"),
+            n_difference_count=("n_difference", "count"),
             z_clip_pos_rate=("z_clip_pos", "mean"),
             z_clip_neg_rate=("z_clip_neg", "mean"),
         )
@@ -215,7 +232,27 @@ def cli_main() -> None:
     )
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/population_relaxation"), help="输出目录")
     parser.add_argument("--max-files", type=int, default=None, help="只处理前 N 个文件（用于快速冒烟测试）")
+    parser.add_argument(
+        "--bin-width-km",
+        type=float,
+        default=None,
+        help="若指定，则使用等宽距离分箱（例如 50 表示每 50km 一个 bin），覆盖到 max-bin-km，并额外加一个开区间 bin（max-bin-km+）。",
+    )
+    parser.add_argument("--max-bin-km", type=float, default=1000.0, help="等宽距离分箱的最大右端（默认 1000km）")
     args = parser.parse_args()
 
     cfg = Config(data_root=args.data_root, output_dir=args.output_dir)
+    if args.bin_width_km is not None:
+        width = float(args.bin_width_km)
+        if not np.isfinite(width) or width <= 0:
+            raise SystemExit(f"--bin-width-km 必须为正数：{args.bin_width_km}")
+        max_km = float(args.max_bin_km)
+        if not np.isfinite(max_km) or max_km <= width:
+            raise SystemExit(f"--max-bin-km 必须大于 bin width：max={args.max_bin_km}, width={args.bin_width_km}")
+
+        edges = list(np.arange(0.0, max_km + 1e-9, width))
+        if not edges or edges[-1] != max_km:
+            edges.append(max_km)
+        edges.append(float("inf"))
+        cfg = replace(cfg, distance_bins_km=tuple(float(x) for x in edges))
     run(cfg, max_files=args.max_files)
