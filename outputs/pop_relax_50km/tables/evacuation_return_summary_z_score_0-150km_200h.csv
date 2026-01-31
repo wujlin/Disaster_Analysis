@@ -1,2 +1,4 @@
-metric,distance_range,min_hours,max_hours,n_points,t_min,y_min,t_end,y_end,return_time_ge0,recovery_fraction_end
-z_score,0-150km,0.0,200.0,26,8.0,-0.7766887418265802,200.0,1.263478673793948,40.0,2.6267503386524678
+distance_bin,metric,y_col,n_points,t_min,y_min,t_cross0,t_last_neg,duration_neg,t_half_recover,area_neg,t_window_min,t_window_max
+0-50km,z_score,z_score_mean,26,48.0,-1.0222337748159078,64.0,192.0,192.0,57.626861617761655,62.066324088989994,0.0,200.0
+50-100km,z_score,z_score_mean,26,0.0,-1.4321742082306137,16.0,8.0,8.0,8.284076171037997,11.703369334154871,0.0,200.0
+100-150km,z_score,z_score_mean,26,8.0,-0.8428651571884209,64.0,56.0,56.0,28.507609944661283,26.49699372074157,0.0,200.0
