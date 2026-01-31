@@ -88,6 +88,8 @@ def summarize_by_distance(
     z_clip_neg = np.where(z.isna(), np.nan, (z <= -4).astype(float))
 
     df = df.assign(
+        n_baseline=n_baseline,
+        n_crisis=n_crisis,
         z_score=z,
         phi=phi,
         percent_change=pct,
@@ -99,6 +101,15 @@ def summarize_by_distance(
     agg = (
         df.groupby("distance_bin", observed=True)
         .agg(
+            tile_count=("quadkey", "count"),
+            n_baseline_sum=("n_baseline", "sum"),
+            n_baseline_mean=("n_baseline", "mean"),
+            n_baseline_std=("n_baseline", "std"),
+            n_baseline_count=("n_baseline", "count"),
+            n_crisis_sum=("n_crisis", "sum"),
+            n_crisis_mean=("n_crisis", "mean"),
+            n_crisis_std=("n_crisis", "std"),
+            n_crisis_count=("n_crisis", "count"),
             z_score_mean=("z_score", "mean"),
             z_score_std=("z_score", "std"),
             z_score_count=("z_score", "count"),
