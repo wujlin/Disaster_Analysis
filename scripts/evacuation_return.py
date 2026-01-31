@@ -28,16 +28,17 @@ def _ensure_dir(p: Path) -> None:
 
 @dataclass(frozen=True)
 class MetricSpec:
+    metric_tag: str
     y_col: str
-    label: str
+    y_label: str
 
 
 def _metric_spec(metric: str) -> MetricSpec:
     metric = str(metric).strip().lower()
     if metric in {"z", "z_score", "zscore"}:
-        return MetricSpec(y_col="z_score_mean", label="z_score_mean")
+        return MetricSpec(metric_tag="z_score", y_col="z_score_mean", y_label="z_score_mean")
     if metric in {"phi"}:
-        return MetricSpec(y_col="phi_mean", label="phi_mean")
+        return MetricSpec(metric_tag="phi", y_col="phi_mean", y_label="phi_mean")
     raise SystemExit(f"未知 metric：{metric}（可选：z_score/phi）")
 
 
@@ -168,7 +169,8 @@ def main() -> None:
         rows.append(
             {
                 "distance_bin": b,
-                "metric": spec.label,
+                "metric": spec.metric_tag,
+                "y_col": spec.y_col,
                 "n_points": int(len(x)),
                 "t_min": t_min,
                 "y_min": y_min,
@@ -183,7 +185,7 @@ def main() -> None:
         )
 
     summary = pd.DataFrame(rows)
-    out_csv = out_tbl / f"evacuation_return_summary_{spec.label}_0-150km_200h.csv"
+    out_csv = out_tbl / f"evacuation_return_summary_{spec.metric_tag}_0-150km_200h.csv"
     summary.to_csv(out_csv, index=False)
 
     # figure：每个 bin 一个子图
@@ -212,10 +214,10 @@ def main() -> None:
                     ax.axvline(float(t_cross0), color=ps.OKABE_ITO["vermillion"], linestyle=":", linewidth=1.2, alpha=0.75)
 
         axes[-1].set_xlabel("Hours since earthquake (PT windows)")
-        fig.suptitle(f"Evacuation → return (0–150km, first 200h): {spec.label}", y=0.99)
+        fig.suptitle(f"Evacuation → return (0–150km, first 200h): {spec.y_label}", y=0.99)
         fig.tight_layout(rect=(0, 0, 1, 0.97))
 
-        out_pdf = out_fig / f"evacuation_return_{spec.label}_0-150km_200h.pdf"
+        out_pdf = out_fig / f"evacuation_return_{spec.metric_tag}_0-150km_200h.pdf"
         ps.save_figure(fig, out_pdf)
         ps.save_figure(fig, out_pdf.with_suffix(".png"), dpi=200)
         plt.close(fig)
