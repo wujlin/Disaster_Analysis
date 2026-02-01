@@ -13,6 +13,12 @@ outputs/*
 !outputs/pop_relax_50km/**
 !outputs/movement_criticality/
 !outputs/movement_criticality/**
+!outputs/movement_network_structure/
+!outputs/movement_network_structure/**
+!outputs/population_redistribution/
+!outputs/population_redistribution/**
+!outputs/movement_population_joint/
+!outputs/movement_population_joint/**
 
 output/
 output_*/
