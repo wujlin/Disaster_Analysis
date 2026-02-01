@@ -1,0 +1,14 @@
+{
+  "slug": "park_fire_2024",
+  "name": "The Park Fire in Northern California, US",
+  "event_type": "wildfire",
+  "data_root": "Data/The Park Fire in Northern California, US",
+  "only_hour_pt": 0,
+  "t0_pt": "2024-07-29 00:00:00",
+  "t0_method": "auto_first_population_window",
+  "center_lat": 38.92236058153293,
+  "center_lon": -121.50869149263461,
+  "center_method": "auto_centroid_abs_n_difference",
+  "first_population_window_pt": "2024-07-29 00:00:00",
+  "first_population_window_file": "949242724385190_2024-07-29_0000.csv"
+}

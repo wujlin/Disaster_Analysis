@@ -1,0 +1,14 @@
+{
+  "slug": "hurricane_beryl_pre_landfall_2024",
+  "name": "Hurricane Beryl Pre Landfall Disaster Maps June 30 2024",
+  "event_type": "hurricane",
+  "data_root": "Data/Hurricane Beryl Pre Landfall Disaster Maps June 30 2024",
+  "only_hour_pt": 0,
+  "t0_pt": "2024-06-30 00:00:00",
+  "t0_method": "auto_first_population_window",
+  "center_lat": 11.51126641051491,
+  "center_lon": -61.15509388039191,
+  "center_method": "auto_centroid_abs_n_difference",
+  "first_population_window_pt": "2024-06-30 00:00:00",
+  "first_population_window_file": "24468477373345527_2024-06-30_0000.csv"
+}

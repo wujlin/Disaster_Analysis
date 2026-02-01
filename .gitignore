@@ -24,6 +24,17 @@ outputs/*
 !outputs/physical_model/
 !outputs/physical_model/**
 
+!outputs/turkiye_earthquake_2023/
+!outputs/turkiye_earthquake_2023/**
+!outputs/hurricane_beryl_pre_landfall_2024/
+!outputs/hurricane_beryl_pre_landfall_2024/**
+!outputs/moldova_flooding_2024/
+!outputs/moldova_flooding_2024/**
+!outputs/park_fire_2024/
+!outputs/park_fire_2024/**
+!outputs/cross_disaster_comparison/
+!outputs/cross_disaster_comparison/**
+
 output/
 output_*/
 output_smoke*/

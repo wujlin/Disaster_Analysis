@@ -392,6 +392,8 @@ def cli_main() -> None:
     )
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/population_redistribution"), help="输出目录")
     parser.add_argument("--max-files", type=int, default=None, help="只处理前 N 个窗口（用于冒烟测试）")
+    parser.add_argument("--center-lat", type=float, default=None, help="灾难中心/震中纬度（用于距离分带；默认使用脚本内置值）")
+    parser.add_argument("--center-lon", type=float, default=None, help="灾难中心/震中经度（用于距离分带；默认使用脚本内置值）")
     parser.add_argument("--t0-pt", type=str, default="2023-02-05 16:00", help="t=0 的 PT 时间戳")
     parser.add_argument("--only-hour-pt", type=int, default=8, help="仅保留该小时（PT）的窗口（默认 08:00）")
     parser.add_argument("--outflow-phi-threshold", type=float, default=0.9, help="outflow 判定阈值（phi_ratio < thr）")
@@ -405,9 +407,14 @@ def cli_main() -> None:
     )
     args = parser.parse_args()
 
+    center_lat = float(args.center_lat) if args.center_lat is not None else 37.174
+    center_lon = float(args.center_lon) if args.center_lon is not None else 37.032
+
     cfg = Config(
         data_root=args.data_root,
         output_dir=args.output_dir,
+        epicenter_lat=center_lat,
+        epicenter_lon=center_lon,
         t0_pt=pd.Timestamp(str(args.t0_pt)),
         only_hour_pt=int(args.only_hour_pt),
         outflow_phi_threshold=float(args.outflow_phi_threshold),
@@ -419,4 +426,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-

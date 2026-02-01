@@ -1,0 +1,14 @@
+{
+  "slug": "moldova_flooding_2024",
+  "name": "Moldova Flooding Sept 16 2024",
+  "event_type": "flood",
+  "data_root": "Data/Moldova Flooding Sept 16 2024",
+  "only_hour_pt": 0,
+  "t0_pt": "2024-09-16 00:00:00",
+  "t0_method": "auto_first_population_window",
+  "center_lat": 47.16212894229687,
+  "center_lon": 28.555310984843555,
+  "center_method": "auto_centroid_abs_n_difference",
+  "first_population_window_pt": "2024-09-16 00:00:00",
+  "first_population_window_file": "3660584867350809_2024-09-16_0000.csv"
+}

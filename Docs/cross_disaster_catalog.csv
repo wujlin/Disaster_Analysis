@@ -1,0 +1,5 @@
+slug,name,data_root,event_type,t0_pt,center_lat,center_lon,only_hour_pt,outflow_phi_threshold,inflow_phi_threshold
+turkiye_earthquake_2023,"Turkiye Turkey Earthquake Full Country Version Feb 8 2023","Data/Turkiye Turkey Earthquake Full Country Version Feb 8 2023",earthquake,"2023-02-05 16:00",37.174,37.032,8,0.9,1.1
+hurricane_beryl_pre_landfall_2024,"Hurricane Beryl Pre Landfall Disaster Maps June 30 2024","Data/Hurricane Beryl Pre Landfall Disaster Maps June 30 2024",hurricane,,,8,0.9,1.1
+moldova_flooding_2024,"Moldova Flooding Sept 16 2024","Data/Moldova Flooding Sept 16 2024",flood,,,8,0.9,1.1
+park_fire_2024,"The Park Fire in Northern California, US","Data/The Park Fire in Northern California, US",wildfire,,,8,0.9,1.1
