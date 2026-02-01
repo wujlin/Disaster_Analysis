@@ -23,6 +23,8 @@ outputs/*
 !outputs/tile_validation/**
 !outputs/physical_model/
 !outputs/physical_model/**
+!outputs/tau_interpretation_test/
+!outputs/tau_interpretation_test/**
 
 !outputs/turkiye_earthquake_2023/
 !outputs/turkiye_earthquake_2023/**

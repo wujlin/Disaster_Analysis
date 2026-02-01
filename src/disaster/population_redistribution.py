@@ -216,21 +216,55 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             labels=band_labels,
             include_lowest=True,
         )
+        both = n_baseline.notna() & n_crisis.notna()
         tmp = pd.DataFrame(
             {
                 "distance_band": band_idx.astype(str),
                 "n_baseline": n_baseline,
                 "n_crisis": n_crisis,
+                # 用 baseline∩crisis 的 overlap tiles 构造“可比较子集”，避免新 tiles 稀释平均值
+                "baseline_overlap": n_baseline.where(both),
+                "crisis_overlap": n_crisis.where(both),
             }
         )
         band_agg = (
             tmp.groupby("distance_band", observed=True)
             .agg(
                 n_tiles=("n_baseline", "count"),
+                n_tiles_crisis=("n_crisis", "count"),
+                n_tiles_overlap=("baseline_overlap", "count"),
                 baseline_sum=("n_baseline", "sum"),
                 crisis_sum=("n_crisis", "sum"),
+                baseline_sum_overlap=("baseline_overlap", "sum"),
+                crisis_sum_overlap=("crisis_overlap", "sum"),
             )
             .reset_index()
+        )
+        band_agg["baseline_mean"] = band_agg["baseline_sum"] / band_agg["n_tiles"]
+        band_agg["crisis_mean"] = np.where(
+            band_agg["n_tiles_crisis"] > 0,
+            band_agg["crisis_sum"] / band_agg["n_tiles_crisis"],
+            np.nan,
+        )
+        band_agg["tile_coverage_ratio"] = np.where(
+            band_agg["n_tiles"] > 0,
+            band_agg["n_tiles_crisis"] / band_agg["n_tiles"],
+            np.nan,
+        )
+        band_agg["baseline_mean_overlap"] = np.where(
+            band_agg["n_tiles_overlap"] > 0,
+            band_agg["baseline_sum_overlap"] / band_agg["n_tiles_overlap"],
+            np.nan,
+        )
+        band_agg["crisis_mean_overlap"] = np.where(
+            band_agg["n_tiles_overlap"] > 0,
+            band_agg["crisis_sum_overlap"] / band_agg["n_tiles_overlap"],
+            np.nan,
+        )
+        band_agg["tile_overlap_ratio"] = np.where(
+            band_agg["n_tiles"] > 0,
+            band_agg["n_tiles_overlap"] / band_agg["n_tiles"],
+            np.nan,
         )
         band_agg["net_change"] = band_agg["crisis_sum"] - band_agg["baseline_sum"]
         band_agg["phi_aggregate"] = band_agg["crisis_sum"] / band_agg["baseline_sum"]
@@ -375,6 +409,9 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 - `tables/redistribution_by_distance_band.csv`：按距离带的 phi_aggregate / net_change 时间序列
 - `tables/flow_classification_summary.csv`：outflow/stable/inflow 的 tile 计数
 - `figures/phi_aggregate_heatmap.*`：phi_aggregate(distance,time) 热力图
+- `tables/redistribution_by_distance_band.csv` 额外列：
+  - `n_tiles_crisis` / `crisis_mean` / `tile_coverage_ratio`（crisis 端可见性代理）
+  - `n_tiles_overlap` / `crisis_mean_overlap` / `tile_overlap_ratio`（baseline∩crisis overlap 子集，避免新 tiles 稀释）
 """
     (out.root / "README.md").write_text(readme, encoding="utf-8")
 
