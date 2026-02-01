@@ -25,6 +25,18 @@ outputs/*
 !outputs/physical_model/**
 !outputs/tau_interpretation_test/
 !outputs/tau_interpretation_test/**
+!outputs/tau_continuous_fit/
+!outputs/tau_continuous_fit/**
+!outputs/binning_sensitivity_tau/
+!outputs/binning_sensitivity_tau/**
+!outputs/nonparametric_tau_tests/
+!outputs/nonparametric_tau_tests/**
+!outputs/movement_recovery_by_distance/
+!outputs/movement_recovery_by_distance/**
+!outputs/network_coverage_validation/
+!outputs/network_coverage_validation/**
+!outputs/business_activity_validation/
+!outputs/business_activity_validation/**
 
 !outputs/turkiye_earthquake_2023/
 !outputs/turkiye_earthquake_2023/**
