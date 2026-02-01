@@ -3,12 +3,14 @@
   "name": "Moldova Flooding Sept 16 2024",
   "event_type": "flood",
   "data_root": "Data/Moldova Flooding Sept 16 2024",
-  "only_hour_pt": 0,
-  "t0_pt": "2024-09-16 00:00:00",
-  "t0_method": "auto_first_population_window",
-  "center_lat": 47.16212894229687,
-  "center_lon": 28.555310984843555,
+  "only_hour_pt": 8,
+  "t0_pt": "2024-09-16 16:00:00",
+  "t0_method": "auto_first_day_1600",
+  "center_lat": 47.182048824861475,
+  "center_lon": 28.551556929292932,
   "center_method": "auto_centroid_abs_n_difference",
-  "first_population_window_pt": "2024-09-16 00:00:00",
-  "first_population_window_file": "3660584867350809_2024-09-16_0000.csv"
+  "center_source_window_pt": "2024-09-16 16:00:00",
+  "center_source_file": "3660584867350809_2024-09-16_1600.csv",
+  "first_population_window_pt": "2024-09-16 08:00:00",
+  "first_population_window_file": "3660584867350809_2024-09-16_0800.csv"
 }

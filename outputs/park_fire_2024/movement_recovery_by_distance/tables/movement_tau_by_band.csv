@@ -1,0 +1,11 @@
+direction,band,n_points,tau_hours,tau_r2,fit_ok
+outflow,0-25km,16,417.7200759111357,0.05383040507147041,1
+outflow,100-200km,16,,,0
+outflow,200km+,16,,,0
+outflow,25-50km,16,,,0
+outflow,50-100km,16,,,0
+inflow,0-25km,16,451.9411079860811,0.0344091185044193,1
+inflow,100-200km,16,,,0
+inflow,200km+,16,,,0
+inflow,25-50km,16,,,0
+inflow,50-100km,16,,,0

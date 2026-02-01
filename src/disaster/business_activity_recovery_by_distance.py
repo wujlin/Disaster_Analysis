@@ -150,7 +150,7 @@ def run(cfg: Config) -> None:
     if data.empty:
         raise SystemExit("Business activity 数据为空或字段无法识别。")
 
-    if "business_vertical" in data.columns:
+    if "business_vertical" in data.columns and str(cfg.only_vertical).lower() != "all":
         data = data[data["business_vertical"].astype(str).str.lower() == str(cfg.only_vertical).lower()].copy()
     if data.empty:
         raise SystemExit(f"未找到 business_vertical={cfg.only_vertical} 的记录。")
@@ -251,13 +251,20 @@ def cli_main() -> None:
         help="数据根目录（包含 business activity/ 子目录）",
     )
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/business_activity_validation"), help="输出目录")
+    parser.add_argument("--center-lat", type=float, default=None, help="灾难中心/震中纬度（默认使用脚本内置值）")
+    parser.add_argument("--center-lon", type=float, default=None, help="灾难中心/震中经度（默认使用脚本内置值）")
     parser.add_argument("--t0-pt", type=str, default="2023-02-05 16:00", help="t=0 的 PT 时间戳")
     parser.add_argument("--only-vertical", type=str, default="all", help="只保留该 business_vertical（默认 all）")
     args = parser.parse_args()
 
+    center_lat = float(args.center_lat) if args.center_lat is not None else 37.174
+    center_lon = float(args.center_lon) if args.center_lon is not None else 37.032
+
     cfg = Config(
         data_root=args.data_root,
         output_dir=args.output_dir,
+        epicenter_lat=center_lat,
+        epicenter_lon=center_lon,
         t0_pt=pd.Timestamp(str(args.t0_pt)),
         only_vertical=str(args.only_vertical),
     )
@@ -266,4 +273,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-

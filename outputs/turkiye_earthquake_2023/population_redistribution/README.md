@@ -21,3 +21,6 @@
 - `tables/redistribution_by_distance_band.csv`：按距离带的 phi_aggregate / net_change 时间序列
 - `tables/flow_classification_summary.csv`：outflow/stable/inflow 的 tile 计数
 - `figures/phi_aggregate_heatmap.*`：phi_aggregate(distance,time) 热力图
+- `tables/redistribution_by_distance_band.csv` 额外列：
+  - `n_tiles_crisis` / `crisis_mean` / `tile_coverage_ratio`（crisis 端可见性代理）
+  - `n_tiles_overlap` / `crisis_mean_overlap` / `tile_overlap_ratio`（baseline∩crisis overlap 子集，避免新 tiles 稀释）

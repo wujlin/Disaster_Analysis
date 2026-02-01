@@ -16,8 +16,8 @@ from disaster.geo import haversine_km
 from disaster.viz import save_png_and_pdf
 
 
-_DATE_RE = re.compile(r"(20\\d{2}-\\d{2}-\\d{2})")
-_DATE_TIME_RE = re.compile(r"(20\\d{2}-\\d{2}-\\d{2})_(\\d{4})")
+_DATE_RE = re.compile(r"(20\d{2}-\d{2}-\d{2})")
+_DATE_TIME_RE = re.compile(r"(20\d{2}-\d{2}-\d{2})_(\d{4})")
 
 
 @dataclass(frozen=True)
@@ -242,6 +242,8 @@ def cli_main() -> None:
         help="数据根目录（包含 network coverage/ 子目录）",
     )
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/network_coverage_validation"), help="输出目录")
+    parser.add_argument("--center-lat", type=float, default=None, help="灾难中心/震中纬度（默认使用脚本内置值）")
+    parser.add_argument("--center-lon", type=float, default=None, help="灾难中心/震中经度（默认使用脚本内置值）")
     parser.add_argument("--t0-pt", type=str, default="2023-02-05 16:00", help="t=0 的 PT 时间戳")
     parser.add_argument(
         "--population-by-band-csv",
@@ -251,10 +253,15 @@ def cli_main() -> None:
     )
     args = parser.parse_args()
 
+    center_lat = float(args.center_lat) if args.center_lat is not None else 37.174
+    center_lon = float(args.center_lon) if args.center_lon is not None else 37.032
+
     pop = args.population_by_band_csv if args.population_by_band_csv.exists() else None
     cfg = Config(
         data_root=args.data_root,
         output_dir=args.output_dir,
+        epicenter_lat=center_lat,
+        epicenter_lon=center_lon,
         t0_pt=pd.Timestamp(str(args.t0_pt)),
         population_by_band_csv=pop,
     )
@@ -263,4 +270,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-

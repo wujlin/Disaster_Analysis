@@ -1,0 +1,5 @@
+slug,name,event_type,model,n_tiles,fit_ok,a,b,c,r_star_km,r_star_boot_p025_km,r_star_boot_p50_km,r_star_boot_p975_km,n_boot_valid
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,logtau = a + b*logr + c*logr^2,17572,1,4.603774161205684,0.9166485399100897,-0.0589166916221202,,,,,
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,logtau = a + b*logr + c*logr^2,781,1,12.13695806356239,-1.976367339297564,0.1693767168230924,341.803356748194,188.76385592609745,298.8235791845149,120498.98391630658,869.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,logtau = a + b*logr + c*logr^2,2776,1,7.216320020660022,-0.4116101596243953,0.0639883057563474,24.93548928378906,0.9183781847558832,24.78986072405304,41.15048209989619,978.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,logtau = a + b*logr + c*logr^2,4669,1,6.538523787010427,-0.2292123640775048,0.0288132629805964,53.38605550623927,0.4776548085003819,53.94172922998674,100.59743180163284,941.0

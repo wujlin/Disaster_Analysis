@@ -1,0 +1,4 @@
+slug,name,event_type,bootstrap_n,r_star_median_km,r_star_ci025_km,r_star_ci975_km
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,869,298.8235791845149,188.76385592609745,120498.98391630659
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,978,24.789860724053042,0.9183781847558831,41.15048209989619
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,941,53.94172922998674,0.4776548085003819,100.59743180163284

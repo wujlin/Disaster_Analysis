@@ -1,0 +1,2 @@
+model,n_tiles,fit_ok,a,b,c,r_star_km,r_star_boot_p025_km,r_star_boot_p50_km,r_star_boot_p975_km,n_boot_valid
+logtau = a + b*logr + c*logr^2,781,1,12.13695806356239,-1.976367339297564,0.1693767168230924,341.803356748194,188.76385592609745,298.8235791845149,120498.98391630658,869

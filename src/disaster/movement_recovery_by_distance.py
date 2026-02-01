@@ -277,13 +277,13 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 - outflow：按 start tile 到震中距离分带
 - inflow：按 end tile 到震中距离分带
 - 仅保留 baseline 与 crisis 同时非空的 OD（overlap edges）
-- 统计：$\\phi_{agg}=\\sum n_{crisis}/\\sum n_{baseline}$
+    - 统计：$\\phi_{{agg}}=\\sum n_{{crisis}}/\\sum n_{{baseline}}$
 
 ## 输出
 
 - `tables/movement_outflow_by_band.csv`
 - `tables/movement_inflow_by_band.csv`
-- `tables/movement_tau_by_band.csv`（对 band-level $\\phi_{agg}(t)$ 做线性化指数拟合）
+    - `tables/movement_tau_by_band.csv`（对 band-level $\\phi_{{agg}}(t)$ 做线性化指数拟合）
 - `figures/movement_outflow_phi_timeseries.*`
 - `figures/movement_inflow_phi_timeseries.*`
 """
@@ -301,6 +301,8 @@ def cli_main() -> None:
         help="数据根目录（包含 movement/ 子目录）",
     )
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/movement_recovery_by_distance"), help="输出目录")
+    parser.add_argument("--center-lat", type=float, default=None, help="灾难中心/震中纬度（默认使用脚本内置值）")
+    parser.add_argument("--center-lon", type=float, default=None, help="灾难中心/震中经度（默认使用脚本内置值）")
     parser.add_argument("--t0-pt", type=str, default="2023-02-05 16:00", help="t=0 的 PT 时间戳")
     parser.add_argument("--only-hour-pt", type=int, default=8, help="仅保留该小时（PT）的窗口（默认 08:00）")
     parser.add_argument("--fit-min-hours", type=float, default=0.0, help="拟合窗口下界（默认 t>=0）")
@@ -308,9 +310,14 @@ def cli_main() -> None:
     parser.add_argument("--max-files", type=int, default=None, help="只处理前 N 个窗口（用于冒烟测试）")
     args = parser.parse_args()
 
+    center_lat = float(args.center_lat) if args.center_lat is not None else 37.174
+    center_lon = float(args.center_lon) if args.center_lon is not None else 37.032
+
     cfg = Config(
         data_root=args.data_root,
         output_dir=args.output_dir,
+        epicenter_lat=center_lat,
+        epicenter_lon=center_lon,
         t0_pt=pd.Timestamp(str(args.t0_pt)),
         only_hour_pt=int(args.only_hour_pt),
         fit_min_hours=float(args.fit_min_hours),

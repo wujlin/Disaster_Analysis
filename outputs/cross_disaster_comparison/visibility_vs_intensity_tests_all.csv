@@ -1,0 +1,12 @@
+slug,name,event_type,range_km,n_tiles,median_d_hours,mean_d_hours,prop_d_gt_0,median_d_ci025,median_d_ci975,p_perm_one_sided
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,25-50,319,48.0,253.3166144200627,0.6300940438871473,24.0,72.0,0.0001999600079984
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,50-100,477,24.0,152.1006289308176,0.5136268343815513,0.0,24.0,0.0001999600079984
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,100-200,1351,0.0,131.72464840858623,0.4803849000740192,0.0,24.0,1.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,50-100,241,0.0,35.35269709543569,0.2448132780082987,0.0,0.0,1.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,100-200,259,0.0,58.84169884169884,0.3243243243243243,0.0,0.0,1.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,25-50,666,0.0,26.306306306306308,0.4324324324324324,0.0,0.0,1.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,50-100,1016,0.0,26.598425196850396,0.4192913385826771,0.0,0.0,1.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,100-200,828,0.0,24.463768115942027,0.3719806763285024,0.0,0.0,1.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,25-50,559,0.0,14.640429338103758,0.2683363148479427,0.0,0.0,1.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,50-100,909,0.0,18.165016501650165,0.3234323432343234,0.0,0.0,1.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,100-200,2291,0.0,16.87647315582715,0.2754255783500655,0.0,0.0,1.0

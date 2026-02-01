@@ -1,0 +1,2 @@
+model,n_tiles,fit_ok,a,b,c,r_star_km
+logtau = a + b*logr + c*logr^2,17572,1,4.603774161205684,0.9166485399100897,-0.05891669162212021,

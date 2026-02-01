@@ -159,7 +159,31 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
     windows = _list_population_windows(spec.data_root, only_hour_pt=int(spec.only_hour_pt))
     first = windows[0]
     first_ts = pd.Timestamp(first["window_start_pt"])
-    df = load_population_file(Path(first["path"]))
+
+    pop_dir = spec.data_root / "population"
+
+    # t0：若未提供，则默认取“首个 08:00 窗口所在日期的 16:00 窗口”
+    t0_method = "provided"
+    if spec.t0_pt is None:
+        t0_candidate = pd.Timestamp(f"{first_ts:%Y-%m-%d} 16:00")
+        matches = list(pop_dir.glob(f"*_{t0_candidate:%Y-%m-%d}_{t0_candidate:%H%M}.csv"))
+        if len(matches) == 1:
+            t0_pt = pd.Timestamp(t0_candidate)
+            t0_method = "auto_first_day_1600"
+            t0_file = matches[0]
+        else:
+            t0_pt = pd.Timestamp(first_ts)
+            t0_method = "auto_first_population_window"
+            t0_file = Path(first["path"])
+    else:
+        t0_pt = pd.Timestamp(spec.t0_pt)
+        matches = list(pop_dir.glob(f"*_{t0_pt:%Y-%m-%d}_{t0_pt:%H%M}.csv"))
+        t0_file = matches[0] if len(matches) == 1 else Path(first["path"])
+
+    # center：若未提供，则优先用 t0 窗口（更可能落在“扰动开始/峰值”附近）
+    center_source_ts = pd.Timestamp(t0_pt)
+    center_source_file = t0_file
+    df = load_population_file(Path(center_source_file))
     lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy(dtype=float)
     lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy(dtype=float)
     diff = pd.to_numeric(df.get("n_difference", np.nan), errors="coerce").to_numpy(dtype=float)
@@ -180,13 +204,6 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
     else:
         center_lat, center_lon = float(spec.center_lat), float(spec.center_lon)
 
-    t0_method = "provided"
-    if spec.t0_pt is None:
-        t0_pt = pd.Timestamp(first_ts)
-        t0_method = "auto_first_population_window"
-    else:
-        t0_pt = pd.Timestamp(spec.t0_pt)
-
     meta = {
         "slug": spec.slug,
         "name": spec.name,
@@ -198,6 +215,8 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
         "center_lat": float(center_lat),
         "center_lon": float(center_lon),
         "center_method": center_method,
+        "center_source_window_pt": str(center_source_ts),
+        "center_source_file": str(Path(center_source_file).name),
         "first_population_window_pt": str(first_ts),
         "first_population_window_file": str(Path(first["path"]).name),
     }
