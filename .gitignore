@@ -11,6 +11,8 @@ outputs/*
 !outputs/population_relaxation/**
 !outputs/pop_relax_50km/
 !outputs/pop_relax_50km/**
+!outputs/movement_criticality/
+!outputs/movement_criticality/**
 
 output/
 output_*/
