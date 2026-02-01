@@ -19,6 +19,10 @@ outputs/*
 !outputs/population_redistribution/**
 !outputs/movement_population_joint/
 !outputs/movement_population_joint/**
+!outputs/tile_validation/
+!outputs/tile_validation/**
+!outputs/physical_model/
+!outputs/physical_model/**
 
 output/
 output_*/
