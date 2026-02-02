@@ -1,0 +1,2 @@
+slug,picked_window_start_pt,picked_hours_since_quake,movement_file,start_band,cos_filter,n_od,total_flow_sum,share_dest_0_25km,share_dest_25_50km
+moldova_flooding_2024,2024-09-18 08:00:00,40.0,25406679659482161_2024-09-18_0800.csv,50-100km,inward,86,2148.0,0.0,0.006052141527001862

@@ -1,0 +1,2 @@
+slug,picked_window_start_pt,picked_hours_since_quake,movement_file,start_band,cos_filter,n_od,total_flow_sum,share_dest_0_25km,share_dest_25_50km
+turkiye_earthquake_2023,2023-02-07 08:00:00,40.0,1632226592531673_2023-02-07_0800.csv,50-100km,inward,71,2032.0,0.0,0.1077755905511811

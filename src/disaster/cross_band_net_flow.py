@@ -93,6 +93,7 @@ def _load_phi_by_band(path: Path) -> pd.DataFrame:
     ]
     cols = [c for c in keep_cols if c in df.columns]
     out = df[cols].copy()
+    out["window_start_pt"] = pd.to_datetime(out["window_start_pt"], errors="coerce")
     out["hours_since_quake"] = pd.to_numeric(out["hours_since_quake"], errors="coerce")
     out["phi_aggregate"] = pd.to_numeric(out.get("phi_aggregate", np.nan), errors="coerce")
     out["baseline_mean_overlap"] = pd.to_numeric(out.get("baseline_mean_overlap", np.nan), errors="coerce")
@@ -335,4 +336,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-

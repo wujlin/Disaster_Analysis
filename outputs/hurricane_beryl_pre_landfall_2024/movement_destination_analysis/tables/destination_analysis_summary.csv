@@ -1,0 +1,2 @@
+slug,picked_window_start_pt,picked_hours_since_quake,movement_file,start_band,cos_filter,n_od,total_flow_sum,share_dest_0_25km,share_dest_25_50km
+hurricane_beryl_pre_landfall_2024,2024-07-02 08:00:00,40.0,78341420054699175_2024-07-02_0800.csv,50-100km,inward,178,3092.0,0.0,0.04204398447606727
