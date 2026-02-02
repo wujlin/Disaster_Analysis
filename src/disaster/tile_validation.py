@@ -13,7 +13,7 @@ except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 from disaster.geo import haversine_km
-from disaster.population_io import load_population_file
+from disaster.population_io import load_population_file, parse_window_start_pt
 from disaster.viz import save_png_and_pdf
 
 
@@ -29,7 +29,11 @@ class Config:
     max_distance_km: float = 25.0
     pre_window: str = "2023-02-05_0800"
     post_window: str = "2023-02-06_0800"
-    evolution_windows: tuple[str, ...] = ("2023-02-06_0800", "2023-02-07_0800", "2023-02-12_0800")
+    pre_crisis_max: float = 1.0
+    post_crisis_min: float = 10.0
+    evolution_all_windows: bool = True
+    evolution_windows: tuple[str, ...] = ()
+    evolution_max_files: int | None = None
     radius_divisor: float = 5.0
     max_marker_radius: float = 40.0
 
@@ -98,6 +102,12 @@ def _load_and_filter(pop_path: Path, *, cfg: Config) -> pd.DataFrame:
     return df
 
 
+def _is_pre_zero(n_crisis_pre: float, *, cfg: Config) -> bool:
+    if not np.isfinite(float(n_crisis_pre)):
+        return True
+    return float(n_crisis_pre) <= float(cfg.pre_crisis_max)
+
+
 def run(cfg: Config) -> None:
     pop_dir = cfg.data_root / "population"
     if not pop_dir.exists():
@@ -123,12 +133,20 @@ def run(cfg: Config) -> None:
     pre = _load_and_filter(pre_path, cfg=cfg)
     post = _load_and_filter(post_path, cfg=cfg)
 
-    pre_keys = set(pre["quadkey"].dropna().astype(str).unique().tolist())
-    post_keys = set(post["quadkey"].dropna().astype(str).unique().tolist())
-    new_keys = post_keys - pre_keys
+    pre_idx = pre.dropna(subset=["quadkey"]).copy()
+    pre_idx["quadkey"] = pre_idx["quadkey"].astype(str)
+    pre_map = dict(zip(pre_idx["quadkey"].to_numpy(), pre_idx["n_crisis"].to_numpy(dtype=float), strict=False))
 
-    new_tiles = post[post["quadkey"].astype(str).isin(sorted(new_keys))].copy()
+    post_idx = post.dropna(subset=["quadkey"]).copy()
+    post_idx["quadkey"] = post_idx["quadkey"].astype(str)
+
+    post_ok = post_idx[pd.to_numeric(post_idx["n_crisis"], errors="coerce") >= float(cfg.post_crisis_min)].copy()
+    post_ok["n_crisis_pre"] = post_ok["quadkey"].map(pre_map).astype(float)
+    activated_mask = post_ok["n_crisis_pre"].apply(lambda x: _is_pre_zero(float(x) if pd.notna(x) else np.nan, cfg=cfg))
+    new_tiles = post_ok[activated_mask].copy()
     new_tiles = new_tiles.sort_values("n_crisis", ascending=False, kind="stable")
+
+    new_keys = set(new_tiles["quadkey"].astype(str).tolist())
 
     out_csv = out.tables / "new_tiles_coordinates.csv"
     new_tiles[
@@ -139,30 +157,75 @@ def run(cfg: Config) -> None:
             "distance_km",
             "n_baseline",
             "n_crisis",
+            "n_crisis_pre",
             "n_difference",
             "z_score",
             "percent_change",
         ]
     ].to_csv(out_csv, index=False)
 
-    # 时间演化：把 new_tiles 在后续窗口（若存在）的 n_crisis 拉出来
-    evo_rows: list[dict] = []
-    for wid in cfg.evolution_windows:
-        try:
-            p = _find_unique_file(pop_dir, wid)
-        except FileNotFoundError:
-            continue
-        _, _, ts = _parse_window_id(wid)
-        df = load_population_file(p)
-        df["quadkey"] = df["quadkey"].astype("string")
-        df["n_crisis"] = pd.to_numeric(df["n_crisis"], errors="coerce")
-        sub = df[df["quadkey"].astype(str).isin(sorted(new_keys))][["quadkey", "n_crisis"]].copy()
-        sub = sub.dropna(subset=["quadkey"])
-        for q, n in sub.itertuples(index=False):
-            evo_rows.append({"quadkey": str(q), "window_start_pt": ts, "n_crisis": float(n) if pd.notna(n) else np.nan})
-    evo = pd.DataFrame(evo_rows)
+    # 时间演化：把 new_tiles 在后续窗口的 n_crisis 拉出来（默认扫描全部窗口）
+    evo_rows: list[pd.DataFrame] = []
+    scanned_windows_count = 0
+    if new_keys:
+        files = sorted(pop_dir.glob("*.csv"))
+        if cfg.evolution_windows and not cfg.evolution_all_windows:
+            files = []
+            for wid in cfg.evolution_windows:
+                try:
+                    files.append(_find_unique_file(pop_dir, wid))
+                except FileNotFoundError:
+                    continue
+        if cfg.evolution_max_files is not None:
+            files = files[: int(cfg.evolution_max_files)]
+        scanned_windows_count = int(len(files))
+
+        for p in files:
+            ts = parse_window_start_pt(p)
+
+            df = load_population_file(p)
+            df["quadkey"] = df["quadkey"].astype("string")
+            sub = df[df["quadkey"].astype(str).isin(new_keys)][["quadkey", "n_baseline", "n_crisis"]].copy()
+            if sub.empty:
+                continue
+            sub["window_start_pt"] = pd.Timestamp(ts)
+            sub["n_baseline"] = pd.to_numeric(sub["n_baseline"], errors="coerce")
+            sub["n_crisis"] = pd.to_numeric(sub["n_crisis"], errors="coerce")
+            evo_rows.append(sub.rename(columns={"quadkey": "quadkey"}))
+
+    evo = pd.concat(evo_rows, ignore_index=True) if evo_rows else pd.DataFrame(columns=["quadkey", "window_start_pt", "n_baseline", "n_crisis"])
+    evo["quadkey"] = evo["quadkey"].astype(str)
+    evo = evo.sort_values(["quadkey", "window_start_pt"], kind="stable")
     out_evo = out.tables / "new_tiles_evolution.csv"
     evo.to_csv(out_evo, index=False)
+
+    summary_rows: list[dict] = []
+    if not evo.empty:
+        total_windows = int(scanned_windows_count) if int(scanned_windows_count) > 0 else int(evo["window_start_pt"].nunique())
+        for q, sub in evo.groupby("quadkey", sort=False):
+            sub = sub.sort_values("window_start_pt", kind="stable")
+            present = sub["n_crisis"].notna()
+            present_n = int(present.sum())
+            first_ts = sub.loc[present, "window_start_pt"].min()
+            last_ts = sub.loc[present, "window_start_pt"].max()
+            duration_h = float((last_ts - first_ts).total_seconds() / 3600.0) if pd.notna(first_ts) and pd.notna(last_ts) else float("nan")
+            summary_rows.append(
+                {
+                    "quadkey": str(q),
+                    "windows_total_scanned": int(total_windows),
+                    "windows_present": int(present_n),
+                    "presence_ratio": float(present_n / total_windows) if total_windows > 0 else float("nan"),
+                    "first_seen_pt": first_ts,
+                    "last_seen_pt": last_ts,
+                    "duration_hours": duration_h,
+                    "n_crisis_peak": float(pd.to_numeric(sub["n_crisis"], errors="coerce").max()),
+                    "n_crisis_mean": float(pd.to_numeric(sub["n_crisis"], errors="coerce").mean()),
+                }
+            )
+
+    summary = pd.DataFrame(summary_rows)
+    out_summary = out.tables / "new_tiles_evolution_summary.csv"
+    summary.to_csv(out_summary, index=False)
 
     # 静态图
     with ps.paper_style():
@@ -249,17 +312,23 @@ def run(cfg: Config) -> None:
     # README
     readme = f"""# Tile Validation (Task A)
 
-目标：对 0–{int(cfg.max_distance_km)}km 范围内 “post 存在但 pre 不存在” 的 tiles 进行地图标注，用于验证“救援营地/救援设施”假说。
+目标：对 0–{int(cfg.max_distance_km)}km 范围内 “震前 n_crisis≈0（或缺失）但震后 n_crisis>0” 的 tiles 进行地图标注与时间演化分析，用于验证“救援/安置设施”假说。
 
 ## 输入窗口（PT）
 
 - pre: {pre_ts:%Y-%m-%d %H:%M}  (`{cfg.pre_window}`)
 - post: {post_ts:%Y-%m-%d %H:%M} (`{cfg.post_window}`)
 
+## 激活判定口径
+
+- pre: `n_crisis_pre <= {float(cfg.pre_crisis_max)}` 或 `n_crisis_pre` 缺失
+- post: `n_crisis_post >= {float(cfg.post_crisis_min)}`（用于排除隐私阈值导致的缺失）
+
 ## 结果文件
 
 - `tables/new_tiles_coordinates.csv`：新激活 tiles 坐标与 n_crisis 等字段
-- `tables/new_tiles_evolution.csv`：新激活 tiles 在后续窗口的 n_crisis（窗口缺失则不会出现）
+- `tables/new_tiles_evolution.csv`：新激活 tiles 在扫描窗口中的 (n_baseline, n_crisis) 时间序列
+- `tables/new_tiles_evolution_summary.csv`：每个 tile 的出现持续性摘要（first/last/presence_ratio/peak）
 - `figures/new_tiles_static.*`：静态图（含 25km 圈、震中、Gaziantep Airport 标注）
 - `new_tiles_map.html`：交互式地图（需要 folium；若环境无 folium 则不会生成）
 
@@ -267,8 +336,13 @@ def run(cfg: Config) -> None:
 
 - new tiles 数量：{len(new_tiles)}
 - 过滤：distance_km < {float(cfg.max_distance_km)}
+"""
+    if cfg.evolution_windows and not cfg.evolution_all_windows:
+        readme += f"\n- 时间演化：仅使用 {len(cfg.evolution_windows)} 个指定窗口\n"
+    else:
+        readme += "\n- 时间演化：扫描 population/ 下的全部窗口（可用 --evolution-max-files 截断）\n"
 
-## 备注
+    readme += """
 
 - 交互式地图依赖 `folium`：可用 `pip install folium` 或 conda 安装。
 """
@@ -289,17 +363,21 @@ def cli_main() -> None:
         default=Path("Data/Turkiye Turkey Earthquake Full Country Version Feb 8 2023"),
         help="数据根目录（包含 population/ 子目录）",
     )
-    parser.add_argument("--output-dir", type=Path, default=Path("outputs/tile_validation"), help="输出目录")
+    parser.add_argument("--output-dir", type=Path, default=Path("outputs/turkiye_earthquake_2023/new_tiles_validation"), help="输出目录")
     parser.add_argument("--max-distance-km", type=float, default=25.0, help="距离阈值（km），默认 25")
     parser.add_argument("--pre-window", type=str, default="2023-02-05_0800", help="pre 窗口（YYYY-MM-DD_HHMM）")
     parser.add_argument("--post-window", type=str, default="2023-02-06_0800", help="post 窗口（YYYY-MM-DD_HHMM）")
+    parser.add_argument("--pre-crisis-max", type=float, default=1.0, help="pre 窗口的 n_crisis 阈值（<=视为≈0/未激活）")
+    parser.add_argument("--post-crisis-min", type=float, default=10.0, help="post 窗口的 n_crisis 阈值（>=视为已激活）")
     parser.add_argument(
         "--evolution-windows",
         type=str,
         nargs="*",
-        default=["2023-02-06_0800", "2023-02-07_0800", "2023-02-12_0800"],
-        help="用于时间演化的窗口列表（YYYY-MM-DD_HHMM）",
+        default=[],
+        help="用于时间演化的窗口列表（YYYY-MM-DD_HHMM）。默认扫描全部窗口；若指定且 --no-evolution-all-windows，则只扫描这些窗口。",
     )
+    parser.add_argument("--no-evolution-all-windows", action="store_true", help="关闭“扫描全部窗口”，仅使用 --evolution-windows")
+    parser.add_argument("--evolution-max-files", type=int, default=None, help="最多扫描多少个窗口文件（用于加速/冒烟测试）")
     parser.add_argument("--radius-divisor", type=float, default=5.0, help="folium marker 半径缩放：radius=n_crisis/divisor")
     parser.add_argument("--max-marker-radius", type=float, default=40.0, help="folium marker 最大半径（像素）")
     args = parser.parse_args()
@@ -310,7 +388,11 @@ def cli_main() -> None:
         max_distance_km=float(args.max_distance_km),
         pre_window=str(args.pre_window),
         post_window=str(args.post_window),
+        pre_crisis_max=float(args.pre_crisis_max),
+        post_crisis_min=float(args.post_crisis_min),
+        evolution_all_windows=not bool(args.no_evolution_all_windows),
         evolution_windows=tuple(str(x) for x in args.evolution_windows),
+        evolution_max_files=int(args.evolution_max_files) if args.evolution_max_files is not None else None,
         radius_divisor=float(args.radius_divisor),
         max_marker_radius=float(args.max_marker_radius),
     )
@@ -319,4 +401,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-
