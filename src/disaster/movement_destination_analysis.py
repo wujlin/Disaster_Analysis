@@ -183,6 +183,7 @@ def run(cfg: Config) -> None:
     nc_sel = nc[sel]
     eidx_sel = eidx[sel]
     edist_sel = edist[sel]
+    sdist_sel = sdist[ok][sel].astype(float)
 
     total_flow = float(np.nansum(nc_sel))
     n_od = int(nc_sel.size)
@@ -224,6 +225,20 @@ def run(cfg: Config) -> None:
     out_hist = out_tab / "destination_distance_hist.csv"
     hist_df.to_csv(out_hist, index=False)
 
+    # origin distance histogram (for Task A)
+    hist_o, _ = np.histogram(sdist_sel, bins=edges, weights=nc_sel)
+    origin_df = pd.DataFrame(
+        {
+            "bin_left_km": edges[:-1].astype(float),
+            "bin_right_km": edges[1:].astype(float),
+            "bin_center_km": centers.astype(float),
+            "flow_sum": hist_o.astype(float),
+        }
+    )
+    origin_df["flow_fraction"] = origin_df["flow_sum"] / total_flow if total_flow > 0 else np.nan
+    out_origin = out_tab / "origin_distance_hist.csv"
+    origin_df.to_csv(out_origin, index=False)
+
     # summary
     share_0_25 = float(dest_df.loc[dest_df["dest_band"] == "0-25km", "flow_fraction"].iloc[0]) if "0-25km" in set(dest_df["dest_band"].astype(str)) else float("nan")
     share_25_50 = float(dest_df.loc[dest_df["dest_band"] == "25-50km", "flow_fraction"].iloc[0]) if "25-50km" in set(dest_df["dest_band"].astype(str)) else float("nan")
@@ -261,6 +276,20 @@ def run(cfg: Config) -> None:
         save_png_and_pdf(ps, fig, out_fig / "destination_distance_hist.png")
         plt.close(fig)
 
+    with ps.paper_style():
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots(figsize=ps.FIGSIZE_FULL)
+        ax.plot(origin_df["bin_center_km"], origin_df["flow_fraction"], color=ps.OKABE_ITO["vermillion"], linewidth=2.4)
+        ax.set_xlabel("Origin distance to center (km)")
+        ax.set_ylabel("Flow fraction (weighted by n_crisis)")
+        title_label = cfg.slug or "event"
+        ax.set_title(f"Origin distance histogram ({title_label})\\nstart={cfg.start_band}, {cos_desc}, t={hs:g}h")
+        ps.despine(ax)
+        fig.tight_layout()
+        save_png_and_pdf(ps, fig, out_fig / "origin_distance_hist.png")
+        plt.close(fig)
+
     readme = f"""# Movement 终点分析（按方向筛选）
 
 本目录用于验证：在指定时间窗口 t、指定起点距离带 start_band 下，方向筛选（cos_alpha）后的流动终点主要落在哪些距离范围/距离带。
@@ -281,13 +310,16 @@ def run(cfg: Config) -> None:
 - `tables/destination_analysis_summary.csv`：本次筛选的样本量与关键比例
 - `tables/destination_band_shares.csv`：终点落入各距离带的流量占比
 - `tables/destination_distance_hist.csv`：终点距离分布（按 n_crisis 加权）
+- `tables/origin_distance_hist.csv`：起点距离分布（按 n_crisis 加权）
 - `figures/destination_distance_hist.*`：终点距离直方图（流量占比）
+- `figures/origin_distance_hist.*`：起点距离直方图（流量占比）
 """
     (out_root / "README.md").write_text(readme, encoding="utf-8")
 
     print(f"Done. Wrote: {out_sum}")
     print(f"Done. Wrote: {out_dest}")
     print(f"Done. Wrote: {out_hist}")
+    print(f"Done. Wrote: {out_origin}")
 
 
 def cli_main() -> None:
@@ -342,4 +374,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-
