@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -22,21 +23,28 @@ class Config:
     catalog: Path
     output_root: Path
     output_dir: Path
+
+    # t_crisis selection
     t_crisis_mode: str = "peak_0_25"  # peak_0_25 | fixed
-    t_crisis_hours: float | None = None  # used when mode=fixed
-    peak_max_hours: float | None = 832.0
-    only_hour_pt: int | None = 8  # None 表示不过滤小时
+    t_crisis_hours: float = 88.0
+    peak_max_hours: float = 832.0
+    only_hour_pt: int = 8
+
+    # distance bands for distributions
     distance_bins_km: tuple[float, ...] = (0.0, 25.0, 50.0, 100.0, 200.0, float("inf"))
-    phi_clip_lo: float = 0.0
-    phi_clip_hi: float = 3.0
-    min_tiles_per_band: int = 200
-    alpha_min: float = -2.0
+
+    # collapse scan
+    alpha_min: float = 0.0
     alpha_max: float = 2.0
     alpha_step: float = 0.05
-    n_bins: int = 45
-    x_lo_q: float = 0.5
-    x_hi_q: float = 99.5
-    binning: str = "auto"  # auto | linear | log
+    n_bins: int = 60
+    x_clip_qlo: float = 0.005
+    x_clip_qhi: float = 0.995
+    min_tiles_per_disaster_band: int = 50
+    min_disasters_per_band: int = 2
+
+    # x definition
+    phi_scale: str = "mean"  # mean | aggregate
 
 
 @dataclass(frozen=True)
@@ -54,160 +62,160 @@ def _ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
-def _alpha_grid(cfg: Config) -> np.ndarray:
-    step = float(cfg.alpha_step)
-    if step <= 0:
-        raise ValueError("alpha_step 必须 > 0")
-    return np.arange(float(cfg.alpha_min), float(cfg.alpha_max) + 1e-12, step, dtype=float)
+def _band_slug(label: str) -> str:
+    return (
+        label.replace(" ", "_")
+        .replace("-", "_")
+        .replace("+", "plus")
+        .replace("/", "_")
+        .replace("km", "km")
+        .replace("__", "_")
+    )
 
 
-def _load_peak_hours(output_root: Path, slug: str, *, max_hours: float | None) -> float:
-    p = output_root / slug / "population_redistribution" / "tables" / "redistribution_by_distance_band.csv"
-    if not p.exists():
-        raise FileNotFoundError(f"未找到：{p}（t_crisis_mode=peak_0_25 需要先生成 population_redistribution 输出）")
-    df = pd.read_csv(p, parse_dates=["window_start_pt"])
-    need = {"hours_since_quake", "distance_band", "phi_aggregate"}
-    miss = sorted(need - set(df.columns))
-    if miss:
-        raise SystemExit(f"{p} 缺少列：{miss}")
-    df["hours_since_quake"] = pd.to_numeric(df["hours_since_quake"], errors="coerce")
-    df["phi_aggregate"] = pd.to_numeric(df["phi_aggregate"], errors="coerce")
-    df["distance_band"] = df["distance_band"].astype(str)
-    df = df[(df["distance_band"] == "0-25km") & (df["hours_since_quake"] >= 0)].copy()
-    if max_hours is not None:
-        df = df[df["hours_since_quake"] <= float(max_hours)].copy()
-    df = df.dropna(subset=["hours_since_quake", "phi_aggregate"]).copy()
-    if df.empty:
-        raise SystemExit(f"{slug} 的 0-25km 在 t>=0 范围内为空，无法做 peak_0_25。")
-    idx = int(df["phi_aggregate"].idxmax())
-    return float(df.loc[idx, "hours_since_quake"])
+def _band_lo_km(label: str) -> float:
+    s = str(label)
+    if s.endswith("km+"):
+        return float(s.replace("km+", ""))
+    if "-" in s:
+        left = s.split("-", 1)[0]
+        return float(left.replace("km", ""))
+    return float("inf")
 
 
-def _list_windows(pop_dir: Path, *, t0_pt: pd.Timestamp, only_hour_pt: int | None) -> list[dict]:
+def _pick_peak_band(available: list[str]) -> str:
+    if "0-25km" in set(available):
+        return "0-25km"
+    # fallback: choose smallest lower bound band present
+    return sorted(available, key=_band_lo_km)[0]
+
+
+def _list_population_windows(data_root: Path, *, only_hour_pt: int) -> list[dict]:
+    pop_dir = data_root / "population"
+    if not pop_dir.exists():
+        raise FileNotFoundError(f"未找到目录：{pop_dir}")
     files = sorted(pop_dir.glob("*.csv"))
     if not files:
         raise FileNotFoundError(f"目录为空：{pop_dir}")
     rows: list[dict] = []
-    for p in files:
-        ts = parse_window_start_pt(p)
-        if only_hour_pt is not None and int(ts.hour) != int(only_hour_pt):
+    for path in files:
+        ts = pd.Timestamp(parse_window_start_pt(path))
+        if int(ts.hour) != int(only_hour_pt):
             continue
-        hs = float((pd.Timestamp(ts) - pd.Timestamp(t0_pt)).total_seconds() / 3600.0)
-        rows.append({"path": p, "window_start_pt": pd.Timestamp(ts), "hours_since_quake": float(hs)})
-    rows = sorted(rows, key=lambda r: float(r["hours_since_quake"]))
+        rows.append({"path": path, "window_start_pt": ts})
+    rows = sorted(rows, key=lambda r: pd.Timestamp(r["window_start_pt"]))
     if not rows:
-        raise FileNotFoundError(f"未找到 hour={only_hour_pt} 的窗口：{pop_dir}")
+        raise FileNotFoundError(f"未找到 hour={only_hour_pt} 的 population 文件：{pop_dir}")
     return rows
 
 
-def _pick_nearest_window(rows: list[dict], target_hours: float) -> dict:
-    if not rows:
-        raise ValueError("rows 为空")
-    return min(rows, key=lambda r: abs(float(r["hours_since_quake"]) - float(target_hours)))
+def _nearest_window(windows: list[dict], target: pd.Timestamp) -> dict:
+    ts = np.array([pd.Timestamp(w["window_start_pt"]).to_datetime64() for w in windows])
+    t = target.to_datetime64()
+    idx = int(np.argmin(np.abs(ts - t)))
+    return windows[idx]
 
 
-def _phi_by_band_for_window(
-    pop_path: Path,
+def _try_load_metadata(output_root: Path, slug: str) -> dict | None:
+    path = output_root / slug / "metadata.json"
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def _select_t_crisis_window(
     *,
+    spec,
+    cfg: Config,
+    t0_pt: pd.Timestamp,
     center_lat: float,
     center_lon: float,
-    distance_bins_km: tuple[float, ...],
-    phi_clip_lo: float,
-    phi_clip_hi: float,
-) -> dict[str, np.ndarray]:
-    df = load_population_file(pop_path)
-    n_baseline = pd.to_numeric(df["n_baseline"], errors="coerce").to_numpy(dtype=float)
-    n_crisis = pd.to_numeric(df["n_crisis"], errors="coerce").to_numpy(dtype=float)
-    lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy(dtype=float)
-    lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy(dtype=float)
+) -> tuple[pd.Timestamp, float, str]:
+    """
+    返回 (window_start_pt, hours_since_quake, method_detail)
+    """
+    windows = _list_population_windows(spec.data_root, only_hour_pt=int(cfg.only_hour_pt))
 
-    ok = np.isfinite(n_baseline) & np.isfinite(n_crisis) & np.isfinite(lat) & np.isfinite(lon) & (n_baseline > 0)
-    if not np.any(ok):
-        return {}
+    if cfg.t_crisis_mode == "fixed":
+        target = pd.Timestamp(t0_pt) + pd.Timedelta(hours=float(cfg.t_crisis_hours))
+        picked = _nearest_window(windows, target)
+        ws = pd.Timestamp(picked["window_start_pt"])
+        hs = float((ws - pd.Timestamp(t0_pt)).total_seconds() / 3600.0)
+        return ws, hs, f"fixed_nearest_to_{float(cfg.t_crisis_hours):g}h"
 
-    phi = (n_crisis[ok] / n_baseline[ok]).astype(float)
-    phi = np.where(np.isfinite(phi), np.clip(phi, float(phi_clip_lo), float(phi_clip_hi)), np.nan)
-    dist = haversine_km(lat[ok], lon[ok], float(center_lat), float(center_lon)).astype(float)
+    if cfg.t_crisis_mode != "peak_0_25":
+        raise SystemExit(f"不支持的 --t-crisis-mode：{cfg.t_crisis_mode}（仅支持 peak_0_25 / fixed）")
 
-    labels = distance_bin_labels(distance_bins_km)
-    band = pd.cut(dist, bins=list(distance_bins_km), right=False, labels=labels, include_lowest=True).astype(str)
-    band = np.asarray(band, dtype=object)
+    # Prefer reusing existing population_redistribution outputs (fast, consistent with existing pipeline).
+    by_band_csv = cfg.output_root / spec.slug / "population_redistribution" / "tables" / "redistribution_by_distance_band.csv"
+    if by_band_csv.exists():
+        df = pd.read_csv(by_band_csv)
+        if {"hours_since_quake", "window_start_pt", "distance_band", "phi_aggregate"} <= set(df.columns):
+            df["hours_since_quake"] = pd.to_numeric(df["hours_since_quake"], errors="coerce")
+            df = df.dropna(subset=["hours_since_quake"]).copy()
+            df = df[(df["hours_since_quake"] >= 0) & (df["hours_since_quake"] <= float(cfg.peak_max_hours))].copy()
+            if not df.empty:
+                bands = sorted(set(df["distance_band"].astype(str)))
+                band = _pick_peak_band(bands)
+                sub = df[df["distance_band"].astype(str) == band].copy()
+                sub["phi_aggregate"] = pd.to_numeric(sub["phi_aggregate"], errors="coerce")
+                sub = sub.dropna(subset=["phi_aggregate"]).copy()
+                if not sub.empty:
+                    idx = int(sub["phi_aggregate"].to_numpy(dtype=float).argmax())
+                    row = sub.iloc[idx]
+                    ws = pd.Timestamp(row["window_start_pt"])
+                    hs = float(row["hours_since_quake"])
+                    return ws, hs, f"peak_phi_aggregate_{band}_from_existing_table"
 
-    out: dict[str, np.ndarray] = {}
-    for lab in labels:
-        m = (band == lab) & np.isfinite(phi)
-        if np.any(m):
-            out[str(lab)] = phi[m].astype(float)
-    return out
+    # Fallback: scan population windows and compute band-level phi_aggregate (slow but self-contained).
+    labels = distance_bin_labels(cfg.distance_bins_km)
+    peak_band = _pick_peak_band(labels)
+    bins = list(cfg.distance_bins_km)
 
+    peak_ws: pd.Timestamp | None = None
+    peak_hs: float = float("nan")
+    peak_phi: float = float("-inf")
+    for w in windows:
+        ws = pd.Timestamp(w["window_start_pt"])
+        hs = float((ws - pd.Timestamp(t0_pt)).total_seconds() / 3600.0)
+        if hs < 0 or hs > float(cfg.peak_max_hours):
+            continue
+        df = load_population_file(Path(w["path"]))
+        lat = pd.to_numeric(df.get("lat", np.nan), errors="coerce").to_numpy(dtype=float)
+        lon = pd.to_numeric(df.get("lon", np.nan), errors="coerce").to_numpy(dtype=float)
+        nb = pd.to_numeric(df.get("n_baseline", np.nan), errors="coerce").to_numpy(dtype=float)
+        nc = pd.to_numeric(df.get("n_crisis", np.nan), errors="coerce").to_numpy(dtype=float)
+        ok = np.isfinite(lat) & np.isfinite(lon) & np.isfinite(nb) & np.isfinite(nc) & (nb > 0)
+        if not np.any(ok):
+            continue
+        dist = haversine_km(lat, lon, float(center_lat), float(center_lon))
+        band = pd.cut(dist, bins=bins, right=False, labels=labels, include_lowest=True).astype(str).to_numpy()
+        m = ok & (band == peak_band)
+        if not np.any(m):
+            continue
+        base_sum = float(np.nansum(nb[m]))
+        crisis_sum = float(np.nansum(nc[m]))
+        if base_sum <= 0:
+            continue
+        phi = float(crisis_sum / base_sum)
+        if phi > peak_phi:
+            peak_phi = phi
+            peak_ws = ws
+            peak_hs = hs
 
-def _safe_pow_mean(mean_phi: float, alpha: float) -> float:
-    if not np.isfinite(mean_phi) or mean_phi <= 0:
-        return float("nan")
-    return float(np.exp(float(alpha) * float(np.log(mean_phi))))
-
-
-def _make_bins(x_all: np.ndarray, *, cfg: Config) -> tuple[np.ndarray, str, float, float]:
-    x_all = np.asarray(x_all, dtype=float)
-    x_all = x_all[np.isfinite(x_all) & (x_all > 0)]
-    if x_all.size < 10:
-        return np.array([]), "linear", float("nan"), float("nan")
-
-    lo_q = float(cfg.x_lo_q)
-    hi_q = float(cfg.x_hi_q)
-    lo = float(np.nanpercentile(x_all, lo_q))
-    hi = float(np.nanpercentile(x_all, hi_q))
-    if not (np.isfinite(lo) and np.isfinite(hi) and hi > lo and lo > 0):
-        return np.array([]), "linear", float("nan"), float("nan")
-
-    mode = str(cfg.binning).strip().lower()
-    if mode not in {"auto", "linear", "log"}:
-        mode = "auto"
-    if mode == "auto":
-        mode = "log" if (hi / lo) >= 50.0 else "linear"
-
-    n_bins = int(cfg.n_bins)
-    if n_bins < 10:
-        n_bins = 10
-
-    if mode == "log":
-        bins = np.logspace(np.log10(lo), np.log10(hi), n_bins + 1)
-    else:
-        bins = np.linspace(lo, hi, n_bins + 1)
-    return bins.astype(float), mode, float(lo), float(hi)
+    if peak_ws is None or not np.isfinite(peak_phi):
+        raise SystemExit(f"无法确定 t_crisis：{spec.slug}（peak_0_25 模式下无有效窗口/数据）")
+    return peak_ws, float(peak_hs), f"peak_phi_aggregate_{peak_band}_from_population_scan"
 
 
 def _hist_density(x: np.ndarray, bins: np.ndarray) -> np.ndarray:
-    x = np.asarray(x, dtype=float)
-    x = x[np.isfinite(x)]
-    if x.size == 0 or bins.size < 2:
-        return np.full(max(0, bins.size - 1), np.nan, dtype=float)
+    if x.size == 0:
+        return np.full(bins.size - 1, np.nan, dtype=float)
     h, _ = np.histogram(x, bins=bins, density=True)
     return h.astype(float)
-
-
-def _bin_centers(bins: np.ndarray, *, mode: str) -> np.ndarray:
-    if bins.size < 2:
-        return np.array([])
-    if mode == "log":
-        return np.sqrt(bins[:-1] * bins[1:]).astype(float)
-    return ((bins[:-1] + bins[1:]) / 2.0).astype(float)
-
-
-def _collapse_residual(densities: list[np.ndarray], bins: np.ndarray) -> float:
-    if not densities or bins.size < 2:
-        return float("nan")
-    P = np.vstack(densities).astype(float)  # (n_disasters, n_bins)
-    if P.size == 0:
-        return float("nan")
-    mean = np.nanmean(P, axis=0)
-    var = np.nanmean((P - mean) ** 2, axis=0)
-    w = np.diff(bins).astype(float)
-    ww = w[np.isfinite(var)]
-    vv = var[np.isfinite(var)]
-    if ww.size == 0 or float(np.sum(ww)) <= 0:
-        return float("nan")
-    return float(np.sum(vv * ww) / np.sum(ww))
 
 
 def run(cfg: Config) -> None:
@@ -224,300 +232,330 @@ def run(cfg: Config) -> None:
         raise
 
     specs = load_catalog(cfg.catalog)
+
     labels = distance_bin_labels(cfg.distance_bins_km)
+    bins = list(cfg.distance_bins_km)
 
-    # 1) 为每个灾害选择 t_crisis window，并提取 tile-level φ 分布（按距离带）
-    per_disaster: dict[str, dict] = {}
-    summary_rows: list[dict] = []
-
-    mode = str(cfg.t_crisis_mode).strip().lower()
-    if mode not in {"peak_0_25", "fixed"}:
-        raise SystemExit(f"未知 t_crisis_mode：{cfg.t_crisis_mode}（可选：peak_0_25/fixed）")
-    if mode == "fixed" and cfg.t_crisis_hours is None:
-        raise SystemExit("t_crisis_mode=fixed 需要提供 --t-crisis-hours")
+    # Collect tile-level phi samples by (band, disaster)
+    phi_samples: dict[str, dict[str, np.ndarray]] = {}
+    band_stats_rows: list[dict] = []
 
     for spec in specs:
-        t0_pt, center_lat, center_lon, _meta = auto_t0_and_center(spec)
-        pop_dir = spec.data_root / "population"
-        windows = _list_windows(pop_dir, t0_pt=pd.Timestamp(t0_pt), only_hour_pt=cfg.only_hour_pt)
-
-        if mode == "fixed":
-            target = float(cfg.t_crisis_hours)
+        meta = _try_load_metadata(cfg.output_root, spec.slug)
+        if meta is not None:
+            t0_pt = pd.Timestamp(meta.get("t0_pt"))
+            center_lat = float(meta.get("center_lat"))
+            center_lon = float(meta.get("center_lon"))
+            meta_method = "metadata_json"
         else:
-            target = _load_peak_hours(cfg.output_root, spec.slug, max_hours=cfg.peak_max_hours)
+            t0_pt, center_lat, center_lon, _meta = auto_t0_and_center(spec)
+            meta_method = "auto_t0_and_center"
 
-        picked = _pick_nearest_window(windows, float(target))
+        # Allow overriding only_hour_pt globally from CLI
+        if int(cfg.only_hour_pt) != int(spec.only_hour_pt):
+            spec = type(spec)(**{**spec.__dict__, "only_hour_pt": int(cfg.only_hour_pt)})  # type: ignore
+
+        ws, hs, t_method = _select_t_crisis_window(spec=spec, cfg=cfg, t0_pt=t0_pt, center_lat=center_lat, center_lon=center_lon)
+
+        windows = _list_population_windows(spec.data_root, only_hour_pt=int(cfg.only_hour_pt))
+        picked = _nearest_window(windows, ws)
         pop_path = Path(picked["path"])
-        used_hours = float(picked["hours_since_quake"])
-        used_ts = pd.Timestamp(picked["window_start_pt"])
+        ws = pd.Timestamp(picked["window_start_pt"])
+        hs = float((ws - pd.Timestamp(t0_pt)).total_seconds() / 3600.0)
 
-        phi_by_band = _phi_by_band_for_window(
-            pop_path,
-            center_lat=float(center_lat),
-            center_lon=float(center_lon),
-            distance_bins_km=cfg.distance_bins_km,
-            phi_clip_lo=float(cfg.phi_clip_lo),
-            phi_clip_hi=float(cfg.phi_clip_hi),
-        )
+        df = load_population_file(pop_path)
+        lat = pd.to_numeric(df.get("lat", np.nan), errors="coerce").to_numpy(dtype=float)
+        lon = pd.to_numeric(df.get("lon", np.nan), errors="coerce").to_numpy(dtype=float)
+        nb = pd.to_numeric(df.get("n_baseline", np.nan), errors="coerce").to_numpy(dtype=float)
+        nc = pd.to_numeric(df.get("n_crisis", np.nan), errors="coerce").to_numpy(dtype=float)
 
-        per_disaster[spec.slug] = {
-            "slug": spec.slug,
-            "name": spec.name,
-            "event_type": spec.event_type,
-            "t0_pt": pd.Timestamp(t0_pt),
-            "center_lat": float(center_lat),
-            "center_lon": float(center_lon),
-            "t_target_hours": float(target),
-            "t_used_hours": float(used_hours),
-            "window_start_pt": used_ts,
-            "population_file": str(pop_path),
-            "phi_by_band": phi_by_band,
-        }
+        ok = np.isfinite(lat) & np.isfinite(lon) & np.isfinite(nb) & np.isfinite(nc) & (nb > 0)
+        if not np.any(ok):
+            print(f"[phi_fss_collapse] {spec.slug}: no valid tiles at t_crisis (overlap & n_baseline>0).")
+            continue
 
-        for band in labels:
-            vals = phi_by_band.get(str(band))
-            if vals is None or vals.size == 0:
+        dist = haversine_km(lat, lon, float(center_lat), float(center_lon))
+        band = pd.cut(dist, bins=bins, right=False, labels=labels, include_lowest=True).astype(str).to_numpy()
+
+        phi = (nc / nb).astype(float)
+
+        for b in labels:
+            m = ok & (band == str(b))
+            if not np.any(m):
                 continue
-            v = vals.astype(float)
-            summary_rows.append(
+            phi_i = phi[m]
+            phi_i = phi_i[np.isfinite(phi_i)]
+            if phi_i.size == 0:
+                continue
+
+            # store samples
+            phi_samples.setdefault(str(b), {})[spec.slug] = phi_i
+
+            # scale stats (per disaster & band)
+            base_sum = float(np.nansum(nb[m]))
+            crisis_sum = float(np.nansum(nc[m]))
+            phi_agg = float(crisis_sum / base_sum) if base_sum > 0 else float("nan")
+            band_stats_rows.append(
                 {
                     "slug": spec.slug,
+                    "name": spec.name,
                     "event_type": spec.event_type,
-                    "t_target_hours": float(target),
-                    "t_used_hours": float(used_hours),
-                    "window_start_pt": str(used_ts),
-                    "distance_band": str(band),
-                    "n_tiles": int(v.size),
-                    "phi_mean": float(np.nanmean(v)),
-                    "phi_median": float(np.nanmedian(v)),
-                    "phi_std": float(np.nanstd(v)),
-                    "phi_p95": float(np.nanpercentile(v, 95)),
-                    "phi_p99": float(np.nanpercentile(v, 99)),
+                    "t0_pt": str(t0_pt),
+                    "center_lat": float(center_lat),
+                    "center_lon": float(center_lon),
+                    "metadata_source": meta_method,
+                    "t_crisis_mode": cfg.t_crisis_mode,
+                    "t_crisis_method": t_method,
+                    "t_crisis_window_start_pt": str(ws),
+                    "t_crisis_hours_since_quake": float(hs),
+                    "population_file": str(pop_path.name),
+                    "distance_band": str(b),
+                    "n_tiles": int(phi_i.size),
+                    "phi_mean": float(np.nanmean(phi_i)),
+                    "phi_median": float(np.nanmedian(phi_i)),
+                    "phi_p10": float(np.nanpercentile(phi_i, 10)),
+                    "phi_p90": float(np.nanpercentile(phi_i, 90)),
+                    "phi_aggregate": phi_agg,
                 }
             )
 
-    summary_df = pd.DataFrame(summary_rows)
+        print(f"[phi_fss_collapse] {spec.slug}: picked t_crisis {ws} (hs={hs:g}) from {pop_path.name}")
+
+    if not band_stats_rows:
+        raise SystemExit("未提取到任何灾害的 tile-level φ 样本（检查数据目录/only_hour_pt/t_crisis 选择）。")
+
+    summary_df = pd.DataFrame(band_stats_rows)
     out_summary = out.tables / "phi_samples_summary.csv"
     summary_df.to_csv(out_summary, index=False)
 
-    # 2) 对每个距离带做 α 扫描，优化坍缩残差
-    alpha_grid = _alpha_grid(cfg)
+    # Scan alpha per band and generate plots
+    alpha_values = np.arange(float(cfg.alpha_min), float(cfg.alpha_max) + 1e-12, float(cfg.alpha_step), dtype=float)
     best_rows: list[dict] = []
 
-    for band in labels:
-        # 收集可用灾害
-        series: list[dict] = []
-        for slug, meta in per_disaster.items():
-            vals = meta["phi_by_band"].get(str(band))
-            if vals is None:
-                continue
-            vals = np.asarray(vals, dtype=float)
-            vals = vals[np.isfinite(vals)]
-            if vals.size < int(cfg.min_tiles_per_band):
-                continue
-            mu = float(np.nanmean(vals))
-            if not np.isfinite(mu) or mu <= 0:
-                continue
-            series.append({"slug": slug, "event_type": meta["event_type"], "phi": vals, "mean": mu})
+    for band_label, by_disaster in phi_samples.items():
+        # Only keep disasters with enough tiles
+        usable: dict[str, np.ndarray] = {k: v for k, v in by_disaster.items() if int(v.size) >= int(cfg.min_tiles_per_disaster_band)}
+        if len(usable) < int(cfg.min_disasters_per_band):
+            print(f"[phi_fss_collapse] band={band_label}: usable disasters too few ({len(usable)}). Skip.")
+            continue
 
-        if len(series) < 2:
+        # Precompute phi_scale per disaster for this band
+        scales: dict[str, float] = {}
+        for slug, phi_i in usable.items():
+            sub = summary_df[(summary_df["slug"] == slug) & (summary_df["distance_band"] == band_label)]
+            if sub.empty:
+                continue
+            if cfg.phi_scale == "aggregate":
+                scales[slug] = float(pd.to_numeric(sub["phi_aggregate"], errors="coerce").iloc[0])
+            else:
+                scales[slug] = float(pd.to_numeric(sub["phi_mean"], errors="coerce").iloc[0])
+
+        scales = {k: v for k, v in scales.items() if np.isfinite(v) and v > 0}
+        usable = {k: v for k, v in usable.items() if k in scales}
+        if len(usable) < int(cfg.min_disasters_per_band):
+            print(f"[phi_fss_collapse] band={band_label}: usable disasters too few after scaling filter ({len(usable)}). Skip.")
             continue
 
         scan_rows: list[dict] = []
-        best_alpha = float("nan")
-        best_e = float("inf")
-        best_bins = np.array([])
-        best_bins_mode = "linear"
-        best_xlo = float("nan")
-        best_xhi = float("nan")
-
-        for a in alpha_grid:
-            scaled: list[np.ndarray] = []
-            for item in series:
-                scale = _safe_pow_mean(float(item["mean"]), float(a))
-                if not np.isfinite(scale) or scale <= 0:
+        for a in alpha_values:
+            xs: dict[str, np.ndarray] = {}
+            for slug, phi_i in usable.items():
+                s = float(scales[slug])
+                x = phi_i.astype(float) / (s**float(a))
+                x = x[np.isfinite(x)]
+                if x.size < int(cfg.min_tiles_per_disaster_band):
                     continue
-                x = item["phi"] / scale
-                x = x[np.isfinite(x) & (x > 0)]
-                if x.size:
-                    scaled.append(x.astype(float))
+                # quantile clip (per disaster)
+                qlo, qhi = np.nanquantile(x, [float(cfg.x_clip_qlo), float(cfg.x_clip_qhi)])
+                if not np.isfinite(qlo) or not np.isfinite(qhi) or qhi <= qlo:
+                    continue
+                x = x[(x >= float(qlo)) & (x <= float(qhi))]
+                if x.size < int(cfg.min_tiles_per_disaster_band):
+                    continue
+                xs[slug] = x
 
-            if len(scaled) < 2:
-                scan_rows.append({"distance_band": str(band), "alpha": float(a), "E": float("nan"), "n_disasters": int(len(scaled))})
+            if len(xs) < int(cfg.min_disasters_per_band):
+                scan_rows.append({"alpha": float(a), "E": float("nan"), "n_disasters": int(len(xs)), "x_min": float("nan"), "x_max": float("nan")})
                 continue
 
-            x_all = np.concatenate(scaled) if scaled else np.array([])
-            bins, bins_mode, xlo, xhi = _make_bins(x_all, cfg=cfg)
-            if bins.size < 2:
-                scan_rows.append({"distance_band": str(band), "alpha": float(a), "E": float("nan"), "n_disasters": int(len(scaled))})
+            x_min = float(min(float(np.nanmin(v)) for v in xs.values()))
+            x_max = float(max(float(np.nanmax(v)) for v in xs.values()))
+            if not (np.isfinite(x_min) and np.isfinite(x_max) and x_max > x_min):
+                scan_rows.append({"alpha": float(a), "E": float("nan"), "n_disasters": int(len(xs)), "x_min": x_min, "x_max": x_max})
                 continue
 
-            densities = [_hist_density(x, bins) for x in scaled]
-            e = _collapse_residual(densities, bins)
-            scan_rows.append({"distance_band": str(band), "alpha": float(a), "E": float(e), "n_disasters": int(len(scaled))})
-            if np.isfinite(e) and float(e) < float(best_e):
-                best_e = float(e)
-                best_alpha = float(a)
-                best_bins = bins
-                best_bins_mode = str(bins_mode)
-                best_xlo = float(xlo)
-                best_xhi = float(xhi)
+            bins_arr = np.linspace(x_min, x_max, int(cfg.n_bins) + 1, dtype=float)
+            ps_list = []
+            for slug, x in xs.items():
+                p = _hist_density(x, bins_arr)
+                if np.any(np.isfinite(p)):
+                    ps_list.append(p)
+            if len(ps_list) < int(cfg.min_disasters_per_band):
+                scan_rows.append({"alpha": float(a), "E": float("nan"), "n_disasters": int(len(ps_list)), "x_min": x_min, "x_max": x_max})
+                continue
+
+            P = np.vstack(ps_list)
+            p_mean = np.nanmean(P, axis=0)
+            var = np.nanmean((P - p_mean) ** 2, axis=0)
+            dx = np.diff(bins_arr)
+            E = float(np.nansum(var * dx) / np.nansum(dx))
+
+            scan_rows.append({"alpha": float(a), "E": E, "n_disasters": int(len(ps_list)), "x_min": x_min, "x_max": x_max})
 
         scan_df = pd.DataFrame(scan_rows)
-        out_scan = out.tables / f"alpha_scan_{str(band).replace('+', 'plus')}.csv"
+        out_scan = out.tables / f"alpha_scan_{_band_slug(band_label)}.csv"
         scan_df.to_csv(out_scan, index=False)
 
-        if not np.isfinite(best_alpha):
+        # best alpha
+        scan_ok = scan_df[np.isfinite(pd.to_numeric(scan_df["E"], errors="coerce"))].copy()
+        if scan_ok.empty:
+            print(f"[phi_fss_collapse] band={band_label}: no valid E(alpha). Skip plots.")
             continue
+        best_idx = int(pd.to_numeric(scan_ok["E"], errors="coerce").to_numpy(dtype=float).argmin())
+        best = scan_ok.iloc[best_idx]
+        alpha_star = float(best["alpha"])
+        E_min = float(best["E"])
+        n_used = int(best["n_disasters"])
 
-        best_rows.append(
-            {
-                "distance_band": str(band),
-                "alpha_star": float(best_alpha),
-                "E_min": float(best_e),
-                "n_disasters_used": int(len(series)),
-                "binning": str(best_bins_mode),
-                "xlo_q": float(cfg.x_lo_q),
-                "xhi_q": float(cfg.x_hi_q),
-                "x_min": float(best_xlo),
-                "x_max": float(best_xhi),
-                "t_crisis_mode": str(mode),
-                "only_hour_pt": int(cfg.only_hour_pt) if cfg.only_hour_pt is not None else -1,
-                "phi_clip_lo": float(cfg.phi_clip_lo),
-                "phi_clip_hi": float(cfg.phi_clip_hi),
-            }
-        )
+        best_rows.append({"distance_band": band_label, "alpha_star": alpha_star, "E_min": E_min, "n_disasters": n_used, "phi_scale": cfg.phi_scale})
 
-        # residual plot
+        # Plot E(alpha)
         with ps.paper_style():
             import matplotlib.pyplot as plt
 
             fig, ax = plt.subplots(figsize=ps.FIGSIZE_FULL)
-            x = pd.to_numeric(scan_df["alpha"], errors="coerce").to_numpy(dtype=float)
-            y = pd.to_numeric(scan_df["E"], errors="coerce").to_numpy(dtype=float)
-            m = np.isfinite(x) & np.isfinite(y)
-            ax.plot(x[m], y[m], color=ps.OKABE_ITO["blue"], linewidth=2.2)
-            if np.isfinite(best_alpha):
-                ax.axvline(float(best_alpha), color=ps.OKABE_ITO["vermillion"], linestyle=":", linewidth=1.6, alpha=0.85)
-            ax.set_xlabel(r"Scaling exponent $\alpha$")
-            ax.set_ylabel(r"Residual $E(\alpha)$")
-            ax.set_title(f"Collapse residual vs alpha ({band})")
+            ax.plot(scan_df["alpha"], scan_df["E"], marker="o", color=ps.OKABE_ITO["blue"], alpha=0.9)
+            ax.axvline(alpha_star, color=ps.OKABE_ITO["vermillion"], linestyle="--", linewidth=1.6, alpha=0.9, label=f"alpha*={alpha_star:.3g}")
+            ax.set_xlabel(r"$\alpha$")
+            ax.set_ylabel(r"$E(\alpha)$ (weighted variance)")
+            ax.set_title(f"Residual scan for band {band_label} (scale={cfg.phi_scale})")
+            ax.legend(frameon=False)
             ps.despine(ax)
             fig.tight_layout()
-            save_png_and_pdf(ps, fig, out.figures / f"residual_E_alpha_{str(band).replace('+', 'plus')}.png")
+            save_png_and_pdf(ps, fig, out.figures / f"residual_E_alpha_{_band_slug(band_label)}.png")
             plt.close(fig)
 
-        # collapse plot at alpha*
-        centers = _bin_centers(best_bins, mode=best_bins_mode)
-        with ps.paper_style():
-            import matplotlib.pyplot as plt
+        # Plot collapsed pdf curves at alpha*
+        # Recompute xs and use common bins at alpha*
+        xs: dict[str, np.ndarray] = {}
+        for slug, phi_i in usable.items():
+            s = float(scales[slug])
+            x = phi_i.astype(float) / (s**float(alpha_star))
+            x = x[np.isfinite(x)]
+            if x.size < int(cfg.min_tiles_per_disaster_band):
+                continue
+            qlo, qhi = np.nanquantile(x, [float(cfg.x_clip_qlo), float(cfg.x_clip_qhi)])
+            if not np.isfinite(qlo) or not np.isfinite(qhi) or qhi <= qlo:
+                continue
+            x = x[(x >= float(qlo)) & (x <= float(qhi))]
+            if x.size < int(cfg.min_tiles_per_disaster_band):
+                continue
+            xs[slug] = x
 
-            fig, ax = plt.subplots(figsize=ps.FIGSIZE_FULL)
-            palette = [
-                ps.OKABE_ITO["blue"],
-                ps.OKABE_ITO["vermillion"],
-                ps.OKABE_ITO["bluish_green"],
-                ps.OKABE_ITO["orange"],
-                ps.OKABE_ITO["sky_blue"],
-                ps.OKABE_ITO["reddish_purple"],
-            ]
-            for i, item in enumerate(series):
-                scale = _safe_pow_mean(float(item["mean"]), float(best_alpha))
-                if not np.isfinite(scale) or scale <= 0:
-                    continue
-                x = item["phi"] / scale
-                dens = _hist_density(x, best_bins)
-                color = palette[i % len(palette)]
-                ax.plot(centers, dens, color=color, linewidth=2.0, alpha=0.9, label=str(item["slug"]))
+        if len(xs) >= int(cfg.min_disasters_per_band):
+            x_min = float(min(float(np.nanmin(v)) for v in xs.values()))
+            x_max = float(max(float(np.nanmax(v)) for v in xs.values()))
+            bins_arr = np.linspace(x_min, x_max, int(cfg.n_bins) + 1, dtype=float)
+            centers = 0.5 * (bins_arr[:-1] + bins_arr[1:])
+            with ps.paper_style():
+                import matplotlib.pyplot as plt
 
-            if best_bins_mode == "log":
-                ax.set_xscale("log")
-            ax.set_xlabel(r"$x=\phi/\langle \phi \rangle^{\alpha}$")
-            ax.set_ylabel(r"$p(x)$")
-            ax.set_title(f"PDF collapse ({band}), alpha*={best_alpha:.2f}")
-            ax.legend(frameon=False, loc="upper right")
-            ps.despine(ax)
-            fig.tight_layout()
-            save_png_and_pdf(ps, fig, out.figures / f"collapse_pdf_{str(band).replace('+', 'plus')}.png")
-            plt.close(fig)
+                fig, ax = plt.subplots(figsize=ps.FIGSIZE_FULL)
+                for slug, x in sorted(xs.items()):
+                    p = _hist_density(x, bins_arr)
+                    ax.plot(centers, p, label=slug, alpha=0.85)
+                ax.set_xlabel(r"$x=\phi/\bar{\phi}^{\alpha}$" if cfg.phi_scale == "mean" else r"$x=\phi/\phi_{agg}^{\alpha}$")
+                ax.set_ylabel(r"$p(x)$")
+                ax.set_title(f"Collapse at alpha*={alpha_star:.3g} for band {band_label}")
+                ax.legend(frameon=False, ncol=2, fontsize=8)
+                ps.despine(ax)
+                fig.tight_layout()
+                save_png_and_pdf(ps, fig, out.figures / f"collapse_pdf_{_band_slug(band_label)}.png")
+                plt.close(fig)
 
-    best_df = pd.DataFrame(best_rows)
+    best_df = pd.DataFrame(best_rows).sort_values(["distance_band"], kind="stable")
     out_best = out.tables / "best_alpha_by_band.csv"
     best_df.to_csv(out_best, index=False)
 
-    readme = f"""# Finite-size scaling (FSS) collapse for tile-level $\\phi$
+    readme = f"""# φ 分布数据坍缩验证（FSS-style, single-window）
 
-目标：对每个灾害、每个距离带，在一个指定的 crisis 时刻 $t_{{crisis}}$ 提取 tile-level
-$$\\phi = n_{{crisis}}/n_{{baseline}}$$
-并做尺度变换 $x=\\phi/\\langle\\phi\\rangle^\\alpha$，优化 $\\alpha$ 使不同灾害的 $p(x)$ 曲线坍缩。
+目的：在选定的 t_crisis 单窗口截面上，比较不同灾害在相同距离带的 tile-level φ=n_crisis/n_baseline 分布是否可通过幂指数缩放坍缩。
+
+## 输入
+
+- `--catalog`：{cfg.catalog}
+- 每个灾害读取 1 个 population 窗口文件（t_crisis）
 
 ## t_crisis 选择
 
-- mode: `{mode}`
-  - `peak_0_25`：每个灾害用 `outputs/<slug>/population_redistribution/.../redistribution_by_distance_band.csv` 的 `0-25km` 在 t>=0（且可选 `peak_max_hours`）内的 `phi_aggregate` 峰值时刻作为 t_crisis
-  - `fixed`：所有灾害使用相同的 `t_crisis_hours`
+- mode={cfg.t_crisis_mode}
+- fixed：取 t=t0+{float(cfg.t_crisis_hours):g}h 的最近窗口
+- peak_0_25：优先复用 `outputs/<slug>/population_redistribution/tables/redistribution_by_distance_band.csv`，在 0–{float(cfg.peak_max_hours):g}h 内取最靠近中心距离带（优先 0-25km，否则取最小 band）的 `phi_aggregate` 峰值窗口
+
+## 坍缩定义
+
+- tile-level：φ_i = n_crisis / n_baseline（只保留 n_baseline>0 且二者非空）
+- 距离带：{list(cfg.distance_bins_km)}
+- 缩放变量：x = φ_i / s^α，其中 s 为每灾害/距离带的尺度
+    - `--phi-scale=mean`：s = mean(φ_i)（默认）
+    - `--phi-scale=aggregate`：s = phi_aggregate = sum(n_crisis)/sum(n_baseline)
+- p(x)：统一 bins 的直方图密度
+- 残差：E(α) = ∫ Var_i[p_i(x)] dx（用 bin 宽加权近似）
 
 ## 主要输出
 
-- `tables/phi_samples_summary.csv`：每个灾害 × 距离带的 φ 分布摘要（n/mean/quantiles）
-- `tables/best_alpha_by_band.csv`：每个距离带的最优 α 与最小残差
-- `tables/alpha_scan_<band>.csv`：每个距离带的 E(α) 扫描结果
-- `figures/residual_E_alpha_<band>.*`：残差曲线
-- `figures/collapse_pdf_<band>.*`：坍缩图（不同灾害不同颜色）
-
-## 参数（写入 best_alpha_by_band.csv）
-
-- distance_bins_km: {list(cfg.distance_bins_km)}
-- only_hour_pt: {cfg.only_hour_pt}
-- phi_clip: [{float(cfg.phi_clip_lo)}, {float(cfg.phi_clip_hi)}]
-- alpha_grid: [{float(cfg.alpha_min)}, {float(cfg.alpha_max)}] step {float(cfg.alpha_step)}
-- binning: {cfg.binning}, x-quantiles: [{float(cfg.x_lo_q)}, {float(cfg.x_hi_q)}]
+- `tables/phi_samples_summary.csv`：每灾害/距离带的样本量与尺度统计（含 t_crisis 选择详情）
+- `tables/alpha_scan_<band>.csv`：每距离带的 E(α) 扫描
+- `tables/best_alpha_by_band.csv`：每距离带最优 α*
+- `figures/residual_E_alpha_<band>.*`：E(α) 曲线
+- `figures/collapse_pdf_<band>.*`：坍缩后的 p(x)
 """
     (out.root / "README.md").write_text(readme, encoding="utf-8")
 
     print(f"Done. Wrote: {out_best}")
+    print(f"Done. Wrote: {out_summary}")
 
 
 def cli_main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--catalog", type=Path, default=Path("Docs/cross_disaster_catalog.csv"), help="灾难配置表（CSV）")
-    parser.add_argument("--output-root", type=Path, default=Path("outputs"), help="outputs 根目录（读取 population_redistribution 用）")
-    parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=Path("outputs/cross_disaster_comparison/phi_fss_collapse"),
-        help="输出目录",
-    )
-    parser.add_argument("--t-crisis-mode", type=str, default="peak_0_25", help="peak_0_25 | fixed")
-    parser.add_argument("--t-crisis-hours", type=float, default=None, help="t_crisis_mode=fixed 时使用（hours_since_quake）")
-    parser.add_argument("--peak-max-hours", type=float, default=832.0, help="peak_0_25 的搜索上界（小时）")
-    parser.add_argument("--only-hour-pt", type=int, default=8, help="只使用该小时的窗口（默认 08:00；设为 -1 表示不过滤）")
-    parser.add_argument("--phi-clip-hi", type=float, default=3.0, help="tile-level φ 的上界裁剪（默认 3）")
-    parser.add_argument("--min-tiles-per-band", type=int, default=200, help="每个灾害在该 band 的最少 tiles（默认 200）")
-    parser.add_argument("--alpha-min", type=float, default=-2.0)
-    parser.add_argument("--alpha-max", type=float, default=2.0)
-    parser.add_argument("--alpha-step", type=float, default=0.05)
-    parser.add_argument("--n-bins", type=int, default=45, help="直方图 bins 数（默认 45）")
-    parser.add_argument("--binning", type=str, default="auto", help="auto | linear | log")
-    args = parser.parse_args()
+    parser.add_argument("--output-root", type=Path, default=Path("outputs"), help="输出根目录（用于读取已有 outputs/<slug>/...）")
+    parser.add_argument("--output-dir", type=Path, default=Path("outputs/cross_disaster_comparison/phi_fss_collapse"), help="本脚本输出目录")
 
-    only_hour = None if int(args.only_hour_pt) < 0 else int(args.only_hour_pt)
+    parser.add_argument("--t-crisis-mode", type=str, default="peak_0_25", choices=["peak_0_25", "fixed"], help="t_crisis 选择模式")
+    parser.add_argument("--t-crisis-hours", type=float, default=88.0, help="fixed 模式：t_crisis= t0 + hours（取最近窗口）")
+    parser.add_argument("--peak-max-hours", type=float, default=832.0, help="peak 模式：只在 0..max_hours 内找峰值")
+    parser.add_argument("--only-hour-pt", type=int, default=8, help="仅使用该小时（PT）的窗口（默认 08:00）")
+
+    parser.add_argument("--alpha-min", type=float, default=0.0, help="α 扫描下界")
+    parser.add_argument("--alpha-max", type=float, default=2.0, help="α 扫描上界")
+    parser.add_argument("--alpha-step", type=float, default=0.05, help="α 扫描步长")
+    parser.add_argument("--n-bins", type=int, default=60, help="直方图 bins 数")
+    parser.add_argument("--x-clip-qlo", type=float, default=0.005, help="x 分位数裁剪下界")
+    parser.add_argument("--x-clip-qhi", type=float, default=0.995, help="x 分位数裁剪上界")
+    parser.add_argument("--min-tiles-per-disaster-band", type=int, default=50, help="每灾害/距离带最少 tiles 数")
+    parser.add_argument("--min-disasters-per-band", type=int, default=2, help="每距离带最少灾害数")
+    parser.add_argument("--phi-scale", type=str, default="mean", choices=["mean", "aggregate"], help="尺度 s 的定义")
+
+    args = parser.parse_args()
 
     cfg = Config(
         catalog=args.catalog,
         output_root=args.output_root,
         output_dir=args.output_dir,
         t_crisis_mode=str(args.t_crisis_mode),
-        t_crisis_hours=float(args.t_crisis_hours) if args.t_crisis_hours is not None else None,
-        peak_max_hours=float(args.peak_max_hours) if args.peak_max_hours is not None else None,
-        only_hour_pt=only_hour,
-        phi_clip_hi=float(args.phi_clip_hi),
-        min_tiles_per_band=int(args.min_tiles_per_band),
+        t_crisis_hours=float(args.t_crisis_hours),
+        peak_max_hours=float(args.peak_max_hours),
+        only_hour_pt=int(args.only_hour_pt),
         alpha_min=float(args.alpha_min),
         alpha_max=float(args.alpha_max),
         alpha_step=float(args.alpha_step),
         n_bins=int(args.n_bins),
-        binning=str(args.binning),
+        x_clip_qlo=float(args.x_clip_qlo),
+        x_clip_qhi=float(args.x_clip_qhi),
+        min_tiles_per_disaster_band=int(args.min_tiles_per_disaster_band),
+        min_disasters_per_band=int(args.min_disasters_per_band),
+        phi_scale=str(args.phi_scale),
     )
     run(cfg)
 
