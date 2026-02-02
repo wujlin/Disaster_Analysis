@@ -1,0 +1,2 @@
+target_band,n_points_phi_mean,corr_net_internal_phi_mean_overlap_minus_1,corr_net_external_phi_mean_overlap_minus_1,n_points_phi_aggregate,corr_net_internal_phi_aggregate,corr_net_external_phi_aggregate
+50-100km,35,-0.23070848358177432,-0.4458128155311332,35,-0.20910237046093816,-0.4028534315847117

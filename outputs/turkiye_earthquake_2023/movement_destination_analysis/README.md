@@ -18,4 +18,6 @@
 - `tables/destination_analysis_summary.csv`：本次筛选的样本量与关键比例
 - `tables/destination_band_shares.csv`：终点落入各距离带的流量占比
 - `tables/destination_distance_hist.csv`：终点距离分布（按 n_crisis 加权）
+- `tables/origin_distance_hist.csv`：起点距离分布（按 n_crisis 加权）
 - `figures/destination_distance_hist.*`：终点距离直方图（流量占比）
+- `figures/origin_distance_hist.*`：起点距离直方图（流量占比）

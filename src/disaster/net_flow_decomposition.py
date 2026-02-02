@@ -89,6 +89,7 @@ def _load_phi_by_band(path: Path) -> pd.DataFrame:
         raise ValueError(f"population_by_band_csv 缺少列：{sorted(needed - set(df.columns))}")
     cols = [c for c in ["window_start_pt", "hours_since_quake", "distance_band", "phi_aggregate", "baseline_mean_overlap", "crisis_mean_overlap"] if c in df.columns]
     out = df[cols].copy()
+    out["window_start_pt"] = pd.to_datetime(out["window_start_pt"], errors="coerce")
     out["hours_since_quake"] = pd.to_numeric(out["hours_since_quake"], errors="coerce")
     out["phi_aggregate"] = pd.to_numeric(out.get("phi_aggregate", np.nan), errors="coerce")
     out["baseline_mean_overlap"] = pd.to_numeric(out.get("baseline_mean_overlap", np.nan), errors="coerce")
@@ -313,7 +314,8 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 - `tables/net_flow_decomposed.csv`：每窗口的分解结果（可选包含 φ 字段）
 - `tables/net_flow_decomposed_corr.csv`：corr(Net_internal, φ) 与 corr(Net_external, φ)
 """
-    (out_root / "README.md").write_text(readme, encoding="utf-8")
+    # 避免覆盖已有目录（例如 cross_band_net_flow/README.md）
+    (out_root / "README_net_flow_decomposition.md").write_text(readme, encoding="utf-8")
 
     print(f"Done. Wrote: {out_csv}")
     print(f"Done. Wrote: {out_corr}")
@@ -368,4 +370,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-
