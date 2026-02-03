@@ -365,8 +365,8 @@ def run_phase1_powerlaw(
                 ax.set_xscale("log")
                 ax.set_yscale("log")
                 ax.set_xlabel("Distance r (km)")
-                ax.set_ylabel(r"$|\\bar{\\phi}(r)-1|$ (time-avg)")
-                ax.set_title(f"{spec.slug}: power-law fit, t∈[{time_min},{time_max}]h")
+                ax.set_ylabel("abs(phi_mean(r) - 1) (time-avg)")
+                ax.set_title(f"{spec.slug}: power-law fit, t in [{time_min},{time_max}]h")
                 ps.despine(ax)
                 fig.tight_layout()
                 save_png_and_pdf(ps, fig, per.figures / "powerlaw_fit_loglog.png")
@@ -568,9 +568,9 @@ def run_phase2_collapse(
                 for slug, sub in curve_df.groupby("slug", sort=False):
                     ax.plot(sub["x"].to_numpy(dtype=float), sub["y"].to_numpy(dtype=float), linewidth=1.6, alpha=0.8, label=str(slug))
             ax.set_xscale("log")
-            ax.set_xlabel(r"$r/r_0$")
-            ax.set_ylabel(r"$|\bar{\phi}(r)-1| \;/\; \max_{r}|\bar{\phi}(r)-1|$")
-            ax.set_title(f"Collapse attempt (t∈[{time_min},{time_max}]h), overlap={overlap_fraction:.2f}")
+            ax.set_xlabel("r / r0")
+            ax.set_ylabel("abs(phi_mean(r)-1) / max_r abs(phi_mean(r)-1)")
+            ax.set_title(f"Collapse attempt (t in [{time_min},{time_max}]h), overlap={overlap_fraction:.2f}")
             ps.despine(ax)
             if not curve_df.empty:
                 ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=2, frameon=False, fontsize=8)

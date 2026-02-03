@@ -1,0 +1,5 @@
+slug,name,event_type,source,phi_col,S,arg_key,t_at_S,phi_at_S,min_phi,max_phi,n_points
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,population_redistribution,phi_aggregate,1.0896136980790523,0-25km,1408.0,2.0896136980790523,0.5824343106731931,2.0896136980790523,465
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,population_redistribution,phi_aggregate,0.18201797351390792,200km+,16.0,0.8179820264860921,0.8179820264860921,1.1421802573550646,124
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,population_redistribution,phi_aggregate,0.13706031893164883,25-50km,448.0,1.1370603189316488,0.9521036493063334,1.1370603189316488,108
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,population_redistribution,phi_aggregate,0.06286109973876353,50-100km,376.0,1.0628610997387635,1.000967148714886,1.0628610997387635,80

@@ -1,0 +1,8 @@
+{
+  "catalog": "Docs/cross_disaster_catalog.csv",
+  "output_root": "outputs",
+  "phi_col": "phi_aggregate",
+  "source": "population_redistribution",
+  "min_hours": 0.0,
+  "max_hours": null
+}
