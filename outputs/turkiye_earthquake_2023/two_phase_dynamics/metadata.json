@@ -1,0 +1,16 @@
+{
+  "slug": "turkiye_earthquake_2023",
+  "name": "Turkiye Turkey Earthquake Full Country Version Feb 8 2023",
+  "event_type": "earthquake",
+  "phi_col": "phi_aggregate",
+  "fit_min_hours": 0.0,
+  "fit_max_hours": 832.0,
+  "peak_min_hours": 0.0,
+  "peak_max_hours": 200.0,
+  "early_hours": 72.0,
+  "neutral_eps": 0.02,
+  "min_points_growth": 5,
+  "min_points_decay": 10,
+  "min_signal_abs": 0.02,
+  "t_shift_hours": 1.0
+}

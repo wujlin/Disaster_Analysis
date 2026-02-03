@@ -1,0 +1,12 @@
+{
+  "slug": "park_fire_2024",
+  "name": "The Park Fire in Northern California, US",
+  "event_type": "wildfire",
+  "phi_col": "phi_aggregate",
+  "fit_mode": "from_peak",
+  "fit_min_hours": 0.0,
+  "fit_max_hours": null,
+  "t_shift_hours": 1.0,
+  "min_points": 10,
+  "min_signal_abs": 0.02
+}

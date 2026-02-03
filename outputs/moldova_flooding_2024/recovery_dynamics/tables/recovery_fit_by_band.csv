@@ -1,0 +1,6 @@
+slug,name,event_type,distance_band,distance_center_km,fit_mode,t_start_hours,t_end_hours,t_peak_hours,n_points_total,max_abs_dev,low_signal,exp_fit_ok,exp_tau_hours,exp_tau_days,exp_A,exp_r2,exp_bic,pl_fit_ok,pl_beta,pl_A,pl_r2,pl_bic,best_model_by_bic
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,0-25km,12.5,from_peak,448.0,640.0,448.0,9,0.10763660001454167,0,0,,,,,,0,,,,,
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,25-50km,37.5,from_peak,448.0,640.0,448.0,9,0.13706031893164883,0,0,,,,,,0,,,,,
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,50-100km,75.0,from_peak,448.0,640.0,448.0,9,0.06519085866144647,0,0,,,,,,0,,,,,
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,100-200km,150.0,from_peak,448.0,640.0,448.0,9,0.057171561045114005,0,0,,,,,,0,,,,,
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,200km+,300.0,from_peak,,,,0,,1,0,,,,,,0,,,,,

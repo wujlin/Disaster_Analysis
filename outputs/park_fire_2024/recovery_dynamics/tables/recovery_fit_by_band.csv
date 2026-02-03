@@ -1,0 +1,6 @@
+slug,name,event_type,distance_band,distance_center_km,fit_mode,t_start_hours,t_end_hours,t_peak_hours,n_points_total,max_abs_dev,low_signal,exp_fit_ok,exp_tau_hours,exp_tau_days,exp_A,exp_r2,exp_bic,pl_fit_ok,pl_beta,pl_A,pl_r2,pl_bic,best_model_by_bic
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,0-25km,12.5,from_peak,376.0,376.0,376.0,1,0.06175892153755069,0,0,,,,,,0,,,,,
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,25-50km,37.5,from_peak,376.0,376.0,376.0,1,0.04859819508261998,0,0,,,,,,0,,,,,
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,50-100km,75.0,from_peak,376.0,376.0,376.0,1,0.06286109973876353,0,0,,,,,,0,,,,,
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,100-200km,150.0,from_peak,376.0,376.0,376.0,1,0.05695235185541514,0,0,,,,,,0,,,,,
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,200km+,300.0,from_peak,376.0,376.0,376.0,1,0.05274974101848984,0,0,,,,,,0,,,,,
