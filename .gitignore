@@ -48,6 +48,8 @@ outputs/*
 !outputs/park_fire_2024/**
 !outputs/cross_disaster_comparison/
 !outputs/cross_disaster_comparison/**
+!outputs/_tmp_two_phase_dynamics/
+!outputs/_tmp_two_phase_dynamics/**
 
 output/
 output_*/
