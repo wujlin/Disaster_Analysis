@@ -26,6 +26,7 @@ class Config:
     center_track_csv: Path | None = None
     center_track_to_tz: str = "America/Los_Angeles"
     center_track_storm_name: str | None = None
+    distance_mode: str = "radial"  # radial: 到中心点距离；path: 到轨迹折线最近距离
     hours_pt: tuple[int, ...] = (0, 8, 16)
     min_hours: float = -16.0
     max_hours: float = 832.0
@@ -50,6 +51,13 @@ def _output_dirs(root: Path) -> OutputDirs:
 
 def _ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
+
+
+def _sum_min_count_1(s: pd.Series) -> float:
+    """
+    避免 pandas 的默认行为：当某组全是 NaN 时 sum() 返回 0.0，导致 phi 伪信号（例如 phi=0）。
+    """
+    return float(s.sum(min_count=1))
 
 
 def _list_population_windows(cfg: Config) -> list[dict]:
@@ -149,6 +157,59 @@ def _center_at(track: tuple[np.ndarray, np.ndarray, np.ndarray], ts: pd.Timestam
     return lat, lon
 
 
+def _equirect_xy_km(
+    lat_deg: np.ndarray, lon_deg: np.ndarray, *, lat0_deg: float, lon0_deg: float
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    简单等距圆柱投影（equirectangular approximation）。
+    目的：在不引入 shapely/pyproj 依赖的前提下，计算点到折线的近似距离（km）。
+    """
+    r_earth_km = 6371.0088
+    lat = np.deg2rad(lat_deg.astype(float))
+    lon = np.deg2rad(lon_deg.astype(float))
+    lat0 = float(np.deg2rad(float(lat0_deg)))
+    lon0 = float(np.deg2rad(float(lon0_deg)))
+    x = (lon - lon0) * np.cos(lat0) * r_earth_km
+    y = (lat - lat0) * r_earth_km
+    return x, y
+
+
+def _min_dist_to_polyline_km(
+    lat_deg: np.ndarray,
+    lon_deg: np.ndarray,
+    *,
+    seg_ax: np.ndarray,
+    seg_ay: np.ndarray,
+    seg_bx: np.ndarray,
+    seg_by: np.ndarray,
+    lat0_deg: float,
+    lon0_deg: float,
+) -> np.ndarray:
+    ok = np.isfinite(lat_deg) & np.isfinite(lon_deg)
+    d = np.full(lat_deg.shape, np.nan, dtype=float)
+    if not np.any(ok):
+        return d
+
+    x, y = _equirect_xy_km(lat_deg[ok], lon_deg[ok], lat0_deg=float(lat0_deg), lon0_deg=float(lon0_deg))
+    min_d2 = np.full(x.shape, np.inf, dtype=float)
+    for ax, ay, bx, by in zip(seg_ax.tolist(), seg_ay.tolist(), seg_bx.tolist(), seg_by.tolist(), strict=False):
+        abx = float(bx) - float(ax)
+        aby = float(by) - float(ay)
+        denom = abx * abx + aby * aby
+        if denom <= 0:
+            continue
+        t = ((x - float(ax)) * abx + (y - float(ay)) * aby) / denom
+        t = np.clip(t, 0.0, 1.0)
+        cx = float(ax) + t * abx
+        cy = float(ay) + t * aby
+        d2 = (x - cx) ** 2 + (y - cy) ** 2
+        min_d2 = np.minimum(min_d2, d2)
+
+    d_ok = np.sqrt(min_d2)
+    d[ok] = d_ok
+    return d
+
+
 def _distance_bins(cfg: Config) -> np.ndarray:
     step = float(cfg.distance_bin_km)
     if step <= 0:
@@ -226,6 +287,28 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         windows = windows[: int(max_files)]
 
     track = _load_center_track(cfg)
+    distance_mode = str(cfg.distance_mode).strip().lower() or "radial"
+    if distance_mode not in {"radial", "path"}:
+        raise SystemExit(f"不支持的 distance_mode：{cfg.distance_mode}（仅支持 radial/path）")
+
+    path_ctx: dict | None = None
+    if distance_mode == "path":
+        if track is None:
+            raise SystemExit("distance_mode=path 需要 center_track_csv（用于定义灾害路径折线）")
+        _t, lat_arr, lon_arr = track
+        if lat_arr.size < 2:
+            raise SystemExit("distance_mode=path 需要至少 2 个轨迹点")
+        lat0 = float(np.nanmean(lat_arr))
+        lon0 = float(np.nanmean(lon_arr))
+        x_tr, y_tr = _equirect_xy_km(lat_arr, lon_arr, lat0_deg=lat0, lon0_deg=lon0)
+        path_ctx = {
+            "lat0": float(lat0),
+            "lon0": float(lon0),
+            "seg_ax": x_tr[:-1].astype(float),
+            "seg_ay": y_tr[:-1].astype(float),
+            "seg_bx": x_tr[1:].astype(float),
+            "seg_by": y_tr[1:].astype(float),
+        }
 
     r_bins = _distance_bins(cfg)
     step = float(cfg.distance_bin_km)
@@ -254,13 +337,27 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
                 "center_lat": float(center_lat),
                 "center_lon": float(center_lon),
                 "center_mode": "track" if track is not None else "static",
+                "distance_mode": str(distance_mode),
                 "center_track_csv": str(cfg.center_track_csv) if cfg.center_track_csv is not None else "",
                 "center_track_to_tz": str(cfg.center_track_to_tz),
                 "center_track_storm_name": str(cfg.center_track_storm_name) if cfg.center_track_storm_name else "",
             }
         )
 
-        dist = haversine_km(lat, lon, float(center_lat), float(center_lon))
+        if distance_mode == "radial":
+            dist = haversine_km(lat, lon, float(center_lat), float(center_lon))
+        else:
+            assert path_ctx is not None
+            dist = _min_dist_to_polyline_km(
+                lat,
+                lon,
+                seg_ax=path_ctx["seg_ax"],
+                seg_ay=path_ctx["seg_ay"],
+                seg_bx=path_ctx["seg_bx"],
+                seg_by=path_ctx["seg_by"],
+                lat0_deg=float(path_ctx["lat0"]),
+                lon0_deg=float(path_ctx["lon0"]),
+            )
         r_bin = np.floor(dist / step) * step
         keep = np.isfinite(r_bin) & (r_bin >= 0) & (r_bin < r_max)
 
@@ -281,10 +378,10 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
                 n_tiles=("n_baseline", "count"),
                 n_tiles_crisis=("n_crisis", "count"),
                 n_tiles_overlap=("baseline_overlap", "count"),
-                baseline_sum=("n_baseline", "sum"),
-                crisis_sum=("n_crisis", "sum"),
-                baseline_sum_overlap=("baseline_overlap", "sum"),
-                crisis_sum_overlap=("crisis_overlap", "sum"),
+                baseline_sum=("n_baseline", _sum_min_count_1),
+                crisis_sum=("n_crisis", _sum_min_count_1),
+                baseline_sum_overlap=("baseline_overlap", _sum_min_count_1),
+                crisis_sum_overlap=("crisis_overlap", _sum_min_count_1),
             )
             .reset_index()
         )
@@ -428,12 +525,13 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 
 ## 配置
 
-- center: ({float(cfg.center_lat):.4f}, {float(cfg.center_lon):.4f})
-- center_track_csv: {cfg.center_track_csv}
-- center_track_to_tz: {cfg.center_track_to_tz}
-- center_track_storm_name: {cfg.center_track_storm_name}
-- t0_pt: {pd.Timestamp(cfg.t0_pt)}
-- hours_pt: {list(int(h) for h in cfg.hours_pt)}
+ - center: ({float(cfg.center_lat):.4f}, {float(cfg.center_lon):.4f})
+ - center_track_csv: {cfg.center_track_csv}
+ - center_track_to_tz: {cfg.center_track_to_tz}
+ - center_track_storm_name: {cfg.center_track_storm_name}
+ - distance_mode: {distance_mode}
+ - t0_pt: {pd.Timestamp(cfg.t0_pt)}
+ - hours_pt: {list(int(h) for h in cfg.hours_pt)}
 
 ## 输出
 
@@ -463,6 +561,13 @@ def cli_main() -> None:
     parser.add_argument("--center-track-csv", type=Path, default=None, help="可选：时变中心轨迹 CSV（含 datetime_utc,lat,lon 列）")
     parser.add_argument("--center-track-to-tz", type=str, default="America/Los_Angeles", help="轨迹时间从 UTC 转到该时区再对齐（默认 America/Los_Angeles）")
     parser.add_argument("--center-track-storm-name", type=str, default=None, help="可选：当轨迹 CSV 含多个 storm_name 时用于过滤")
+    parser.add_argument(
+        "--distance-mode",
+        type=str,
+        default="radial",
+        choices=["radial", "path"],
+        help="距离定义：radial=到中心点（static/track）；path=到轨迹折线最近距离（需要 center_track_csv）",
+    )
     parser.add_argument("--t0-pt", type=str, required=True, help="t=0 的 PT 时间戳（例如 2023-02-05 16:00）")
     parser.add_argument("--hours-pt", type=int, nargs="*", default=[0, 8, 16], help="保留哪些 PT 小时窗口（默认 0 8 16）")
     parser.add_argument("--min-hours", type=float, default=-16.0, help="最小 hours_since_quake（默认 -16）")
@@ -482,6 +587,7 @@ def cli_main() -> None:
         center_track_csv=Path(args.center_track_csv) if args.center_track_csv is not None else None,
         center_track_to_tz=str(args.center_track_to_tz),
         center_track_storm_name=str(args.center_track_storm_name) if args.center_track_storm_name else None,
+        distance_mode=str(args.distance_mode),
         t0_pt=pd.Timestamp(str(args.t0_pt)),
         hours_pt=tuple(int(x) for x in args.hours_pt),
         min_hours=float(args.min_hours),

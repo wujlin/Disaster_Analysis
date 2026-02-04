@@ -19,6 +19,7 @@ from disaster.phi_heatmap import run as run_heatmap
 class Config:
     catalog: Path
     output_root: Path
+    distance_mode: str = "radial"
     hours_pt: tuple[int, ...] = (0, 8, 16)
     min_hours: float = -16.0
     max_hours: float = 832.0
@@ -35,8 +36,18 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
     specs = load_catalog(cfg.catalog)
     _ensure_dir(cfg.output_root)
 
+    distance_mode = str(cfg.distance_mode).strip().lower() or "radial"
+    if distance_mode not in {"radial", "path"}:
+        raise SystemExit(f"不支持的 distance_mode：{cfg.distance_mode}（仅支持 radial/path）")
+
     skipped: list[dict] = []
     for spec in specs:
+        if distance_mode == "path" and spec.center_track_csv is None:
+            msg = "distance_mode=path 需要 catalog 提供 center_track_csv"
+            skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
+            print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
+            continue
+
         t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec)
         out_dir = cfg.output_root / spec.slug / "phi_heatmap"
         _ensure_dir(out_dir)
@@ -51,6 +62,7 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             center_track_csv=spec.center_track_csv,
             center_track_to_tz=str(spec.center_track_to_tz),
             center_track_storm_name=str(spec.center_track_storm_name) if spec.center_track_storm_name else None,
+            distance_mode=str(distance_mode),
             t0_pt=pd.Timestamp(t0_pt),
             hours_pt=tuple(int(h) for h in cfg.hours_pt),
             min_hours=float(cfg.min_hours),
@@ -76,6 +88,13 @@ def cli_main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--catalog", type=Path, default=Path("Docs/cross_disaster_catalog.csv"), help="灾难配置表（CSV）")
     parser.add_argument("--output-root", type=Path, default=Path("outputs"), help="输出根目录（默认 outputs/）")
+    parser.add_argument(
+        "--distance-mode",
+        type=str,
+        default="radial",
+        choices=["radial", "path"],
+        help="距离定义：radial=到中心点（static/track）；path=到轨迹折线最近距离（仅对有 center_track_csv 的灾害有效）",
+    )
     parser.add_argument("--hours-pt", type=int, nargs="*", default=[0, 8, 16], help="使用哪些 PT 小时窗口（默认 0 8 16）")
     parser.add_argument("--min-hours", type=float, default=-16.0, help="最小 hours_since_quake（默认 -16）")
     parser.add_argument("--max-hours", type=float, default=832.0, help="最大 hours_since_quake（默认 832）")
@@ -88,6 +107,7 @@ def cli_main() -> None:
     cfg = Config(
         catalog=args.catalog,
         output_root=args.output_root,
+        distance_mode=str(args.distance_mode),
         hours_pt=tuple(int(x) for x in args.hours_pt),
         min_hours=float(args.min_hours),
         max_hours=float(args.max_hours),
