@@ -35,6 +35,7 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
     specs = load_catalog(cfg.catalog)
     _ensure_dir(cfg.output_root)
 
+    skipped: list[dict] = []
     for spec in specs:
         t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec)
         out_dir = cfg.output_root / spec.slug / "phi_heatmap"
@@ -58,7 +59,17 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             max_distance_km=float(cfg.max_distance_km),
             phase_eps=float(cfg.phase_eps),
         )
-        run_heatmap(hm_cfg, max_files=max_files)
+        try:
+            run_heatmap(hm_cfg, max_files=max_files)
+        except FileNotFoundError as e:
+            msg = str(e)
+            (out_dir / "SKIPPED.txt").write_text(msg + "\n", encoding="utf-8")
+            skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
+            print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
+            continue
+
+    if skipped:
+        pd.DataFrame(skipped).to_csv(cfg.output_root / "_skipped_phi_heatmap.csv", index=False)
 
 
 def cli_main() -> None:

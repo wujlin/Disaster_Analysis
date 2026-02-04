@@ -1,0 +1,16 @@
+{
+  "slug": "line_fire_southern_california_9_september_2024",
+  "name": "Line Fire Southern California 9 September 2024",
+  "event_type": "wildfire",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Line Fire Southern California 9 September 2024",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-09-09 16:00:00",
+  "t0_method": "provided",
+  "center_lat": 34.121,
+  "center_lon": -117.155,
+  "center_method": "provided",
+  "center_source_window_pt": "2024-09-09 16:00:00",
+  "center_source_file": "3713634161750568_2024-09-09_1600.csv",
+  "first_population_window_pt": "2024-09-09 08:00:00",
+  "first_population_window_file": "3713634161750568_2024-09-09_0800.csv"
+}

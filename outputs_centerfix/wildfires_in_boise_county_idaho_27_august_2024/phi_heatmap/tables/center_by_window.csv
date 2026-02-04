@@ -1,0 +1,4 @@
+window_start_pt,hours_since_quake,center_lat,center_lon,center_mode,center_track_csv,center_track_to_tz,center_track_storm_name
+2024-08-28 08:00:00,16.0,43.56194994759615,-116.06872112659072,static,,America/Los_Angeles,
+2024-08-29 08:00:00,40.0,43.56194994759615,-116.06872112659072,static,,America/Los_Angeles,
+2024-08-30 08:00:00,64.0,43.56194994759615,-116.06872112659072,static,,America/Los_Angeles,

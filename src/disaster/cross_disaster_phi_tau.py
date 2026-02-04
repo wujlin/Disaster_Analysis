@@ -92,6 +92,15 @@ def _safe_timestamp(x: object) -> pd.Timestamp | None:
     return pd.Timestamp(ts)
 
 
+def _safe_str(x: object) -> str:
+    if x is None:
+        return ""
+    s = str(x).strip()
+    if s == "" or s.lower() == "nan":
+        return ""
+    return s
+
+
 def load_catalog(path: Path) -> list[DisasterSpec]:
     if not path.exists():
         raise FileNotFoundError(f"未找到 catalog：{path}")
@@ -103,9 +112,9 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
 
     specs: list[DisasterSpec] = []
     for row in df.to_dict(orient="records"):
-        track_csv = str(row.get("center_track_csv", "")).strip() or str(row.get("track_csv", "")).strip()
-        track_to_tz = str(row.get("center_track_to_tz", "")).strip() or "America/Los_Angeles"
-        track_storm = str(row.get("center_track_storm_name", "")).strip() or str(row.get("track_storm_name", "")).strip()
+        track_csv = _safe_str(row.get("center_track_csv")) or _safe_str(row.get("track_csv"))
+        track_to_tz = _safe_str(row.get("center_track_to_tz")) or "America/Los_Angeles"
+        track_storm = _safe_str(row.get("center_track_storm_name")) or _safe_str(row.get("track_storm_name"))
         specs.append(
             DisasterSpec(
                 slug=str(row["slug"]).strip(),

@@ -1,0 +1,28 @@
+slug,name,event_type,source,phi_col,S,arg_key,t_at_S,phi_at_S,min_phi,max_phi,n_points
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,phi_heatmap,phi_aggregate,1.066549622727201,10.0,64.0,2.066549622727201,0.1414960253028286,2.066549622727201,150
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,phi_heatmap,phi_aggregate,1.0315078366446877,0.0,64.0,2.0315078366446877,0.9199874319595944,2.0315078366446877,111
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,phi_heatmap,phi_aggregate,1.0,190.0,16.0,0.0,0.0,1.1421802573550646,75
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,phi_heatmap,phi_aggregate,1.0,0.0,16.0,0.0,0.0,1.6090552114757195,93
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,phi_heatmap,phi_aggregate,1.0,110.0,16.0,0.0,0.0,1.7723601589386284,63
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,phi_heatmap,phi_aggregate,1.0,160.0,16.0,0.0,0.0,1.08346052006263,51
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,phi_heatmap,phi_aggregate,0.9795729131906923,210.0,0.0,0.0204270868093077,0.0204270868093077,1.2873520191086492,29
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,phi_heatmap,phi_aggregate,0.7464169961248379,290.0,64.0,1.746416996124838,0.4054802428117195,1.746416996124838,135
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,phi_heatmap,phi_aggregate,0.7248140395551586,350.0,40.0,1.7248140395551586,0.6210606999046537,1.7248140395551586,111
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,phi_heatmap,phi_aggregate,0.7175526410480475,0.0,40.0,1.7175526410480475,0.89461838701846,1.7175526410480475,150
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,phi_heatmap,phi_aggregate,0.628635419009175,400.0,0.0,1.628635419009175,0.6323964858790628,1.628635419009175,49
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,phi_heatmap,phi_aggregate,0.4742229773908003,0.0,16.0,0.5257770226091997,0.5257770226091997,1.1731607032232585,150
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,phi_heatmap,phi_aggregate,0.46047495296510044,110.0,16.0,0.5395250470348996,0.5395250470348996,1.0720135845909236,36
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,phi_heatmap,phi_aggregate,0.4019356956158575,380.0,40.0,1.4019356956158575,0.9068086243432578,1.4019356956158575,117
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,phi_heatmap,phi_aggregate,0.40082444929562944,210.0,40.0,1.4008244492956294,0.6809716061207585,1.4008244492956294,81
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,phi_heatmap,phi_aggregate,0.3853173851785655,70.0,16.0,0.6146826148214345,0.6146826148214345,1.1836889485843185,147
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,phi_heatmap,phi_aggregate,0.36038343426348063,250.0,40.0,1.3603834342634806,0.8555975219890201,1.3603834342634806,138
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,phi_heatmap,phi_aggregate,0.2950861065235819,490.0,16.0,1.295086106523582,0.7834554192170209,1.295086106523582,136
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,phi_heatmap,phi_aggregate,0.2900628261568965,260.0,64.0,0.7099371738431035,0.7099371738431035,1.1568906622377226,82
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,phi_heatmap,phi_aggregate,0.2623739816193835,460.0,24.0,1.2623739816193835,0.8423990724119605,1.2623739816193835,80
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,phi_heatmap,phi_aggregate,0.23285765057032592,450.0,40.0,1.232857650570326,0.9561218368900316,1.232857650570326,150
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,phi_heatmap,phi_aggregate,0.22464806817251026,40.0,16.0,0.7753519318274897,0.7753519318274897,0.9994372867665696,150
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,phi_heatmap,phi_aggregate,0.1727191783157893,260.0,40.0,0.8272808216842107,0.8272808216842107,1.143365377022114,150
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,phi_heatmap,phi_aggregate,0.1670692205877944,490.0,64.0,0.8329307794122056,0.8329307794122056,1.130962161370081,150
+line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,phi_heatmap,phi_aggregate,0.1531228152645896,260.0,64.0,1.1531228152645896,0.969225904316428,1.1531228152645896,81
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,phi_heatmap,phi_aggregate,0.0920971118105306,190.0,40.0,0.9079028881894694,0.9079028881894694,1.048451089698703,60
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,phi_heatmap,phi_aggregate,,,,,,,0
