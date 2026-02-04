@@ -100,6 +100,8 @@ outputs/*
 !outputs/_tmp_universality_scaling/**
 !outputs/_tmp_universality_scaling_all/
 !outputs/_tmp_universality_scaling_all/**
+!outputs/_tmp_phi_data_quality_all/
+!outputs/_tmp_phi_data_quality_all/**
 
 output/
 output_*/

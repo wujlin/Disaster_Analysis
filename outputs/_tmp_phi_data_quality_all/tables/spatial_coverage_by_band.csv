@@ -1,0 +1,214 @@
+slug,name,event_type,r_band_start_km,n_obs,mean,median,r_band_end_km,r_band_center_km
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,0.0,70,28.757142857142856,27.0,50.0,25.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,50.0,70,123.08571428571429,134.0,100.0,75.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,100.0,70,173.52857142857144,177.5,150.0,125.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,150.0,70,115.41428571428571,112.5,200.0,175.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,200.0,70,68.45714285714286,53.0,250.0,225.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,250.0,70,29.84285714285714,28.0,300.0,275.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,300.0,70,21.65714285714286,23.0,350.0,325.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,350.0,70,22.714285714285715,23.0,400.0,375.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,400.0,70,45.871428571428574,38.5,450.0,425.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,450.0,70,101.07142857142857,119.0,500.0,475.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,0.0,75,311.29333333333335,337.0,50.0,25.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,50.0,75,502.17333333333335,508.0,100.0,75.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,100.0,75,340.1066666666667,328.0,150.0,125.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,150.0,75,507.6666666666667,515.0,200.0,175.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,200.0,75,773.7333333333333,785.0,250.0,225.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,250.0,75,741.0,660.0,300.0,275.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,300.0,75,276.70666666666665,250.0,350.0,325.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,350.0,75,62.96,22.0,400.0,375.0
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,400.0,30,2.466666666666667,2.0,450.0,425.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,0.0,32,16.6875,17.0,50.0,25.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,50.0,160,64.43125,77.0,100.0,75.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,100.0,160,68.625,80.0,150.0,125.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,150.0,160,3.80625,3.0,200.0,175.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,200.0,96,16.552083333333332,19.0,250.0,225.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,250.0,128,44.546875,33.5,300.0,275.0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,300.0,64,9.75,9.5,350.0,325.0
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,0.0,75,198.38666666666666,239.0,50.0,25.0
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,50.0,75,137.57333333333332,145.0,100.0,75.0
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,100.0,30,4.533333333333333,5.0,150.0,125.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,0.0,60,74.83333333333333,84.0,50.0,25.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,50.0,75,339.85333333333335,364.0,100.0,75.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,100.0,75,513.7733333333333,445.0,150.0,125.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,150.0,75,816.1333333333333,829.0,200.0,175.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,200.0,75,709.4,645.0,250.0,225.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,250.0,75,551.1466666666666,547.0,300.0,275.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,300.0,75,654.92,617.0,350.0,325.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,350.0,75,705.3733333333333,710.0,400.0,375.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,400.0,75,873.4266666666666,850.0,450.0,425.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,450.0,75,1217.9733333333334,1219.0,500.0,475.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,0.0,35,164.8,186.0,50.0,25.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,50.0,35,341.25714285714287,342.0,100.0,75.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,100.0,35,404.8857142857143,392.0,150.0,125.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,150.0,35,349.34285714285716,362.0,200.0,175.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,200.0,35,438.62857142857143,438.0,250.0,225.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,250.0,35,378.7142857142857,411.0,300.0,275.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,300.0,35,209.62857142857143,203.0,350.0,325.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,350.0,35,125.45714285714286,116.0,400.0,375.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,400.0,35,53.6,52.0,450.0,425.0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,450.0,35,24.62857142857143,24.0,500.0,475.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,0.0,75,233.4,233.0,50.0,25.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,50.0,75,591.84,574.0,100.0,75.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,100.0,75,730.4533333333334,715.0,150.0,125.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,150.0,75,671.96,677.0,200.0,175.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,200.0,75,682.48,682.0,250.0,225.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,250.0,75,728.7866666666666,763.0,300.0,275.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,300.0,75,486.6,477.0,350.0,325.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,350.0,75,266.24,260.0,400.0,375.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,400.0,75,197.14666666666668,203.0,450.0,425.0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,450.0,75,206.68,215.0,500.0,475.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,0.0,50,116.48,114.0,50.0,25.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,50.0,50,426.66,440.0,100.0,75.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,100.0,50,717.52,715.5,150.0,125.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,150.0,50,375.26,365.5,200.0,175.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,200.0,50,312.18,320.0,250.0,225.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,250.0,50,201.54,201.0,300.0,275.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,300.0,43,9.093023255813954,7.0,350.0,325.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,350.0,30,4.166666666666667,2.5,400.0,375.0
+line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,0.0,75,265.4533333333333,298.0,50.0,25.0
+line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,50.0,75,438.6933333333333,438.0,100.0,75.0
+line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,100.0,75,256.6533333333333,272.0,150.0,125.0
+line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,150.0,75,121.64,126.0,200.0,175.0
+line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,200.0,60,5.383333333333334,6.0,250.0,225.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,0.0,140,258.98571428571427,283.0,50.0,25.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,50.0,140,282.25714285714287,278.0,100.0,75.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,100.0,140,176.44285714285715,168.5,150.0,125.0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,150.0,140,61.75714285714286,54.0,200.0,175.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,0.0,85,239.28235294117647,249.0,50.0,25.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,50.0,85,323.45882352941175,297.0,100.0,75.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,100.0,85,548.6941176470589,486.0,150.0,125.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,150.0,85,207.52941176470588,179.0,200.0,175.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,200.0,85,69.43529411764706,54.0,250.0,225.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,250.0,85,19.49411764705882,17.0,300.0,275.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,300.0,85,22.235294117647058,18.0,350.0,325.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,350.0,85,56.23529411764706,60.0,400.0,375.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,400.0,85,80.50588235294117,100.0,450.0,425.0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,450.0,24,0.7916666666666666,1.0,500.0,475.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,0.0,75,206.09333333333333,239.0,50.0,25.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,50.0,75,581.4533333333334,615.0,100.0,75.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,100.0,75,479.2133333333333,450.0,150.0,125.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,150.0,75,290.28,267.0,200.0,175.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,200.0,75,148.02666666666667,154.0,250.0,225.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,250.0,75,26.533333333333335,33.0,300.0,275.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,300.0,75,55.44,53.0,350.0,325.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,350.0,75,20.72,15.0,400.0,375.0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,400.0,75,12.253333333333334,4.0,450.0,425.0
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,0.0,5,167.8,170.0,50.0,25.0
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,50.0,5,281.8,283.0,100.0,75.0
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,100.0,5,229.2,221.0,150.0,125.0
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,150.0,5,82.8,38.0,200.0,175.0
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,200.0,3,5.666666666666667,4.0,250.0,225.0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,0.0,75,128.82666666666665,139.0,50.0,25.0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,50.0,75,300.26666666666665,333.0,100.0,75.0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,100.0,75,207.37333333333333,204.0,150.0,125.0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,150.0,75,257.6,272.0,200.0,175.0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,200.0,75,271.25333333333333,261.0,250.0,225.0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,250.0,75,121.66666666666667,127.0,300.0,275.0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,300.0,16,1.8125,2.0,350.0,325.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,0.0,60,292.06666666666666,307.0,50.0,25.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,50.0,60,836.9,834.0,100.0,75.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,100.0,60,1111.35,1159.0,150.0,125.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,150.0,60,1040.8,1135.0,200.0,175.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,200.0,60,584.6833333333333,586.5,250.0,225.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,250.0,60,300.85,303.0,300.0,275.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,300.0,60,117.46666666666667,125.5,350.0,325.0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,350.0,48,9.145833333333334,12.0,400.0,375.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,0.0,40,28.5,26.5,50.0,25.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,50.0,40,129.475,111.5,100.0,75.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,100.0,40,412.15,436.5,150.0,125.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,150.0,40,615.1,590.5,200.0,175.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,200.0,40,722.7,736.0,250.0,225.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,250.0,40,749.925,699.0,300.0,275.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,300.0,40,715.675,727.5,350.0,325.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,350.0,40,747.075,769.0,400.0,375.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,400.0,40,859.325,863.5,450.0,425.0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,450.0,40,792.5,769.5,500.0,475.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,0.0,30,12.866666666666667,13.0,50.0,25.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,50.0,35,25.17142857142857,25.0,100.0,75.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,100.0,35,54.2,30.0,150.0,125.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,150.0,35,193.4857142857143,179.0,200.0,175.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,200.0,35,133.74285714285713,128.0,250.0,225.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,250.0,35,63.51428571428571,75.0,300.0,275.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,300.0,35,23.142857142857142,27.0,350.0,325.0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,350.0,24,1.75,2.0,400.0,375.0
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,0.0,65,21.26153846153846,14.0,50.0,25.0
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,50.0,65,8.107692307692307,9.0,100.0,75.0
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,100.0,52,5.519230769230769,2.0,150.0,125.0
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,150.0,65,11.76923076923077,5.0,200.0,175.0
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,200.0,26,1.9230769230769231,2.0,250.0,225.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,0.0,75,94.36,66.0,50.0,25.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,50.0,75,316.97333333333336,304.0,100.0,75.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,100.0,75,399.5733333333333,390.0,150.0,125.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,150.0,75,264.76,254.0,200.0,175.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,200.0,75,144.97333333333333,144.0,250.0,225.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,250.0,75,48.44,54.0,300.0,275.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,300.0,75,8.173333333333334,8.0,350.0,325.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,350.0,75,2.68,3.0,400.0,375.0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,400.0,20,0.9,1.0,450.0,425.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,0.0,75,113.41333333333333,105.0,50.0,25.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,50.0,75,397.14666666666665,369.0,100.0,75.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,100.0,75,349.0933333333333,336.0,150.0,125.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,150.0,75,780.6533333333333,687.0,200.0,175.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,200.0,75,1022.44,1055.0,250.0,225.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,250.0,75,1260.8266666666666,1305.0,300.0,275.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,300.0,75,1759.8133333333333,1793.0,350.0,325.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,350.0,75,1845.7866666666666,1858.0,400.0,375.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,400.0,75,1666.44,1667.0,450.0,425.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,450.0,75,1713.44,1727.0,500.0,475.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,0.0,60,177.25,159.5,50.0,25.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,50.0,60,281.3833333333333,258.5,100.0,75.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,100.0,60,381.6666666666667,394.0,150.0,125.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,150.0,60,320.21666666666664,335.0,200.0,175.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,200.0,60,263.48333333333335,265.5,250.0,225.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,250.0,60,156.31666666666666,152.0,300.0,275.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,300.0,60,183.15,181.0,350.0,325.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,350.0,60,77.66666666666667,80.5,400.0,375.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,400.0,60,70.38333333333334,57.5,450.0,425.0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,450.0,60,74.18333333333334,74.0,500.0,475.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,0.0,48,142.66666666666666,141.5,50.0,25.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,50.0,60,314.3,311.5,100.0,75.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,100.0,60,290.0,290.0,150.0,125.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,150.0,60,314.7,323.0,200.0,175.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,200.0,60,327.4,331.5,250.0,225.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,250.0,60,414.35,426.0,300.0,275.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,300.0,60,293.96666666666664,294.5,350.0,325.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,350.0,60,253.95,254.0,400.0,375.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,400.0,60,308.75,287.0,450.0,425.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,450.0,60,281.75,285.5,500.0,475.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,0.0,75,164.25333333333333,175.0,50.0,25.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,50.0,75,385.73333333333335,387.0,100.0,75.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,100.0,75,368.3066666666667,379.0,150.0,125.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,150.0,75,339.68,375.0,200.0,175.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,200.0,75,262.1066666666667,268.0,250.0,225.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,250.0,75,207.56,210.0,300.0,275.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,300.0,75,143.21333333333334,137.0,350.0,325.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,350.0,75,138.18666666666667,143.0,400.0,375.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,400.0,42,19.642857142857142,5.0,450.0,425.0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,450.0,45,1.9777777777777779,2.0,500.0,475.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,0.0,180,90.41666666666667,119.0,50.0,25.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,50.0,180,125.55,121.0,100.0,75.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,100.0,180,182.80555555555554,180.0,150.0,125.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,150.0,180,163.05,158.0,200.0,175.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,200.0,180,170.5388888888889,191.0,250.0,225.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,250.0,180,181.07222222222222,182.0,300.0,275.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,300.0,180,156.76111111111112,142.5,350.0,325.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,350.0,180,197.86111111111111,187.0,400.0,375.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,400.0,180,323.81111111111113,332.0,450.0,425.0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,450.0,180,382.5,377.5,500.0,475.0
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,0.0,60,165.86666666666667,173.5,50.0,25.0
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,50.0,60,289.8833333333333,305.0,100.0,75.0
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,100.0,60,198.3,198.0,150.0,125.0
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,150.0,60,146.66666666666666,149.0,200.0,175.0
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,200.0,60,44.1,33.0,250.0,225.0
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,250.0,24,36.916666666666664,36.0,300.0,275.0
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,0.0,55,288.74545454545455,299.0,50.0,25.0
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,50.0,55,452.8909090909091,512.0,100.0,75.0
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,100.0,55,105.85454545454546,105.0,150.0,125.0
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,150.0,22,8.0,6.5,200.0,175.0
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,0.0,75,101.26666666666667,122.0,50.0,25.0
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,50.0,75,91.05333333333333,74.0,100.0,75.0
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,100.0,75,58.08,58.0,150.0,125.0
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,150.0,75,59.38666666666666,54.0,200.0,175.0
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,200.0,75,43.48,24.0,250.0,225.0
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,250.0,37,16.37837837837838,4.0,300.0,275.0
