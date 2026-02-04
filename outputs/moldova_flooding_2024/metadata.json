@@ -2,7 +2,7 @@
   "slug": "moldova_flooding_2024",
   "name": "Moldova Flooding Sept 16 2024",
   "event_type": "flood",
-  "data_root": "Data/Moldova Flooding Sept 16 2024",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Moldova Flooding Sept 16 2024",
   "only_hour_pt": 8,
   "t0_pt": "2024-09-16 16:00:00",
   "t0_method": "auto_first_day_1600",

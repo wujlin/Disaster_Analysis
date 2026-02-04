@@ -1,0 +1,16 @@
+{
+  "slug": "hurricane_beryl_across_quintana_roo_and_yucatan_mexico",
+  "name": "Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",
+  "event_type": "hurricane",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-07-05 16:00:00",
+  "t0_method": "auto_first_day_1600",
+  "center_lat": 20.434595694285033,
+  "center_lon": -88.60613109144063,
+  "center_method": "auto_centroid_abs_n_difference",
+  "center_source_window_pt": "2024-07-05 16:00:00",
+  "center_source_file": "2897718945970473_2024-07-05_1600.csv",
+  "first_population_window_pt": "2024-07-05 08:00:00",
+  "first_population_window_file": "2897718945970473_2024-07-05_0800.csv"
+}

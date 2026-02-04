@@ -2,7 +2,7 @@
   "slug": "hurricane_beryl_pre_landfall_2024",
   "name": "Hurricane Beryl Pre Landfall Disaster Maps June 30 2024",
   "event_type": "hurricane",
-  "data_root": "Data/Hurricane Beryl Pre Landfall Disaster Maps June 30 2024",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Beryl Pre Landfall Disaster Maps June 30 2024",
   "only_hour_pt": 8,
   "t0_pt": "2024-06-30 16:00:00",
   "t0_method": "auto_first_day_1600",

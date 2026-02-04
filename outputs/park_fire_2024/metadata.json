@@ -2,7 +2,7 @@
   "slug": "park_fire_2024",
   "name": "The Park Fire in Northern California, US",
   "event_type": "wildfire",
-  "data_root": "Data/The Park Fire in Northern California, US",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/The Park Fire in Northern California, US",
   "only_hour_pt": 8,
   "t0_pt": "2024-07-29 16:00:00",
   "t0_method": "auto_first_day_1600",

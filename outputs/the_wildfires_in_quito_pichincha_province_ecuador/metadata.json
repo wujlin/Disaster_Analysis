@@ -1,0 +1,16 @@
+{
+  "slug": "the_wildfires_in_quito_pichincha_province_ecuador",
+  "name": "The Wildfires in Quito, Pichincha Province, Ecuador",
+  "event_type": "wildfire",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/The Wildfires in Quito, Pichincha Province, Ecuador",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-09-24 16:00:00",
+  "t0_method": "auto_first_day_1600",
+  "center_lat": -0.9726120156202206,
+  "center_lon": -78.96436749231096,
+  "center_method": "auto_centroid_abs_n_difference",
+  "center_source_window_pt": "2024-09-24 16:00:00",
+  "center_source_file": "1612196216477889_2024-09-24_1600.csv",
+  "first_population_window_pt": "2024-09-24 08:00:00",
+  "first_population_window_file": "1612196216477889_2024-09-24_0800.csv"
+}

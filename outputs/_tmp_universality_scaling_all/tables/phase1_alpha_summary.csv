@@ -1,0 +1,2 @@
+n_fit_ok,alpha_mean,alpha_std,alpha_cv,strong_signal_threshold,time_min_hours,time_max_hours,r_min,r_max,y_min
+26,-0.11327942186516717,0.38555210170309007,-3.40354934157415,0.1,24.0,72.0,10.0,500.0,0.0001

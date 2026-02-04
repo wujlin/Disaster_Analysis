@@ -2,7 +2,7 @@
   "slug": "turkiye_earthquake_2023",
   "name": "Turkiye Turkey Earthquake Full Country Version Feb 8 2023",
   "event_type": "earthquake",
-  "data_root": "Data/Turkiye Turkey Earthquake Full Country Version Feb 8 2023",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Turkiye Turkey Earthquake Full Country Version Feb 8 2023",
   "only_hour_pt": 8,
   "t0_pt": "2023-02-05 16:00:00",
   "t0_method": "provided",

@@ -197,6 +197,8 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         )
         agg["phi_aggregate"] = agg["crisis_sum"] / agg["baseline_sum"]
         agg["phi_overlap"] = agg["crisis_sum_overlap"] / agg["baseline_sum_overlap"]
+        agg.loc[agg["n_tiles"] <= 0, "phi_aggregate"] = np.nan
+        agg.loc[agg["n_tiles_overlap"] <= 0, "phi_overlap"] = np.nan
         agg["tile_overlap_ratio"] = np.where(agg["n_tiles"] > 0, agg["n_tiles_overlap"] / agg["n_tiles"], np.nan)
         agg.insert(0, "window_start_pt", pd.Timestamp(meta["window_start_pt"]))
         agg.insert(1, "hours_since_quake", float(meta["hours_since_quake"]))

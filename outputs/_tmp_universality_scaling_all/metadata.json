@@ -1,0 +1,8 @@
+{
+  "catalog": "outputs/_tmp_universality_scaling_all/catalog_all.csv",
+  "output_root": "outputs",
+  "phi_col": "phi_aggregate",
+  "source": "phi_heatmap",
+  "min_hours": 0.0,
+  "max_hours": null
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "park_fire_california_29_july_2024",
+  "name": "Park Fire California 29 July 2024",
+  "event_type": "wildfire",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Park Fire California 29 July 2024",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-07-29 16:00:00",
+  "t0_method": "auto_first_day_1600",
+  "center_lat": 38.50398445323192,
+  "center_lon": -121.5917346836024,
+  "center_method": "auto_centroid_abs_n_difference",
+  "center_source_window_pt": "2024-07-29 16:00:00",
+  "center_source_file": "4710307661338599_2024-07-29_1600.csv",
+  "first_population_window_pt": "2024-07-29 08:00:00",
+  "first_population_window_file": "4710307661338599_2024-07-29_0800.csv"
+}

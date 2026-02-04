@@ -1,0 +1,16 @@
+{
+  "slug": "the_flooding_in_benue_and_kogi_states_nigeria",
+  "name": "The Flooding in Benue and Kogi States, Nigeria",
+  "event_type": "flood",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding in Benue and Kogi States, Nigeria",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-10-21 16:00:00",
+  "t0_method": "auto_first_day_1600",
+  "center_lat": 7.550362890263884,
+  "center_lon": 6.969442137368035,
+  "center_method": "auto_centroid_abs_n_difference",
+  "center_source_window_pt": "2024-10-21 16:00:00",
+  "center_source_file": "1413391517911743_2024-10-21_1600.csv",
+  "first_population_window_pt": "2024-10-21 08:00:00",
+  "first_population_window_file": "1413391517911743_2024-10-21_0800.csv"
+}
