@@ -1,0 +1,8 @@
+{
+  "catalog": "Docs/cross_disaster_catalog_centerfix6.csv",
+  "output_root": "outputs_trackpath",
+  "phi_col": "phi_aggregate",
+  "source": "phi_heatmap",
+  "min_hours": 0.0,
+  "max_hours": 72.0
+}

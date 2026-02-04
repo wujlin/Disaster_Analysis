@@ -1,0 +1,28 @@
+slug,name,event_type,source,phi_col,S,arg_key,t_at_S,phi_at_S,min_phi,max_phi,n_points
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,phi_heatmap,phi_aggregate,1.1199173235542808,300.0,24.0,2.1199173235542808,0.8104845902270932,2.1199173235542808,140
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,phi_heatmap,phi_aggregate,0.3314686880126837,30.0,0.0,0.6685313119873163,0.6685313119873163,1.1337873730717545,144
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,phi_heatmap,phi_aggregate,0.17590389292118447,20.0,48.0,1.1759038929211845,0.909641739065742,1.1759038929211845,200
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,phi_heatmap,phi_aggregate,,,,,,,0
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,phi_heatmap,phi_aggregate,,,,,,,0
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,phi_heatmap,phi_aggregate,,,,,,,0
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,phi_heatmap,phi_aggregate,,,,,,,0
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,phi_heatmap,phi_aggregate,,,,,,,0
+line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,phi_heatmap,phi_aggregate,,,,,,,0
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,phi_heatmap,phi_aggregate,,,,,,,0
+park_fire_2024,"The Park Fire in Northern California, US",wildfire,phi_heatmap,phi_aggregate,,,,,,,0
+park_fire_california_29_july_2024,Park Fire California 29 July 2024,wildfire,phi_heatmap,phi_aggregate,,,,,,,0
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,phi_heatmap,phi_aggregate,,,,,,,0
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,phi_heatmap,phi_aggregate,,,,,,,0
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,flood,phi_heatmap,phi_aggregate,,,,,,,0
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,phi_heatmap,phi_aggregate,,,,,,,0
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,phi_heatmap,phi_aggregate,,,,,,,0
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,phi_heatmap,phi_aggregate,,,,,,,0
+the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,phi_heatmap,phi_aggregate,,,,,,,0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,phi_heatmap,phi_aggregate,,,,,,,0
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,phi_heatmap,phi_aggregate,,,,,,,0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,phi_heatmap,phi_aggregate,,,,,,,0
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,phi_heatmap,phi_aggregate,,,,,,,0
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,phi_heatmap,phi_aggregate,,,,,,,0
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,phi_heatmap,phi_aggregate,,,,,,,0
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,phi_heatmap,phi_aggregate,,,,,,,0
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,phi_heatmap,phi_aggregate,,,,,,,0

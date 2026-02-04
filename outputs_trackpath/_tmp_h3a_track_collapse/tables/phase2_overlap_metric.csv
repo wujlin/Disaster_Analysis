@@ -1,0 +1,2 @@
+n_disasters_used,x_min,x_max,x_grid_n,overlap_tol,overlap_fraction,time_min_hours,time_max_hours,strong_signal_threshold
+3,0.5,3.0,80,0.2,0.45,0.0,72.0,0.0
