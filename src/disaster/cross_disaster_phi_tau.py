@@ -28,6 +28,9 @@ class DisasterSpec:
     t0_pt: pd.Timestamp | None
     center_lat: float | None
     center_lon: float | None
+    center_track_csv: Path | None = None
+    center_track_to_tz: str = "America/Los_Angeles"
+    center_track_storm_name: str | None = None
     only_hour_pt: int = 8
     outflow_phi_threshold: float = 0.9
     inflow_phi_threshold: float = 1.1
@@ -100,6 +103,9 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
 
     specs: list[DisasterSpec] = []
     for row in df.to_dict(orient="records"):
+        track_csv = str(row.get("center_track_csv", "")).strip() or str(row.get("track_csv", "")).strip()
+        track_to_tz = str(row.get("center_track_to_tz", "")).strip() or "America/Los_Angeles"
+        track_storm = str(row.get("center_track_storm_name", "")).strip() or str(row.get("track_storm_name", "")).strip()
         specs.append(
             DisasterSpec(
                 slug=str(row["slug"]).strip(),
@@ -109,6 +115,9 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
                 t0_pt=_safe_timestamp(row.get("t0_pt")),
                 center_lat=_safe_float(row.get("center_lat")),
                 center_lon=_safe_float(row.get("center_lon")),
+                center_track_csv=Path(track_csv) if track_csv else None,
+                center_track_to_tz=str(track_to_tz),
+                center_track_storm_name=str(track_storm) if track_storm else None,
                 only_hour_pt=_safe_int(row.get("only_hour_pt"), 8),
                 outflow_phi_threshold=float(_safe_float(row.get("outflow_phi_threshold")) or 0.9),
                 inflow_phi_threshold=float(_safe_float(row.get("inflow_phi_threshold")) or 1.1),

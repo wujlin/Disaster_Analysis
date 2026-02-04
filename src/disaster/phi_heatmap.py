@@ -23,6 +23,9 @@ class Config:
     center_lat: float
     center_lon: float
     t0_pt: pd.Timestamp
+    center_track_csv: Path | None = None
+    center_track_to_tz: str = "America/Los_Angeles"
+    center_track_storm_name: str | None = None
     hours_pt: tuple[int, ...] = (0, 8, 16)
     min_hours: float = -16.0
     max_hours: float = 832.0
@@ -75,6 +78,75 @@ def _list_population_windows(cfg: Config) -> list[dict]:
             f"未找到符合条件的 population 窗口：hours_pt={sorted(hours_keep)}，t范围=[{cfg.min_hours},{cfg.max_hours}]"
         )
     return rows
+
+
+def _load_center_track(cfg: Config) -> tuple[np.ndarray, np.ndarray, np.ndarray] | None:
+    if cfg.center_track_csv is None:
+        return None
+    p = Path(cfg.center_track_csv)
+    if not p.exists():
+        raise FileNotFoundError(f"未找到 center_track_csv：{p}")
+
+    df = pd.read_csv(p)
+    required = {"datetime_utc", "lat", "lon"}
+    missing = sorted(required - set(df.columns))
+    if missing:
+        raise SystemExit(f"track CSV 缺少列：{missing}（来自 {p}）")
+
+    if "storm_name" in df.columns:
+        names = (
+            df["storm_name"]
+            .dropna()
+            .astype(str)
+            .map(lambda s: s.strip())
+            .replace("", np.nan)
+            .dropna()
+            .unique()
+            .tolist()
+        )
+        want = str(cfg.center_track_storm_name).strip() if cfg.center_track_storm_name else ""
+        if want:
+            df = df[df["storm_name"].astype(str).str.strip().str.lower() == want.lower()].copy()
+        elif len(names) > 1:
+            raise SystemExit(f"track CSV 含多个 storm_name={sorted(names)}；请设置 center_track_storm_name 指定其一（来自 {p}）")
+
+    t_utc = pd.to_datetime(df["datetime_utc"], utc=True, errors="coerce")
+    t_local = t_utc.dt.tz_convert(str(cfg.center_track_to_tz)).dt.tz_localize(None)
+    lat = pd.to_numeric(df["lat"], errors="coerce")
+    lon = pd.to_numeric(df["lon"], errors="coerce")
+    ok = t_local.notna() & lat.notna() & lon.notna()
+    t_local = t_local[ok]
+    lat = lat[ok]
+    lon = lon[ok]
+    if t_local.empty:
+        raise SystemExit(f"track CSV 无有效时间/坐标：{p}")
+
+    t_ns = t_local.astype("datetime64[ns]").astype("int64").to_numpy(dtype=np.int64)
+    lat_v = lat.to_numpy(dtype=float)
+    lon_v = lon.to_numpy(dtype=float)
+
+    order = np.argsort(t_ns)
+    t_ns = t_ns[order]
+    lat_v = lat_v[order]
+    lon_v = lon_v[order]
+
+    # drop duplicate timestamps (keep last)
+    if t_ns.size >= 2:
+        keep = np.ones(t_ns.shape[0], dtype=bool)
+        keep[:-1] = t_ns[:-1] != t_ns[1:]
+        t_ns = t_ns[keep]
+        lat_v = lat_v[keep]
+        lon_v = lon_v[keep]
+
+    return t_ns, lat_v, lon_v
+
+
+def _center_at(track: tuple[np.ndarray, np.ndarray, np.ndarray], ts: pd.Timestamp) -> tuple[float, float]:
+    t_ns_arr, lat_arr, lon_arr = track
+    x = np.int64(pd.Timestamp(ts).value)
+    lat = float(np.interp(x, t_ns_arr, lat_arr, left=float(lat_arr[0]), right=float(lat_arr[-1])))
+    lon = float(np.interp(x, t_ns_arr, lon_arr, left=float(lon_arr[0]), right=float(lon_arr[-1])))
+    return lat, lon
 
 
 def _distance_bins(cfg: Config) -> np.ndarray:
@@ -153,11 +225,14 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
     if max_files is not None:
         windows = windows[: int(max_files)]
 
+    track = _load_center_track(cfg)
+
     r_bins = _distance_bins(cfg)
     step = float(cfg.distance_bin_km)
     r_max = float(cfg.max_distance_km)
 
     rows: list[pd.DataFrame] = []
+    center_rows: list[dict] = []
     for i, meta in enumerate(windows, start=1):
         p = Path(meta["path"])
         df = load_population_file(p)
@@ -167,7 +242,25 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy(dtype=float)
         lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy(dtype=float)
 
-        dist = haversine_km(lat, lon, float(cfg.center_lat), float(cfg.center_lon))
+        window_ts = pd.Timestamp(meta["window_start_pt"])
+        if track is None:
+            center_lat, center_lon = float(cfg.center_lat), float(cfg.center_lon)
+        else:
+            center_lat, center_lon = _center_at(track, window_ts)
+        center_rows.append(
+            {
+                "window_start_pt": window_ts,
+                "hours_since_quake": float(meta["hours_since_quake"]),
+                "center_lat": float(center_lat),
+                "center_lon": float(center_lon),
+                "center_mode": "track" if track is not None else "static",
+                "center_track_csv": str(cfg.center_track_csv) if cfg.center_track_csv is not None else "",
+                "center_track_to_tz": str(cfg.center_track_to_tz),
+                "center_track_storm_name": str(cfg.center_track_storm_name) if cfg.center_track_storm_name else "",
+            }
+        )
+
+        dist = haversine_km(lat, lon, float(center_lat), float(center_lon))
         r_bin = np.floor(dist / step) * step
         keep = np.isfinite(r_bin) & (r_bin >= 0) & (r_bin < r_max)
 
@@ -211,6 +304,8 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
     long_df = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
     out_long = out.tables / "phi_rt_long.csv"
     long_df.to_csv(out_long, index=False)
+
+    pd.DataFrame(center_rows).to_csv(out.tables / "center_by_window.csv", index=False)
 
     # pivot：r_bin_km x hours_since_quake
     pivot = long_df.pivot(index="r_bin_km", columns="hours_since_quake", values="phi_aggregate").sort_index().sort_index(axis=1)
@@ -334,6 +429,9 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 ## 配置
 
 - center: ({float(cfg.center_lat):.4f}, {float(cfg.center_lon):.4f})
+- center_track_csv: {cfg.center_track_csv}
+- center_track_to_tz: {cfg.center_track_to_tz}
+- center_track_storm_name: {cfg.center_track_storm_name}
 - t0_pt: {pd.Timestamp(cfg.t0_pt)}
 - hours_pt: {list(int(h) for h in cfg.hours_pt)}
 
@@ -341,6 +439,7 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 
 - `tables/phi_rt_long.csv`：长表（每个窗口 × 每个 r_bin 的汇总）
 - `tables/phi_rt_matrix.csv`：宽表（rows=r_bin_km, cols=hours_since_quake）
+- `tables/center_by_window.csv`：每个时间窗口使用的中心点（static 或 track 插值）
 - `tables/three_phase_by_time.csv`：三相分离判定（按时间）
 - `tables/three_phase_windows.csv`：三相分离连续时间段
 - `figures/phi_rt_heatmap.*`：热力图（含 φ=1/0.9/0.8 等值线）
@@ -361,6 +460,9 @@ def cli_main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True, help="输出目录")
     parser.add_argument("--center-lat", type=float, required=True, help="中心点纬度（震中/灾害中心）")
     parser.add_argument("--center-lon", type=float, required=True, help="中心点经度（震中/灾害中心）")
+    parser.add_argument("--center-track-csv", type=Path, default=None, help="可选：时变中心轨迹 CSV（含 datetime_utc,lat,lon 列）")
+    parser.add_argument("--center-track-to-tz", type=str, default="America/Los_Angeles", help="轨迹时间从 UTC 转到该时区再对齐（默认 America/Los_Angeles）")
+    parser.add_argument("--center-track-storm-name", type=str, default=None, help="可选：当轨迹 CSV 含多个 storm_name 时用于过滤")
     parser.add_argument("--t0-pt", type=str, required=True, help="t=0 的 PT 时间戳（例如 2023-02-05 16:00）")
     parser.add_argument("--hours-pt", type=int, nargs="*", default=[0, 8, 16], help="保留哪些 PT 小时窗口（默认 0 8 16）")
     parser.add_argument("--min-hours", type=float, default=-16.0, help="最小 hours_since_quake（默认 -16）")
@@ -377,6 +479,9 @@ def cli_main() -> None:
         output_dir=args.output_dir,
         center_lat=float(args.center_lat),
         center_lon=float(args.center_lon),
+        center_track_csv=Path(args.center_track_csv) if args.center_track_csv is not None else None,
+        center_track_to_tz=str(args.center_track_to_tz),
+        center_track_storm_name=str(args.center_track_storm_name) if args.center_track_storm_name else None,
         t0_pt=pd.Timestamp(str(args.t0_pt)),
         hours_pt=tuple(int(x) for x in args.hours_pt),
         min_hours=float(args.min_hours),
