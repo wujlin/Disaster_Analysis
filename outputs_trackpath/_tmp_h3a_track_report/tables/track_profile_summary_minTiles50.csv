@@ -1,0 +1,4 @@
+slug,storm_name,time_min_hours,time_max_hours,min_tiles,r0_km,y_max_abs_phi_minus_1,n_bins_used,meta_year,meta_landfall_category,meta_landfall_vmax_kt
+hurricane_milton_across_florida_us,Milton,0.0,72.0,50,174.0873153239998,0.20001299966724329,30,2024,Cat3,125
+hurricane_beryl_across_southeastern_texas_us,Beryl,0.0,72.0,50,55.85952984275988,0.19768561253402228,32,2024,Cat1,80
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Helene,0.0,72.0,50,368.4293086789583,0.13686294263637677,50,2024,Cat4,140

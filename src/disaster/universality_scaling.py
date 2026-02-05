@@ -225,19 +225,38 @@ def _radial_profile_from_phi_long(
     else:
         dr = 10.0
 
-    g = df.groupby(r_bin_col, sort=True, observed=True)[phi_col].mean().reset_index()
+    agg_map: dict[str, str] = {phi_col: "mean"}
+    for c in ["n_tiles", "n_tiles_crisis", "n_tiles_overlap"]:
+        if c in df.columns:
+            agg_map[c] = "mean"
+    g = df.groupby(r_bin_col, sort=True, observed=True).agg(agg_map).reset_index()
     g = g.rename(columns={r_bin_col: "r_bin_km", phi_col: "phi_mean"})
+    if "n_tiles" in g.columns:
+        g = g.rename(columns={"n_tiles": "n_tiles_mean"})
+    if "n_tiles_crisis" in g.columns:
+        g = g.rename(columns={"n_tiles_crisis": "n_tiles_crisis_mean"})
+    if "n_tiles_overlap" in g.columns:
+        g = g.rename(columns={"n_tiles_overlap": "n_tiles_overlap_mean"})
+
+    if "n_tiles_mean" in g.columns and "n_tiles_crisis_mean" in g.columns:
+        g["n_eff_mean"] = np.minimum(
+            pd.to_numeric(g["n_tiles_mean"], errors="coerce").to_numpy(dtype=float),
+            pd.to_numeric(g["n_tiles_crisis_mean"], errors="coerce").to_numpy(dtype=float),
+        )
     g["r_center_km"] = pd.to_numeric(g["r_bin_km"], errors="coerce") + dr / 2.0
     g["abs_dev"] = (pd.to_numeric(g["phi_mean"], errors="coerce") - 1.0).abs()
     return g.sort_values("r_center_km", kind="stable")
 
 
-def _fit_powerlaw_alpha(profile: pd.DataFrame, *, r_min: float, r_max: float, y_min: float) -> dict:
+def _fit_powerlaw_alpha(profile: pd.DataFrame, *, r_min: float, r_max: float, y_min: float, min_tiles: int) -> dict:
     if profile.empty:
         return {"fit_ok": 0}
     r = pd.to_numeric(profile["r_center_km"], errors="coerce").to_numpy(dtype=float)
     y = pd.to_numeric(profile["abs_dev"], errors="coerce").to_numpy(dtype=float)
     ok = np.isfinite(r) & np.isfinite(y) & (r > 0) & (y > float(y_min)) & (r >= float(r_min)) & (r <= float(r_max))
+    if int(min_tiles) > 0 and "n_eff_mean" in profile.columns:
+        n_eff = pd.to_numeric(profile["n_eff_mean"], errors="coerce").to_numpy(dtype=float)
+        ok = ok & np.isfinite(n_eff) & (n_eff >= float(min_tiles))
     if int(np.sum(ok)) < 3:
         return {"fit_ok": 0}
     rr = r[ok]
@@ -275,6 +294,7 @@ def run_phase1_powerlaw(
     r_min: float,
     r_max: float,
     y_min: float,
+    min_tiles: int,
 ) -> pd.DataFrame:
     specs = load_catalog(catalog)
     out = _out_dirs(out_dir)
@@ -313,7 +333,7 @@ def run_phase1_powerlaw(
             continue
 
         prof = _radial_profile_from_phi_long(phi_long, time_min=float(time_min), time_max=float(time_max), phi_col=phi_col)
-        fit = _fit_powerlaw_alpha(prof, r_min=float(r_min), r_max=float(r_max), y_min=float(y_min))
+        fit = _fit_powerlaw_alpha(prof, r_min=float(r_min), r_max=float(r_max), y_min=float(y_min), min_tiles=int(min_tiles))
         rows.append(
             {
                 "slug": spec.slug,
@@ -329,6 +349,7 @@ def run_phase1_powerlaw(
                 "r_max_fit": float(fit.get("r_max_fit", float("nan"))),
                 "y_min_fit": float(fit.get("y_min_fit", float("nan"))),
                 "y_max_fit": float(fit.get("y_max_fit", float("nan"))),
+                "min_tiles": int(min_tiles),
             }
         )
 
@@ -395,6 +416,7 @@ def run_phase1_powerlaw(
                 "r_min": float(r_min),
                 "r_max": float(r_max),
                 "y_min": float(y_min),
+                "min_tiles": int(min_tiles),
             }
         ]
     )
@@ -447,6 +469,7 @@ def run_phase2_collapse(
     x_max: float,
     x_grid_n: int,
     overlap_tol: float,
+    min_tiles: int,
 ) -> pd.DataFrame:
     specs = load_catalog(catalog)
     out = _out_dirs(out_dir)
@@ -482,6 +505,8 @@ def run_phase2_collapse(
             continue
 
         prof = _radial_profile_from_phi_long(phi_long, time_min=float(time_min), time_max=float(time_max), phi_col=phi_col)
+        if int(min_tiles) > 0 and "n_eff_mean" in prof.columns:
+            prof = prof[pd.to_numeric(prof["n_eff_mean"], errors="coerce") >= float(min_tiles)].copy()
         r = pd.to_numeric(prof["r_center_km"], errors="coerce").to_numpy(dtype=float)
         y = pd.to_numeric(prof["abs_dev"], errors="coerce").to_numpy(dtype=float)
         ok = np.isfinite(r) & np.isfinite(y) & (r > 0) & (y >= 0)
@@ -553,6 +578,7 @@ def run_phase2_collapse(
                 "time_min_hours": float(time_min),
                 "time_max_hours": float(time_max),
                 "strong_signal_threshold": float(strong_signal_threshold),
+                "min_tiles": int(min_tiles),
             }
         ]
     ).to_csv(out.tables / "phase2_overlap_metric.csv", index=False)
@@ -614,6 +640,7 @@ def cli_main() -> None:
     p.add_argument("--x-max", type=float, default=3.0)
     p.add_argument("--x-grid-n", type=int, default=80)
     p.add_argument("--overlap-tol", type=float, default=0.2)
+    p.add_argument("--min-tiles", type=int, default=0, help="稳健性过滤：仅保留 n_eff_mean>=min_tiles 的距离 bins（默认 0 不过滤）")
 
     args = p.parse_args()
 
@@ -645,6 +672,7 @@ def cli_main() -> None:
             r_min=float(args.r_min),
             r_max=float(args.r_max),
             y_min=float(args.y_min),
+            min_tiles=int(args.min_tiles),
         )
         return
 
@@ -662,6 +690,7 @@ def cli_main() -> None:
             x_max=float(args.x_max),
             x_grid_n=int(args.x_grid_n),
             overlap_tol=float(args.overlap_tol),
+            min_tiles=int(args.min_tiles),
         )
         return
 
