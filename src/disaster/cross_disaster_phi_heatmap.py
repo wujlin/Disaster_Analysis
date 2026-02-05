@@ -73,7 +73,7 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         )
         try:
             run_heatmap(hm_cfg, max_files=max_files)
-        except FileNotFoundError as e:
+        except (FileNotFoundError, SystemExit, ValueError) as e:
             msg = str(e)
             (out_dir / "SKIPPED.txt").write_text(msg + "\n", encoding="utf-8")
             skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
