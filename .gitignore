@@ -6,6 +6,9 @@ __pycache__/
 
 Data/
 
+# Secrets / auth material
+config/cookie.json
+
 outputs/*
 !outputs/population_relaxation/
 !outputs/population_relaxation/**

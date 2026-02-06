@@ -1,0 +1,67 @@
+{
+  "dataset_id": "1206560174663575",
+  "display_name": "The Earthquake Across Dhaka Division, Bangladesh",
+  "collection_title": "Business Activity Trends During Crisis",
+  "countries": [
+    "Bangladesh"
+  ],
+  "date_range": "2025-11-21 00:00 — 2025-12-04 00:00",
+  "files": [
+    {
+      "id": "1482147149550327",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9gBeMiJ-kgN3aZhlLfeVW1DqOY-O6g_6H4l0ZBFPjIrre8Ov8GmfWIYqDOndljSHP0W-yb5zeZE4uDqe9qQmsadoy0mdpCCtc6V4mFxHyWE-art66LNw?_nc_gid=bf8wSxCtjFHTFWbzJJj-Aw&_nc_oc=AdmeIwgJTzVGbUR9-z47hZFI_voiZNTOq3KW3MxuvJV_tikr2RSh0UQHGl41m9z6WrSO70LlPAGM5Q05E0kEo_tx&ccb=10-6&oh=00_Afuj_lMWgasqIq2RjTyJhaDls_lYEtI3cR798fbQ47Dr8w&oe=69AD0715&_nc_sid=a53f5b",
+      "date_time": "2025-12-04 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1770784436958998",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_RY3_hkdSZEXqt4jSBuJz6Zce1_cNBds3yKx09_ZQwIf-iWRvHs5CfcloYPT4j_XBuDbIV4DO_kz261LsGmzia1FMi1F_GK1lJvj1v8WDm9BHyjgBCtw?_nc_gid=bf8wSxCtjFHTFWbzJJj-Aw&_nc_oc=Admfdxmar0xSl4O37mnZAhNDiKlM435mEZM9jX1FjH5UDg1vKHdNBf2mJL1qmD5K-5o6SfldQNMFXB0gZc5rVCIf&ccb=10-5&oh=00_Afuo-z9ziUOFnJHOhN8iTAwrz2yeb1bBaiXI4fB2RSSDZg&oe=69ACDA50&_nc_sid=a53f5b",
+      "date_time": "2025-12-03 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1531309088109999",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8WtmYbfQs3rAIQF2w-mRCBs-_iu92SXVQiKZ8zRgautosjHQIxDA_t9EhU3xARnvpwkcbu4wdFfRe9sag4sRPLDCx1N0kM3Oen_3hrrWN-odbixLP0Tg?_nc_gid=bf8wSxCtjFHTFWbzJJj-Aw&_nc_oc=Adnmqb3JcnvNLPpqR8zbiB18rMRtis9It8xFPppRtF4xLCsgPkxPwSr7rYpDRCXRs3M6MxZGmtiRhkQjUiKgKltV&ccb=10-5&oh=00_Afsl9epqk3CV-7_NozUjghOtfBjjJMACfXqMZ3sSAJKx8w&oe=69ACFC33&_nc_sid=a53f5b",
+      "date_time": "2025-12-02 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "698418806396963",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An98O8sKfjVbJYdZo3CYIYGV8iYPnJeA5yAek7afpDnnXU4uAf7hOHLTT_6deCNoHYPXHJEp52RCY6u86LVo95iv9cM-3pGyNAgzs2IX_xVXiY8idywD?_nc_gid=bf8wSxCtjFHTFWbzJJj-Aw&_nc_oc=AdlVPat9HAyzstTLcvJ_fsLNUMjKE-cjdKpxKy3W3ty7eXxrAWSnvu_NQVpurNhznRtqRF2isnaO2Szopaql_6k6&ccb=10-5&oh=00_Aft_orQM_kB3yv8SDy0ikY6j3YxvLC4UEHxS16aA4PJVmQ&oe=69ACE02E&_nc_sid=a53f5b",
+      "date_time": "2025-12-01 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1927576837790792",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9D5oqwua0inb92AOkP6J4KR1JDZDPXOAcbzvcHtPil9TYF-866YaBElI_oF3KowR9UmGosynKJ3Dk6s-fYY1yR3RPNs4BYBKRvKhkjvqpfuQNCJQJ1pw?_nc_gid=bf8wSxCtjFHTFWbzJJj-Aw&_nc_oc=AdlfWnVjV5DN5geS6InotcTzsRSoTJczv8IChbh2DzIerUg1a0FJo86UvMETnhYl65agwdiDPSaBjqttYowo_PF3&ccb=10-5&oh=00_AfvL1DLCA6zi5CA7CfqjX2A0o6gW_Dj8ZocuqRoiRdUtoQ&oe=69ACE9FD&_nc_sid=a53f5b",
+      "date_time": "2025-11-30 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1682740482702928",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_AbcS3y8bSHpSCfdAKN-_2Jh1IGd8MChv_RkUecR14XJWceL2WBDue6LntN9ja8-rxs2EDgtCcCJWSPO7uXYrkwso201WNhxF85epwDfgXyLoPImIY3Q?_nc_gid=bf8wSxCtjFHTFWbzJJj-Aw&_nc_oc=AdmvqrTlYf8HN1c3XYDWc0Ig_r3t-Z0ziXNTOLSyKzjiN-GPZ0NVXL7UErI7w_JgOyFv8eLYLI-InG5Xutdnn2Xl&ccb=10-5&oh=00_Afu864WoPwDwWBUOI3Yi_YEJaEytoWJX7U2ALd-arHhfWw&oe=69ACE9EA&_nc_sid=a53f5b",
+      "date_time": "2025-11-29 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "2065660657307043",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8qjwSlU0jUKUJKo0_ap7Ybu8RanLWPaEx62c42fJiic9VoabiHzAJXJ59_PAx0pA22dsO3N8gfxsfDxd9SNLqgLOVnxyHH_LnuDFXnIrnMAIPL5kvnLA?_nc_gid=bf8wSxCtjFHTFWbzJJj-Aw&_nc_oc=Adniq0OFCa7pc8Ue5SJxRX6RcO4XiKnO4HrLJDJQq5dKQuLOAlmQVoSbSsjHPudrbZLLnJZ_6sPw-5Sy178h2f7B&ccb=10-6&oh=00_Aft9ckSvOZySgtD8Kt5c8vR6ozcm0lIKXayiMkrxKZM4hA&oe=69ACE030&_nc_sid=a53f5b",
+      "date_time": "2025-11-28 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    }
+  ]
+}

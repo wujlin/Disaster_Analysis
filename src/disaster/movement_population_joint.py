@@ -13,7 +13,7 @@ except ModuleNotFoundError as e:
 
 from disaster.geo import haversine_km
 from disaster.movement_io import load_movement_file
-from disaster.population_io import load_population_file, parse_window_start_pt
+from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.viz import save_png_and_pdf
 
 
@@ -49,8 +49,9 @@ def _ensure_dir(p: Path) -> None:
 
 
 def _list_windows(data_root: Path, *, subdir: str, t0_pt: pd.Timestamp, only_hour_pt: int) -> dict[pd.Timestamp, dict]:
-    d = data_root / subdir
-    if not d.exists():
+    try:
+        d = resolve_subdir(data_root, subdir)
+    except FileNotFoundError:
         return {}
     out: dict[pd.Timestamp, dict] = {}
     for path in sorted(d.glob("*.csv")):

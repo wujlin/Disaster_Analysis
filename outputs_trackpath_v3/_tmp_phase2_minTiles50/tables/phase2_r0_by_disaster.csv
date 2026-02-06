@@ -1,0 +1,8 @@
+slug,name,event_type,r0_km,y_max,n_windows_in_range,track_anchor_to_t0_hours,note
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,,0.0513302976083545,3,3.9166666666666665,
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,114.36287608904385,0.05804407421662683,3,3.0,
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,,,0,35.75,t0_misaligned_vs_track_anchor
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,,0.1751916974191774,3,14.5,
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,320.9943067741197,0.04576445877693458,3,4.0,
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,383.4713451121178,0.17992380407095665,3,22.5,
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,,,0,29.0,t0_misaligned_vs_track_anchor

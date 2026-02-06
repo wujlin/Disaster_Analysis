@@ -13,7 +13,7 @@ except ModuleNotFoundError as e:
 
 from disaster.geo import distance_bin_labels, haversine_km
 from disaster.movement_io import load_movement_file
-from disaster.population_io import parse_window_start_pt
+from disaster.population_io import parse_window_start_pt, resolve_subdir
 from disaster.viz import default_distance_bin_color_map, save_png_and_pdf
 
 
@@ -63,9 +63,7 @@ def _parse_movement_window_start(path: Path) -> pd.Timestamp:
 
 
 def _list_movement_windows(cfg: Config) -> list[dict]:
-    mov_dir = cfg.data_root / "movement"
-    if not mov_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{mov_dir}")
+    mov_dir = resolve_subdir(cfg.data_root, "movement")
 
     files = sorted(mov_dir.glob("*.csv"))
     if not files:

@@ -1,0 +1,2 @@
+fit_ok,alpha,slope,intercept,r2_loglog,n_points_fit,r_min_fit,r_max_fit,y_min_fit,y_max_fit,time_min_hours,time_max_hours
+1,-0.72085063288626,0.72085063288626,-5.33116493676718,0.6461986761713165,7,15.0,75.0,0.023270474677189235,0.10532321719353988,24.0,72.0

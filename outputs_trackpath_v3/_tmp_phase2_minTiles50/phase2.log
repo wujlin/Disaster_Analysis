@@ -1,0 +1,2 @@
+/mnt/e/newdesktop/Disaster/src/disaster/universality_scaling.py:738: RuntimeWarning: All-NaN slice encountered
+  spread = np.nanmax(mat, axis=0) - np.nanmin(mat, axis=0)

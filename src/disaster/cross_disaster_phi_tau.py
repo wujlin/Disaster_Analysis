@@ -14,7 +14,7 @@ except ModuleNotFoundError as e:
 
 from disaster.physical_model_phi_rt import Config as PhysicalConfig
 from disaster.physical_model_phi_rt import run as run_physical
-from disaster.population_io import load_population_file, parse_window_start_pt
+from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.population_redistribution import Config as RedistributionConfig
 from disaster.population_redistribution import run as run_redistribution
 
@@ -140,9 +140,7 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
 
 
 def _list_population_windows(data_root: Path, *, only_hour_pt: int) -> list[dict]:
-    pop_dir = data_root / "population"
-    if not pop_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{pop_dir}")
+    pop_dir = resolve_subdir(data_root, "population")
     files = sorted(pop_dir.glob("*.csv"))
     if not files:
         raise FileNotFoundError(f"目录为空：{pop_dir}")
@@ -241,9 +239,9 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
     first = windows[0]
     first_ts = pd.Timestamp(first["window_start_pt"])
 
-    pop_dir = spec.data_root / "population"
+    pop_dir = resolve_subdir(spec.data_root, "population")
 
-    # t0：优先对齐 track anchor（landfall/closest approach），否则退化为“首日 16:00”。
+    # t0：优先对齐 track anchor（landfall/closest approach），否则退化为"首日 16:00"。
     t0_method = "provided"
     if spec.t0_pt is None:
         track_df = _load_track_points_for_spec(spec)

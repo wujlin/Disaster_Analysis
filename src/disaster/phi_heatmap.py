@@ -12,7 +12,7 @@ except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 from disaster.geo import haversine_km
-from disaster.population_io import load_population_file, parse_window_start_pt
+from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.viz import save_png_and_pdf
 
 
@@ -72,9 +72,7 @@ def _sum_min_count_1(s: pd.Series) -> float:
 
 
 def _list_population_windows(cfg: Config) -> list[dict]:
-    pop_dir = cfg.data_root / "population"
-    if not pop_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{pop_dir}")
+    pop_dir = resolve_subdir(cfg.data_root, "population")
 
     files = sorted(pop_dir.glob("*.csv"))
     if not files:

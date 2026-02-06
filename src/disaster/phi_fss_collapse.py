@@ -14,7 +14,7 @@ except ModuleNotFoundError as e:
 
 from disaster.cross_disaster_phi_tau import auto_t0_and_center, load_catalog
 from disaster.geo import distance_bin_labels, haversine_km
-from disaster.population_io import load_population_file, parse_window_start_pt
+from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.viz import save_png_and_pdf
 
 
@@ -91,9 +91,7 @@ def _pick_peak_band(available: list[str]) -> str:
 
 
 def _list_population_windows(data_root: Path, *, only_hour_pt: int) -> list[dict]:
-    pop_dir = data_root / "population"
-    if not pop_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{pop_dir}")
+    pop_dir = resolve_subdir(data_root, "population")
     files = sorted(pop_dir.glob("*.csv"))
     if not files:
         raise FileNotFoundError(f"目录为空：{pop_dir}")

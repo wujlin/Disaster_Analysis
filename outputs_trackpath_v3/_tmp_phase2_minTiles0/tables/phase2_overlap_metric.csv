@@ -1,0 +1,2 @@
+n_disasters_used,x_min,x_max,x_grid_n,overlap_tol,overlap_fraction,time_min_hours,time_max_hours,strong_signal_threshold,min_tiles,min_windows,max_track_anchor_gap_hours,detrend_far_rmin_km,detrend_far_rmax_km,min_coverage_frac
+5,0.5,3.0,80,0.2,0.45,24.0,72.0,0.5,0,3,24.0,,,

@@ -13,7 +13,7 @@ except ModuleNotFoundError as e:
 
 from disaster.geo import haversine_km
 from disaster.movement_io import load_movement_file
-from disaster.population_io import parse_window_start_pt
+from disaster.population_io import parse_window_start_pt, resolve_subdir
 from disaster.viz import save_png_and_pdf
 
 
@@ -96,9 +96,7 @@ def _linearized_tau(t: np.ndarray, y: np.ndarray, *, tail_frac: float) -> dict:
 
 
 def run(cfg: Config, *, max_files: int | None = None) -> None:
-    move_dir = cfg.data_root / "movement"
-    if not move_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{move_dir}")
+    move_dir = resolve_subdir(cfg.data_root, "movement")
 
     out = _output_dirs(cfg.output_dir)
     _ensure_dir(out.root)

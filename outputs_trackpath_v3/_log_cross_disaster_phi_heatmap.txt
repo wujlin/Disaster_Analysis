@@ -1,0 +1,54 @@
+[cross_disaster_phi_heatmap] hurricane_beryl_across_quintana_roo_and_yucatan_mexico: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/hurricane_beryl_across_quintana_roo_and_yucatan_mexico/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_beryl_across_quintana_roo_and_yucatan_mexico/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_beryl_across_southeastern_texas_us: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/hurricane_beryl_across_southeastern_texas_us/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_beryl_across_southeastern_texas_us/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_beryl_pre_landfall_2024: computing heatmap...
+[phi_heatmap] processed 20/27 windows...
+Done. Wrote: outputs_trackpath_v3/hurricane_beryl_pre_landfall_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_beryl_pre_landfall_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_ernesto_puerto_rico_14_august_2024: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/hurricane_ernesto_puerto_rico_14_august_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_ernesto_puerto_rico_14_august_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_john_across_southeastern_guerrero_mexico: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/hurricane_john_across_southeastern_guerrero_mexico/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_john_across_southeastern_guerrero_mexico/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_john_southern_mexico_25_september_2024: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/hurricane_john_southern_mexico_25_september_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_john_southern_mexico_25_september_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_milton_across_florida_us: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/hurricane_milton_across_florida_us/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/hurricane_milton_across_florida_us/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] line_fire_southern_california_9_september_2024: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] moldova_flooding_2024: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] park_fire_2024: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] park_fire_california_29_july_2024: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] the_flooding_across_antioquia_and_choc_departments_colombia: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] the_flooding_across_bagmati_and_koshi_provinces_nepal: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] the_flooding_across_eastern_bangladesh: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] the_flooding_across_gujarat_india: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] the_flooding_in_benue_and_kogi_states_nigeria: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] the_flooding_in_conakry_city_conakry_guinea: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] the_wildfires_in_quito_pichincha_province_ecuador: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] tropical_storm_debby_united_states_pre_landfall_4_august_2024: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/tropical_storm_debby_united_states_pre_landfall_4_august_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/tropical_storm_debby_united_states_pre_landfall_4_august_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] tropical_storm_enteng_across_luzon_and_visayas_islands_philippines: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] tropical_storm_kristine_in_bicol_and_calabarzon_philippines: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/tropical_storm_kristine_in_bicol_and_calabarzon_philippines/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/tropical_storm_kristine_in_bicol_and_calabarzon_philippines/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] tropical_storm_yagi_philippines_2_september_2024: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/tropical_storm_yagi_philippines_2_september_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/tropical_storm_yagi_philippines_2_september_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] turkiye_earthquake_2023: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)
+[cross_disaster_phi_heatmap] typhoon_krathon_across_taiwan: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/typhoon_krathon_across_taiwan/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/typhoon_krathon_across_taiwan/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] typhoon_yagi_across_northeastern_vietnam: computing heatmap...
+Done. Wrote: outputs_trackpath_v3/typhoon_yagi_across_northeastern_vietnam/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs_trackpath_v3/typhoon_yagi_across_northeastern_vietnam/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] wildfires_in_boise_county_idaho_27_august_2024: skipped (distance_mode=path 需要 catalog 提供 center_track_csv)

@@ -1,0 +1,171 @@
+{
+  "dataset_id": "1968440140663647",
+  "display_name": "Global Earthquake Model Research 2025 Sep 18",
+  "collection_title": "Network Coverage Maps",
+  "countries": [
+    "Portugal"
+  ],
+  "date_range": "2025-09-18 00:00 — 2026-02-01 00:00",
+  "files": [
+    {
+      "id": "1842712736446061",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8WLuAYrUQJezkt-PVomv3RJ8yONs_S-K2uRfRvQdCeOET3-XOLiszMhfHe1gZr0JbWfhRjwR-n2neRlQyENsbUlcvENvwDnUrAYS5hEOoW5u36-yFbrQ?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdlEZKWWbaoWFy4wbGHQ6zMBTXMpxSz0vZzDTIvHLxnO2t-EreVnfM_O_pRtYOXywCIK3OpvirEwOe-m33-qL3HT&ccb=10-5&oh=00_Afs4WCmzKtDmyQWnO625gbm9-A0s_PusZD7iB34vbcVyHA&oe=69AD0318&_nc_sid=a53f5b",
+      "date_time": "2026-02-01 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1135326301902317",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_s7guuaya5ve-lN7QFv1cCBrICB1viKuorPY-DMQ7NSY0wzAVmFgGbm3KqO1js51RalAwIHFsFo6FAY9KHG4b0nJn9pjfJXfq8ZwcWU2RQu8icCbSaqA?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdkVPVMV_quBNCliZFOU9J435GIBja_ES9OEIBA3felcYDlZDHv9Xy5R9xnmj878tAMpgnjCymjhA2wU2xfyDWYZ&ccb=10-5&oh=00_AfvQ6qVqsPjPYNrqMNirXam72GFCOGhi-8msQfF_ctD51w&oe=69ACF0B0&_nc_sid=a53f5b",
+      "date_time": "2026-01-31 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "2928176000705223",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9I7x6WGqJSqEKA74MKqJqXoDaPO4lkBz5tdRJCQ_dNziK3wjioIE702h1m6B8imj3uhFkBJUZnzKZ4uIFQesQiQl_ErRnRYyesW-nWYmDrgxfzdmtkiw?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdnSkkGMwM5NtQFlWGF3_rJzfLrSmC8ruuHlFBQEvBrTLvk_2dSDf8yVxfpHCpO7SEf614GBnFSSjwdVQEIpwsxQ&ccb=10-5&oh=00_AfuBmAhIfWwN_JAUGMVbESt4UBvHURuvt_GrBn8aJhjAhQ&oe=69ACDBC1&_nc_sid=a53f5b",
+      "date_time": "2026-01-30 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1206424894803517",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9y6QsLsJC6w-uWKk5hWtRX2pCzZ4QQsIi7x-QRAS6Sx6X5b51_x1oAKG8ku_6udqQekWYfwWL8tI_T1UC9eu-gH_UsXT6l0hTKkfJ3VzDNMtyA0QhmGQ?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdnOI5drcLJIf4ZrKDj-ZqSrV_Jf4rzo6i6Tf8-ePBnsh0N_Z_XMsqoDVIFB4fwgQ--IbzJHDQH5ThoPk2krogSG&ccb=10-5&oh=00_AfuaCMZ_lGY-NHGyr7BARLIQeDssukLZuYZ0qw0FtbVtNQ&oe=69ACFABC&_nc_sid=a53f5b",
+      "date_time": "2026-01-29 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1288157683361595",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9BT2rAP2HB_cEaGFWRjVqODJd3o3DNkM4qs7aG1T0-VPy0iJwowfPjTrSZ2sFpWDbGMsm4VHzZ5Y4lQnOHC3Avo76tP94NyVkmBZEiWXjnwZD57cVO9w?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdkMootcZxhSoBUvYrKsvF9supS1nTzrvyr7hNLcke-LqTAAv16vc7BKc5skgM5W1c5I0bimFpryT0tIDwdTAiwB&ccb=10-5&oh=00_AftiH8QtEDfefl8EMnX2Ukr9uzETHiZurZeM2xZ-mHSjpA&oe=69ACE5E2&_nc_sid=a53f5b",
+      "date_time": "2026-01-28 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1388925249063735",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8cBZdtaR-pkmPFTJItotCunmMt0mysFyWSCbm71U7i3XG8VZeXoe4CQvZi3Ury0O-WmRAL7yd7wGn7nZOkGIGB-7VhrhhDpcn0cP_R3gSBTYTDPN2aLQ?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=Adm8Z0T8_ul7pBijuPG6Cr_vrWST2MyWP29FblzU1ma8V6Fjq8RwThaz-UnOika9atNJwrxrC5-UnKmz-C4ps5av&ccb=10-5&oh=00_AfstYN_qUZJ4ozOycA1ISCpGz7HTHRfKhW7WgoabCUmowg&oe=69ACF6E6&_nc_sid=a53f5b",
+      "date_time": "2026-01-27 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1582829299582999",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9gz6B1qwnYdnsCRkMy25nETv7wO74wGoTssHbondhTY6GXprt0kpSt4_GYsJm0Qs30yfGRkrTkoJGBfnxA0UotrfWRo1Bk11poBzg4Su0ZMLvpre7LlA?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdmFhblqr8tzR_AxE4pfjEw0ETjHjN8BGY0CjdEkLAtAG2QL0kOnxOleN1GD4Zmp1lGBM6ExiXuy-dJunY8cifsX&ccb=10-5&oh=00_Afvr4T1L9bH3rpoNqLKMY3_MjVxbknZ9MZsM3RS7IWJL9w&oe=69ACFCE9&_nc_sid=a53f5b",
+      "date_time": "2026-01-26 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1380592260745433",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-N3tkwOAY5NUnmi12R4vF-HVNwbdMnRp9WiYUtx0vPf7r0juW2mBrFG9yerLByS3FmyqzZ3klY2P0D7EtpRv1ct5YJLTVkE4kf4skPzhElaaiPYViIAw?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdnpgRFxBQb1qU7CT7rNRgVXIcWimVK5rWj2uZn2WttpvswJoQR0UtwR1X4Jj-m3GB7VrSbRmDgT9owJcpem6fQp&ccb=10-5&oh=00_AfveRPlKc3IJboLkaPj12RpPAGpEr_1pN2liXDScX43LmA&oe=69ACDE3B&_nc_sid=a53f5b",
+      "date_time": "2026-01-25 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "913650341061235",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8Gn7X-bgUnR9-aP06GDYlC3cpM9kkwUw8KvfOMC7xye6x_XdicE8OOLBW8sjhRzDI1wf0YTgG0zWgKS4_Pvab3Ee1ACqBHbbM_Q80fxcSZd46tlEMs?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdmTZB1fYgtZ14eQV11zIs3o0yGIgWdnC9X3fyoQZXAaqH05Vq7U5rAp4w8uh-Q3XeCl0t1yWkEsm7bJvnHwnCbo&ccb=10-5&oh=00_Aft2SzZ2HFhvgQ9agT5b5wjOs8-QJ0jCg_L1_NvGN-InAg&oe=69AD0CD3&_nc_sid=a53f5b",
+      "date_time": "2026-01-24 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1261975709128437",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-iY4R8444YM-7JKYRZ5MGl91HU15V47DQ6tt8uh2ToDHxCrsqMZBIHctOaT5DATOC2e1m6KD84GLHJmL1yE0DCvCzWWeyTgWw4Hi935grpKJSF8ahcLg?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=Adm2ePlKOj_4EPOrhi_dK3Ok9XMyLR57RiJHJOttKRVbVfaNfmFOKCmU9QCReWJlmLV_pGTCwrvxG4D_SRxpbn-3&ccb=10-5&oh=00_AfuCIXXrt8oiauLlkoUpkwRsfya1VXj-sDh9GY-pOuAmIQ&oe=69ACE85E&_nc_sid=a53f5b",
+      "date_time": "2026-01-23 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "902428028934585",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9NVsy-B8gQG-3Quv4FHB-YUUXLbJTKAbBKmU3FDjyu1kVmr0RJSVErj8VFlVND7OT2QFj7DztlVa1cxERLuu645gASCmefqBntgPWeM3_WoMlYpI6u?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdnGj74CwD52N2NF9cno5gwWvl4T38fdvJrgPPz4m6bJqNPjpFVo7FAfN0il6oYN6xhUn6qYx1BHv4Qg5HA4s6Vb&ccb=10-6&oh=00_Afst5RPhbBXQDEF9HAbsLqqMn7cIPd6T5pBMJy8lXCveZA&oe=69AD0063&_nc_sid=a53f5b",
+      "date_time": "2026-01-22 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "881564421149778",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_MG8_ZVWuntyRe7FS1aR_XsdZcOa4qbI32GHxiM8km9aa5vGhAu2zvvgeMLzwh20yDYgj0RO42SAcviFEDIfxn560by0Q6cRaQXO62tBjTcGM0lEV5?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdnzDX8OIXaFGvZ-pDgi3zIcxB9pRtdEi5vBsVvtQE-kkK1AyScdV58Ex48PT3cB_uGSW7oHKoDVPZp_CW8YVZ2h&ccb=10-5&oh=00_AfuCAbvUWH6l0F17EAsx529nEP9CsmBBL9BAeYA_kR9oaw&oe=69AD05EA&_nc_sid=a53f5b",
+      "date_time": "2026-01-21 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "3840963849544416",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_X1D4bBlHu6yWoz6a-uG9q4qpdCmIrvZOrTf-8j1Bd6JlZ-JtvSnWslDphWloTx6GBd7s7YkMHv1ChL8ojytZRHLICEQBebmDbWuY9er4E-Ow8EHQDDw?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdkzHnHD-2OwQMHaZkQXddPTo5j2L7IyzlFmMBFv8FZaDGLEq6cVA37VheUpVnJyRVKNDcgPS4PqFwIFbjbXd7rM&ccb=10-5&oh=00_AfuhLw0X-TNOjbu-H9n_eHFfuNke05M6YAj37dzsp3V5TQ&oe=69AD07AF&_nc_sid=a53f5b",
+      "date_time": "2026-01-20 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "886517467456394",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_epdBLnZ0fZXKRHiVgHtWDmb1RI5qbhbOB967qQ7ChPCLSkYvsRbve-HZqqoQthhmv5HMcWwVtOJ-h1uZDBtexYlGBOZ-asi0RQsxB9k6VYdRxUx6_?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=Adnot9jW6UP15W1qb8NYme8CWdnUxdAWH9QRJVUA3qwA2VUGVLLycHHdJ3wxC62GUibikuXv85Y_2sye28Qon8A0&ccb=10-5&oh=00_Aftqwvmztrbv7SPpKcSvEwker3Igu37SsGAMCZXAm_pqGA&oe=69AD07C8&_nc_sid=a53f5b",
+      "date_time": "2026-01-19 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1965761604096349",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8PJF5v_pJECpJJv1u2NG6u6gfOZeubYq_fV4jarJx0HabRoiOks0Jdo5HBztpotocAPwnz8UI7Dc_q1y4ynH9UdjDFG3AwKu0lQ2eSUzoBqRYGMImWUA?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=Adkk1LPS_KlspB3hJQ29ljYSWzyHnti5ZtH3Y-41TCOC9YmeVBKgWb_I7MVJ0ANOiFVBiUjeqiMFEt08Fin1ZLKg&ccb=10-5&oh=00_AfuxpHku8h1nCSsf1CkJV0qJEH9nooKsfD-9Ezd2dCnatw&oe=69ACD8CC&_nc_sid=a53f5b",
+      "date_time": "2026-01-18 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1220342072850031",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_jLGmn0AiTv2QGdY0rAXf7A7zos-F8NOw5mGi8rSaR5fpzPmXYXGHLaEWdhPaLBNUlRiQNca7ZtbpoAG13BGWuz1HuQMY91nt9CCw1uRjPGEdt5nXhaw?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=Admpb7zpVtOL0WtvwzlMaXugfQXfryqju195IVA1U9_GAqyfLqjV4ZdbcSfKwHKp8Ty0uqqFV4k-RBUZBY3D0iFP&ccb=10-5&oh=00_Afu_OYcC9kTWCmGz-Z4RGeE3ZqUq6n9_2L6_lfedzAk6LQ&oe=69AD030C&_nc_sid=a53f5b",
+      "date_time": "2026-01-17 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "25350189384677405",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9yFCLrstt0YYQzhLpe5D9yV14wVUuqBZnt1D3giFLb0jspXBEJI7c_3Gre7HZ5ugGLjDA7xlsXuHinm8mcAs00tfbaMXL9C6T3oa-BfOWLRMufuIKZC-Q?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdnzluXn8X2s9UNK6jeduL2gqqWr4PlP5QcoLa2NDZwjcIqnOwwgID5hB5okVq53sY2dpUSIe4PRuSJLffzG6vK2&ccb=10-5&oh=00_AfuU1h7ZQhRNgP5qCL5xLj9GaDtTZ--slVKDSzaFSOLlOA&oe=69ACF66E&_nc_sid=a53f5b",
+      "date_time": "2026-01-16 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "3197084473827179",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9UsaxWZb3N9PPfZGIqbgB2YUHSzq8THyHuGphlehgYaRDiN1gkvEJdaCa3MFVxmdtFIi6cxxCQqJeP0KTRuSscWQ70H-kubstwD73GR8abGymnOIoTFQ?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=Adlq8XyT7HuQmdkv8BznOE_HEFts0EowxIZHACtQ1KSeZfre7gS2EPZXpowo-K9Um6_fd5y2sDhLTrq1V109xl8m&ccb=10-5&oh=00_AfvEm6JEBbfoqAwC3no4UhYWalLfxzABCwvMC3ppSdY8UA&oe=69AD079D&_nc_sid=a53f5b",
+      "date_time": "2026-01-15 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1528436061718577",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_Iml7uAxySCDDctPODypTCq4anTGlpNmVsbhLKUEECqZu8hB-vGKQqXJH3i0OEPt_ZTcpt_-yyRtojQcj5PD-sNX0BjP9xT2B9QSosKNAUjjNCgnVkBw?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=Adl6O2VWbLFAc8ua-eiUNN9K4yQ3j4cgytwoxY8SPElXEGWJlwbOgq3wZf_Rt0dUDi_sSumjpK8Qe1CAYeL8r3QH&ccb=10-6&oh=00_Afst6DKpMqiSt25GF_Ekem9ev5YOrVYfb9OiaYOx9Xdy8A&oe=69AD0449&_nc_sid=a53f5b",
+      "date_time": "2026-01-14 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1218663296257692",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-S1B7dI-dcLmGrjFOLkfjXSlxruQLYnfyImBumccc8VR4d6KlHDz1xaP1peeMHSNlpNyU05LU3BNnPEFaZWx84qqazqWI7oKd15aX70IHqFW_LlehQUg?_nc_gid=HTzm7VQW3rHxtGFJ7Bs4tQ&_nc_oc=AdmLEeQdp_F0i39b40zKYhes12lQnlH2xlXAQdyl_pyswaQPTXUStUkDAoPrcEKobq_4TCmhPd8JJIJBSRFIjhiZ&ccb=10-5&oh=00_Afs7OT-7looBvDUe9G7VY8oHt_s7Y2tHXZZ-uppoQEXEzQ&oe=69ACD7D6&_nc_sid=a53f5b",
+      "date_time": "2026-01-13 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+slug,name,event_type,source,phi_col,S,arg_key,t_at_S,phi_at_S,min_phi,max_phi,n_points
+hurricane_melissa_10_27_2025,Hurricane Melissa 10 27 2025,hurricane,phi_heatmap,phi_aggregate,0.9026404985466916,0.0,8.0,1.9026404985466916,0.8546169014857141,1.9026404985466916,136
+hurricane_melissa_aftermath_2025_11_03,Hurricane Melissa Aftermath 2025 11 03,hurricane,phi_heatmap,phi_aggregate,0.3379950174551203,490.0,0.0,0.6620049825448797,0.6620049825448797,1.285257163551062,185
+the_earthquake_across_dhaka_division_bangladesh,"The Earthquake Across Dhaka Division, Bangladesh",earthquake,phi_heatmap,phi_aggregate,0.1657359487972756,220.0,8.0,1.1657359487972756,0.8573260167555994,1.1657359487972756,115
+the_earthquake_across_central_mexico,The Earthquake Across Central Mexico,earthquake,phi_heatmap,phi_aggregate,0.14533933291189638,470.0,0.0,1.1453393329118964,0.9774648331601836,1.1453393329118964,200
+global_earthquake_model_research_2025_sep_18,Global Earthquake Model Research 2025 Sep 18,earthquake,phi_heatmap,phi_aggregate,0.10705669033317888,50.0,0.0,0.8929433096668211,0.8929433096668211,1.0876318010504868,32

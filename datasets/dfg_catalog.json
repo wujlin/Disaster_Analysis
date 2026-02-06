@@ -1,0 +1,1651 @@
+[
+  {
+    "dataset_id": "1603570647757603",
+    "display_name": "The Flooding Across Northwestern Colombia",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Colombia"
+    ],
+    "date_range_start": "2026-02-03 16:00",
+    "date_range_end": "2026-02-04 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 83,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "947522614505481",
+    "bounding_box": {},
+    "collection_id": "1944075236187716"
+  },
+  {
+    "dataset_id": "898288549245887",
+    "display_name": "Tropical Cyclone Fytia Across Analamanga and Boeny Regions, Madagascar",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Madagascar"
+    ],
+    "date_range_start": "2026-02-03 08:00",
+    "date_range_end": "2026-02-04 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 365,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1942861459638751",
+    "bounding_box": {},
+    "collection_id": "907928545062728"
+  },
+  {
+    "dataset_id": "2400215927094863",
+    "display_name": "Winter Storm Fern Across Tennessee and Kentucky, US",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "2026-01-30 08:00",
+    "date_range_end": "2026-02-04 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 12,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1453544236086746",
+    "bounding_box": {},
+    "collection_id": "26068107169482234"
+  },
+  {
+    "dataset_id": "2673506263006023",
+    "display_name": "Winter Storm Fern Across Tennessee and Kentucky, US",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "3000-01-01",
+    "date_range_end": "1800-01-01",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 60,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1453544236086746",
+    "bounding_box": {},
+    "collection_id": "2161148864655958"
+  },
+  {
+    "dataset_id": "2383145292130335",
+    "display_name": "Winter Storm Fern Across Tennessee and Kentucky, US",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "2026-01-30 00:00",
+    "date_range_end": "2026-02-01 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 136,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1453544236086746",
+    "bounding_box": {},
+    "collection_id": "879722138101142"
+  },
+  {
+    "dataset_id": "761700556996705",
+    "display_name": "Winter Storm Fern 2026 01 27",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "3000-01-01",
+    "date_range_end": "1800-01-01",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 60,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "2392381371196073",
+    "bounding_box": {},
+    "collection_id": "1904795643760899"
+  },
+  {
+    "dataset_id": "1444576480719086",
+    "display_name": "Winter Storm Fern 2026 01 27",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "2026-01-27 00:00",
+    "date_range_end": "2026-02-04 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 229,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "2392381371196073",
+    "bounding_box": {},
+    "collection_id": "917493137528958"
+  },
+  {
+    "dataset_id": "740801659088506",
+    "display_name": "Winter Storm Fern 2026 01 27",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "2026-01-27 08:00",
+    "date_range_end": "2026-02-04 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 3,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "2392381371196073",
+    "bounding_box": {},
+    "collection_id": "785901080461560"
+  },
+  {
+    "dataset_id": "4214223752167099",
+    "display_name": "Storm Chandra 2026 01 27",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "United Kingdom"
+    ],
+    "date_range_start": "2026-01-27 00:00",
+    "date_range_end": "2026-02-04 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "885482210897869",
+    "bounding_box": {},
+    "collection_id": "2240928850011183"
+  },
+  {
+    "dataset_id": "1997385907487982",
+    "display_name": "Storm Chandra 2026 01 27",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "United Kingdom"
+    ],
+    "date_range_start": "2026-01-27 16:00",
+    "date_range_end": "2026-02-04 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 14,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "885482210897869",
+    "bounding_box": {},
+    "collection_id": "780541451735263"
+  },
+  {
+    "dataset_id": "903878912224698",
+    "display_name": "Flooding In Mozambique 20 January 2026",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Mozambique"
+    ],
+    "date_range_start": "3000-01-01",
+    "date_range_end": "1800-01-01",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 60,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1320702749778452",
+    "bounding_box": {},
+    "collection_id": "867529672865665"
+  },
+  {
+    "dataset_id": "878074721771794",
+    "display_name": "The Flooding in Mopani and Vhembe Districts, Limpopo, South Africa",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "South Africa"
+    ],
+    "date_range_start": "3000-01-01",
+    "date_range_end": "1800-01-01",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 60,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "2119308765489067",
+    "bounding_box": {},
+    "collection_id": "1435895771377476"
+  },
+  {
+    "dataset_id": "1304029558432254",
+    "display_name": "The Earthquake Across Central Mexico",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Mexico"
+    ],
+    "date_range_start": "2026-01-02 08:00",
+    "date_range_end": "2026-01-16 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 11,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "867110789405317",
+    "bounding_box": {},
+    "collection_id": "2346629035812267"
+  },
+  {
+    "dataset_id": "1553039769281990",
+    "display_name": "The Earthquake Across Central Mexico",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "Mexico"
+    ],
+    "date_range_start": "2026-01-02 00:00",
+    "date_range_end": "2026-01-15 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1067,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "867110789405317",
+    "bounding_box": {},
+    "collection_id": "1936321280636202"
+  },
+  {
+    "dataset_id": "1384932873142250",
+    "display_name": "The Earthquake Across Central Mexico",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Mexico"
+    ],
+    "date_range_start": "2026-01-02 00:00",
+    "date_range_end": "2026-01-07 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 519,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "867110789405317",
+    "bounding_box": {},
+    "collection_id": "876256618152457"
+  },
+  {
+    "dataset_id": "887176223902432",
+    "display_name": "The Earthquake Across Central Mexico",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Mexico"
+    ],
+    "date_range_start": "2026-01-02 00:00",
+    "date_range_end": "2026-01-07 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 28,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "867110789405317",
+    "bounding_box": {},
+    "collection_id": "821916640847503"
+  },
+  {
+    "dataset_id": "1553486449305980",
+    "display_name": "Flooding And Rain In Southern California 12 23 2025",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "2025-12-23 08:00",
+    "date_range_end": "2026-01-06 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 55,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1207066454090684",
+    "bounding_box": {},
+    "collection_id": "2312094409276631"
+  },
+  {
+    "dataset_id": "1609437733749748",
+    "display_name": "Flooding And Rain In Southern California 12 23 2025",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "2025-12-23 00:00",
+    "date_range_end": "2026-01-06 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1207066454090684",
+    "bounding_box": {},
+    "collection_id": "1849956902556991"
+  },
+  {
+    "dataset_id": "24022831430748522",
+    "display_name": "Flooding And Rain In Southern California 12 23 2025",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "United States"
+    ],
+    "date_range_start": "2025-12-23 00:00",
+    "date_range_end": "2026-01-06 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 115,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1207066454090684",
+    "bounding_box": {},
+    "collection_id": "1423037192726660"
+  },
+  {
+    "dataset_id": "1208651411125288",
+    "display_name": "The Flooding Across Peninsular Malaysia",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Malaysia"
+    ],
+    "date_range_start": "2025-11-29 00:00",
+    "date_range_end": "2025-12-06 00:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 107,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "4026198590857943",
+    "bounding_box": {},
+    "collection_id": "1397084938488731"
+  },
+  {
+    "dataset_id": "882332094465014",
+    "display_name": "The Flooding Across Peninsular Malaysia",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Malaysia"
+    ],
+    "date_range_start": "2025-12-01 08:00",
+    "date_range_end": "2025-12-06 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 50,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "4026198590857943",
+    "bounding_box": {},
+    "collection_id": "1294206889141521"
+  },
+  {
+    "dataset_id": "1241611861130550",
+    "display_name": "The Flooding Across Peninsular Malaysia",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Malaysia"
+    ],
+    "date_range_start": "2025-12-01 00:00",
+    "date_range_end": "2025-12-06 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 566,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "4026198590857943",
+    "bounding_box": {},
+    "collection_id": "1134912361830899"
+  },
+  {
+    "dataset_id": "1733919087283097",
+    "display_name": "The Flooding in Sri Lanka",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Sri Lanka"
+    ],
+    "date_range_start": "2025-11-29 00:00",
+    "date_range_end": "2025-12-11 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 203,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1924803048102600",
+    "bounding_box": {},
+    "collection_id": "25100925922869697"
+  },
+  {
+    "dataset_id": "2317358205353808",
+    "display_name": "The Flooding in Sri Lanka",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Sri Lanka"
+    ],
+    "date_range_start": "2025-11-29 00:00",
+    "date_range_end": "2025-12-11 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1924803048102600",
+    "bounding_box": {},
+    "collection_id": "2333552470504572"
+  },
+  {
+    "dataset_id": "837493009174405",
+    "display_name": "The Flooding in Sri Lanka",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Sri Lanka"
+    ],
+    "date_range_start": "2025-11-30 16:00",
+    "date_range_end": "2025-12-11 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 184,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1924803048102600",
+    "bounding_box": {},
+    "collection_id": "1801267363925823"
+  },
+  {
+    "dataset_id": "1397261878688059",
+    "display_name": "The Flooding in Sri Lanka",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "Sri Lanka"
+    ],
+    "date_range_start": "2025-12-08 00:00",
+    "date_range_end": "2025-12-09 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "1924803048102600",
+    "bounding_box": {},
+    "collection_id": "668609519519833"
+  },
+  {
+    "dataset_id": "1140820781558148",
+    "display_name": "Tropical Cyclone Senyar In Sumatra Indonesia 11.28.2025",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Indonesia"
+    ],
+    "date_range_start": "2025-11-28 08:00",
+    "date_range_end": "2025-12-12 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 56,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1167435482263686",
+    "bounding_box": {},
+    "collection_id": "2599508503766776"
+  },
+  {
+    "dataset_id": "1335285924951112",
+    "display_name": "Tropical Cyclone Senyar In Sumatra Indonesia 11.28.2025",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "Indonesia"
+    ],
+    "date_range_start": "2025-11-28 00:00",
+    "date_range_end": "2025-12-09 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "1167435482263686",
+    "bounding_box": {},
+    "collection_id": "1401993208020598"
+  },
+  {
+    "dataset_id": "1392589539188207",
+    "display_name": "Tropical Cyclone Senyar In Sumatra Indonesia 11.28.2025",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Indonesia"
+    ],
+    "date_range_start": "2025-11-28 16:00",
+    "date_range_end": "2025-12-12 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 63,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1167435482263686",
+    "bounding_box": {},
+    "collection_id": "833266469442099"
+  },
+  {
+    "dataset_id": "3301132476724325",
+    "display_name": "Tropical Cyclone Senyar In Sumatra Indonesia 11.28.2025",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Indonesia"
+    ],
+    "date_range_start": "2025-11-28 00:00",
+    "date_range_end": "2025-12-12 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 495,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1167435482263686",
+    "bounding_box": {},
+    "collection_id": "806552755743420"
+  },
+  {
+    "dataset_id": "1183399349847650",
+    "display_name": "The Flooding in Sumatra, Indonesia",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Indonesia"
+    ],
+    "date_range_start": "2025-11-28 08:00",
+    "date_range_end": "2025-12-09 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 58,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1909862436628462",
+    "bounding_box": {},
+    "collection_id": "1957587611638081"
+  },
+  {
+    "dataset_id": "1594209645081873",
+    "display_name": "The Flooding in Sumatra, Indonesia",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Indonesia"
+    ],
+    "date_range_start": "2025-11-28 00:00",
+    "date_range_end": "2025-12-09 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 426,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1909862436628462",
+    "bounding_box": {},
+    "collection_id": "1879375020121928"
+  },
+  {
+    "dataset_id": "1254746363341373",
+    "display_name": "The Flooding in Sumatra, Indonesia",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Indonesia"
+    ],
+    "date_range_start": "2025-11-28 08:00",
+    "date_range_end": "2025-12-09 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 49,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1909862436628462",
+    "bounding_box": {},
+    "collection_id": "1414557980005110"
+  },
+  {
+    "dataset_id": "854637200479085",
+    "display_name": "The Flooding in Hat Yai, Songkhla Province, Thailand",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-25 00:00",
+    "date_range_end": "2025-12-03 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 523,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "829545893287247",
+    "bounding_box": {},
+    "collection_id": "1624142691886746"
+  },
+  {
+    "dataset_id": "1360688099129497",
+    "display_name": "The Flooding in Hat Yai, Songkhla Province, Thailand",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-25 00:00",
+    "date_range_end": "2025-12-03 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 62,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "829545893287247",
+    "bounding_box": {},
+    "collection_id": "1161073802335854"
+  },
+  {
+    "dataset_id": "630027776863801",
+    "display_name": "The Flooding in Hat Yai, Songkhla Province, Thailand",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-25 16:00",
+    "date_range_end": "2025-12-03 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 20,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "829545893287247",
+    "bounding_box": {},
+    "collection_id": "826148506885799"
+  },
+  {
+    "dataset_id": "1372158640949275",
+    "display_name": "The Flooding In Southern Thailand And Malaysia",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Malaysia",
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-24 08:00",
+    "date_range_end": "2025-12-08 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 55,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1361460199045045",
+    "bounding_box": {},
+    "collection_id": "2225282344620565"
+  },
+  {
+    "dataset_id": "1723303335284297",
+    "display_name": "The Flooding In Southern Thailand And Malaysia",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Malaysia",
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-24 08:00",
+    "date_range_end": "2025-12-08 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 77,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1361460199045045",
+    "bounding_box": {},
+    "collection_id": "1940916846487667"
+  },
+  {
+    "dataset_id": "1342179897713810",
+    "display_name": "The Flooding In Southern Thailand And Malaysia",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Malaysia",
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-24 00:00",
+    "date_range_end": "2025-12-08 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 836,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1361460199045045",
+    "bounding_box": {},
+    "collection_id": "691095720737000"
+  },
+  {
+    "dataset_id": "856951877277079",
+    "display_name": "The Earthquake Across Dhaka Division, Bangladesh",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Bangladesh"
+    ],
+    "date_range_start": "2025-11-21 00:00",
+    "date_range_end": "2025-12-04 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 705,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1888540995076319",
+    "bounding_box": {},
+    "collection_id": "2062087394195997"
+  },
+  {
+    "dataset_id": "1785492615463575",
+    "display_name": "The Earthquake Across Dhaka Division, Bangladesh",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Bangladesh"
+    ],
+    "date_range_start": "2025-11-21 08:00",
+    "date_range_end": "2025-12-04 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 54,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1888540995076319",
+    "bounding_box": {},
+    "collection_id": "1546273249955243"
+  },
+  {
+    "dataset_id": "1471653427259830",
+    "display_name": "The Earthquake Across Dhaka Division, Bangladesh",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Bangladesh"
+    ],
+    "date_range_start": "2025-11-21 00:00",
+    "date_range_end": "2025-12-04 00:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 72,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1888540995076319",
+    "bounding_box": {},
+    "collection_id": "876202378085038"
+  },
+  {
+    "dataset_id": "1206560174663575",
+    "display_name": "The Earthquake Across Dhaka Division, Bangladesh",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "Bangladesh"
+    ],
+    "date_range_start": "2025-11-21 00:00",
+    "date_range_end": "2025-12-04 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "1888540995076319",
+    "bounding_box": {},
+    "collection_id": "830005189886849"
+  },
+  {
+    "dataset_id": "1585163106260328",
+    "display_name": "The Flooding in South Central Region, Vietnam",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Vietnam"
+    ],
+    "date_range_start": "2025-11-21 08:00",
+    "date_range_end": "2025-12-02 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 26,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1982422672601741",
+    "bounding_box": {},
+    "collection_id": "3036635629841378"
+  },
+  {
+    "dataset_id": "819582524042904",
+    "display_name": "The Flooding in South Central Region, Vietnam",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Vietnam"
+    ],
+    "date_range_start": "2025-11-21 00:00",
+    "date_range_end": "2025-12-02 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 55,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1982422672601741",
+    "bounding_box": {},
+    "collection_id": "1333292601321459"
+  },
+  {
+    "dataset_id": "1186394876705533",
+    "display_name": "The Flooding in South Central Region, Vietnam",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Vietnam"
+    ],
+    "date_range_start": "2025-11-21 00:00",
+    "date_range_end": "2025-12-02 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 483,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1982422672601741",
+    "bounding_box": {},
+    "collection_id": "828753763340031"
+  },
+  {
+    "dataset_id": "2739181849751928",
+    "display_name": "The Flooding in Central Thailand",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-14 00:00",
+    "date_range_end": "2025-11-21 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 624,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1083989240352154",
+    "bounding_box": {},
+    "collection_id": "845057215055499"
+  },
+  {
+    "dataset_id": "3193095804186999",
+    "display_name": "The Flooding Across Central Thailand",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-14 00:00",
+    "date_range_end": "2025-11-21 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "1149114166925348",
+    "bounding_box": {},
+    "collection_id": "1835550077047312"
+  },
+  {
+    "dataset_id": "806946752375998",
+    "display_name": "The Flooding Across Central Thailand",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-14 00:00",
+    "date_range_end": "2025-11-21 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 579,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1149114166925348",
+    "bounding_box": {},
+    "collection_id": "1720316712269511"
+  },
+  {
+    "dataset_id": "1989972738244106",
+    "display_name": "The Flooding Across Central Thailand",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-14 16:00",
+    "date_range_end": "2025-11-21 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 17,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1149114166925348",
+    "bounding_box": {},
+    "collection_id": "1457295915365722"
+  },
+  {
+    "dataset_id": "1573597270302202",
+    "display_name": "The Flooding Across Central Thailand",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Thailand"
+    ],
+    "date_range_start": "2025-11-14 00:00",
+    "date_range_end": "2025-11-21 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 49,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1149114166925348",
+    "bounding_box": {},
+    "collection_id": "1388672076298091"
+  },
+  {
+    "dataset_id": "1065583435585611",
+    "display_name": "Super Typhoon Uwan Across Northern and Central Philippines",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-09 00:00",
+    "date_range_end": "2025-11-18 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 719,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "768543686229339",
+    "bounding_box": {},
+    "collection_id": "1546008773081843"
+  },
+  {
+    "dataset_id": "855784936910194",
+    "display_name": "Storm No. 13 Across Central Vietnam",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-07 16:00",
+    "date_range_end": "2025-11-19 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 19,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "712991128500156",
+    "bounding_box": {},
+    "collection_id": "3180804435415235"
+  },
+  {
+    "dataset_id": "1895748438023074",
+    "display_name": "Storm No. 13 Across Central Vietnam",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-07 00:00",
+    "date_range_end": "2025-11-19 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 911,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "712991128500156",
+    "bounding_box": {},
+    "collection_id": "1799719387329926"
+  },
+  {
+    "dataset_id": "1374062590911468",
+    "display_name": "Storm No. 13 Across Central Vietnam",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-07 00:00",
+    "date_range_end": "2025-11-19 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 50,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "712991128500156",
+    "bounding_box": {},
+    "collection_id": "1564586091225944"
+  },
+  {
+    "dataset_id": "1497613291461201",
+    "display_name": "Storm No. 13 Across Central Vietnam",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-07 08:00",
+    "date_range_end": "2025-11-19 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 34,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "712991128500156",
+    "bounding_box": {},
+    "collection_id": "1398542798937619"
+  },
+  {
+    "dataset_id": "1364492905205455",
+    "display_name": "Typhoon Tino Kalmaegi 2025 11 05",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-05 00:00",
+    "date_range_end": "2025-11-19 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 591,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1460257131731099",
+    "bounding_box": {},
+    "collection_id": "1589881232371280"
+  },
+  {
+    "dataset_id": "33211473478452053",
+    "display_name": "Typhoon Tino Kalmaegi 2025 11 05",
+    "collection_title": "Business Activity Trends During Crisis",
+    "map_type_title": "Business Activity Trends During Crisis",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-05 00:00",
+    "date_range_end": "2025-11-19 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 911,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "1460257131731099",
+    "bounding_box": {},
+    "collection_id": "1169178277871393"
+  },
+  {
+    "dataset_id": "1324567145662631",
+    "display_name": "Typhoon Tino Kalmaegi 2025 11 05",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-05 16:00",
+    "date_range_end": "2025-11-19 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 34,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1460257131731099",
+    "bounding_box": {},
+    "collection_id": "727203873019270"
+  },
+  {
+    "dataset_id": "1131479522485136",
+    "display_name": "Typhoon Tino Kalmaegi 2025 11 05",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-05 08:00",
+    "date_range_end": "2025-11-19 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 19,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1460257131731099",
+    "bounding_box": {},
+    "collection_id": "718333941297425"
+  },
+  {
+    "dataset_id": "1159658832366190",
+    "display_name": "Typhoon Tino in Central and Eastern Visayas, Philippines",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-04 00:00",
+    "date_range_end": "2025-11-15 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 47,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "733282203115987",
+    "bounding_box": {},
+    "collection_id": "2029319717859941"
+  },
+  {
+    "dataset_id": "678687245253383",
+    "display_name": "Typhoon Tino in Central and Eastern Visayas, Philippines",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-04 16:00",
+    "date_range_end": "2025-11-15 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 23,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "733282203115987",
+    "bounding_box": {},
+    "collection_id": "1836245800362766"
+  },
+  {
+    "dataset_id": "1310400410837877",
+    "display_name": "Typhoon Tino in Central and Eastern Visayas, Philippines",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Philippines"
+    ],
+    "date_range_start": "2025-11-04 00:00",
+    "date_range_end": "2025-11-15 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 858,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "733282203115987",
+    "bounding_box": {},
+    "collection_id": "1372684421246600"
+  },
+  {
+    "dataset_id": "1693451371571961",
+    "display_name": "Hurricane Melissa Aftermath 2025 11 03",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Dominican Republic",
+      "Jamaica",
+      "Haiti",
+      "The Bahamas",
+      "Bermuda"
+    ],
+    "date_range_start": "2025-11-03 00:00",
+    "date_range_end": "2025-11-23 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1448062849592721",
+    "bounding_box": {},
+    "collection_id": "1844877632820070"
+  },
+  {
+    "dataset_id": "747262731704282",
+    "display_name": "Hurricane Melissa Aftermath 2025 11 03",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Dominican Republic",
+      "Jamaica",
+      "Haiti",
+      "The Bahamas",
+      "Bermuda"
+    ],
+    "date_range_start": "2025-11-03 00:00",
+    "date_range_end": "2025-11-23 00:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 214,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1448062849592721",
+    "bounding_box": {},
+    "collection_id": "1782245702733827"
+  },
+  {
+    "dataset_id": "1289565269594516",
+    "display_name": "Hurricane Melissa Aftermath 2025 11 03",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Dominican Republic",
+      "Jamaica",
+      "Haiti",
+      "The Bahamas",
+      "Bermuda"
+    ],
+    "date_range_start": "2025-11-03 08:00",
+    "date_range_end": "2025-11-23 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 174,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1448062849592721",
+    "bounding_box": {},
+    "collection_id": "1167010548865696"
+  },
+  {
+    "dataset_id": "4222997078018501",
+    "display_name": "The Flooding in Hue and Da Nang, Vietnam",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Vietnam"
+    ],
+    "date_range_start": "2025-10-29 08:00",
+    "date_range_end": "2025-11-10 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 100,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "674053035457524",
+    "bounding_box": {},
+    "collection_id": "1414986389975099"
+  },
+  {
+    "dataset_id": "869338815765203",
+    "display_name": "The Flooding in Hue and Da Nang, Vietnam",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Vietnam"
+    ],
+    "date_range_start": "2025-10-29 00:00",
+    "date_range_end": "2025-11-10 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 137,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "674053035457524",
+    "bounding_box": {},
+    "collection_id": "1127792939565723"
+  },
+  {
+    "dataset_id": "838457552396985",
+    "display_name": "The Flooding in Hue and Da Nang, Vietnam",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Vietnam"
+    ],
+    "date_range_start": "2025-10-29 00:00",
+    "date_range_end": "2025-11-10 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 670,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "674053035457524",
+    "bounding_box": {},
+    "collection_id": "836902395461458"
+  },
+  {
+    "dataset_id": "2327920630957580",
+    "display_name": "Hurricane Melissa 10 27 2025",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Dominican Republic",
+      "Jamaica",
+      "Haiti",
+      "The Bahamas",
+      "Bermuda"
+    ],
+    "date_range_start": "2025-10-27 00:00",
+    "date_range_end": "2025-11-10 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1515322732994087",
+    "bounding_box": {},
+    "collection_id": "811145724854880"
+  },
+  {
+    "dataset_id": "2317035405407646",
+    "display_name": "Hurricane Melissa 10 27 2025",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Dominican Republic",
+      "Jamaica",
+      "Haiti",
+      "The Bahamas",
+      "Bermuda"
+    ],
+    "date_range_start": "2025-10-27 08:00",
+    "date_range_end": "2025-11-10 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 217,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "1515322732994087",
+    "bounding_box": {},
+    "collection_id": "791684887170225"
+  },
+  {
+    "dataset_id": "1229745325844390",
+    "display_name": "Hurricane Melissa 10 27 2025",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Dominican Republic",
+      "Jamaica",
+      "Haiti",
+      "The Bahamas",
+      "Bermuda"
+    ],
+    "date_range_start": "2025-10-27 08:00",
+    "date_range_end": "2025-11-10 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 172,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "1515322732994087",
+    "bounding_box": {},
+    "collection_id": "789063513955321"
+  },
+  {
+    "dataset_id": "1096637342645947",
+    "display_name": "Global Earthquake Model Research 2025 Sep 18",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Portugal"
+    ],
+    "date_range_start": "2025-09-18 16:00",
+    "date_range_end": "2026-02-04 08:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 363,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "833232192361801",
+    "bounding_box": {},
+    "collection_id": "1851459522075479"
+  },
+  {
+    "dataset_id": "1968440140663647",
+    "display_name": "Global Earthquake Model Research 2025 Sep 18",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Portugal"
+    ],
+    "date_range_start": "2025-09-18 00:00",
+    "date_range_end": "2026-02-01 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "833232192361801",
+    "bounding_box": {},
+    "collection_id": "1373518674492546"
+  },
+  {
+    "dataset_id": "1126772169393938",
+    "display_name": "Global Earthquake Model Research 2025 Sep 18",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Portugal"
+    ],
+    "date_range_start": "2025-09-18 08:00",
+    "date_range_end": "2026-01-07 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 365,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "833232192361801",
+    "bounding_box": {},
+    "collection_id": "671815298719651"
+  },
+  {
+    "dataset_id": "782411531186786",
+    "display_name": "Drc Ebola Outbreak",
+    "collection_title": "Movement Between Places During Crisis",
+    "map_type_title": "Movement Between Places During Crisis (Bing Tiles)",
+    "countries": [
+      "Democratic Republic of the Congo"
+    ],
+    "date_range_start": "2025-09-09 16:00",
+    "date_range_end": "2025-12-08 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 365,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "578757368563727",
+    "bounding_box": {},
+    "collection_id": "24498235913196438"
+  },
+  {
+    "dataset_id": "1577071937009571",
+    "display_name": "Drc Ebola Outbreak",
+    "collection_title": "Facebook Population During Crisis",
+    "map_type_title": "Facebook Population During Crisis (Bing Tiles)",
+    "countries": [
+      "Democratic Republic of the Congo"
+    ],
+    "date_range_start": "2025-09-09 08:00",
+    "date_range_end": "2025-12-08 16:00",
+    "hours_in_window": 8,
+    "max_days_in_bulk_download": 365,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "578757368563727",
+    "bounding_box": {},
+    "collection_id": "815818714441275"
+  },
+  {
+    "dataset_id": "4048057922118931",
+    "display_name": "Drc Ebola Outbreak",
+    "collection_title": "Network Coverage Maps",
+    "map_type_title": "Active Network Coverage",
+    "countries": [
+      "Democratic Republic of the Congo"
+    ],
+    "date_range_start": "2025-09-09 00:00",
+    "date_range_end": "2025-12-08 00:00",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_GEOTIFF"
+    ],
+    "crisis_id": "578757368563727",
+    "bounding_box": {},
+    "collection_id": "659367656720825"
+  },
+  {
+    "dataset_id": "178833823852657",
+    "display_name": "Commuting Zones",
+    "collection_title": "Commuting Zones",
+    "map_type_title": "Commuting Zones",
+    "countries": [],
+    "date_range_start": "2020-10-04",
+    "date_range_end": "2024-02-04",
+    "hours_in_window": 4392,
+    "max_days_in_bulk_download": 13304,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV",
+      "DOWNLOADABLE_MBTILE"
+    ],
+    "crisis_id": "",
+    "bounding_box": {},
+    "collection_id": "812274483180323"
+  },
+  {
+    "dataset_id": "3874218465973730",
+    "display_name": "Travel Patterns (Edges)",
+    "collection_title": "Travel Patterns",
+    "map_type_title": "Travel Patterns (Edges)",
+    "countries": [],
+    "date_range_start": "2020-03-24",
+    "date_range_end": "2026-02-04",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 1095,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "",
+    "bounding_box": {},
+    "collection_id": "451078630526683"
+  },
+  {
+    "dataset_id": "1172981560192445",
+    "display_name": "Climate Change Survey",
+    "collection_title": "Climate Change Survey",
+    "map_type_title": "Climate Change Survey",
+    "countries": [],
+    "date_range_start": "2022-03-24",
+    "date_range_end": "2022-04-12",
+    "hours_in_window": 168,
+    "max_days_in_bulk_download": 7665,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "",
+    "bounding_box": {},
+    "collection_id": "3367161170205659"
+  },
+  {
+    "dataset_id": "3125711247742392",
+    "display_name": "Colocation",
+    "collection_title": "Colocation",
+    "map_type_title": "Colocation",
+    "countries": [],
+    "date_range_start": "2022-08-01",
+    "date_range_end": "2026-02-02",
+    "hours_in_window": 168,
+    "max_days_in_bulk_download": 5,
+    "downloadable_formats": [
+      "DOWNLOADABLE_ZIPPED_CSV"
+    ],
+    "crisis_id": "",
+    "bounding_box": {},
+    "collection_id": "469534685249709"
+  },
+  {
+    "dataset_id": "640679780696161",
+    "display_name": "Movement Distribution",
+    "collection_title": "Movement Distribution",
+    "map_type_title": "Movement Distribution",
+    "countries": [],
+    "date_range_start": "2022-12-01",
+    "date_range_end": "2026-02-04",
+    "hours_in_window": 24,
+    "max_days_in_bulk_download": 66,
+    "downloadable_formats": [
+      "DOWNLOADABLE_CSV"
+    ],
+    "crisis_id": "",
+    "bounding_box": {},
+    "collection_id": "1103194967011467"
+  }
+]

@@ -12,7 +12,7 @@ try:
 except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
-from disaster.population_io import load_population_file
+from disaster.population_io import load_population_file, resolve_subdir
 from disaster.geo import haversine_km
 from disaster.viz import save_png_and_pdf
 
@@ -177,8 +177,9 @@ def _find_t_at_S(phase0_csv: Path | None, slug: str) -> float | None:
 
 
 def _find_population_file(data_root: Path, ts_pt: pd.Timestamp) -> Path | None:
-    pop_dir = data_root / "population"
-    if not pop_dir.exists():
+    try:
+        pop_dir = resolve_subdir(data_root, "population")
+    except FileNotFoundError:
         return None
     pat = f"*_{ts_pt:%Y-%m-%d}_{ts_pt:%H%M}.csv"
     hits = sorted(pop_dir.glob(pat))
@@ -240,7 +241,11 @@ def run(cfg: Config) -> None:
     if pop_file is None:
         # fallback: use metadata's center_source_file if present
         src_name = str(meta.get("center_source_file", "")).strip()
-        cand = data_root / "population" / src_name if src_name else None
+        try:
+            _pop_dir = resolve_subdir(data_root, "population")
+        except FileNotFoundError:
+            _pop_dir = data_root / "population"
+        cand = _pop_dir / src_name if src_name else None
         pop_file = cand if cand is not None and cand.exists() else None
     if pop_file is None:
         raise SystemExit(f"未找到 population 文件（data_root={data_root} ts_pt={ts_pt}）")

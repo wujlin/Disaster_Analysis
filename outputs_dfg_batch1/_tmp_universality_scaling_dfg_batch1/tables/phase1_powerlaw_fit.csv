@@ -1,0 +1,6 @@
+slug,name,event_type,time_min_hours,time_max_hours,fit_ok,alpha,r2_loglog,n_points_fit,n_windows_in_range,track_anchor_to_t0_hours,r_min_fit,r_max_fit,y_min_fit,y_max_fit
+global_earthquake_model_research_2025_sep_18,Global Earthquake Model Research 2025 Sep 18,earthquake,24.0,72.0,1,-0.72085063288626,0.6461986761713165,7,1,,15.0,75.0,0.023270474677189235,0.10532321719353988
+hurricane_melissa_10_27_2025,Hurricane Melissa 10 27 2025,hurricane,24.0,72.0,1,0.5015994582342166,0.17103108854920823,33,1,,15.0,335.0,0.0014267703415455912,0.1305609029306698
+hurricane_melissa_aftermath_2025_11_03,Hurricane Melissa Aftermath 2025 11 03,hurricane,24.0,72.0,1,0.11210686851103406,0.004630883463160984,37,2,,15.0,495.0,0.0006820553182558253,0.18457313618097215
+the_earthquake_across_central_mexico,The Earthquake Across Central Mexico,earthquake,24.0,72.0,1,0.00765503234572866,0.0002799627470371213,49,1,,15.0,495.0,0.012723824683940954,0.0958044784109151
+the_earthquake_across_dhaka_division_bangladesh,"The Earthquake Across Dhaka Division, Bangladesh",earthquake,24.0,72.0,1,0.20434353751733347,0.44730850945411793,22,2,,15.0,225.0,0.04483774803563456,0.10372057801598822

@@ -13,7 +13,7 @@ except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 from disaster.geo import haversine_km
-from disaster.population_io import load_population_file, parse_window_start_pt
+from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.viz import save_png_and_pdf
 
 
@@ -109,9 +109,7 @@ def _is_pre_zero(n_crisis_pre: float, *, cfg: Config) -> bool:
 
 
 def run(cfg: Config) -> None:
-    pop_dir = cfg.data_root / "population"
-    if not pop_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{pop_dir}")
+    pop_dir = resolve_subdir(cfg.data_root, "population")
 
     out = _output_dirs(cfg.output_dir)
     _ensure_dir(out.root)

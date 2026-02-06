@@ -13,6 +13,7 @@ except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 from disaster.geo import haversine_km
+from disaster.population_io import resolve_subdir
 from disaster.viz import save_png_and_pdf
 
 
@@ -94,9 +95,7 @@ def _load_network_coverage_file(path: Path) -> pd.DataFrame:
 
 
 def run(cfg: Config) -> None:
-    nc_dir = cfg.data_root / "network coverage"
-    if not nc_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{nc_dir}")
+    nc_dir = resolve_subdir(cfg.data_root, "network coverage")
 
     out = _output_dirs(cfg.output_dir)
     _ensure_dir(out.root)

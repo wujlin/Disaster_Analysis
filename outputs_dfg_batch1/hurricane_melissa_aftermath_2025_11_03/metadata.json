@@ -1,0 +1,18 @@
+{
+  "slug": "hurricane_melissa_aftermath_2025_11_03",
+  "name": "Hurricane Melissa Aftermath 2025 11 03",
+  "event_type": "hurricane",
+  "data_root": "datasets/Hurricane_Melissa_Aftermath_2025_11_03",
+  "only_hour_pt": 8,
+  "t0_pt": "2025-11-21 16:00:00",
+  "t0_method": "auto_first_day_1600",
+  "track_anchor_ok": 0,
+  "t0_snap_ok": 0,
+  "center_lat": 19.22640071456933,
+  "center_lon": -71.78075461472417,
+  "center_method": "auto_centroid_abs_n_difference",
+  "center_source_window_pt": "2025-11-21 16:00:00",
+  "center_source_file": "Hurricane_Melissa_Aftermath_2025_11_03_Facebook_Population_During_Crisis_2025-11-21_1600.csv",
+  "first_population_window_pt": "2025-11-21 08:00:00",
+  "first_population_window_file": "Hurricane_Melissa_Aftermath_2025_11_03_Facebook_Population_During_Crisis_2025-11-21_0800.csv"
+}

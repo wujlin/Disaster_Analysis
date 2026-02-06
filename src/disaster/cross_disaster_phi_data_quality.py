@@ -14,7 +14,7 @@ except ModuleNotFoundError as e:
 
 from disaster.cross_disaster_phi_tau import DisasterSpec, load_catalog
 from disaster.geo import haversine_km
-from disaster.population_io import load_population_file, parse_window_start_pt
+from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.viz import save_png_and_pdf
 
 
@@ -410,10 +410,9 @@ def _maybe_plot_turkey_phi_zero_tiles(
     except Exception:
         return
 
-    pop_dir = Path(spec.data_root) / "population"
-    if not pop_dir.exists():
-        pop_dir = Path(spec.data_root) / "raw" / "population"
-    if not pop_dir.exists():
+    try:
+        pop_dir = resolve_subdir(Path(spec.data_root), "population")
+    except FileNotFoundError:
         return
 
     files = sorted(pop_dir.glob("*.csv"))

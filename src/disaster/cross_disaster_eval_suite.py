@@ -17,6 +17,7 @@ from disaster.binning_sensitivity_tau import run as run_binning
 from disaster.business_activity_recovery_by_distance import Config as BusinessConfig
 from disaster.business_activity_recovery_by_distance import run as run_business
 from disaster.cross_disaster_phi_tau import auto_t0_and_center, detect_three_phase, load_catalog, write_phase_summary_md
+from disaster.population_io import resolve_subdir
 from disaster.movement_recovery_by_distance import Config as MovementConfig
 from disaster.movement_recovery_by_distance import run as run_movement
 from disaster.network_coverage_validation import Config as NetworkCoverageConfig
@@ -326,7 +327,12 @@ def run_suite(
             )
 
         # Movement / Network coverage / Business activity（可用则跑）
-        if (spec.data_root / "movement").exists():
+        try:
+            resolve_subdir(spec.data_root, "movement")
+            _has_movement = True
+        except FileNotFoundError:
+            _has_movement = False
+        if _has_movement:
             print(f"[eval_suite] {spec.slug}: movement_recovery_by_distance")
             _run_step(
                 spec,
@@ -355,7 +361,12 @@ def run_suite(
                 error="missing movement/ directory",
             )
 
-        if (spec.data_root / "network coverage").exists():
+        try:
+            resolve_subdir(spec.data_root, "network coverage")
+            _has_network = True
+        except FileNotFoundError:
+            _has_network = False
+        if _has_network:
             print(f"[eval_suite] {spec.slug}: network_coverage_validation")
             pop_band_csv = out.population_redistribution / "tables" / "redistribution_by_distance_band.csv"
             pop_band_csv = pop_band_csv if pop_band_csv.exists() else None
@@ -384,7 +395,12 @@ def run_suite(
                 error="missing network coverage/ directory",
             )
 
-        if (spec.data_root / "business activity").exists():
+        try:
+            resolve_subdir(spec.data_root, "business activity")
+            _has_business = True
+        except FileNotFoundError:
+            _has_business = False
+        if _has_business:
             print(f"[eval_suite] {spec.slug}: business_activity_recovery_by_distance")
             _run_step(
                 spec,

@@ -1,0 +1,71 @@
+{
+  "dataset_id": "2327920630957580",
+  "display_name": "Hurricane Melissa 10 27 2025",
+  "collection_title": "Network Coverage Maps",
+  "countries": [
+    "Dominican Republic",
+    "Jamaica",
+    "Haiti",
+    "The Bahamas",
+    "Bermuda"
+  ],
+  "date_range": "2025-10-27 00:00 — 2025-11-10 00:00",
+  "files": [
+    {
+      "id": "1846528016231521",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_8GwYXwiA95u7IegLwJk37B_Fg3Gq6V5GMvh1BKXnstzqQSAUF8WkR_CfybctQB8_kdUioQ7_I7TXrdyqMG16ekqg7Sr9_kFrZ0RdO9LZffzQy25S3Ig?_nc_gid=6wBZXhA3YkPjSBwNGORZQw&_nc_oc=AdkjzrHO-Mmwr5AfKW4jIUO_kmL5_s4mCrQOX66Kc2h9Y54aSDboijnnkRVSlwz6t0EnzkpeHS7A0qzuna74A9Zt&ccb=10-5&oh=00_AfuxMJAVNf-yx_9_RSXhHq8-9dIo8ol8gxhVVnJ-E4t_DA&oe=69AD0205&_nc_sid=a53f5b",
+      "date_time": "2025-11-10 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1271641478318109",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9j4RbWG1NhpMFt1G4IE-bDtD33NT9jJ3LX_r5wsjIslIkD2P85-4Jz6vQdK1HVLIJ-VaKPtyZU238wvTw3qWV4zLvJvxmGQnHaBerxFixUmrLtR0jm4w?_nc_gid=6wBZXhA3YkPjSBwNGORZQw&_nc_oc=AdmcT10-GvYmu1kG_wtAzoMlxnwTnnkDaOqRStc_WeA9LsOGiLSt6CrAVrqRaRA9KzEh1WldVfuIncGe52FVTKEf&ccb=10-5&oh=00_AftvVL-OORZxBVhGfs2trYFei-oH7g7NDFcmtaUv2wCG5g&oe=69ACF4FC&_nc_sid=a53f5b",
+      "date_time": "2025-11-09 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1887206275552410",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-gjZbC2Fz8VC1Dnxzopiu-dR4nXS5EbI1S7CB1kJRQlPTvmgXh15aeFHZpkBDBq3PFU56yKLP4piIsX4m25_d5JU25iPYEgpT21RpEunmCZYhIQ8pr2w?_nc_gid=6wBZXhA3YkPjSBwNGORZQw&_nc_oc=AdkxCgDTL5e_aJh5D16QPZrAl6Vs6_bhWvGQ1kqDKx51ZZd2YqhC6lnh7ijyVLgvSAAiLU2l7uHP0Hf8PGq4iAex&ccb=10-6&oh=00_AfsviLZnb7PrVGpmw9nEAuVZB712qHRknsTZ8REClVsljw&oe=69ACE6D8&_nc_sid=a53f5b",
+      "date_time": "2025-11-08 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "644724698607034",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9MxxUfdZD-9DKki6o31eGGBraptbe9e7WLgZJltkMoebn_tOpd_of2ibwQx_ZEJAmG5u8Yl4QORSqpVCdWv5mAYk4-J4z2_7EF3oilBav1dM6dIOm-?_nc_gid=6wBZXhA3YkPjSBwNGORZQw&_nc_oc=AdnHmj-JmqBYMWufaeh6z3fYvd89RTe6yMZhM429x8LTIgkg56SdBhMtl2z7Paze7Xsre4i54Gsds7M6--txb1mP&ccb=10-6&oh=00_AfsQzy6KitWc34QKBsed5w6hqEpYTATAPNe7WeUgXVGyPQ&oe=69ACFA03&_nc_sid=a53f5b",
+      "date_time": "2025-11-07 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1178528404225704",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-LpSK8qKClFUCxG2D5HtZRBMK35EkW60OlYfUeZsozB6NLqdTzMw245Pw7efRoE7hEO1xcxFOlUp2lzFTv7cjokpFCWxWmwj1WrgydXrZpeHo3fgWkMw?_nc_gid=6wBZXhA3YkPjSBwNGORZQw&_nc_oc=Adn42DZNe7d5XXbftSJ35570t7At0xTnPVW5y5FqAQZPyE8syAmdtLzqPtAlXBXpOPA1EVu_olROGT-1OG8w37X1&ccb=10-6&oh=00_AfsqYgj4v5VXyeF_VyN9Lway_KFnsaXc7Geqv0toypR5ng&oe=69ACE323&_nc_sid=a53f5b",
+      "date_time": "2025-11-06 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "833723252569820",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8JNoNeuhzyDomMb430hv50tXxiTLs7AYMtz3cUehOfq7LeQZTNID45sILzoku35Svm9XZTtei_yq46rGXXDYWnBWFLtbDhIf-ah6yEWxg8LJXIdhUv?_nc_gid=6wBZXhA3YkPjSBwNGORZQw&_nc_oc=Adkxn2PJRjnE9H23fH8BkJ0a5phcTho9Rd0QG531dpcbcweFzD4dh0K0UaAPKG-Wds82-Z-jkmBTJOsNkVnX2-zO&ccb=10-6&oh=00_Aft_-cfTBkOI9uNYk0FPxknG3CI8GztEO4sDQBu7AfNXgQ&oe=69AD0C04&_nc_sid=a53f5b",
+      "date_time": "2025-11-05 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "4188064551450570",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8PRn-g843Z1ydb1J25huLvVjPDKOcrnefTgL_eUZRW3cvqVjhrnb4nv4NJvjDxkmisq8hBRhfTcjKIKaua1dTNG6R8aA9exMwav6ddCCmmwRCv96V3kg?_nc_gid=6wBZXhA3YkPjSBwNGORZQw&_nc_oc=AdmIjLjDwIs7xvMA_L6IUHzxlyJwYoPwHo8BfG0XKtqILpyzRB7kp2FSRjqojxqEm4xr62XDPdJPfMRg2mal4Vnd&ccb=10-6&oh=00_AftAiYhwS1FT8pJvJYjnNvkVL4Sj49IPHvUGBMD_IRd1mQ&oe=69ACED70&_nc_sid=a53f5b",
+      "date_time": "2025-11-04 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    }
+  ]
+}

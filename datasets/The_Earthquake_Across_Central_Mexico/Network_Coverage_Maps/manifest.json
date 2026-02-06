@@ -1,0 +1,59 @@
+{
+  "dataset_id": "1384932873142250",
+  "display_name": "The Earthquake Across Central Mexico",
+  "collection_title": "Network Coverage Maps",
+  "countries": [
+    "Mexico"
+  ],
+  "date_range": "2026-01-02 00:00 — 2026-01-07 00:00",
+  "files": [
+    {
+      "id": "1410819267431413",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-G4-DL-8zGYKnybGVxlNBdXlnieAiFQTeM4TpIq2wW3YIUEYVF2OhUK-7oJcjCNDeMMwoDGP282jsVIO37uWGEgtxIXCQCGZESyq_uFCSkgQHTkrKXLg?_nc_gid=MRqfKkjYx2-SAHlBepUoMQ&_nc_oc=AdkG1oV7TsTF-W27H1JqARr1nvzetQpz-uV62zfLvzzY58c8XyaNHUow02NbzxLGYatdMw76nn-rDO_hccOr1YNu&ccb=10-5&oh=00_Aft3rhp2056yDNhO-0LZJBJaQGeLCKICYMpuvLQxB5JB1A&oe=69ACEF6D&_nc_sid=a53f5b",
+      "date_time": "2026-01-07 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1608758426779078",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_7-uK4lIoNidU25xsoCLJxz8zp8GdMm8d-W2hi-4hKqjha_FxlzO002yK-aOfRU9V_AV5gm6ZpXgDAf4VrQC6FqCwje_Mm506uKLyht3CKUlTUHhH6IQ?_nc_gid=MRqfKkjYx2-SAHlBepUoMQ&_nc_oc=Adnj5NUWqynyHsPICfSwXG60ZMg1tL3LaEqgyTBVeDMIK8w101JuIv9CE2q8cUVAQMOHuitvh9tJCbyoW9dK7xXV&ccb=10-5&oh=00_AftRx2QKDomFo1jFWXgV97gkp0u5HlsQJ3q7kNv8XFqZpA&oe=69AD0E5E&_nc_sid=a53f5b",
+      "date_time": "2026-01-06 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "26012068585045642",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_wm0NbF9GJZnKYv6TKg0cHU465m5NKgTRZvwbEy3PxMMlA-x3Vgor2EDVLMirYfs0PB1dXLrPH05WOURPTfdmkbLHck0OllwXFel3lbYxLPZns5k3bYz8?_nc_gid=MRqfKkjYx2-SAHlBepUoMQ&_nc_oc=AdkiBMONlm33lpbYZ5k8fTHxsh1U2hS3x3xTxarrK3W1SaRCkuUCxTSheFjHpd8kngtrBfioFdg59z4LbsLnBOJt&ccb=10-5&oh=00_AfsEcC-ehlzkiE3znQEfGnqw83sUA1jO3d-hiyjfu8qITw&oe=69ACE250&_nc_sid=a53f5b",
+      "date_time": "2026-01-05 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1397395348512699",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-hryxLZnVXEGWkEeE00nlIz76-dg3AsxMMMQnDXfsm0A3znAicUFa6MXflg0UXH3AYqi_okrHy8fQC0c3tNv9o4P6ZQvGBjQ3XffW0IHkmDrRC9mEjCA?_nc_gid=MRqfKkjYx2-SAHlBepUoMQ&_nc_oc=Adnw1PkA2MjGKKfZ47w-1KFvFYEVuhSXeeEp8eHmgRU7Kkz_AnrHEI95dUeHqCRYcpgSRqbm8GfPpHA5qaL-3VVc&ccb=10-5&oh=00_AfsGQKZcmSjSAx5w6izdf1W-WQIFtOSIn0qhrHbFlDVSMQ&oe=69ACEF3A&_nc_sid=a53f5b",
+      "date_time": "2026-01-04 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1367438524585701",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-rzFrQ-DVQSwKppsVs4K8RVtMVumT_iirBRK8PL99RyE0L9QX_Gy95dovLHawVWDSmeLNMVBs3vG5a8fPI-MNNj_j1vBv2zm4QfhQdS3cB551qL_cwOg?_nc_gid=MRqfKkjYx2-SAHlBepUoMQ&_nc_oc=Adl0JvO3hOV6CvSPcVKuG3WGd69EhfShUaRy77BSecvdVGm9VAo_qYk5HecdWoimKL8hqbS1_rxiH58UJ8ixa1KN&ccb=10-5&oh=00_Afv2AIbQ7KpC4v24ndb-IBu-V1el94M74AO0Ya2OqYenQA&oe=69ACEF2B&_nc_sid=a53f5b",
+      "date_time": "2026-01-03 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "2197486237445253",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An85tW0byiwiH1c_1JZRgYsueyu54EHX3drQ7gFBRKIHW7AQDQwrexiCa4DbrTVEqB2Bzwp_DJK44yLg3nDvu1kYUpIawD1X-cNToYWxSQRGP-hmbW8GeA?_nc_gid=MRqfKkjYx2-SAHlBepUoMQ&_nc_oc=Adm_6_q9GdBnAIvFjRkn3zhm9qWSIqwtXPr8zEBGR4r5r_rBh1_wAbYXmFVu3Y9Av56NLTBAtXYwyO3OJFqIKdql&ccb=10-5&oh=00_Afv6ym-Bi2UHTV4XDFSIoSQr-vW0Fa78Mg58uMV0IJ9-Hw&oe=69ACF752&_nc_sid=a53f5b",
+      "date_time": "2026-01-02 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    }
+  ]
+}

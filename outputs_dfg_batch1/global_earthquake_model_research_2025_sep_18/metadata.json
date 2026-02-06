@@ -1,0 +1,18 @@
+{
+  "slug": "global_earthquake_model_research_2025_sep_18",
+  "name": "Global Earthquake Model Research 2025 Sep 18",
+  "event_type": "earthquake",
+  "data_root": "datasets/Global_Earthquake_Model_Research_2025_Sep_18",
+  "only_hour_pt": 8,
+  "t0_pt": "2026-01-06 16:00:00",
+  "t0_method": "auto_first_day_1600",
+  "track_anchor_ok": 0,
+  "t0_snap_ok": 0,
+  "center_lat": 38.896118009340654,
+  "center_lon": -9.176124681338374,
+  "center_method": "auto_centroid_abs_n_difference",
+  "center_source_window_pt": "2026-01-06 16:00:00",
+  "center_source_file": "Global_Earthquake_Model_Research_2025_Sep_18_Facebook_Population_During_Crisis_2026-01-06_1600.csv",
+  "first_population_window_pt": "2026-01-06 08:00:00",
+  "first_population_window_file": "Global_Earthquake_Model_Research_2025_Sep_18_Facebook_Population_During_Crisis_2026-01-06_0800.csv"
+}

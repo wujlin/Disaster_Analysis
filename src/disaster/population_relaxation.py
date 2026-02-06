@@ -13,7 +13,7 @@ except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 from disaster.geo import distance_bin_labels, haversine_km
-from disaster.population_io import load_population_file, parse_window_start_pt
+from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.relaxation_fit import try_fit_relaxation_models
 from disaster.viz import plot_relaxation_curves, plot_zscore_heatmap
 
@@ -134,9 +134,7 @@ def summarize_by_distance(
 
 
 def run(cfg: Config, *, max_files: int | None = None) -> None:
-    pop_dir = cfg.data_root / "population"
-    if not pop_dir.exists():
-        raise FileNotFoundError(f"未找到目录：{pop_dir}")
+    pop_dir = resolve_subdir(cfg.data_root, "population")
 
     out = _output_dirs(cfg.output_dir)
     _ensure_output_dir(out.root)

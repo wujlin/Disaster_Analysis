@@ -1,0 +1,123 @@
+{
+  "dataset_id": "1553039769281990",
+  "display_name": "The Earthquake Across Central Mexico",
+  "collection_title": "Business Activity Trends During Crisis",
+  "countries": [
+    "Mexico"
+  ],
+  "date_range": "2026-01-02 00:00 — 2026-01-15 00:00",
+  "files": [
+    {
+      "id": "2150405755714022",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_0bBBj1P4OMxPRKZcbYbeKNSVwbvJ0PjjBEY0fywAGo6ivbg2afuxAx9hAN5EiQGhwREPgSI91cSoLKpgVYgMAym6alExi9B7AnROijetJ7Fq0lmHPuw?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=Adn965tGP95pqsDqeNE73WpC6CGbn_IB9YuaIv44CF-MiwJ5vSMzWuNIZJJD_ip4aWMlOoaTE6nEqcqPAirXDyBp&ccb=10-5&oh=00_AfsbBYadRaAAr2ZMoAPF-xiQPTQVm4Qj5hzwIbRxMV_FdA&oe=69ACE212&_nc_sid=a53f5b",
+      "date_time": "2026-01-15 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1889473948595638",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9o0V63Zq_m_fDCyceTBGdJLNnO-ibJFQZ4JdMDohJMKTS8ugrusNGMuXShwDHWVlWtJtaZZyad2Radqh0UfDmVD0on3EXHz-mS0Zcwxf0H4azJt5YXEw?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdmvTch82M1K3SakOEr6FxAQBke6-uNuX_fP31XXowjpKDBBU8t0vNrC--VwqwyHziRl4dh8efXwhhkYU0oRmu4w&ccb=10-5&oh=00_AfsD-ql15ueUxuuHri6_h8ZF1Cu6fmmX1exB6eLUvovDtw&oe=69ACFEDF&_nc_sid=a53f5b",
+      "date_time": "2026-01-14 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1418200293020992",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_hXaUmU7RwuZsh8s8st6yXCs85ew2c1Ea_ILk0ldhojnomheYdn3xkLFTs5tbC4Ax8wAuWCJEPy5uIgzCzD1YlXLkkdcBvaXvTYleJ-7JSRE52WBDh2g?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=Adkc440Ubc8JKEsOkcGAaP4WAQPud_D98__YysKnszL-DBPEHFOvkzj8ahjnCDh7lpE5EyiqvSfArA9QGSrHeRfF&ccb=10-5&oh=00_AfsElUJ9_DM1ZtlRxiaBhWzmv9JFAl-3cg6iP9CKh1nRXQ&oe=69ACDAB8&_nc_sid=a53f5b",
+      "date_time": "2026-01-13 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1361777121944590",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8UsY8R455lOm8GPo9yiV6QMDx_B7GbnCh-yc_4oDgwIG3l90f3s5pJRq6JWr7qa0GeqzO6yeELrCxxlA_90jIuuQ-rOU0OgI8rlQskkqi8SXrnQ0yzdw?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdltyGRHEqe_Cz8VNvF69U7IizTXyayNq0cz2pi7aPmsU2FVupym5HXxMyc5_wFCdTjleoy_pkKe4ivqQ8W2FVzJ&ccb=10-6&oh=00_Afud32_43Se8ljAc1EreQ9KjKHBM15428Q3PhvAzbzQCEg&oe=69ACF251&_nc_sid=a53f5b",
+      "date_time": "2026-01-12 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1602737847811946",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8GxidAYaaL7iM-uSMiMgTtmx_VeFgerBkKFPsAgNQBFSxsg_adNLhr0Dod7Yq2f12K65Ulxv_mXtxSfS-LwDCSMRke5t3kb576smIjw3khVoQlj1CwRA?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdnFxLv0n5CwBo__wWQ0-rxkwFckAm4VX5RWDyJPxXDWAVWklXtNHpCriKrIppC1IJLCM7OZK7PGQWgryGQw_jVi&ccb=10-6&oh=00_AftcXx7U3WvcWqnFk4G2fxwRMkU7dUpS00WD-e7wJkkOPw&oe=69ACE380&_nc_sid=a53f5b",
+      "date_time": "2026-01-11 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "2065542867621104",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8D-8EW1iFji5wmtMFagnnX5xv31vbRTK2zKoeMKT-yakkNlKtRn9gb-pFsUZ2d3MNdJDZS7Gzw_mM0zHx92D-_jU_7McfitpTfAT0NA4RIeiBvCICZxw?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdkcyFPd2OrT3wR-96GZMWEE6vao8_vEIDc8j59zNLTkj656u1icYsSaKqRrk9iy5hO3zLg4js6v5xJ8erBYm2-8&ccb=10-6&oh=00_AfumVDmasFgxygVbqpfNjUxLuJoL8l9Lo3urQ0vSzwdrJw&oe=69ACFAAC&_nc_sid=a53f5b",
+      "date_time": "2026-01-10 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "4151075031823778",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9nXZTvW2t9yO7e-AGhWiLjidBrcx42VfFhnxQVEjuiGUcKEWLKKDZu-_Nrm0pqcJqPx9j3DCIxJmlvwMb8JMT0z0CDzYu7Vgd8OySA27h9uvxtgIivEQ?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdlOnJRzzhQbLi5ApKfwr6t8rm4zsPL21o0M_DhtvVwvbeMu8lWcxi0xFUWdhQhJ-5DhVk2-akaJtDnuX4gdFgF2&ccb=10-6&oh=00_AfvvpX33P4UN1fr3xEi35QCzgffh0_lt4ibsuC_JzhKSqQ&oe=69AD0E95&_nc_sid=a53f5b",
+      "date_time": "2026-01-09 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "4164689420418058",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9Lvzj0ktnSqZWmMxNKcvZETD2WGswHbQ7PJgDjqxb25SojMxsnTKgwW_MS1f2-v8jWBjI3ld6p_asm1yhA85pJXFDIgm7g00SEynmK7Iyt_q3Zi5qQ5A?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=Admo7LMewfwXeA4Ek2ERgsueo3MhSdrTeyDSXqbcqAm_neAa94qhLsHFkJEoj0O8YaxZ1yBjkVf5PY8KswzLFIXR&ccb=10-6&oh=00_Afty3iwOTYXWa9u0nttCe2vpH3rdWx9qA86RBZcEvHitYw&oe=69ACE31F&_nc_sid=a53f5b",
+      "date_time": "2026-01-08 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1449232043539069",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-u9yYYEjLPAvXU3raafJ0WXLq5W62MuaZr5IqKiAoRHItM9R4ECp3R9z4HijFUAh9MSVm7hMC6WT07OTKaSHWyopTxY2LN_sDzS_4H4mYnY311oUnzUg?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdmWZerdn5_r-DfzarW_WK6drFyED-UIQscVtqOy_T3EAxoFxxIv0cbvuRYVAhFLWbZ0RJKtTMK6t82q73ZTHzkD&ccb=10-5&oh=00_Aft8a492Dl5kcs-WJeJeuusZq2MGVbJ42ZxxsOLsuMgirQ&oe=69ACECE6&_nc_sid=a53f5b",
+      "date_time": "2026-01-07 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "2458291877935777",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An9KO0sdKyD0rs4db8CB6GK4ZTgq6LkZklF7lkaz6tJUImGyGBBOl6K4AhoIsoIOEcWeGZfEbG81vGAg6ozK2p3Mb6NJa0yVXYl5sbC2WCwAMPXUU4WlfQ?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=Adn-ILwj7nJgVqyMe-ftCFrlowLkTQsEFh-m6XGQ2Ai-50pzH_iOXbjFGv7YbssmZsRvIrlh35Qn206epnXq_N6D&ccb=10-5&oh=00_Afv_Pabo6MHKmyvhAgXfc0SbK9JIxIqxd5OiGGQ5b2Jz6w&oe=69AD0756&_nc_sid=a53f5b",
+      "date_time": "2026-01-06 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "880604824966243",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8gBa1FuqX9oigbkdpLlrNv06g-vyySWjNTEouxcc47Cjms4APcPg4_E8k9MYiQWOWxjnQ3M_PaYgweAt_B2cBmTiTB-mnb5kfS48MNgHZX3nPZryXe?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdlajQ6uOMyLG2DbcRL1XT4a_yVzUOslmqWkRQ-duaK89N8FgVbgWjVNOUtLD7AFravLSCaNjtIvndmW9YOApnTH&ccb=10-5&oh=00_AfukQu-R6RfSrYEnFOvmg0x2bAZhdYNcVurI2lbZbOm9aQ&oe=69ACEE62&_nc_sid=a53f5b",
+      "date_time": "2026-01-05 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "767475955849738",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An_JNqWAS89ttqMEgqSVoz59Am9pKeNqRLEFeAGLliouv5cG-TOv_HNGOznRZjtaz1vsPXAlsa2uZOMC8Qa6QtiHSfEF1wBPBWkp7iysRHrKieubkMDb?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=AdnlEt9MT3SUsgeJVoEE3A_CVMyx_7sCSK-EiXLr8yOO8tF3VqdP-KHR7TFIR_qltA54yAUVs-UhtipBhw1zZmil&ccb=10-6&oh=00_AftxbZtjnGaUDI2cLLEkabMCq_aQCS5XDqDwP68Np4n5mA&oe=69ACF815&_nc_sid=a53f5b",
+      "date_time": "2026-01-04 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1522527678854770",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An8HHvS3VLPlxFm7k-FQTPq5G7nWvmlYrPEaM2ib4NPFHTSAsmFZEBaDY4hAXOLKgZtzq5CWexOivvQpuQ5euyFdQYvdwQMg92WO_fCWl0DAbkHHlChz4g?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=Adng3zxkGJgNdkUgnI19EwU4hHy6mFPojYovTH7VCmS070bJeeMpkrPaoC0_HbC9fHyASziOi2ff7fskbOjS1gdg&ccb=10-6&oh=00_Aft2QP0041-HKyjPAFRmQbbCnlURNx-q0oRymnlCsvr7PA&oe=69AD0DAE&_nc_sid=a53f5b",
+      "date_time": "2026-01-03 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    },
+    {
+      "id": "1928475141404708",
+      "cdn_url": "https://scontent-mia3-3.xx.fbcdn.net/m1/v/t0.40481-6/An-rP4t_p8p2ULeq9j8nrtv2gjS0y70khekgcYNRAJc5tap7N4YYjaVBsBngvI5VXHJadnxWFf1Ojjywl97V_rOEa6JMwqK7TNe5k1YYcS5nb7lF_hW32w?_nc_gid=1zZVrFFTk9BKUKD5DUZtOQ&_nc_oc=Adk-PJa5uvbRgvR8kALBkU1r4edL5E2Vtg4gn3dTMRwGUElw1asAXD-UUKLDYMRS5c6qkF53tAthz9ebckAsEk5a&ccb=10-6&oh=00_AfuLdnA5F5xERLYpvffJnoXk2AIEXQYgNQtbK8HUlEtcew&oe=69ACE95A&_nc_sid=a53f5b",
+      "date_time": "2026-01-02 00:00",
+      "content_type": "text/csv",
+      "resource_type": "DOWNLOADABLE_CSV",
+      "size": 0
+    }
+  ]
+}
