@@ -1,6 +1,6 @@
 slug,name,data_root,event_type,t0_pt,center_lat,center_lon,only_hour_pt,outflow_phi_threshold,inflow_phi_threshold,center_track_csv,center_track_to_tz,center_track_storm_name
-global_earthquake_model_research_2025_sep_18,"Global Earthquake Model Research 2025 Sep 18","datasets/Global_Earthquake_Model_Research_2025_Sep_18",earthquake,,,,8,0.9,1.1,,America/Los_Angeles,
-hurricane_melissa_10_27_2025,"Hurricane Melissa 10 27 2025","datasets/Hurricane_Melissa_10_27_2025",hurricane,,,,8,0.9,1.1,,America/Los_Angeles,
-hurricane_melissa_aftermath_2025_11_03,"Hurricane Melissa Aftermath 2025 11 03","datasets/Hurricane_Melissa_Aftermath_2025_11_03",hurricane,,,,8,0.9,1.1,,America/Los_Angeles,
-the_earthquake_across_central_mexico,"The Earthquake Across Central Mexico","datasets/The_Earthquake_Across_Central_Mexico",earthquake,,,,8,0.9,1.1,,America/Los_Angeles,
-the_earthquake_across_dhaka_division_bangladesh,"The Earthquake Across Dhaka Division, Bangladesh","datasets/The_Earthquake_Across_Dhaka_Division_Bangladesh",earthquake,,,,8,0.9,1.1,,America/Los_Angeles,
+global_earthquake_model_research_2025_sep_18,"Global Earthquake Model Research 2025 Sep 18","datasets/Global_Earthquake_Model_Research_2025_Sep_18",earthquake,2025-09-18 08:00:00,38.896118009340654,-9.176124681338374,8,0.9,1.1,,America/Los_Angeles,
+hurricane_melissa_10_27_2025,"Hurricane Melissa 10 27 2025","datasets/Hurricane_Melissa_10_27_2025",hurricane,2025-10-27 08:00:00,16.4,-77.8,8,0.9,1.1,,America/Los_Angeles,
+hurricane_melissa_aftermath_2025_11_03,"Hurricane Melissa Aftermath 2025 11 03","datasets/Hurricane_Melissa_Aftermath_2025_11_03",hurricane,2025-11-03 00:00:00,18.1,-78.0,8,0.9,1.1,,America/Los_Angeles,
+the_earthquake_across_central_mexico,"The Earthquake Across Central Mexico","datasets/The_Earthquake_Across_Central_Mexico",earthquake,2026-01-02 00:00:00,16.875,-99.336,8,0.9,1.1,,America/Los_Angeles,
+the_earthquake_across_dhaka_division_bangladesh,"The Earthquake Across Dhaka Division, Bangladesh","datasets/The_Earthquake_Across_Dhaka_Division_Bangladesh",earthquake,2025-11-21 00:00:00,23.858,90.54,8,0.9,1.1,,America/Los_Angeles,

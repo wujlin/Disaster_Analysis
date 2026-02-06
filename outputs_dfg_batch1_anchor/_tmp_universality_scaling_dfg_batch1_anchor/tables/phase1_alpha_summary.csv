@@ -1,0 +1,2 @@
+n_fit_ok,alpha_mean,alpha_std,alpha_cv,strong_signal_threshold,time_min_hours,time_max_hours,r_min,r_max,y_min,min_tiles,min_windows,max_track_anchor_gap_hours,detrend_far_rmin_km,detrend_far_rmax_km,min_coverage_frac
+5,0.861614957708831,0.6778514162869156,0.7867219692766576,0.1,24.0,72.0,10.0,500.0,0.0001,0,0,,,,

@@ -518,9 +518,12 @@ def cmd_download(args: argparse.Namespace) -> None:
         print(f"  ID: {dsid}")
 
         # 获取文件列表
+        # 默认下载到该数据集的 date_range_end；如提供 --end-date 则覆盖（便于抓取早期窗口）。
+        end_date = str(args.end_date).strip() if getattr(args, "end_date", None) else ""
+        end_date = end_date or ds.get("date_range_end", "")
         files = fetch_file_urls(
             session, dsid, sp,
-            end_date=ds.get("date_range_end", ""),
+            end_date=end_date,
             num_dates=args.max_dates,
         )
 
@@ -719,6 +722,7 @@ def main() -> None:
     p_dl.add_argument("--type", help="按数据类型筛选 (Population/Movement/Network/Business)")
     p_dl.add_argument("--country", help="按国家筛选")
     p_dl.add_argument("--max-dates", type=int, default=100, help="最大下载天数 (默认 100)")
+    p_dl.add_argument("--end-date", default="", help="覆盖 catalog 的 date_range_end（格式：YYYY-MM-DD HH:MM）")
     p_dl.add_argument("--format", default="csv",
                        help="下载格式: csv (默认) / geotiff / geojson / all")
     p_dl.add_argument("--yes", "-y", action="store_true", help="跳过确认直接下载")
