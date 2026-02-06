@@ -18,7 +18,7 @@
 
 ## 2. 分析迭代记录（按模块）
 
-> 时间以 outputs 中文件时间为准（2026-01-31 ~ 2026-02-03）。
+> 时间以 outputs 中文件时间为准（2026-01-31 ~ 2026-02-06）。
 
 ### 2.1 Population：φ（n_crisis / n_baseline）与基础现象
 
@@ -323,6 +323,71 @@
 
 ---
 
+### 2.9 Storm 轨迹（distance_mode=path）：φ(d_path,t) 与“路径组”普适性检验
+
+> 问题：对飓风/台风等“中心随时间移动”的灾害，若仍用静态中心距离 r，会把轨迹漂移混进空间结构里。  
+> 回答：把距离改为 **到轨迹的路径距离** `d_path`，并只取局部 track 段做 φ heatmap 与普适性检验（Phase0/1/2）。
+
+**时间**：2026-02-06  
+**关键口径（可复现设置）**：
+- `distance_mode=path` + `only_hour_pt=8`（只用 08:00 PT 窗口）
+- track 裁剪：时间 `±24h` + 空间半径 `max_distance_km+100km`
+- Phase1/2 过滤：`max_track_anchor_gap_hours=24`（避免 t0 与 track anchor 明显错位）
+
+**主输出根目录**：
+- `outputs_trackpath_v3/`
+
+#### 2.9.1 φ heatmap（path）
+
+**每灾害输出**：
+- `outputs_trackpath_v3/<slug>/phi_heatmap/tables/phi_rt_long.csv`
+- `outputs_trackpath_v3/<slug>/phi_heatmap/tables/center_by_window.csv`
+
+**跳过（预期行为）**：
+- path 口径要求 catalog 提供 `center_track_csv`；无 track 的灾害会被跳过并落表：`outputs_trackpath_v3/_skipped_phi_heatmap.csv`
+  - 例如 Turkey、洪水、野火、Enteng 等都在该表中（它们需要静态中心口径，不应混用 path）。
+
+**快速自检（可核查事实）**：
+- 对 Beryl/Milton/Helene：`center_by_window.csv` 中 `path_track_clip_kind` 为 `time_and_spatial`（非 `full`），且 `path_track_length_ratio_to_rmax` 显著小于 `path_track_length_total_ratio_to_rmax`。
+
+#### 2.9.2 普适性 Phase0/1/2（path 组）
+
+**Phase0：信号强度扫描**
+- 输出：`outputs_trackpath_v3/_tmp_phase0/tables/phase0_signal_strength.csv`
+- 事实：`S>=0.5` 的灾害数为 **7**（在 27 灾害表上扫描得到的计数；后续 Phase2 还会因数据可用性/过滤进一步减少）。
+
+**Phase2：坍缩重叠度**
+- `minTiles=0`：`outputs_trackpath_v3/_tmp_phase2_minTiles0/tables/phase2_overlap_metric.csv`
+  - `n_disasters_used=5`，`overlap_fraction=0.45`
+- `minTiles=50`：`outputs_trackpath_v3/_tmp_phase2_minTiles50/tables/phase2_overlap_metric.csv`
+  - `n_disasters_used=3`，`overlap_fraction≈0.365`
+
+**对齐问题排除（可核查事实）**：
+- 在 `outputs_trackpath_v3/_tmp_phase2_minTiles0/tables/phase2_r0_by_disaster.csv` 中，2 个灾害被标记 `note=t0_misaligned_vs_track_anchor`：
+  - `hurricane_john_southern_mexico_25_september_2024`（`track_anchor_to_t0_hours≈35.75h`）
+  - `typhoon_yagi_across_northeastern_vietnam`（`track_anchor_to_t0_hours≈29h`）
+
+#### 2.9.3 H3a：3 个飓风的报告/机制与路径叠图（裁剪段口径）
+
+**报告**：
+- `outputs_trackpath_v3/_tmp_h3a_track_report_minTiles0/`
+- `outputs_trackpath_v3/_tmp_h3a_track_report_minTiles50/`
+
+**机制表**：
+- `outputs_trackpath_v3/_tmp_h3a_track_mechanism_minTiles50/`
+
+**路径 overlay**：
+- `outputs_trackpath_v3/_tmp_overlay/figures/*_track_overlay_t0h.png`（同时有 pdf/html）
+
+**相关代码入口**：
+- `scripts/cross_disaster_phi_heatmap.py`
+- `scripts/universality_scaling.py`
+- `scripts/h3a_track_report.py`
+- `scripts/h3a_track_mechanism.py`
+- `scripts/h3a_track_map_overlay.py`
+
+---
+
 ## 3. 关键教训（从“证伪/诊断”中得到）
 
 ### 3.1 方法论层面
@@ -368,4 +433,3 @@
 - 目的地/起点分布：`scripts/movement_destination_analysis.py` → `outputs/<slug>/movement_destination_analysis/`
 - 25–50km 流入来源：`scripts/movement_inflow_source_analysis.py` → `outputs/<slug>/movement_inflow_source_analysis/`
 - 系统性方向分析（无 binning；Δr+d_move）：`scripts/movement_direction_systematic.py` → `outputs/<slug>/movement_analysis/`
-
