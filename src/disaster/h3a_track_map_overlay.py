@@ -13,6 +13,7 @@ except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 from disaster.population_io import load_population_file
+from disaster.geo import haversine_km
 from disaster.viz import save_png_and_pdf
 
 
@@ -128,6 +129,40 @@ def _load_track_points(track_csv: Path, *, storm_name: str) -> pd.DataFrame:
     return df
 
 
+def _clip_track_points_like_phi_heatmap(
+    track: pd.DataFrame,
+    *,
+    center_track_to_tz: str,
+    clip_start_pt: str,
+    clip_end_pt: str,
+    center_lat: float,
+    center_lon: float,
+    spatial_radius_km: float,
+) -> pd.DataFrame:
+    """
+    关键修复：可视化时的路径应与 `phi_heatmap(distance_mode=path)` 使用的裁剪段一致，
+    避免把完整生命周期 track 画进图里导致误解。
+    """
+    if track.empty:
+        return track
+
+    out = track.copy()
+    out["datetime_local"] = out["datetime_utc"].dt.tz_convert(str(center_track_to_tz)).dt.tz_localize(None)
+
+    t0 = pd.to_datetime(str(clip_start_pt).strip(), errors="coerce")
+    t1 = pd.to_datetime(str(clip_end_pt).strip(), errors="coerce")
+    if not pd.isna(t0) and not pd.isna(t1):
+        out = out[(out["datetime_local"] >= pd.Timestamp(t0)) & (out["datetime_local"] <= pd.Timestamp(t1))].copy()
+
+    rr = float(spatial_radius_km)
+    if np.isfinite(rr) and rr > 0:
+        d = haversine_km(out["lat"].to_numpy(dtype=float), out["lon"].to_numpy(dtype=float), float(center_lat), float(center_lon))
+        out = out[np.isfinite(d) & (d <= rr)].copy()
+
+    out = out.sort_values("datetime_utc", kind="stable")
+    return out
+
+
 def _find_t_at_S(phase0_csv: Path | None, slug: str) -> float | None:
     if phase0_csv is None or not phase0_csv.exists():
         return None
@@ -163,9 +198,34 @@ def run(cfg: Config) -> None:
     meta = _load_json(meta_path)
     data_root = Path(str(meta.get("data_root", "")).strip())
     t0_pt = pd.Timestamp(str(meta.get("t0_pt", "")).strip())
+    center_lat = float(meta.get("center_lat", np.nan))
+    center_lon = float(meta.get("center_lon", np.nan))
 
     track_csv, storm_name = _load_track_from_center_by_window(Path(cfg.output_root), cfg.slug)
     track = _load_track_points(track_csv, storm_name=storm_name)
+
+    # clip track points to the same segment used by phi_heatmap (distance_mode=path)
+    cbw_path = Path(cfg.output_root) / cfg.slug / "phi_heatmap" / "tables" / "center_by_window.csv"
+    if cbw_path.exists():
+        cbw = pd.read_csv(cbw_path)
+        if not cbw.empty:
+            row0 = cbw.iloc[0].to_dict()
+            center_track_to_tz = str(row0.get("center_track_to_tz", "America/Los_Angeles") or "America/Los_Angeles")
+            clip_start_pt = str(row0.get("path_track_clip_start_pt", "") or "")
+            clip_end_pt = str(row0.get("path_track_clip_end_pt", "") or "")
+            spatial_r = float(pd.to_numeric(row0.get("path_track_clip_spatial_radius_km"), errors="coerce"))
+
+            clipped = _clip_track_points_like_phi_heatmap(
+                track,
+                center_track_to_tz=center_track_to_tz,
+                clip_start_pt=clip_start_pt,
+                clip_end_pt=clip_end_pt,
+                center_lat=float(center_lat),
+                center_lon=float(center_lon),
+                spatial_radius_km=float(spatial_r),
+            )
+            if clipped.shape[0] >= 2:
+                track = clipped
 
     # choose time slice
     phase0_csv = cfg.phase0_csv
@@ -312,4 +372,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-

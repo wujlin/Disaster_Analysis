@@ -38,50 +38,26 @@ def _infer_slugs(output_root: Path) -> list[str]:
     return out
 
 
-def _polyline_length_km(lat: np.ndarray, lon: np.ndarray) -> float:
-    lat = np.asarray(lat, dtype=float)
-    lon = np.asarray(lon, dtype=float)
-    ok = np.isfinite(lat) & np.isfinite(lon)
-    lat = lat[ok]
-    lon = lon[ok]
-    if lat.size < 2:
-        return float("nan")
-    r = 6371.0
-    lat1 = np.radians(lat[:-1])
-    lon1 = np.radians(lon[:-1])
-    lat2 = np.radians(lat[1:])
-    lon2 = np.radians(lon[1:])
-    dlat = lat2 - lat1
-    dlon = lon2 - lon1
-    a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
-    d = 2 * r * np.arcsin(np.sqrt(a))
-    return float(np.nansum(d))
-
-
-def _load_track_from_center_by_window(output_root: Path, slug: str) -> tuple[Path | None, str]:
+def _track_length_from_phi_heatmap(output_root: Path, slug: str) -> dict:
+    """
+    关键修复：轨迹长度应与 `phi_heatmap` 里用于计算 d_path 的“裁剪后 polyline”一致，
+    而不是 storm 生命周期全轨迹长度。
+    """
     p = output_root / slug / "phi_heatmap" / "tables" / "center_by_window.csv"
     if not p.exists():
-        return None, ""
+        return {}
     df = pd.read_csv(p)
     if df.empty:
-        return None, ""
-    track_csv = str(df.iloc[0].get("center_track_csv", "")).strip()
-    storm_name = str(df.iloc[0].get("center_track_storm_name", "")).strip()
-    if not track_csv:
-        return None, storm_name
-    return Path(track_csv), storm_name
-
-
-def _load_track_points(track_csv: Path, *, storm_name: str) -> pd.DataFrame:
-    df = pd.read_csv(track_csv)
-    if "storm_name" in df.columns and storm_name:
-        df = df[df["storm_name"].astype(str).str.strip().str.lower() == str(storm_name).strip().lower()].copy()
-    df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
-    df["lon"] = pd.to_numeric(df["lon"], errors="coerce")
-    df["datetime_utc"] = pd.to_datetime(df["datetime_utc"], utc=True, errors="coerce")
-    df = df.dropna(subset=["datetime_utc", "lat", "lon"]).copy()
-    df = df.sort_values("datetime_utc", kind="stable")
-    return df
+        return {}
+    row = df.iloc[0].to_dict()
+    return {
+        "track_length_km": float(pd.to_numeric(row.get("path_track_length_km"), errors="coerce")),
+        "track_length_total_km": float(pd.to_numeric(row.get("path_track_length_total_km"), errors="coerce")),
+        "track_length_ratio_to_rmax": float(pd.to_numeric(row.get("path_track_length_ratio_to_rmax"), errors="coerce")),
+        "track_clip_kind": str(row.get("path_track_clip_kind", "") or ""),
+        "track_clip_pad_hours": float(pd.to_numeric(row.get("path_track_clip_pad_hours"), errors="coerce")),
+        "track_clip_spatial_radius_km": float(pd.to_numeric(row.get("path_track_clip_spatial_radius_km"), errors="coerce")),
+    }
 
 
 def _corr(x: np.ndarray, y: np.ndarray) -> float:
@@ -160,13 +136,14 @@ def run(cfg: Config) -> None:
             exposure_frac_20 = float(baseline_near_20 / baseline_total) if baseline_total and np.isfinite(baseline_total) else float("nan")
             exposure_frac_r0 = float(baseline_near_r0 / baseline_total) if baseline_total and np.isfinite(baseline_total) else float("nan")
 
-        # track length
-        track_csv, storm_name_track = _load_track_from_center_by_window(Path(cfg.output_root), slug)
-        track_len_km = float("nan")
-        if track_csv is not None and track_csv.exists():
-            tr = _load_track_points(track_csv, storm_name=storm_name_track)
-            if not tr.empty:
-                track_len_km = _polyline_length_km(tr["lat"].to_numpy(dtype=float), tr["lon"].to_numpy(dtype=float))
+        # track length (clipped polyline used in d_path)
+        track_info = _track_length_from_phi_heatmap(Path(cfg.output_root), slug)
+        track_len_km = float(track_info.get("track_length_km", float("nan")))
+        track_len_total_km = float(track_info.get("track_length_total_km", float("nan")))
+        track_ratio = float(track_info.get("track_length_ratio_to_rmax", float("nan")))
+        track_clip_kind = str(track_info.get("track_clip_kind", "") or "")
+        track_clip_pad_hours = float(track_info.get("track_clip_pad_hours", float("nan")))
+        track_clip_spatial_radius_km = float(track_info.get("track_clip_spatial_radius_km", float("nan")))
 
         row = {
             "slug": str(slug),
@@ -182,6 +159,11 @@ def run(cfg: Config) -> None:
             "exposure_frac_20km": float(exposure_frac_20),
             "exposure_frac_r0": float(exposure_frac_r0),
             "track_length_km": float(track_len_km),
+            "track_length_total_km": float(track_len_total_km),
+            "track_length_ratio_to_rmax": float(track_ratio),
+            "track_clip_kind": str(track_clip_kind),
+            "track_clip_pad_hours": float(track_clip_pad_hours),
+            "track_clip_spatial_radius_km": float(track_clip_spatial_radius_km),
         }
         if storm_meta:
             for k, v in storm_meta.items():

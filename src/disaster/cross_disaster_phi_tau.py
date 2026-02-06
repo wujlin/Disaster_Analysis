@@ -158,6 +158,69 @@ def _list_population_windows(data_root: Path, *, only_hour_pt: int) -> list[dict
     return rows
 
 
+def _load_track_points_for_spec(spec: DisasterSpec) -> pd.DataFrame | None:
+    if spec.center_track_csv is None:
+        return None
+    p = Path(spec.center_track_csv)
+    if not p.exists():
+        return None
+    df = pd.read_csv(p)
+    need = {"datetime_utc", "lat", "lon"}
+    if not need.issubset(df.columns):
+        return None
+
+    if "storm_name" in df.columns and spec.center_track_storm_name:
+        want = str(spec.center_track_storm_name).strip().lower()
+        df = df[df["storm_name"].astype(str).str.strip().str.lower() == want].copy()
+
+    df["datetime_utc"] = pd.to_datetime(df["datetime_utc"], utc=True, errors="coerce")
+    df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
+    df["lon"] = pd.to_numeric(df["lon"], errors="coerce")
+    df = df.dropna(subset=["datetime_utc", "lat", "lon"]).copy()
+    if df.empty:
+        return None
+
+    # align into local PT timeline used by FBDM filenames
+    df["datetime_local"] = df["datetime_utc"].dt.tz_convert(str(spec.center_track_to_tz)).dt.tz_localize(None)
+    df = df.sort_values("datetime_local", kind="stable").reset_index(drop=True)
+    return df
+
+
+def _choose_track_anchor(track: pd.DataFrame, *, ref_ts: pd.Timestamp) -> tuple[pd.Timestamp, dict]:
+    if track.empty:
+        return pd.Timestamp(ref_ts), {"track_anchor_ok": 0}
+
+    track = track.copy()
+    if "status" in track.columns:
+        st = track["status"].astype(str).str.strip().str.lower()
+        land = track[st == "landfall"].copy()
+    else:
+        land = track.iloc[0:0].copy()
+
+    cand = land if not land.empty else track
+    cand["dt_abs_h"] = (pd.to_datetime(cand["datetime_local"]) - pd.Timestamp(ref_ts)).abs() / pd.to_timedelta(1, unit="h")
+    idx = int(cand["dt_abs_h"].astype(float).idxmin())
+    row = cand.loc[idx]
+    anchor_ts = pd.Timestamp(row["datetime_local"])
+    meta = {
+        "track_anchor_ok": 1,
+        "track_anchor_pt": str(anchor_ts),
+        "track_anchor_method": "landfall_nearest_in_time" if not land.empty else "nearest_in_time",
+        "track_anchor_status": str(row.get("status", "")).strip(),
+        "track_anchor_lat": float(row["lat"]),
+        "track_anchor_lon": float(row["lon"]),
+    }
+    return anchor_ts, meta
+
+
+def _snap_t0_to_first_window_after_anchor(windows: list[dict], *, anchor_ts: pd.Timestamp) -> tuple[pd.Timestamp, Path | None, dict]:
+    for r in windows:
+        ts = pd.Timestamp(r["window_start_pt"])
+        if ts >= pd.Timestamp(anchor_ts):
+            return ts, Path(r["path"]), {"t0_snap_ok": 1, "t0_snap_window_pt": str(ts)}
+    return pd.Timestamp(anchor_ts), None, {"t0_snap_ok": 0, "t0_snap_window_pt": ""}
+
+
 def _weighted_centroid(lat: np.ndarray, lon: np.ndarray, w: np.ndarray) -> tuple[float, float] | None:
     mask = np.isfinite(lat) & np.isfinite(lon) & np.isfinite(w) & (w > 0)
     if not np.any(mask):
@@ -180,21 +243,40 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
 
     pop_dir = spec.data_root / "population"
 
-    # t0：若未提供，则默认取“首个 08:00 窗口所在日期的 16:00 窗口”
+    # t0：优先对齐 track anchor（landfall/closest approach），否则退化为“首日 16:00”。
     t0_method = "provided"
     if spec.t0_pt is None:
-        t0_candidate = pd.Timestamp(f"{first_ts:%Y-%m-%d} 16:00")
-        matches = list(pop_dir.glob(f"*_{t0_candidate:%Y-%m-%d}_{t0_candidate:%H%M}.csv"))
-        if len(matches) == 1:
-            t0_pt = pd.Timestamp(t0_candidate)
-            t0_method = "auto_first_day_1600"
-            t0_file = matches[0]
+        track_df = _load_track_points_for_spec(spec)
+        if track_df is not None:
+            anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(first_ts))
+            t0_pt, t0_file, snap_meta = _snap_t0_to_first_window_after_anchor(windows, anchor_ts=anchor_ts)
+            if snap_meta.get("t0_snap_ok", 0) == 1:
+                t0_method = "auto_track_anchor_next_window"
+            else:
+                t0_method = "auto_track_anchor_no_window"
+            t0_file = t0_file if t0_file is not None else Path(first["path"])
         else:
-            t0_pt = pd.Timestamp(first_ts)
-            t0_method = "auto_first_population_window"
-            t0_file = Path(first["path"])
+            anchor_meta = {"track_anchor_ok": 0}
+            snap_meta = {"t0_snap_ok": 0}
+            t0_candidate = pd.Timestamp(f"{first_ts:%Y-%m-%d} 16:00")
+            matches = list(pop_dir.glob(f"*_{t0_candidate:%Y-%m-%d}_{t0_candidate:%H%M}.csv"))
+            if len(matches) == 1:
+                t0_pt = pd.Timestamp(t0_candidate)
+                t0_method = "auto_first_day_1600"
+                t0_file = matches[0]
+            else:
+                t0_pt = pd.Timestamp(first_ts)
+                t0_method = "auto_first_population_window"
+                t0_file = Path(first["path"])
     else:
         t0_pt = pd.Timestamp(spec.t0_pt)
+        track_df = _load_track_points_for_spec(spec)
+        if track_df is not None:
+            anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(t0_pt))
+        else:
+            anchor_meta = {"track_anchor_ok": 0}
+            anchor_ts = None
+        snap_meta = {"t0_snap_ok": 0}
         matches = list(pop_dir.glob(f"*_{t0_pt:%Y-%m-%d}_{t0_pt:%H%M}.csv"))
         t0_file = matches[0] if len(matches) == 1 else Path(first["path"])
 
@@ -222,6 +304,14 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
     else:
         center_lat, center_lon = float(spec.center_lat), float(spec.center_lon)
 
+    extra = {}
+    if int(anchor_meta.get("track_anchor_ok", 0)) == 1 and anchor_meta.get("track_anchor_pt"):
+        try:
+            anchor_ts = pd.Timestamp(str(anchor_meta["track_anchor_pt"]))
+            extra["track_anchor_to_t0_hours"] = float((pd.Timestamp(t0_pt) - anchor_ts).total_seconds() / 3600.0)
+        except Exception:
+            pass
+
     meta = {
         "slug": spec.slug,
         "name": spec.name,
@@ -230,6 +320,9 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
         "only_hour_pt": int(spec.only_hour_pt),
         "t0_pt": str(t0_pt),
         "t0_method": t0_method,
+        **anchor_meta,
+        **snap_meta,
+        **extra,
         "center_lat": float(center_lat),
         "center_lon": float(center_lon),
         "center_method": center_method,

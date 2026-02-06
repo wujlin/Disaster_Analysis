@@ -31,6 +31,27 @@ def _ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
+def _load_event_metadata(output_root: Path, slug: str) -> dict:
+    p = output_root / slug / "metadata.json"
+    if not p.exists():
+        return {}
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _track_anchor_gap_hours(meta: dict) -> float | None:
+    x = meta.get("track_anchor_to_t0_hours")
+    try:
+        if x is None:
+            return None
+        v = float(x)
+        return v if np.isfinite(v) else None
+    except Exception:
+        return None
+
+
 def _safe_float(x: object) -> float | None:
     if x is None:
         return None
@@ -210,6 +231,9 @@ def _radial_profile_from_phi_long(
     phi_col: str,
     min_tiles: int = 0,
     r_bin_col: str = "r_bin_km",
+    detrend_far_rmin_km: float | None = None,
+    detrend_far_rmax_km: float | None = None,
+    min_coverage_frac: float | None = None,
 ) -> pd.DataFrame:
     df = df_long.copy()
     df["hours_since_quake"] = pd.to_numeric(df["hours_since_quake"], errors="coerce")
@@ -220,19 +244,40 @@ def _radial_profile_from_phi_long(
     if df.empty:
         return pd.DataFrame()
 
+    phi_use_col = str(phi_col)
+    if detrend_far_rmin_km is not None and np.isfinite(float(detrend_far_rmin_km)):
+        rmin = float(detrend_far_rmin_km)
+        rmax = float(detrend_far_rmax_km) if detrend_far_rmax_km is not None and np.isfinite(float(detrend_far_rmax_km)) else float("inf")
+        far = df[(df[r_bin_col] >= rmin) & (df[r_bin_col] <= rmax)].copy()
+        if not far.empty:
+            far_phi = (
+                far.groupby("hours_since_quake", observed=True)[phi_col]
+                .median()
+                .reset_index()
+                .rename(columns={phi_col: "phi_far"})
+            )
+            df = df.merge(far_phi, on="hours_since_quake", how="left")
+            df["phi_detrended"] = pd.to_numeric(df[phi_col], errors="coerce") / pd.to_numeric(df["phi_far"], errors="coerce")
+            df = df.replace([np.inf, -np.inf], np.nan)
+            df = df.dropna(subset=["phi_detrended"]).copy()
+            phi_use_col = "phi_detrended"
+
     r_bins = np.sort(df[r_bin_col].unique().astype(float))
     if r_bins.size >= 2:
         dr = float(np.median(np.diff(r_bins)))
     else:
         dr = 10.0
 
-    agg_ops: dict[str, tuple[str, str]] = {"phi_mean": (phi_col, "mean")}
+    agg_ops: dict[str, tuple[str, str]] = {"phi_mean": (phi_use_col, "mean")}
     if "n_tiles" in df.columns:
         df["n_tiles"] = pd.to_numeric(df["n_tiles"], errors="coerce")
         agg_ops["n_tiles_mean"] = ("n_tiles", "mean")
     if "n_tiles_overlap" in df.columns:
         df["n_tiles_overlap"] = pd.to_numeric(df["n_tiles_overlap"], errors="coerce")
         agg_ops["n_tiles_overlap_mean"] = ("n_tiles_overlap", "mean")
+    if "path_coverage_frac" in df.columns:
+        df["path_coverage_frac"] = pd.to_numeric(df["path_coverage_frac"], errors="coerce")
+        agg_ops["path_coverage_frac_mean"] = ("path_coverage_frac", "mean")
 
     g = df.groupby(r_bin_col, sort=True, observed=True).agg(**agg_ops).reset_index()
     g = g.rename(columns={r_bin_col: "r_bin_km"})
@@ -240,6 +285,8 @@ def _radial_profile_from_phi_long(
     g["abs_dev"] = (pd.to_numeric(g["phi_mean"], errors="coerce") - 1.0).abs()
     if int(min_tiles) > 0 and "n_tiles_mean" in g.columns:
         g = g[pd.to_numeric(g["n_tiles_mean"], errors="coerce") >= float(min_tiles)].copy()
+    if min_coverage_frac is not None and "path_coverage_frac_mean" in g.columns:
+        g = g[pd.to_numeric(g["path_coverage_frac_mean"], errors="coerce") >= float(min_coverage_frac)].copy()
     return g.sort_values("r_center_km", kind="stable")
 
 
@@ -287,6 +334,11 @@ def run_phase1_powerlaw(
     r_max: float,
     y_min: float,
     min_tiles: int = 0,
+    min_windows: int = 0,
+    max_track_anchor_gap_hours: float | None = None,
+    detrend_far_rmin_km: float | None = None,
+    detrend_far_rmax_km: float | None = None,
+    min_coverage_frac: float | None = None,
 ) -> pd.DataFrame:
     specs = load_catalog(catalog)
     out = _out_dirs(out_dir)
@@ -306,6 +358,25 @@ def run_phase1_powerlaw(
         if strong_slugs is not None and spec.slug not in strong_slugs:
             continue
 
+        meta = _load_event_metadata(Path(output_root), spec.slug)
+        gap_h = _track_anchor_gap_hours(meta)
+        if max_track_anchor_gap_hours is not None and gap_h is not None and abs(float(gap_h)) > float(max_track_anchor_gap_hours):
+            rows.append(
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "event_type": spec.event_type,
+                    "fit_ok": 0,
+                    "alpha": float("nan"),
+                    "r2_loglog": float("nan"),
+                    "n_points_fit": 0,
+                    "n_windows_in_range": 0,
+                    "track_anchor_to_t0_hours": float(gap_h),
+                    "note": "t0_misaligned_vs_track_anchor",
+                }
+            )
+            continue
+
         phi_long = _load_phi_heatmap_long(
             output_root=output_root, slug=spec.slug, phi_col=phi_col, min_hours=float(time_min), max_hours=float(time_max)
         )
@@ -319,7 +390,29 @@ def run_phase1_powerlaw(
                     "alpha": float("nan"),
                     "r2_loglog": float("nan"),
                     "n_points_fit": 0,
+                    "n_windows_in_range": 0,
+                    "track_anchor_to_t0_hours": float(gap_h) if gap_h is not None else float("nan"),
                     "note": "missing_phi_heatmap",
+                }
+            )
+            continue
+
+        n_windows = int(pd.to_numeric(phi_long["hours_since_quake"], errors="coerce").dropna().nunique())
+        if int(min_windows) > 0 and int(n_windows) < int(min_windows):
+            rows.append(
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "event_type": spec.event_type,
+                    "time_min_hours": float(time_min),
+                    "time_max_hours": float(time_max),
+                    "fit_ok": 0,
+                    "alpha": float("nan"),
+                    "r2_loglog": float("nan"),
+                    "n_points_fit": 0,
+                    "n_windows_in_range": int(n_windows),
+                    "track_anchor_to_t0_hours": float(gap_h) if gap_h is not None else float("nan"),
+                    "note": "too_few_time_windows",
                 }
             )
             continue
@@ -330,6 +423,9 @@ def run_phase1_powerlaw(
             time_max=float(time_max),
             phi_col=phi_col,
             min_tiles=int(min_tiles),
+            detrend_far_rmin_km=float(detrend_far_rmin_km) if detrend_far_rmin_km is not None else None,
+            detrend_far_rmax_km=float(detrend_far_rmax_km) if detrend_far_rmax_km is not None else None,
+            min_coverage_frac=float(min_coverage_frac) if min_coverage_frac is not None else None,
         )
         fit = _fit_powerlaw_alpha(prof, r_min=float(r_min), r_max=float(r_max), y_min=float(y_min))
         rows.append(
@@ -343,6 +439,8 @@ def run_phase1_powerlaw(
                 "alpha": float(fit.get("alpha", float("nan"))),
                 "r2_loglog": float(fit.get("r2_loglog", float("nan"))),
                 "n_points_fit": int(fit.get("n_points_fit", 0)),
+                "n_windows_in_range": int(n_windows),
+                "track_anchor_to_t0_hours": float(gap_h) if gap_h is not None else float("nan"),
                 "r_min_fit": float(fit.get("r_min_fit", float("nan"))),
                 "r_max_fit": float(fit.get("r_max_fit", float("nan"))),
                 "y_min_fit": float(fit.get("y_min_fit", float("nan"))),
@@ -414,6 +512,11 @@ def run_phase1_powerlaw(
                 "r_max": float(r_max),
                 "y_min": float(y_min),
                 "min_tiles": int(min_tiles),
+                "min_windows": int(min_windows),
+                "max_track_anchor_gap_hours": float(max_track_anchor_gap_hours) if max_track_anchor_gap_hours is not None else float("nan"),
+                "detrend_far_rmin_km": float(detrend_far_rmin_km) if detrend_far_rmin_km is not None else float("nan"),
+                "detrend_far_rmax_km": float(detrend_far_rmax_km) if detrend_far_rmax_km is not None else float("nan"),
+                "min_coverage_frac": float(min_coverage_frac) if min_coverage_frac is not None else float("nan"),
             }
         ]
     )
@@ -467,6 +570,11 @@ def run_phase2_collapse(
     x_grid_n: int,
     overlap_tol: float,
     min_tiles: int = 0,
+    min_windows: int = 0,
+    max_track_anchor_gap_hours: float | None = None,
+    detrend_far_rmin_km: float | None = None,
+    detrend_far_rmax_km: float | None = None,
+    min_coverage_frac: float | None = None,
 ) -> pd.DataFrame:
     specs = load_catalog(catalog)
     out = _out_dirs(out_dir)
@@ -492,12 +600,54 @@ def run_phase2_collapse(
         if strong_slugs is not None and spec.slug not in strong_slugs:
             continue
 
+        meta = _load_event_metadata(Path(output_root), spec.slug)
+        gap_h = _track_anchor_gap_hours(meta)
+        if max_track_anchor_gap_hours is not None and gap_h is not None and abs(float(gap_h)) > float(max_track_anchor_gap_hours):
+            r0_rows.append(
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "event_type": spec.event_type,
+                    "r0_km": float("nan"),
+                    "y_max": float("nan"),
+                    "n_windows_in_range": 0,
+                    "track_anchor_to_t0_hours": float(gap_h),
+                    "note": "t0_misaligned_vs_track_anchor",
+                }
+            )
+            continue
+
         phi_long = _load_phi_heatmap_long(
             output_root=output_root, slug=spec.slug, phi_col=phi_col, min_hours=float(time_min), max_hours=float(time_max)
         )
         if phi_long is None or phi_long.empty:
             r0_rows.append(
-                {"slug": spec.slug, "name": spec.name, "event_type": spec.event_type, "r0_km": float("nan"), "y_max": float("nan")}
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "event_type": spec.event_type,
+                    "r0_km": float("nan"),
+                    "y_max": float("nan"),
+                    "n_windows_in_range": 0,
+                    "track_anchor_to_t0_hours": float(gap_h) if gap_h is not None else float("nan"),
+                    "note": "missing_phi_heatmap",
+                }
+            )
+            continue
+
+        n_windows = int(pd.to_numeric(phi_long["hours_since_quake"], errors="coerce").dropna().nunique())
+        if int(min_windows) > 0 and int(n_windows) < int(min_windows):
+            r0_rows.append(
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "event_type": spec.event_type,
+                    "r0_km": float("nan"),
+                    "y_max": float("nan"),
+                    "n_windows_in_range": int(n_windows),
+                    "track_anchor_to_t0_hours": float(gap_h) if gap_h is not None else float("nan"),
+                    "note": "too_few_time_windows",
+                }
             )
             continue
 
@@ -507,6 +657,9 @@ def run_phase2_collapse(
             time_max=float(time_max),
             phi_col=phi_col,
             min_tiles=int(min_tiles),
+            detrend_far_rmin_km=float(detrend_far_rmin_km) if detrend_far_rmin_km is not None else None,
+            detrend_far_rmax_km=float(detrend_far_rmax_km) if detrend_far_rmax_km is not None else None,
+            min_coverage_frac=float(min_coverage_frac) if min_coverage_frac is not None else None,
         )
         r = pd.to_numeric(prof["r_center_km"], errors="coerce").to_numpy(dtype=float)
         y = pd.to_numeric(prof["abs_dev"], errors="coerce").to_numpy(dtype=float)
@@ -515,13 +668,33 @@ def run_phase2_collapse(
         y = y[ok]
         if r.size < 3:
             r0_rows.append(
-                {"slug": spec.slug, "name": spec.name, "event_type": spec.event_type, "r0_km": float("nan"), "y_max": float("nan")}
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "event_type": spec.event_type,
+                    "r0_km": float("nan"),
+                    "y_max": float("nan"),
+                    "n_windows_in_range": int(n_windows),
+                    "track_anchor_to_t0_hours": float(gap_h) if gap_h is not None else float("nan"),
+                    "note": "too_few_r_bins",
+                }
             )
             continue
 
         y_max = float(np.nanmax(y))
         r0 = _half_distance_r0(r, y)
-        r0_rows.append({"slug": spec.slug, "name": spec.name, "event_type": spec.event_type, "r0_km": float(r0), "y_max": float(y_max)})
+        r0_rows.append(
+            {
+                "slug": spec.slug,
+                "name": spec.name,
+                "event_type": spec.event_type,
+                "r0_km": float(r0),
+                "y_max": float(y_max),
+                "n_windows_in_range": int(n_windows),
+                "track_anchor_to_t0_hours": float(gap_h) if gap_h is not None else float("nan"),
+                "note": "",
+            }
+        )
 
         if not np.isfinite(r0) or r0 <= 0 or not np.isfinite(y_max) or y_max <= 0:
             continue
@@ -580,6 +753,11 @@ def run_phase2_collapse(
                 "time_max_hours": float(time_max),
                 "strong_signal_threshold": float(strong_signal_threshold),
                 "min_tiles": int(min_tiles),
+                "min_windows": int(min_windows),
+                "max_track_anchor_gap_hours": float(max_track_anchor_gap_hours) if max_track_anchor_gap_hours is not None else float("nan"),
+                "detrend_far_rmin_km": float(detrend_far_rmin_km) if detrend_far_rmin_km is not None else float("nan"),
+                "detrend_far_rmax_km": float(detrend_far_rmax_km) if detrend_far_rmax_km is not None else float("nan"),
+                "min_coverage_frac": float(min_coverage_frac) if min_coverage_frac is not None else float("nan"),
             }
         ]
     ).to_csv(out.tables / "phase2_overlap_metric.csv", index=False)
@@ -642,6 +820,11 @@ def cli_main() -> None:
     p.add_argument("--x-grid-n", type=int, default=80)
     p.add_argument("--overlap-tol", type=float, default=0.2)
     p.add_argument("--min-tiles", type=int, default=0, help="仅对 source=phi_heatmap 生效：剖面聚合时要求每个 r_bin 的平均 n_tiles >= min_tiles")
+    p.add_argument("--min-windows", type=int, default=0, help="Phase1/2：在 [time_min,time_max] 内要求每个灾害至少有多少个时间窗口（0=不限制）")
+    p.add_argument("--max-track-anchor-gap-hours", type=float, default=None, help="Phase1/2：若 metadata.json 含 track_anchor_to_t0_hours，则要求 |gap|<=该阈值（None=不限制）")
+    p.add_argument("--detrend-far-rmin-km", type=float, default=None, help="Phase1/2：可选远场去趋势：far-field r>=该阈值用于估计 phi_far(t)")
+    p.add_argument("--detrend-far-rmax-km", type=float, default=None, help="Phase1/2：可选远场去趋势：far-field r<=该阈值（默认无上限）")
+    p.add_argument("--min-coverage-frac", type=float, default=None, help="Phase1/2：若存在 path_coverage_frac，则要求 r_bin 的平均覆盖率 >= 该阈值（None=不限制）")
 
     args = p.parse_args()
 
@@ -674,6 +857,11 @@ def cli_main() -> None:
             r_max=float(args.r_max),
             y_min=float(args.y_min),
             min_tiles=int(args.min_tiles),
+            min_windows=int(args.min_windows),
+            max_track_anchor_gap_hours=(float(args.max_track_anchor_gap_hours) if args.max_track_anchor_gap_hours is not None else None),
+            detrend_far_rmin_km=(float(args.detrend_far_rmin_km) if args.detrend_far_rmin_km is not None else None),
+            detrend_far_rmax_km=(float(args.detrend_far_rmax_km) if args.detrend_far_rmax_km is not None else None),
+            min_coverage_frac=(float(args.min_coverage_frac) if args.min_coverage_frac is not None else None),
         )
         return
 
@@ -692,6 +880,11 @@ def cli_main() -> None:
             x_grid_n=int(args.x_grid_n),
             overlap_tol=float(args.overlap_tol),
             min_tiles=int(args.min_tiles),
+            min_windows=int(args.min_windows),
+            max_track_anchor_gap_hours=(float(args.max_track_anchor_gap_hours) if args.max_track_anchor_gap_hours is not None else None),
+            detrend_far_rmin_km=(float(args.detrend_far_rmin_km) if args.detrend_far_rmin_km is not None else None),
+            detrend_far_rmax_km=(float(args.detrend_far_rmax_km) if args.detrend_far_rmax_km is not None else None),
+            min_coverage_frac=(float(args.min_coverage_frac) if args.min_coverage_frac is not None else None),
         )
         return
 

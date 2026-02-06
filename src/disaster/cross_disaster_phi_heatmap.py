@@ -26,6 +26,9 @@ class Config:
     distance_bin_km: float = 10.0
     max_distance_km: float = 500.0
     phase_eps: float = 0.05
+    path_clip_pad_hours: float = 24.0
+    path_clip_spatial_pad_km: float = 100.0
+    path_sector_n: int = 0
 
 
 def _ensure_dir(p: Path) -> None:
@@ -64,6 +67,9 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             center_track_storm_name=str(spec.center_track_storm_name) if spec.center_track_storm_name else None,
             distance_mode=str(distance_mode),
             t0_pt=pd.Timestamp(t0_pt),
+            path_clip_pad_hours=float(cfg.path_clip_pad_hours),
+            path_clip_spatial_pad_km=float(cfg.path_clip_spatial_pad_km),
+            path_sector_n=int(cfg.path_sector_n),
             hours_pt=tuple(int(h) for h in cfg.hours_pt),
             min_hours=float(cfg.min_hours),
             max_hours=float(cfg.max_hours),
@@ -101,6 +107,14 @@ def cli_main() -> None:
     parser.add_argument("--distance-bin-km", type=float, default=10.0, help="距离 bin 宽度（km，默认 10）")
     parser.add_argument("--max-distance-km", type=float, default=500.0, help="最大距离（km，默认 500）")
     parser.add_argument("--phase-eps", type=float, default=0.05, help="三相分离判定 eps（默认 0.05）")
+    parser.add_argument("--path-clip-pad-hours", type=float, default=24.0, help="distance_mode=path 时：以 t0/landfall 为 anchor 的时间裁剪半径（小时，默认 24）")
+    parser.add_argument(
+        "--path-clip-spatial-pad-km",
+        type=float,
+        default=100.0,
+        help="distance_mode=path 时：空间裁剪 padding（km，默认 100；总半径=max_distance_km+pad）",
+    )
+    parser.add_argument("--path-sector-n", type=int, default=0, help="distance_mode=path 时角向覆盖率诊断：扇区数（0=不计算，默认 0）")
     parser.add_argument("--max-files", type=int, default=None, help="最多处理多少个窗口文件（每个灾害，冒烟测试用）")
     args = parser.parse_args()
 
@@ -114,6 +128,9 @@ def cli_main() -> None:
         distance_bin_km=float(args.distance_bin_km),
         max_distance_km=float(args.max_distance_km),
         phase_eps=float(args.phase_eps),
+        path_clip_pad_hours=float(args.path_clip_pad_hours),
+        path_clip_spatial_pad_km=float(args.path_clip_spatial_pad_km),
+        path_sector_n=int(args.path_sector_n),
     )
     run(cfg, max_files=int(args.max_files) if args.max_files is not None else None)
 
