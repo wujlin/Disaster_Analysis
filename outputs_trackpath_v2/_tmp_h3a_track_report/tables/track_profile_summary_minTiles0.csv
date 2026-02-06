@@ -1,0 +1,14 @@
+slug,storm_name,time_min_hours,time_max_hours,min_tiles,r0_km,y_max_abs_phi_minus_1,n_bins_used,meta_year,meta_landfall_category,meta_landfall_vmax_kt
+hurricane_beryl_pre_landfall_2024,Beryl,0.0,72.0,0,32.421558053412035,0.9801430115286617,26,2024.0,Cat1,80.0
+hurricane_milton_across_florida_us,Milton,0.0,72.0,0,310.26339240575624,0.9104025078554567,35,2024.0,Cat3,125.0
+typhoon_yagi_across_northeastern_vietnam,Yagi,0.0,72.0,0,22.375338985526774,0.5965614066813829,18,,,
+hurricane_john_southern_mexico_25_september_2024,John,0.0,72.0,0,19.090883365638316,0.5637534035315275,47,,,
+hurricane_ernesto_puerto_rico_14_august_2024,Ernesto,0.0,72.0,0,,0.5025469785441976,17,,,
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Debby,0.0,72.0,0,22.766350723975002,0.4427498808406569,49,,,
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,Trami,0.0,72.0,0,383.4814579437601,0.3204226412912802,44,,,
+hurricane_john_across_southeastern_guerrero_mexico,John,0.0,72.0,0,10.23289769911984,0.2736134164372078,42,,,
+typhoon_krathon_across_taiwan,Krathon,0.0,72.0,0,,0.21490871426165425,31,,,
+tropical_storm_yagi_philippines_2_september_2024,Yagi,0.0,72.0,0,310.18918599249287,0.2120986120261209,35,,,
+hurricane_beryl_across_southeastern_texas_us,Beryl,0.0,72.0,0,60.207468024928296,0.1955532730610361,38,2024.0,Cat1,80.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Helene,0.0,72.0,0,368.4293086789583,0.13686294263637677,50,2024.0,Cat4,140.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,Beryl,0.0,72.0,0,140.1127488016347,0.1306015170967939,50,2024.0,Cat1,80.0

@@ -1,11 +1,11 @@
 slug,name,event_type,r0_km,y_max
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,,
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,55.85952984275988,0.19768561253402228
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,,
-hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,,
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,175.675566963868,0.1306015170967939
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,60.207468024928296,0.1955532730610361
+hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,170.55610079087734,0.03520731607842187
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,111.6893276826361,0.0629916636006449
 hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,368.4293086789583,0.13686294263637677
-hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,,
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,,
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,10.23289769911984,0.2736134164372078
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,19.090883365638316,0.5637534035315275
 hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,174.0873153239998,0.20001299966724329
 line_fire_southern_california_9_september_2024,Line Fire Southern California 9 September 2024,wildfire,,
 moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,,
@@ -18,11 +18,11 @@ the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India",flood,,
 the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria",flood,,
 the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea",flood,,
 the_wildfires_in_quito_pichincha_province_ecuador,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,,
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,,
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,306.73769282967856,0.09024595012835657
 tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,,
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,,
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,,
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,383.4814579437601,0.3204226412912802
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,230.83293549306154,0.05598388109048469
 turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,,
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,,
-typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,,
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,,0.13784604369697084
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,22.375338985526774,0.5965614066813829
 wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,wildfire,,
