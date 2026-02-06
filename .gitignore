@@ -8,6 +8,14 @@ Data/
 
 # Secrets / auth material
 config/cookie.json
+config/_dfg_tokens.json
+
+# Local downloaded datasets (DFG / raw data; do not commit)
+datasets/
+
+# Local one-off catalogs / debug dumps
+datasets_catalog.*
+_debug_*
 
 outputs/*
 !outputs/population_relaxation/
