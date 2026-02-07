@@ -20,6 +20,7 @@ class Config:
     catalog: Path
     output_root: Path
     distance_mode: str = "radial"
+    path_distance_method: str = "equirect"
     hours_pt: tuple[int, ...] = (0, 8, 16)
     min_hours: float = -16.0
     max_hours: float = 832.0
@@ -29,6 +30,8 @@ class Config:
     path_clip_pad_hours: float = 24.0
     path_clip_spatial_pad_km: float = 100.0
     path_sector_n: int = 0
+    track_dt_default_hours: float = 6.0
+    track_gap_factor: float = 1.5
 
 
 def _ensure_dir(p: Path) -> None:
@@ -66,6 +69,7 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             center_track_to_tz=str(spec.center_track_to_tz),
             center_track_storm_name=str(spec.center_track_storm_name) if spec.center_track_storm_name else None,
             distance_mode=str(distance_mode),
+            path_distance_method=str(cfg.path_distance_method),
             t0_pt=pd.Timestamp(t0_pt),
             path_clip_pad_hours=float(cfg.path_clip_pad_hours),
             path_clip_spatial_pad_km=float(cfg.path_clip_spatial_pad_km),
@@ -76,6 +80,8 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             distance_bin_km=float(cfg.distance_bin_km),
             max_distance_km=float(cfg.max_distance_km),
             phase_eps=float(cfg.phase_eps),
+            track_dt_default_hours=float(cfg.track_dt_default_hours),
+            track_gap_factor=float(cfg.track_gap_factor),
         )
         try:
             run_heatmap(hm_cfg, max_files=max_files)
@@ -101,6 +107,13 @@ def cli_main() -> None:
         choices=["radial", "path"],
         help="距离定义：radial=到中心点（static/track）；path=到轨迹折线最近距离（仅对有 center_track_csv 的灾害有效）",
     )
+    parser.add_argument(
+        "--path-distance-method",
+        type=str,
+        default="equirect",
+        choices=["equirect", "geodesic"],
+        help="distance_mode=path 时：点到轨迹距离算法（默认 equirect；geodesic 更精确但更慢）",
+    )
     parser.add_argument("--hours-pt", type=int, nargs="*", default=[0, 8, 16], help="使用哪些 PT 小时窗口（默认 0 8 16）")
     parser.add_argument("--min-hours", type=float, default=-16.0, help="最小 hours_since_quake（默认 -16）")
     parser.add_argument("--max-hours", type=float, default=832.0, help="最大 hours_since_quake（默认 832）")
@@ -115,6 +128,8 @@ def cli_main() -> None:
         help="distance_mode=path 时：空间裁剪 padding（km，默认 100；总半径=max_distance_km+pad）",
     )
     parser.add_argument("--path-sector-n", type=int, default=0, help="distance_mode=path 时角向覆盖率诊断：扇区数（0=不计算，默认 0）")
+    parser.add_argument("--track-dt-default-hours", type=float, default=6.0, help="track 点时间间隔估计失败时的默认 dt（小时，默认 6）")
+    parser.add_argument("--track-gap-factor", type=float, default=1.5, help="track 连续段判定：gap_thr = dt_est * factor（默认 1.5）")
     parser.add_argument("--max-files", type=int, default=None, help="最多处理多少个窗口文件（每个灾害，冒烟测试用）")
     args = parser.parse_args()
 
@@ -122,6 +137,7 @@ def cli_main() -> None:
         catalog=args.catalog,
         output_root=args.output_root,
         distance_mode=str(args.distance_mode),
+        path_distance_method=str(args.path_distance_method),
         hours_pt=tuple(int(x) for x in args.hours_pt),
         min_hours=float(args.min_hours),
         max_hours=float(args.max_hours),
@@ -131,6 +147,8 @@ def cli_main() -> None:
         path_clip_pad_hours=float(args.path_clip_pad_hours),
         path_clip_spatial_pad_km=float(args.path_clip_spatial_pad_km),
         path_sector_n=int(args.path_sector_n),
+        track_dt_default_hours=float(args.track_dt_default_hours),
+        track_gap_factor=float(args.track_gap_factor),
     )
     run(cfg, max_files=int(args.max_files) if args.max_files is not None else None)
 

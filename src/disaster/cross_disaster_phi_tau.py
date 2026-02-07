@@ -113,8 +113,14 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
     specs: list[DisasterSpec] = []
     for row in df.to_dict(orient="records"):
         track_csv = _safe_str(row.get("center_track_csv")) or _safe_str(row.get("track_csv"))
+        # 说明：FBDM population/movement 的固定窗口以 Pacific Time (PT) 给出（见 Docs/facebook_data）。
+        # 因此这里默认用 America/Los_Angeles 做对齐（除非 catalog 显式指定其它时区）。
         track_to_tz = _safe_str(row.get("center_track_to_tz")) or "America/Los_Angeles"
         track_storm = _safe_str(row.get("center_track_storm_name")) or _safe_str(row.get("track_storm_name"))
+        outflow = _safe_float(row.get("outflow_phi_threshold"))
+        inflow = _safe_float(row.get("inflow_phi_threshold"))
+        outflow = 0.9 if outflow is None else float(outflow)
+        inflow = 1.1 if inflow is None else float(inflow)
         specs.append(
             DisasterSpec(
                 slug=str(row["slug"]).strip(),
@@ -128,8 +134,8 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
                 center_track_to_tz=str(track_to_tz),
                 center_track_storm_name=str(track_storm) if track_storm else None,
                 only_hour_pt=_safe_int(row.get("only_hour_pt"), 8),
-                outflow_phi_threshold=float(_safe_float(row.get("outflow_phi_threshold")) or 0.9),
-                inflow_phi_threshold=float(_safe_float(row.get("inflow_phi_threshold")) or 1.1),
+                outflow_phi_threshold=float(outflow),
+                inflow_phi_threshold=float(inflow),
             )
         )
 
@@ -219,6 +225,34 @@ def _snap_t0_to_first_window_after_anchor(windows: list[dict], *, anchor_ts: pd.
     return pd.Timestamp(anchor_ts), None, {"t0_snap_ok": 0, "t0_snap_window_pt": ""}
 
 
+def _snap_t0_to_nearest_window(windows: list[dict], *, anchor_ts: pd.Timestamp) -> tuple[pd.Timestamp, Path, dict]:
+    """
+    将 t0 对齐到“最近的可用 population 窗口”，避免 catalog 给了一个不存在的时刻导致 t0_pt 与 t0_file 不一致。
+
+    返回：(snapped_t0_pt, snapped_t0_file, meta)
+    """
+    if not windows:
+        raise SystemExit("windows 为空，无法 snap t0")
+    anchor_ts = pd.Timestamp(anchor_ts)
+
+    best: tuple[float, pd.Timestamp, Path] | None = None  # (abs_dt_hours, ts, path)
+    for r in windows:
+        ts = pd.Timestamp(r["window_start_pt"])
+        dt_h = float(abs((ts - anchor_ts).total_seconds()) / 3600.0)
+        cand = (dt_h, ts, Path(r["path"]))
+        if best is None or cand[0] < best[0]:
+            best = cand
+        elif best is not None and cand[0] == best[0]:
+            # 平局时：优先选择 anchor 之后的窗口（更接近“事件发生后第一个观测”）
+            if cand[1] >= anchor_ts and best[1] < anchor_ts:
+                best = cand
+
+    assert best is not None
+    dt_h, ts, p = best
+    meta = {"t0_snap_ok": 1, "t0_snap_window_pt": str(ts), "t0_snap_delta_hours": float(dt_h)}
+    return ts, p, meta
+
+
 def _weighted_centroid(lat: np.ndarray, lon: np.ndarray, w: np.ndarray) -> tuple[float, float] | None:
     mask = np.isfinite(lat) & np.isfinite(lon) & np.isfinite(w) & (w > 0)
     if not np.any(mask):
@@ -239,66 +273,80 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
     first = windows[0]
     first_ts = pd.Timestamp(first["window_start_pt"])
 
-    pop_dir = resolve_subdir(spec.data_root, "population")
-
-    # t0：优先对齐 track anchor（landfall/closest approach），否则退化为"首日 16:00"。
-    t0_method = "provided"
+    # t0：优先对齐 track anchor（landfall/closest approach），否则退化为“首个可用 population 窗口”（并显式 WARNING）。
+    t0_method = "provided_exact"
     if spec.t0_pt is None:
         track_df = _load_track_points_for_spec(spec)
         if track_df is not None:
             anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(first_ts))
-            t0_pt, t0_file, snap_meta = _snap_t0_to_first_window_after_anchor(windows, anchor_ts=anchor_ts)
-            if snap_meta.get("t0_snap_ok", 0) == 1:
-                t0_method = "auto_track_anchor_next_window"
-            else:
-                t0_method = "auto_track_anchor_no_window"
-            t0_file = t0_file if t0_file is not None else Path(first["path"])
+            t0_pt, t0_file, snap_meta = _snap_t0_to_nearest_window(windows, anchor_ts=anchor_ts)
+            t0_method = "auto_track_anchor_nearest_window"
         else:
             anchor_meta = {"track_anchor_ok": 0}
-            snap_meta = {"t0_snap_ok": 0}
-            t0_candidate = pd.Timestamp(f"{first_ts:%Y-%m-%d} 16:00")
-            matches = list(pop_dir.glob(f"*_{t0_candidate:%Y-%m-%d}_{t0_candidate:%H%M}.csv"))
-            if len(matches) == 1:
-                t0_pt = pd.Timestamp(t0_candidate)
-                t0_method = "auto_first_day_1600"
-                t0_file = matches[0]
-            else:
-                t0_pt = pd.Timestamp(first_ts)
-                t0_method = "auto_first_population_window"
-                t0_file = Path(first["path"])
+            snap_meta = {"t0_snap_ok": 0, "t0_snap_window_pt": "", "t0_snap_delta_hours": float("nan")}
+            t0_pt = pd.Timestamp(first_ts)
+            t0_method = "auto_first_population_window"
+            t0_file = Path(first["path"])
+            print(
+                f"[cross_disaster_phi_tau][WARNING] {spec.slug}: catalog 未提供 t0_pt 且缺少 track；"
+                f"退化为 first_population_window_pt={t0_pt}（低置信度）"
+            )
     else:
-        t0_pt = pd.Timestamp(spec.t0_pt)
+        t0_raw = pd.Timestamp(spec.t0_pt)
+        t0_pt, t0_file, snap_meta = _snap_t0_to_nearest_window(windows, anchor_ts=t0_raw)
         track_df = _load_track_points_for_spec(spec)
         if track_df is not None:
-            anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(t0_pt))
+            anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(t0_raw))
         else:
             anchor_meta = {"track_anchor_ok": 0}
             anchor_ts = None
-        snap_meta = {"t0_snap_ok": 0}
-        matches = list(pop_dir.glob(f"*_{t0_pt:%Y-%m-%d}_{t0_pt:%H%M}.csv"))
-        t0_file = matches[0] if len(matches) == 1 else Path(first["path"])
+        if pd.Timestamp(t0_pt) == pd.Timestamp(t0_raw):
+            t0_method = "provided_exact"
+        else:
+            t0_method = "provided_snapped_nearest_window"
+            delta_h = float(snap_meta.get("t0_snap_delta_hours", float("nan")))
+            if np.isfinite(delta_h) and delta_h > 12.0:
+                print(
+                    f"[cross_disaster_phi_tau][WARNING] {spec.slug}: 提供的 t0_pt={t0_raw} 与最近窗口差 {delta_h:.1f}h；"
+                    "请检查 catalog 或数据窗口时间戳"
+                )
 
-    # center：若未提供，则优先用 t0 窗口（更可能落在“扰动开始/峰值”附近）
     center_source_ts = pd.Timestamp(t0_pt)
-    center_source_file = t0_file
-    df = load_population_file(Path(center_source_file))
-    lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy(dtype=float)
-    lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy(dtype=float)
-    diff = pd.to_numeric(df.get("n_difference", np.nan), errors="coerce").to_numpy(dtype=float)
-    crisis = pd.to_numeric(df.get("n_crisis", np.nan), errors="coerce").to_numpy(dtype=float)
+    center_source_file: Path | None = t0_file
 
     center_method = "provided"
     if spec.center_lat is None or spec.center_lon is None:
-        # 优先按 |n_difference| 加权，定位“变化最大”的区域
-        out = _weighted_centroid(lat, lon, np.abs(diff))
-        if out is None:
-            out = _weighted_centroid(lat, lon, crisis)
-            center_method = "auto_centroid_n_crisis"
+        # 若有 track anchor（尤其是飓风/台风等路径型灾害），优先使用 anchor 点作为中心，避免“加权质心被远端异常 tile 拉偏”。
+        anchor_lat = _safe_float(anchor_meta.get("track_anchor_lat"))
+        anchor_lon = _safe_float(anchor_meta.get("track_anchor_lon"))
+        if int(anchor_meta.get("track_anchor_ok", 0)) == 1 and anchor_lat is not None and anchor_lon is not None and np.isfinite(anchor_lat) and np.isfinite(anchor_lon):
+            center_lat = float(anchor_lat)
+            center_lon = float(anchor_lon)
+            center_method = "auto_track_anchor"
+            center_source_ts = pd.Timestamp(str(anchor_meta.get("track_anchor_pt", t0_pt)))
+            center_source_file = None
         else:
-            center_method = "auto_centroid_abs_n_difference"
-        if out is None:
-            raise SystemExit(f"无法自动估计中心点：{spec.slug}（首窗无有效坐标/权重）")
-        center_lat, center_lon = out
+            assert center_source_file is not None
+            df = load_population_file(center_source_file)
+            lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy(dtype=float)
+            lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy(dtype=float)
+            diff = pd.to_numeric(df.get("n_difference", np.nan), errors="coerce").to_numpy(dtype=float)
+            crisis = pd.to_numeric(df.get("n_crisis", np.nan), errors="coerce").to_numpy(dtype=float)
+
+            # 优先按 |n_difference| 加权，定位“变化最大”的区域
+            out = _weighted_centroid(lat, lon, np.abs(diff))
+            if out is None:
+                out = _weighted_centroid(lat, lon, crisis)
+                center_method = "auto_centroid_n_crisis"
+            else:
+                center_method = "auto_centroid_abs_n_difference"
+            if out is None:
+                raise SystemExit(f"无法自动估计中心点：{spec.slug}（首窗无有效坐标/权重）")
+            center_lat, center_lon = out
+            print(
+                f"[cross_disaster_phi_tau][WARNING] {spec.slug}: catalog 未提供 center_lat/center_lon，"
+                f"已用 {center_method} 在窗口 {Path(center_source_file).name} 上估计中心点（请优先在 catalog 显式提供）。"
+            )
     else:
         center_lat, center_lon = float(spec.center_lat), float(spec.center_lon)
 
@@ -318,6 +366,7 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
         "only_hour_pt": int(spec.only_hour_pt),
         "t0_pt": str(t0_pt),
         "t0_method": t0_method,
+        "t0_file": str(Path(t0_file).name) if t0_file else "",
         **anchor_meta,
         **snap_meta,
         **extra,
@@ -325,7 +374,7 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
         "center_lon": float(center_lon),
         "center_method": center_method,
         "center_source_window_pt": str(center_source_ts),
-        "center_source_file": str(Path(center_source_file).name),
+        "center_source_file": str(center_source_file.name) if center_source_file is not None else "",
         "first_population_window_pt": str(first_ts),
         "first_population_window_file": str(Path(first["path"]).name),
     }

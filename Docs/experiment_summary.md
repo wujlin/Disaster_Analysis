@@ -331,6 +331,7 @@
 **时间**：2026-02-06  
 **关键口径（可复现设置）**：
 - `distance_mode=path` + `only_hour_pt=8`（只用 08:00 PT 窗口）
+- `path_distance_method=equirect`（默认；可用 `geodesic` 做 robustness check）
 - track 裁剪：时间 `±24h` + 空间半径 `max_distance_km+100km`
 - Phase1/2 过滤：`max_track_anchor_gap_hours=24`（避免 t0 与 track anchor 明显错位）
 
@@ -385,6 +386,9 @@
 - `scripts/h3a_track_report.py`
 - `scripts/h3a_track_mechanism.py`
 - `scripts/h3a_track_map_overlay.py`
+- `scripts/phi_overlap_stability.py`（诊断 n_tiles_overlap 的时序稳定性）
+- `scripts/phi_time_aggregation_verify.py`（诊断 8h→24h 聚合：RoS vs MoR）
+- `scripts/path_track_clip_audit.py`（审计 clip_kind 是否退化到 full）
 
 ---
 

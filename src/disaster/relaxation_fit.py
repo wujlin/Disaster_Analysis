@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -58,7 +59,14 @@ def fit_relaxation_models(
     fit_df = fit_relaxation_models_table(ts, cfg=cfg)
     if fit_df.empty:
         return
-    best = fit_df.loc[fit_df.groupby("distance_bin")["bic"].idxmin()].copy()
+    ok = fit_df.copy()
+    if "fit_ok" in ok.columns:
+        ok = ok[pd.to_numeric(ok["fit_ok"], errors="coerce") == 1].copy()
+    ok["bic"] = pd.to_numeric(ok["bic"], errors="coerce")
+    ok = ok[ok["bic"].notna()].copy()
+    if ok.empty:
+        return
+    best = ok.loc[ok.groupby("distance_bin")["bic"].idxmin()].copy()
     best.insert(1, "best_by", "bic")
 
     fit_df.to_csv(output_path.with_name(output_path.stem + "_all_models.csv"), index=False)
@@ -79,8 +87,9 @@ def fit_relaxation_models_table(ts: pd.DataFrame, *, cfg: FitConfig | None = Non
     def exp_model(t, tau, a, c):
         return a * np.exp(-t / tau) + c
 
-    def power_law(t, alpha, a, c):
-        return a * np.power(t + 1.0, -alpha) + c
+    def power_law(t, tau, alpha, a, c):
+        # 与时间单位无关的参数化：(1 + t/tau)^(-alpha)
+        return a * np.power(1.0 + (t / tau), -alpha) + c
 
     def stretched_exp(t, tau, beta, a, c):
         return a * np.exp(-np.power(t / tau, beta)) + c
@@ -138,8 +147,11 @@ def fit_relaxation_models_table(ts: pd.DataFrame, *, cfg: FitConfig | None = Non
             ),
             "power_law": (
                 power_law,
-                3,
-                dict(p0=[0.5, a_guess, c_guess], bounds=([0.01, -np.inf, -np.inf], [3.0, np.inf, np.inf])),
+                4,
+                dict(
+                    p0=[tau_guess, 0.5, a_guess, c_guess],
+                    bounds=([0.1, 0.01, -np.inf, -np.inf], [tau_hi, 3.0, np.inf, np.inf]),
+                ),
             ),
             "stretched_exp": (
                 stretched_exp,
@@ -154,6 +166,15 @@ def fit_relaxation_models_table(ts: pd.DataFrame, *, cfg: FitConfig | None = Non
         }
 
         for name, (fn, k, kw) in models.items():
+            lo_bounds, hi_bounds = kw.get("bounds", (None, None))
+            bounds_lo_s = ""
+            bounds_hi_s = ""
+            try:
+                if lo_bounds is not None and hi_bounds is not None:
+                    bounds_lo_s = json.dumps([float(x) for x in lo_bounds])
+                    bounds_hi_s = json.dumps([float(x) for x in hi_bounds])
+            except Exception:
+                pass
             try:
                 fit_kw = dict(maxfev=12000, **kw)
                 if sigma is not None:
@@ -174,7 +195,6 @@ def fit_relaxation_models_table(ts: pd.DataFrame, *, cfg: FitConfig | None = Non
                     bic = n * np.log(sse / n) + k * np.log(n)
                     chi2 = float("nan")
 
-                lo_bounds, hi_bounds = kw.get("bounds", (None, None))
                 at_bounds = False
                 if lo_bounds is not None and hi_bounds is not None:
                     for v, lo, hi in zip(popt, lo_bounds, hi_bounds, strict=False):
@@ -183,22 +203,41 @@ def fit_relaxation_models_table(ts: pd.DataFrame, *, cfg: FitConfig | None = Non
                 row = {
                     "distance_bin": str(dist_bin),
                     "model": name,
+                    "fit_ok": 1,
                     "n_points": int(len(t)),
                     "sse": float(sse),
                     "chi2": float(chi2),
                     "aic": float(aic),
                     "bic": float(bic),
                     "at_bounds": bool(at_bounds),
+                    "bounds_lo": bounds_lo_s,
+                    "bounds_hi": bounds_hi_s,
                 }
                 if name in {"exponential", "log"}:
                     row.update({"tau": float(popt[0]), "A": float(popt[1]), "C": float(popt[2])})
                 elif name == "power_law":
-                    row.update({"alpha": float(popt[0]), "A": float(popt[1]), "C": float(popt[2])})
+                    row.update({"tau": float(popt[0]), "alpha": float(popt[1]), "A": float(popt[2]), "C": float(popt[3])})
                 else:
                     row.update({"tau": float(popt[0]), "beta": float(popt[1]), "A": float(popt[2]), "C": float(popt[3])})
                 rows.append(row)
-            except Exception:
-                continue
+            except Exception as e:
+                rows.append(
+                    {
+                        "distance_bin": str(dist_bin),
+                        "model": name,
+                        "fit_ok": 0,
+                        "n_points": int(len(t)),
+                        "sse": float("nan"),
+                        "chi2": float("nan"),
+                        "aic": float("nan"),
+                        "bic": float("nan"),
+                        "at_bounds": False,
+                        "bounds_lo": bounds_lo_s,
+                        "bounds_hi": bounds_hi_s,
+                        "error_type": type(e).__name__,
+                        "error_msg": str(e)[:300],
+                    }
+                )
 
     return pd.DataFrame(rows)
 

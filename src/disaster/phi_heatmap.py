@@ -27,6 +27,7 @@ class Config:
     center_track_to_tz: str = "America/Los_Angeles"
     center_track_storm_name: str | None = None
     distance_mode: str = "radial"  # radial: 到中心点距离；path: 到轨迹折线最近距离
+    path_distance_method: str = "equirect"  # distance_mode=path 时：equirect(快) | geodesic(精确)
     hours_pt: tuple[int, ...] = (0, 8, 16)
     min_hours: float = -16.0
     max_hours: float = 832.0
@@ -39,6 +40,8 @@ class Config:
     path_clip_pad_hours: float = 24.0
     path_clip_spatial_pad_km: float = 100.0
     path_sector_n: int = 0  # 0 表示不计算；>0 则输出每个 r_bin 的角向覆盖率（用于诊断海陆不对称）
+    track_dt_default_hours: float = 6.0  # track 点时间戳间隔估计失败时的默认值
+    track_gap_factor: float = 1.5  # 连续段判定：gap_thr = track_dt_est * track_gap_factor
 
 
 @dataclass(frozen=True)
@@ -168,12 +171,19 @@ def _load_center_track(cfg: Config) -> CenterTrack | None:
     return CenterTrack(t_ns=t_ns, lat=lat_v, lon=lon_v, status=status_v)
 
 
-def _center_at(track: CenterTrack, ts: pd.Timestamp) -> tuple[float, float]:
+def _center_at(track: CenterTrack, ts: pd.Timestamp) -> tuple[float, float, bool, str]:
     t_ns_arr, lat_arr, lon_arr = track.t_ns, track.lat, track.lon
     x = np.int64(pd.Timestamp(ts).value)
+    extrapolated = bool(x < np.int64(t_ns_arr[0]) or x > np.int64(t_ns_arr[-1]))
+    if x < np.int64(t_ns_arr[0]):
+        extrap_side = "before"
+    elif x > np.int64(t_ns_arr[-1]):
+        extrap_side = "after"
+    else:
+        extrap_side = "within"
     lat = float(np.interp(x, t_ns_arr, lat_arr, left=float(lat_arr[0]), right=float(lat_arr[-1])))
     lon = float(np.interp(x, t_ns_arr, lon_arr, left=float(lon_arr[0]), right=float(lon_arr[-1])))
-    return lat, lon
+    return lat, lon, extrapolated, extrap_side
 
 
 def _haversine_pairwise_km(lat1: np.ndarray, lon1: np.ndarray, lat2: np.ndarray, lon2: np.ndarray) -> np.ndarray:
@@ -200,7 +210,13 @@ def _polyline_length_km(lat_arr: np.ndarray, lon_arr: np.ndarray) -> float:
     return float(np.nansum(d))
 
 
-def _select_longest_contiguous_segment(t_ns: np.ndarray, keep: np.ndarray) -> tuple[int, int] | None:
+def _select_longest_contiguous_segment(
+    t_ns: np.ndarray,
+    keep: np.ndarray,
+    *,
+    dt_default_hours: float,
+    gap_factor: float,
+) -> tuple[int, int] | None:
     t_ns = np.asarray(t_ns, dtype=np.int64)
     keep = np.asarray(keep, dtype=bool)
     if t_ns.size != keep.size or t_ns.size < 2:
@@ -210,10 +226,10 @@ def _select_longest_contiguous_segment(t_ns: np.ndarray, keep: np.ndarray) -> tu
 
     if t_ns.size >= 3:
         dt_hours = float(np.median(np.diff(t_ns.astype(np.int64))) / 1e9 / 3600.0)
-        dt_hours = dt_hours if np.isfinite(dt_hours) and dt_hours > 0 else 6.0
+        dt_hours = dt_hours if np.isfinite(dt_hours) and dt_hours > 0 else float(dt_default_hours)
     else:
-        dt_hours = 6.0
-    gap_thr = dt_hours * 1.5
+        dt_hours = float(dt_default_hours)
+    gap_thr = dt_hours * float(gap_factor)
 
     best: tuple[int, int, int, float] | None = None  # (start,end,n,duration_h)
     start: int | None = None
@@ -319,7 +335,12 @@ def _clip_track_for_path(track: CenterTrack, cfg: Config) -> tuple[tuple[np.ndar
     keep_both = keep_time & keep_spatial
 
     def _apply_keep(mask: np.ndarray) -> tuple[np.ndarray, np.ndarray, dict] | None:
-        seg = _select_longest_contiguous_segment(track.t_ns, mask)
+        seg = _select_longest_contiguous_segment(
+            track.t_ns,
+            mask,
+            dt_default_hours=float(cfg.track_dt_default_hours),
+            gap_factor=float(cfg.track_gap_factor),
+        )
         if seg is None:
             return None
         a, b = seg
@@ -397,6 +418,100 @@ def _equirect_xy_km(
     x = (lon - lon0) * np.cos(lat0) * r_earth_km
     y = (lat - lat0) * r_earth_km
     return x, y
+
+
+def _angular_distance_rad(lat1: np.ndarray, lon1: np.ndarray, lat2: np.ndarray, lon2: np.ndarray) -> np.ndarray:
+    """
+    球面两点角距离（弧度，haversine 形式）。
+    输入可广播；返回同形状数组。
+    """
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2.0) ** 2
+    a = np.clip(a, 0.0, 1.0)
+    return 2.0 * np.arctan2(np.sqrt(a), np.sqrt(np.maximum(1.0 - a, 0.0)))
+
+
+def _bearing_rad(lat1: float, lon1: float, lat2: np.ndarray, lon2: np.ndarray) -> np.ndarray:
+    """
+    初始方位角（弧度，[-pi,pi]），从 (lat1,lon1) 指向 (lat2,lon2)。
+    lat1/lon1 为标量，lat2/lon2 为数组（便于向量化）。
+    """
+    dlon = lon2 - float(lon1)
+    y = np.sin(dlon) * np.cos(lat2)
+    x = np.cos(float(lat1)) * np.sin(lat2) - np.sin(float(lat1)) * np.cos(lat2) * np.cos(dlon)
+    return np.arctan2(y, x)
+
+
+def _min_dist_to_polyline_geodesic_km(
+    lat_deg: np.ndarray,
+    lon_deg: np.ndarray,
+    *,
+    seg_a_lat_deg: np.ndarray,
+    seg_a_lon_deg: np.ndarray,
+    seg_b_lat_deg: np.ndarray,
+    seg_b_lon_deg: np.ndarray,
+) -> np.ndarray:
+    """
+    点到折线（球面大圆线段序列）的最小距离（km）。
+    使用 cross-track / along-track 公式判断投影是否落在线段内；
+    若不在线段内，则取到端点的最小距离。
+    """
+    ok = np.isfinite(lat_deg) & np.isfinite(lon_deg)
+    d_out = np.full(lat_deg.shape, np.nan, dtype=float)
+    if not np.any(ok):
+        return d_out
+
+    r_earth_km = 6371.0088
+
+    lat_p = np.deg2rad(lat_deg[ok].astype(float))
+    lon_p = np.deg2rad(lon_deg[ok].astype(float))
+
+    a_lat = np.deg2rad(np.asarray(seg_a_lat_deg, dtype=float))
+    a_lon = np.deg2rad(np.asarray(seg_a_lon_deg, dtype=float))
+    b_lat = np.deg2rad(np.asarray(seg_b_lat_deg, dtype=float))
+    b_lon = np.deg2rad(np.asarray(seg_b_lon_deg, dtype=float))
+
+    min_delta = np.full(lat_p.shape, np.inf, dtype=float)
+    for la, loa, lb, lob in zip(a_lat.tolist(), a_lon.tolist(), b_lat.tolist(), b_lon.tolist(), strict=False):
+        la = float(la)
+        loa = float(loa)
+        lb = float(lb)
+        lob = float(lob)
+
+        delta12 = float(_angular_distance_rad(np.array(la), np.array(loa), np.array(lb), np.array(lob)))
+        if not np.isfinite(delta12) or delta12 <= 0:
+            delta13 = _angular_distance_rad(np.array(la), np.array(loa), lat_p, lon_p)
+            min_delta = np.minimum(min_delta, delta13)
+            continue
+
+        theta12 = float(_bearing_rad(la, loa, np.array([lb]), np.array([lob]))[0])
+        delta13 = _angular_distance_rad(np.array(la), np.array(loa), lat_p, lon_p)
+        theta13 = _bearing_rad(la, loa, lat_p, lon_p)
+
+        theta_diff = theta13 - theta12
+        sin_xt = np.sin(delta13) * np.sin(theta_diff)
+        sin_xt = np.clip(sin_xt, -1.0, 1.0)
+        delta_xt = np.arcsin(sin_xt)
+
+        # signed along-track distance from A to the perpendicular projection on great-circle AB
+        delta_at = np.arctan2(np.sin(delta13) * np.cos(theta_diff), np.cos(delta13))
+
+        mask_start = delta_at < 0
+        mask_end = delta_at > float(delta12)
+        mask_within = (~mask_start) & (~mask_end)
+
+        d_seg = np.empty_like(delta13)
+        d_seg[mask_within] = np.abs(delta_xt[mask_within])
+        d_seg[mask_start] = delta13[mask_start]
+        if np.any(mask_end):
+            delta23 = _angular_distance_rad(np.array(lb), np.array(lob), lat_p[mask_end], lon_p[mask_end])
+            d_seg[mask_end] = delta23
+
+        min_delta = np.minimum(min_delta, d_seg)
+
+    d_out[ok] = min_delta * float(r_earth_km)
+    return d_out
 
 
 def _min_dist_to_polyline_km(
@@ -571,9 +686,30 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         (lat_arr, lon_arr), track_meta = _clip_track_for_path(track, cfg)
         if lat_arr.size < 2:
             raise SystemExit("distance_mode=path 需要至少 2 个轨迹点")
+        clip_kind = str(track_meta.get("path_track_clip_kind", "")).strip().lower()
+        if clip_kind and clip_kind != "time_and_spatial":
+            print(
+                f"[phi_heatmap][WARNING] track clipping used fallback: clip_kind={clip_kind} "
+                f"(keep_time={int(track_meta.get('path_track_keep_time_points', 0))}, "
+                f"keep_spatial={int(track_meta.get('path_track_keep_spatial_points', 0))}, "
+                f"keep_both={int(track_meta.get('path_track_keep_both_points', 0))}, "
+                f"points_total={int(track_meta.get('path_track_points_total', 0))}, "
+                f"points_used={int(track_meta.get('path_track_points_used', 0))})"
+            )
+        if clip_kind == "full":
+            print(
+                "[phi_heatmap][WARNING] track clipping fell back to full track "
+                f"(points_total={int(track_meta.get('path_track_points_total', 0))}, "
+                f"points_used={int(track_meta.get('path_track_points_used', 0))}, "
+                f"len_total_km={float(track_meta.get('path_track_length_total_km', float('nan'))):.1f}, "
+                f"len_used_km={float(track_meta.get('path_track_length_km', float('nan'))):.1f})"
+            )
         lat0 = float(np.nanmean(lat_arr))
         lon0 = float(np.nanmean(lon_arr))
         x_tr, y_tr = _equirect_xy_km(lat_arr, lon_arr, lat0_deg=lat0, lon0_deg=lon0)
+        path_method = str(cfg.path_distance_method).strip().lower() or "equirect"
+        if path_method not in {"equirect", "geodesic"}:
+            raise SystemExit(f"不支持的 path_distance_method：{cfg.path_distance_method}（仅支持 equirect/geodesic）")
         path_ctx = {
             "lat0": float(lat0),
             "lon0": float(lon0),
@@ -581,8 +717,13 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             "seg_ay": y_tr[:-1].astype(float),
             "seg_bx": x_tr[1:].astype(float),
             "seg_by": y_tr[1:].astype(float),
+            "seg_a_lat_deg": lat_arr[:-1].astype(float),
+            "seg_a_lon_deg": lon_arr[:-1].astype(float),
+            "seg_b_lat_deg": lat_arr[1:].astype(float),
+            "seg_b_lon_deg": lon_arr[1:].astype(float),
             "track_points_used": int(track_meta.get("path_track_points_used", int(lat_arr.size))),
             "track_length_km": float(track_meta.get("path_track_length_km", float("nan"))),
+            "path_distance_method": str(path_method),
         }
 
     r_bins = _distance_bins(cfg)
@@ -591,6 +732,10 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 
     rows: list[pd.DataFrame] = []
     center_rows: list[dict] = []
+    track_time_min_pt = str(pd.to_datetime(int(track.t_ns.min()))) if track is not None and track.t_ns.size else ""
+    track_time_max_pt = str(pd.to_datetime(int(track.t_ns.max()))) if track is not None and track.t_ns.size else ""
+
+    extrap_count = 0
     for i, meta in enumerate(windows, start=1):
         p = Path(meta["path"])
         df = load_population_file(p)
@@ -601,23 +746,37 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy(dtype=float)
 
         window_ts = pd.Timestamp(meta["window_start_pt"])
+        center_used_for_distance = 1 if distance_mode == "radial" else 0
         if track is None:
             center_lat, center_lon = float(cfg.center_lat), float(cfg.center_lon)
+            center_mode = "static"
+            center_extrapolated = 0
+            center_extrap_side = ""
         else:
-            center_lat, center_lon = _center_at(track, window_ts)
+            center_lat, center_lon, is_extrap, side = _center_at(track, window_ts)
+            center_extrapolated = 1 if bool(is_extrap) else 0
+            center_extrap_side = str(side)
+            center_mode = "track_extrapolated" if center_extrapolated else "track"
+            extrap_count += int(center_extrapolated)
         center_rows.append(
             {
                 "window_start_pt": window_ts,
                 "hours_since_quake": float(meta["hours_since_quake"]),
                 "center_lat": float(center_lat),
                 "center_lon": float(center_lon),
-                "center_mode": "track" if track is not None else "static",
+                "center_mode": str(center_mode),
+                "center_used_for_distance": int(center_used_for_distance),
+                "center_extrapolated": int(center_extrapolated),
+                "center_extrapolation_side": str(center_extrap_side),
+                "center_track_time_min_pt": str(track_time_min_pt),
+                "center_track_time_max_pt": str(track_time_max_pt),
                 "distance_mode": str(distance_mode),
                 "center_track_csv": str(cfg.center_track_csv) if cfg.center_track_csv is not None else "",
                 "center_track_to_tz": str(cfg.center_track_to_tz),
                 "center_track_storm_name": str(cfg.center_track_storm_name) if cfg.center_track_storm_name else "",
                 "path_track_points_used": int(path_ctx.get("track_points_used", 0)) if path_ctx is not None else 0,
                 "path_track_length_km": float(path_ctx.get("track_length_km", float("nan"))) if path_ctx is not None else float("nan"),
+                "path_distance_method": str(path_ctx.get("path_distance_method", "")) if path_ctx is not None else "",
                 "path_track_clip_ok": int(track_meta.get("path_track_clip_ok", 0)) if track_meta else 0,
                 "path_track_clip_kind": str(track_meta.get("path_track_clip_kind", "")) if track_meta else "",
                 "path_track_clip_start_pt": str(track_meta.get("path_track_clip_start_pt", "")) if track_meta else "",
@@ -644,8 +803,9 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             dist = haversine_km(lat, lon, float(center_lat), float(center_lon))
         else:
             assert path_ctx is not None
+            method = str(path_ctx.get("path_distance_method", "equirect")).strip().lower() or "equirect"
             if int(cfg.path_sector_n) > 0:
-                dist, dx, dy = _min_dist_to_polyline_km_with_vector(
+                dist_e, dx, dy = _min_dist_to_polyline_km_with_vector(
                     lat,
                     lon,
                     seg_ax=path_ctx["seg_ax"],
@@ -655,17 +815,38 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
                     lat0_deg=float(path_ctx["lat0"]),
                     lon0_deg=float(path_ctx["lon0"]),
                 )
+                if method == "geodesic":
+                    dist = _min_dist_to_polyline_geodesic_km(
+                        lat,
+                        lon,
+                        seg_a_lat_deg=path_ctx["seg_a_lat_deg"],
+                        seg_a_lon_deg=path_ctx["seg_a_lon_deg"],
+                        seg_b_lat_deg=path_ctx["seg_b_lat_deg"],
+                        seg_b_lon_deg=path_ctx["seg_b_lon_deg"],
+                    )
+                else:
+                    dist = dist_e
             else:
-                dist = _min_dist_to_polyline_km(
-                    lat,
-                    lon,
-                    seg_ax=path_ctx["seg_ax"],
-                    seg_ay=path_ctx["seg_ay"],
-                    seg_bx=path_ctx["seg_bx"],
-                    seg_by=path_ctx["seg_by"],
-                    lat0_deg=float(path_ctx["lat0"]),
-                    lon0_deg=float(path_ctx["lon0"]),
-                )
+                if method == "geodesic":
+                    dist = _min_dist_to_polyline_geodesic_km(
+                        lat,
+                        lon,
+                        seg_a_lat_deg=path_ctx["seg_a_lat_deg"],
+                        seg_a_lon_deg=path_ctx["seg_a_lon_deg"],
+                        seg_b_lat_deg=path_ctx["seg_b_lat_deg"],
+                        seg_b_lon_deg=path_ctx["seg_b_lon_deg"],
+                    )
+                else:
+                    dist = _min_dist_to_polyline_km(
+                        lat,
+                        lon,
+                        seg_ax=path_ctx["seg_ax"],
+                        seg_ay=path_ctx["seg_ay"],
+                        seg_bx=path_ctx["seg_bx"],
+                        seg_by=path_ctx["seg_by"],
+                        lat0_deg=float(path_ctx["lat0"]),
+                        lon0_deg=float(path_ctx["lon0"]),
+                    )
         r_bin = np.floor(dist / step) * step
         keep = np.isfinite(r_bin) & (r_bin >= 0) & (r_bin < r_max)
 
@@ -716,6 +897,12 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         if i % 20 == 0:
             print(f"[phi_heatmap] processed {i}/{len(windows)} windows...")
 
+    if extrap_count and track_time_min_pt and track_time_max_pt:
+        print(
+            f"[phi_heatmap][WARNING] center extrapolated for {int(extrap_count)}/{int(len(windows))} windows "
+            f"(track_time_range=[{track_time_min_pt},{track_time_max_pt}])"
+        )
+
     long_df = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
     out_long = out.tables / "phi_rt_long.csv"
     long_df.to_csv(out_long, index=False)
@@ -725,7 +912,14 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
     # pivot：r_bin_km x hours_since_quake
     pivot = long_df.pivot(index="r_bin_km", columns="hours_since_quake", values="phi_aggregate").sort_index().sort_index(axis=1)
     pivot = pivot.reindex(index=r_bins)
-    t_grid = np.arange(float(cfg.min_hours), float(cfg.max_hours) + 1e-9, 8.0, dtype=float)
+    t_step = 8.0
+    ts_unique = long_df["hours_since_quake"].dropna().unique().astype(float)
+    ts_unique = np.sort(ts_unique)
+    if ts_unique.size >= 2:
+        dt = float(np.median(np.diff(ts_unique)))
+        if np.isfinite(dt) and dt > 0:
+            t_step = float(dt)
+    t_grid = np.arange(float(cfg.min_hours), float(cfg.max_hours) + 1e-9, float(t_step), dtype=float)
     pivot = pivot.reindex(columns=t_grid)
     out_matrix = out.tables / "phi_rt_matrix.csv"
     pivot.reset_index().to_csv(out_matrix, index=False)
@@ -848,9 +1042,12 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
  - center_track_to_tz: {cfg.center_track_to_tz}
  - center_track_storm_name: {cfg.center_track_storm_name}
  - distance_mode: {distance_mode}
+ - path_distance_method: {str(cfg.path_distance_method).strip().lower() or "equirect"}
  - path_clip_pad_hours: {float(cfg.path_clip_pad_hours)}
  - path_clip_spatial_pad_km: {float(cfg.path_clip_spatial_pad_km)}
  - path_sector_n: {int(cfg.path_sector_n)}
+ - track_dt_default_hours: {float(cfg.track_dt_default_hours)}
+ - track_gap_factor: {float(cfg.track_gap_factor)}
  - t0_pt: {pd.Timestamp(cfg.t0_pt)}
  - hours_pt: {list(int(h) for h in cfg.hours_pt)}
 
@@ -889,6 +1086,13 @@ def cli_main() -> None:
         choices=["radial", "path"],
         help="距离定义：radial=到中心点（static/track）；path=到轨迹折线最近距离（需要 center_track_csv）",
     )
+    parser.add_argument(
+        "--path-distance-method",
+        type=str,
+        default="equirect",
+        choices=["equirect", "geodesic"],
+        help="distance_mode=path 时：点到轨迹距离算法（默认 equirect；geodesic 更精确但更慢）",
+    )
     parser.add_argument("--path-clip-pad-hours", type=float, default=24.0, help="distance_mode=path 时，轨迹折线按时间裁剪的前后 padding（小时，默认 24）")
     parser.add_argument(
         "--path-clip-spatial-pad-km",
@@ -905,6 +1109,8 @@ def cli_main() -> None:
     parser.add_argument("--max-distance-km", type=float, default=500.0, help="最大距离（km，默认 500）")
     parser.add_argument("--phi-vmin", type=float, default=0.6, help="热力图 vmin（默认 0.6）")
     parser.add_argument("--phi-vmax", type=float, default=1.6, help="热力图 vmax（默认 1.6）")
+    parser.add_argument("--track-dt-default-hours", type=float, default=6.0, help="track 点时间间隔估计失败时的默认 dt（小时，默认 6）")
+    parser.add_argument("--track-gap-factor", type=float, default=1.5, help="track 连续段判定：gap_thr = dt_est * factor（默认 1.5）")
     parser.add_argument("--max-files", type=int, default=None, help="最多处理多少个窗口文件（冒烟测试用）")
     args = parser.parse_args()
 
@@ -917,6 +1123,7 @@ def cli_main() -> None:
         center_track_to_tz=str(args.center_track_to_tz),
         center_track_storm_name=str(args.center_track_storm_name) if args.center_track_storm_name else None,
         distance_mode=str(args.distance_mode),
+        path_distance_method=str(args.path_distance_method),
         t0_pt=pd.Timestamp(str(args.t0_pt)),
         path_clip_pad_hours=float(args.path_clip_pad_hours),
         path_clip_spatial_pad_km=float(args.path_clip_spatial_pad_km),
@@ -928,6 +1135,8 @@ def cli_main() -> None:
         max_distance_km=float(args.max_distance_km),
         phi_vmin=float(args.phi_vmin),
         phi_vmax=float(args.phi_vmax),
+        track_dt_default_hours=float(args.track_dt_default_hours),
+        track_gap_factor=float(args.track_gap_factor),
     )
     run(cfg, max_files=int(args.max_files) if args.max_files is not None else None)
 
