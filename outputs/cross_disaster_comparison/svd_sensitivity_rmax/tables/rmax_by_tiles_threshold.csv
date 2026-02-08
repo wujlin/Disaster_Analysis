@@ -1,0 +1,15 @@
+slug,event_type,output_root,tiles_thr,r_max_km_tiles_ge_thr
+typhoon_yagi_across_northeastern_vietnam,typhoon,outputs/_runs/trackpath/v4_yagi_fix,50.0,150.0
+hurricane_ernesto_puerto_rico_14_august_2024,hurricane,outputs/_runs/trackpath/v3,50.0,180.0
+hurricane_beryl_pre_landfall_2024,hurricane,outputs/_runs/trackpath/v3,50.0,230.0
+typhoon_krathon_across_taiwan,typhoon,outputs/_runs/trackpath/v3,50.0,230.0
+tropical_storm_yagi_philippines_2_september_2024,tropical_storm,outputs/_runs/trackpath/v3,50.0,280.0
+hurricane_milton_across_florida_us,hurricane,outputs/_runs/trackpath/v3,50.0,290.0
+hurricane_beryl_across_southeastern_texas_us,hurricane,outputs/_runs/trackpath/v3,50.0,310.0
+hurricane_john_southern_mexico_25_september_2024,hurricane,outputs/_runs/trackpath/v3,50.0,460.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,hurricane,outputs/_runs/trackpath/v3,50.0,490.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,hurricane,outputs/_runs/trackpath/v3,50.0,490.0
+hurricane_john_across_southeastern_guerrero_mexico,hurricane,outputs/_runs/trackpath/v3,50.0,490.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,tropical_storm,outputs/_runs/trackpath/v3,50.0,490.0
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,tropical_storm,outputs/_runs/trackpath/v3,50.0,490.0
+turkiye_earthquake_2023,earthquake,outputs,50.0,490.0

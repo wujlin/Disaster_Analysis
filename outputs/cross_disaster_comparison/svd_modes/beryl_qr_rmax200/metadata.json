@@ -1,0 +1,23 @@
+{
+  "slug": "hurricane_beryl_across_quintana_roo_and_yucatan_mexico",
+  "output_root": "outputs/_runs/trackpath/v3",
+  "value_col": "phi_overlap",
+  "r_max_km": 200.0,
+  "time_min": null,
+  "time_max": null,
+  "complete_only": 1,
+  "mode_used": "drop_complete",
+  "shape_raw": [
+    21,
+    14
+  ],
+  "shape_used": [
+    21,
+    14
+  ],
+  "nan_frac_raw_matrix": 0.0,
+  "sigma1_energy": 0.6077947886654546,
+  "sigma2_energy": 0.23726372612703148,
+  "sigma1": 0.7371079205892268,
+  "sigma2": 0.46054096345539597
+}

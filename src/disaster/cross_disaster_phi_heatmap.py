@@ -32,6 +32,7 @@ class Config:
     path_sector_n: int = 0
     track_dt_default_hours: float = 6.0
     track_gap_factor: float = 1.5
+    slugs: tuple[str, ...] = ()
 
 
 def _ensure_dir(p: Path) -> None:
@@ -48,6 +49,8 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
 
     skipped: list[dict] = []
     for spec in specs:
+        if cfg.slugs and spec.slug not in set(cfg.slugs):
+            continue
         if distance_mode == "path" and spec.center_track_csv is None:
             msg = "distance_mode=path 需要 catalog 提供 center_track_csv"
             skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
@@ -131,6 +134,7 @@ def cli_main() -> None:
     parser.add_argument("--track-dt-default-hours", type=float, default=6.0, help="track 点时间间隔估计失败时的默认 dt（小时，默认 6）")
     parser.add_argument("--track-gap-factor", type=float, default=1.5, help="track 连续段判定：gap_thr = dt_est * factor（默认 1.5）")
     parser.add_argument("--max-files", type=int, default=None, help="最多处理多少个窗口文件（每个灾害，冒烟测试用）")
+    parser.add_argument("--slugs", type=str, nargs="*", default=[], help="可选：只跑指定 slugs（默认跑全表）")
     args = parser.parse_args()
 
     cfg = Config(
@@ -149,6 +153,7 @@ def cli_main() -> None:
         path_sector_n=int(args.path_sector_n),
         track_dt_default_hours=float(args.track_dt_default_hours),
         track_gap_factor=float(args.track_gap_factor),
+        slugs=tuple(str(s) for s in args.slugs) if args.slugs else (),
     )
     run(cfg, max_files=int(args.max_files) if args.max_files is not None else None)
 

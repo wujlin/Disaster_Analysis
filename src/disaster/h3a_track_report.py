@@ -291,8 +291,8 @@ def run(cfg: Config) -> None:
 
 def cli_main() -> None:
     p = argparse.ArgumentParser(description="H3a: 飓风路径几何下的 φ(d_path) 报告（原始曲线 + 坍缩）")
-    p.add_argument("--output-root", type=Path, default=Path("outputs_trackpath"))
-    p.add_argument("--out-dir", type=Path, default=Path("outputs_trackpath/_tmp_h3a_track_report"))
+    p.add_argument("--output-root", type=Path, default=Path("outputs/_runs/trackpath/v3"))
+    p.add_argument("--out-dir", type=Path, default=Path("outputs/_runs/trackpath/v3/_tmp_h3a_track_report"))
     p.add_argument("--time-min-hours", type=float, default=0.0)
     p.add_argument("--time-max-hours", type=float, default=72.0)
     p.add_argument("--phi-col", type=str, default="phi_aggregate")
@@ -316,4 +316,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-

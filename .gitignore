@@ -18,6 +18,9 @@ datasets_catalog.*
 _debug_*
 
 outputs/*
+# Curated run artifacts (tracked / shareable)
+!outputs/_runs/
+!outputs/_runs/**
 !outputs/population_relaxation/
 !outputs/population_relaxation/**
 !outputs/pop_relax_50km/

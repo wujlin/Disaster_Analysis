@@ -1,0 +1,22 @@
+{
+  "n_events": 14,
+  "value_col": "phi_overlap",
+  "r_max_list": [
+    100.0,
+    200.0,
+    300.0,
+    500.0
+  ],
+  "time_min": null,
+  "time_max": null,
+  "complete_only": 1,
+  "tiles_thr": 50.0,
+  "r_common_tiles_ge_thr": 150.0,
+  "roots": [
+    "outputs/_runs/trackpath/v3",
+    "outputs/_runs/trackpath/v4_yagi_fix"
+  ],
+  "events": [
+    "outputs:turkiye_earthquake_2023"
+  ]
+}

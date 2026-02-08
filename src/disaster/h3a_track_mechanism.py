@@ -173,7 +173,7 @@ def run(cfg: Config) -> None:
         rows.append(row)
 
     if not rows:
-        raise SystemExit("没有可用样本（请先生成 outputs_trackpath/<slug>/phi_heatmap/...）")
+        raise SystemExit("没有可用样本（请先生成 outputs/_runs/trackpath/v3/<slug>/phi_heatmap/...，或通过 --output-root 指定）")
 
     df = pd.DataFrame(rows).sort_values("y_max_abs_phi_minus_1", ascending=False, kind="stable")
     df.to_csv(tabs / f"h3a_mechanism_summary_minTiles{int(cfg.min_tiles)}.csv", index=False)
@@ -234,8 +234,8 @@ def run(cfg: Config) -> None:
 
 def cli_main() -> None:
     p = argparse.ArgumentParser(description="H3a: 机制层指标（r0 vs 轨迹长度，y_max vs 暴露）")
-    p.add_argument("--output-root", type=Path, default=Path("outputs_trackpath"))
-    p.add_argument("--out-dir", type=Path, default=Path("outputs_trackpath/_tmp_h3a_mechanism"))
+    p.add_argument("--output-root", type=Path, default=Path("outputs/_runs/trackpath/v3"))
+    p.add_argument("--out-dir", type=Path, default=Path("outputs/_runs/trackpath/v3/_tmp_h3a_mechanism"))
     p.add_argument("--time-min-hours", type=float, default=0.0)
     p.add_argument("--time-max-hours", type=float, default=72.0)
     p.add_argument("--phi-col", type=str, default="phi_aggregate")

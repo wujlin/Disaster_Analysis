@@ -1,0 +1,23 @@
+{
+  "slug": "hurricane_john_southern_mexico_25_september_2024",
+  "output_root": "outputs/_runs/trackpath/v3",
+  "value_col": "phi_overlap",
+  "r_max_km": 200.0,
+  "time_min": null,
+  "time_max": null,
+  "complete_only": 1,
+  "mode_used": "drop_complete",
+  "shape_raw": [
+    21,
+    15
+  ],
+  "shape_used": [
+    21,
+    15
+  ],
+  "nan_frac_raw_matrix": 0.0,
+  "sigma1_energy": 0.5468610254851537,
+  "sigma2_energy": 0.4031790753731534,
+  "sigma1": 1.7821365244367944,
+  "sigma2": 1.53021155481637
+}

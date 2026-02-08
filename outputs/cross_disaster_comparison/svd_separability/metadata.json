@@ -1,0 +1,15 @@
+{
+  "n_events": 14,
+  "sigma1_threshold": 0.8,
+  "n_sigma1_ge_threshold": 7,
+  "frac_sigma1_ge_threshold": 0.5,
+  "value_col": "phi_overlap",
+  "near_r_max_km": 50.0,
+  "roots": [
+    "outputs/_runs/trackpath/v3",
+    "outputs/_runs/trackpath/v4_yagi_fix"
+  ],
+  "events": [
+    "outputs:turkiye_earthquake_2023"
+  ]
+}

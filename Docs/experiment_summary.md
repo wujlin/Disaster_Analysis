@@ -336,16 +336,16 @@
 - Phase1/2 过滤：`max_track_anchor_gap_hours=24`（避免 t0 与 track anchor 明显错位）
 
 **主输出根目录**：
-- `outputs_trackpath_v3/`
+- `outputs/_runs/trackpath/v3/`
 
 #### 2.9.1 φ heatmap（path）
 
 **每灾害输出**：
-- `outputs_trackpath_v3/<slug>/phi_heatmap/tables/phi_rt_long.csv`
-- `outputs_trackpath_v3/<slug>/phi_heatmap/tables/center_by_window.csv`
+- `outputs/_runs/trackpath/v3/<slug>/phi_heatmap/tables/phi_rt_long.csv`
+- `outputs/_runs/trackpath/v3/<slug>/phi_heatmap/tables/center_by_window.csv`
 
 **跳过（预期行为）**：
-- path 口径要求 catalog 提供 `center_track_csv`；无 track 的灾害会被跳过并落表：`outputs_trackpath_v3/_skipped_phi_heatmap.csv`
+- path 口径要求 catalog 提供 `center_track_csv`；无 track 的灾害会被跳过并落表：`outputs/_runs/trackpath/v3/_skipped_phi_heatmap.csv`
   - 例如 Turkey、洪水、野火、Enteng 等都在该表中（它们需要静态中心口径，不应混用 path）。
 
 **快速自检（可核查事实）**：
@@ -354,31 +354,31 @@
 #### 2.9.2 普适性 Phase0/1/2（path 组）
 
 **Phase0：信号强度扫描**
-- 输出：`outputs_trackpath_v3/_tmp_phase0/tables/phase0_signal_strength.csv`
+- 输出：`outputs/_runs/trackpath/v3/_tmp_phase0/tables/phase0_signal_strength.csv`
 - 事实：`S>=0.5` 的灾害数为 **7**（在 27 灾害表上扫描得到的计数；后续 Phase2 还会因数据可用性/过滤进一步减少）。
 
 **Phase2：坍缩重叠度**
-- `minTiles=0`：`outputs_trackpath_v3/_tmp_phase2_minTiles0/tables/phase2_overlap_metric.csv`
+- `minTiles=0`：`outputs/_runs/trackpath/v3/_tmp_phase2_minTiles0/tables/phase2_overlap_metric.csv`
   - `n_disasters_used=5`，`overlap_fraction=0.45`
-- `minTiles=50`：`outputs_trackpath_v3/_tmp_phase2_minTiles50/tables/phase2_overlap_metric.csv`
+- `minTiles=50`：`outputs/_runs/trackpath/v3/_tmp_phase2_minTiles50/tables/phase2_overlap_metric.csv`
   - `n_disasters_used=3`，`overlap_fraction≈0.365`
 
 **对齐问题排除（可核查事实）**：
-- 在 `outputs_trackpath_v3/_tmp_phase2_minTiles0/tables/phase2_r0_by_disaster.csv` 中，2 个灾害被标记 `note=t0_misaligned_vs_track_anchor`：
+- 在 `outputs/_runs/trackpath/v3/_tmp_phase2_minTiles0/tables/phase2_r0_by_disaster.csv` 中，2 个灾害被标记 `note=t0_misaligned_vs_track_anchor`：
   - `hurricane_john_southern_mexico_25_september_2024`（`track_anchor_to_t0_hours≈35.75h`）
   - `typhoon_yagi_across_northeastern_vietnam`（`track_anchor_to_t0_hours≈29h`）
 
 #### 2.9.3 H3a：3 个飓风的报告/机制与路径叠图（裁剪段口径）
 
 **报告**：
-- `outputs_trackpath_v3/_tmp_h3a_track_report_minTiles0/`
-- `outputs_trackpath_v3/_tmp_h3a_track_report_minTiles50/`
+- `outputs/_runs/trackpath/v3/_tmp_h3a_track_report_minTiles0/`
+- `outputs/_runs/trackpath/v3/_tmp_h3a_track_report_minTiles50/`
 
 **机制表**：
-- `outputs_trackpath_v3/_tmp_h3a_track_mechanism_minTiles50/`
+- `outputs/_runs/trackpath/v3/_tmp_h3a_track_mechanism_minTiles50/`
 
 **路径 overlay**：
-- `outputs_trackpath_v3/_tmp_overlay/figures/*_track_overlay_t0h.png`（同时有 pdf/html）
+- `outputs/_runs/trackpath/v3/_tmp_overlay/figures/*_track_overlay_t0h.png`（同时有 pdf/html）
 
 **相关代码入口**：
 - `scripts/cross_disaster_phi_heatmap.py`
@@ -389,6 +389,105 @@
 - `scripts/phi_overlap_stability.py`（诊断 n_tiles_overlap 的时序稳定性）
 - `scripts/phi_time_aggregation_verify.py`（诊断 8h→24h 聚合：RoS vs MoR）
 - `scripts/path_track_clip_audit.py`（审计 clip_kind 是否退化到 full）
+
+---
+
+### 2.10 SVD 可分离性（rank-1 dominance）：δ(r,t)=φ(r,t)-1 的跨事件检验
+
+> 目的：不再把重点放在“α 是否普适”，而是检验 **人口重分布场是否具有时空可分离结构**（rank-1 dominance）。
+
+**时间**：2026-02-08  
+**指标定义**：
+- `δ(r,t)=φ(r,t)-1`（默认使用 `phi_overlap`）
+- 可分离性：`sigma1_energy = σ1^2 / Σ_k σ_k^2`
+- 信号强度：`S = max_{r,t} |δ(r,t)|`
+- 近场数据密度 proxy：`n_tiles_overlap_near_mean`（默认 `r<=50km` bins 的均值）
+
+**输入事件**（不挑选不过滤）：
+- `outputs/_runs/trackpath/v3/` 下的 13 个风暴/台风类事件
+- `outputs/turkiye_earthquake_2023/`（径向口径的地震对照）
+- 若存在 `outputs/_runs/trackpath/v4_yagi_fix/`，同名 slug 会自动覆盖旧版 Yagi（用于修复 t0/track 裁剪问题后的结果）
+
+**主要输出**：
+- 表：`outputs/cross_disaster_comparison/svd_separability/tables/svd_separability_all.csv`
+- 概览：`outputs/cross_disaster_comparison/svd_separability/metadata.json`
+  - 当前结果：`n_events=14`，其中 `sigma1_energy>=0.8` 的事件数为 `7`（见 metadata）
+
+**Null model 校正（Permutation；complete δ 矩阵）**：
+- 输出：`outputs/cross_disaster_comparison/svd_separability_nullN200/tables/svd_separability_all.csv`
+- 关键结果（可核查事实；阈值 `z>3`，`N=200`）：
+  - `z_col>3`：`14/14`
+  - `z_row>3`：`9/14`
+  - `both>3`：`9/14`
+
+**相关代码入口**：
+- `scripts/cross_disaster_svd_separability.py`
+- `src/disaster/cross_disaster_svd_separability.py`
+
+---
+
+### 2.11 Q2：σ₁ 差异来源的敏感性检验（r_max / 维度）与 σ₂ 可视化
+
+**时间**：2026-02-08  
+
+#### 2.11.1 σ₁ 对 r_max 的依赖（跨事件 sweep）
+
+**输出**：
+- `outputs/cross_disaster_comparison/svd_sensitivity_rmax/tables/svd_sigma1_rmax_sweep.csv`
+- `outputs/cross_disaster_comparison/svd_sensitivity_rmax/tables/sigma1_rank_stability_spearman.csv`
+- `outputs/cross_disaster_comparison/svd_sensitivity_rmax/tables/sigma1_vs_dimension_corr.csv`
+- `outputs/cross_disaster_comparison/svd_sensitivity_rmax/metadata.json`
+
+**关键结果（可核查事实）**：
+- Beryl TX：`σ₁` 随 `r_max` 增大单调下降（`0.926@100km → 0.873@200km → 0.820@300km → 0.750@500km`；见 sweep 表）。
+- `σ₁` 与 `n_time_used` 存在稳定的负相关（Spearman ρ 约 `-0.56~-0.65`，见 `sigma1_vs_dimension_corr.csv`）。
+- 事件排序对 `r_max` 较稳定（例如 `rmax_300 vs rmax_500` Spearman `≈0.991`；见 `sigma1_rank_stability_spearman.csv`）。
+
+**相关代码入口**：
+- `scripts/cross_disaster_svd_sensitivity.py`
+- `src/disaster/cross_disaster_svd_sensitivity.py`
+
+#### 2.11.2 σ₂ 模态（低 σ₁ 事件的第二结构）
+
+**输出（示例）**：
+- `outputs/cross_disaster_comparison/svd_modes/beryl_qr_rmax200/`
+- `outputs/cross_disaster_comparison/svd_modes/john_southern_rmax200/`
+
+**关键结果（可核查事实；r_max=200, complete）**：
+- Beryl QR：`σ₁≈0.608`、`σ₂≈0.237`（见 `metadata.json`）
+- John Southern：`σ₁≈0.547`、`σ₂≈0.403`（见 `metadata.json`）
+
+**相关代码入口**：
+- `scripts/svd_mode_viz.py`
+- `src/disaster/svd_mode_viz.py`
+
+---
+
+### 2.12 Q3：rank-1 动力学 g₁(t) 的幂律拟合（从可分离性走向时间衰减律）
+
+**时间**：2026-02-08  
+**定义**：
+- `δ(r,t)=φ(r,t)-1`
+- `g₁(t)=σ₁·v₁(t)`（SVD 的第一时间模态振幅；见 `v_modes` 的同一定义）
+
+**关键口径**：
+- `value_col=phi_overlap`、`r_max=200km`、`complete_only=1`
+- 幂律拟合：对 `|g₁(t)|` 在 `t>=t_start` 的尾部做 `log-log` 线性拟合
+  - 默认 `fit_mode=from_peak`（从 `|g₁|` 的峰值后开始拟合）
+
+**输出**：
+- `outputs/cross_disaster_comparison/rank1_dynamics/tables/g1_timeseries_long.csv`
+- `outputs/cross_disaster_comparison/rank1_dynamics/tables/g1_powerlaw_fits.csv`
+- 图：`outputs/cross_disaster_comparison/rank1_dynamics/figures/g1_abs_powerlaw_fits.png`
+
+**关键结果（可核查事实；σ₁≥0.90 的事件）**：
+- `σ₁≥0.90` 的事件数：`7`
+- 在 `from_peak` + `min_fit_points=4` 的口径下：`6/7` 可完成拟合（Ernesto 因 `n_time_used=2` 失败）
+- 拟合得到的 `α` 离散很大（约 `-0.02 ~ 0.81`），且部分事件拟合优度较低（`R²` 可低至 `~0.03`；见 `g1_powerlaw_fits.csv`）
+
+**相关代码入口**：
+- `scripts/cross_disaster_rank1_dynamics.py`
+- `src/disaster/cross_disaster_rank1_dynamics.py`
 
 ---
 
@@ -437,3 +536,10 @@
 - 目的地/起点分布：`scripts/movement_destination_analysis.py` → `outputs/<slug>/movement_destination_analysis/`
 - 25–50km 流入来源：`scripts/movement_inflow_source_analysis.py` → `outputs/<slug>/movement_inflow_source_analysis/`
 - 系统性方向分析（无 binning；Δr+d_move）：`scripts/movement_direction_systematic.py` → `outputs/<slug>/movement_analysis/`
+
+### Cross-Disaster Structure
+
+- SVD 可分离性（rank-1 dominance + null）：`scripts/cross_disaster_svd_separability.py` → `outputs/cross_disaster_comparison/svd_separability/`、`outputs/cross_disaster_comparison/svd_separability_nullN200/`
+- σ₁ 对 r_max/维度敏感性：`scripts/cross_disaster_svd_sensitivity.py` → `outputs/cross_disaster_comparison/svd_sensitivity_rmax/`
+- SVD 模态可视化（u_k/v_k/g_k）：`scripts/svd_mode_viz.py` → `outputs/cross_disaster_comparison/svd_modes/`
+- rank-1 动力学 g₁(t) 幂律拟合：`scripts/cross_disaster_rank1_dynamics.py` → `outputs/cross_disaster_comparison/rank1_dynamics/`

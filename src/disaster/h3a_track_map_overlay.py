@@ -356,10 +356,10 @@ def run(cfg: Config) -> None:
 
 def cli_main() -> None:
     p = argparse.ArgumentParser(description="H3a: 路径几何 overlay（track + tile→path 最近距离示意）")
-    p.add_argument("--output-root", type=Path, default=Path("outputs_trackpath"))
+    p.add_argument("--output-root", type=Path, default=Path("outputs/_runs/trackpath/v3"))
     p.add_argument("--slug", type=str, required=True)
-    p.add_argument("--out-dir", type=Path, default=Path("outputs_trackpath/_tmp_h3a_track_overlay"))
-    p.add_argument("--phase0-csv", type=Path, default=None, help="用于选择 t_at_S 的表（默认 outputs_trackpath/_tmp_h3a_track_collapse/...）")
+    p.add_argument("--out-dir", type=Path, default=Path("outputs/_runs/trackpath/v3/_tmp_h3a_track_overlay"))
+    p.add_argument("--phase0-csv", type=Path, default=None, help="用于选择 t_at_S 的表（默认 output_root 下的 _tmp_phase0/...）")
     p.add_argument("--top-k-tiles", type=int, default=80)
     p.add_argument("--min-abs-dev", type=float, default=0.05)
     args = p.parse_args()
