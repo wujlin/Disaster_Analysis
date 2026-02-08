@@ -1,0 +1,5 @@
+[cross_disaster_phi_tau][WARNING] typhoon_yagi_across_northeastern_vietnam: 提供的 t0_pt=2024-09-07 03:00:00 与最近窗口差 29.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] typhoon_yagi_across_northeastern_vietnam: computing heatmap...
+[phi_heatmap][WARNING] center extrapolated for 11/11 windows (track_time_range=[2024-08-31 17:00:00,2024-09-07 03:00:00])
+Done. Wrote: outputs/_runs/trackpath/v4_yagi_fix/typhoon_yagi_across_northeastern_vietnam/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/trackpath/v4_yagi_fix/typhoon_yagi_across_northeastern_vietnam/phi_heatmap/tables/phi_rt_matrix.csv

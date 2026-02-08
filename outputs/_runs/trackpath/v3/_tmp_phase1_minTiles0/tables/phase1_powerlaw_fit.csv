@@ -1,8 +1,0 @@
-slug,name,event_type,time_min_hours,time_max_hours,fit_ok,alpha,r2_loglog,n_points_fit,n_windows_in_range,track_anchor_to_t0_hours,r_min_fit,r_max_fit,y_min_fit,y_max_fit,note
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,24.0,72.0,1,0.7647987410627081,0.2922137997489205,23,3,3.9166666666666665,15.0,255.0,0.00911291717088547,0.7639238425567492,
-hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,24.0,72.0,1,1.3540699217997327,0.2733699488013105,18,3,3.0,35.0,205.0,0.006477123427317988,0.5769143109496816,
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,,,0,,,0,0,35.75,,,,,t0_misaligned_vs_track_anchor
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,24.0,72.0,1,-0.276330011080891,0.0524322507559527,34,3,14.5,15.0,345.0,0.00314462799738513,1.5438178757647125,
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,24.0,72.0,1,0.4488548081823125,0.051809785669848285,48,3,4.0,15.0,495.0,0.0001946057889681274,0.24469131454086457,
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,24.0,72.0,1,0.28239955276220974,0.024200296719562808,44,3,22.5,65.0,495.0,0.0023942381738126794,0.45950085233375226,
-typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,,,0,,,0,0,29.0,,,,,t0_misaligned_vs_track_anchor

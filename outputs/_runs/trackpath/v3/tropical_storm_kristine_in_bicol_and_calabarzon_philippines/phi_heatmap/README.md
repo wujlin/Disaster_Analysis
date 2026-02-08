@@ -8,15 +8,18 @@
 
 ## 配置
 
- - center: (13.6484, 121.6501)
+ - center: (17.2000, 122.3000)
  - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Trami
  - distance_mode: path
+ - path_distance_method: equirect
  - path_clip_pad_hours: 24.0
  - path_clip_spatial_pad_km: 100.0
- - path_sector_n: 12
- - t0_pt: 2024-10-24 08:00:00
+ - path_sector_n: 0
+ - track_dt_default_hours: 6.0
+ - track_gap_factor: 1.5
+ - t0_pt: 2024-10-23 08:00:00
  - hours_pt: [8]
 
 ## 输出
@@ -30,4 +33,4 @@
 
 ## 覆盖时间（PT）
 
-- 2024-10-24 08:00:00 → 2024-11-03 08:00:00
+- 2024-10-23 08:00:00 → 2024-11-03 08:00:00

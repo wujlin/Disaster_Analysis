@@ -8,14 +8,17 @@
 
 ## 配置
 
- - center: (18.8134, -98.8960)
+ - center: (18.6000, -103.6000)
  - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: John
  - distance_mode: path
+ - path_distance_method: equirect
  - path_clip_pad_hours: 24.0
  - path_clip_spatial_pad_km: 100.0
- - path_sector_n: 12
+ - path_sector_n: 0
+ - track_dt_default_hours: 6.0
+ - track_gap_factor: 1.5
  - t0_pt: 2024-10-01 08:00:00
  - hours_pt: [8]
 

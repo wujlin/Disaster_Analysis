@@ -351,34 +351,14 @@
 **快速自检（可核查事实）**：
 - 对 Beryl/Milton/Helene：`center_by_window.csv` 中 `path_track_clip_kind` 为 `time_and_spatial`（非 `full`），且 `path_track_length_ratio_to_rmax` 显著小于 `path_track_length_total_ratio_to_rmax`。
 
-#### 2.9.2 普适性 Phase0/1/2（path 组）
+#### 2.9.2 （可选）普适性 Phase0/1/2（path 组）
 
-**Phase0：信号强度扫描**
-- 输出：`outputs/_runs/trackpath/v3/_tmp_phase0/tables/phase0_signal_strength.csv`
-- 事实：`S>=0.5` 的灾害数为 **7**（在 27 灾害表上扫描得到的计数；后续 Phase2 还会因数据可用性/过滤进一步减少）。
+> 说明：为避免旧 slug 残留导致“目录扫描式事件发现”被污染，当前仓库快照只提交 `v3/` 下的 **φ heatmap（path）** 产物。  
+> 因此：Phase0/1/2 的 `_tmp_phase*`、以及 H3a 报告/机制/overlay 等派生结果**不再**随 `outputs/_runs/trackpath/v3/` 跟踪提交。
 
-**Phase2：坍缩重叠度**
-- `minTiles=0`：`outputs/_runs/trackpath/v3/_tmp_phase2_minTiles0/tables/phase2_overlap_metric.csv`
-  - `n_disasters_used=5`，`overlap_fraction=0.45`
-- `minTiles=50`：`outputs/_runs/trackpath/v3/_tmp_phase2_minTiles50/tables/phase2_overlap_metric.csv`
-  - `n_disasters_used=3`，`overlap_fraction≈0.365`
+#### 2.9.3 （可选）H3a：3 个飓风的报告/机制与路径叠图（裁剪段口径）
 
-**对齐问题排除（可核查事实）**：
-- 在 `outputs/_runs/trackpath/v3/_tmp_phase2_minTiles0/tables/phase2_r0_by_disaster.csv` 中，2 个灾害被标记 `note=t0_misaligned_vs_track_anchor`：
-  - `hurricane_john_southern_mexico_25_september_2024`（`track_anchor_to_t0_hours≈35.75h`）
-  - `typhoon_yagi_across_northeastern_vietnam`（`track_anchor_to_t0_hours≈29h`）
-
-#### 2.9.3 H3a：3 个飓风的报告/机制与路径叠图（裁剪段口径）
-
-**报告**：
-- `outputs/_runs/trackpath/v3/_tmp_h3a_track_report_minTiles0/`
-- `outputs/_runs/trackpath/v3/_tmp_h3a_track_report_minTiles50/`
-
-**机制表**：
-- `outputs/_runs/trackpath/v3/_tmp_h3a_track_mechanism_minTiles50/`
-
-**路径 overlay**：
-- `outputs/_runs/trackpath/v3/_tmp_overlay/figures/*_track_overlay_t0h.png`（同时有 pdf/html）
+> 同上：H3a 的 `_tmp_h3a_*` 与 `_tmp_overlay/` 不再随 `v3/` 跟踪提交；需要时请在新的输出目录中重跑对应脚本。
 
 **相关代码入口**：
 - `scripts/cross_disaster_phi_heatmap.py`
@@ -411,14 +391,14 @@
 **主要输出**：
 - 表：`outputs/cross_disaster_comparison/svd_separability/tables/svd_separability_all.csv`
 - 概览：`outputs/cross_disaster_comparison/svd_separability/metadata.json`
-  - 当前结果：`n_events=14`，其中 `sigma1_energy>=0.8` 的事件数为 `7`（见 metadata）
+  - 当前结果：`n_events=14`，其中 `sigma1_energy>=0.8` 的事件数为 `6`（见 metadata）
 
 **Null model 校正（Permutation；complete δ 矩阵）**：
 - 输出：`outputs/cross_disaster_comparison/svd_separability_nullN200/tables/svd_separability_all.csv`
 - 关键结果（可核查事实；阈值 `z>3`，`N=200`）：
-  - `z_col>3`：`14/14`
-  - `z_row>3`：`9/14`
-  - `both>3`：`9/14`
+  - `z_col>3`：`13/14`
+  - `z_row>3`：`8/14`
+  - `both>3`：`8/14`
 
 **相关代码入口**：
 - `scripts/cross_disaster_svd_separability.py`
@@ -440,8 +420,8 @@
 
 **关键结果（可核查事实）**：
 - Beryl TX：`σ₁` 随 `r_max` 增大单调下降（`0.926@100km → 0.873@200km → 0.820@300km → 0.750@500km`；见 sweep 表）。
-- `σ₁` 与 `n_time_used` 存在稳定的负相关（Spearman ρ 约 `-0.56~-0.65`，见 `sigma1_vs_dimension_corr.csv`）。
-- 事件排序对 `r_max` 较稳定（例如 `rmax_300 vs rmax_500` Spearman `≈0.991`；见 `sigma1_rank_stability_spearman.csv`）。
+- `σ₁` 与 `n_time_used` 存在稳定的负相关（Spearman ρ 约 `-0.66~-0.75`，见 `sigma1_vs_dimension_corr.csv`）。
+- 事件排序对 `r_max` 较稳定（例如 `rmax_300 vs rmax_500` Spearman `≈0.984`；见 `sigma1_rank_stability_spearman.csv`）。
 
 **相关代码入口**：
 - `scripts/cross_disaster_svd_sensitivity.py`

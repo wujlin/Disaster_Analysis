@@ -1,201 +1,175 @@
 slug,name,event_type,hours_since_quake,g1,abs_g1,sigma1_energy,r_max_km,mode_used
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,0.0,-0.6474585958645893,0.6474585958645893,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,24.0,-0.19697013409073902,0.19697013409073902,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,48.0,-0.14608021664875634,0.14608021664875634,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,72.0,-0.1448089699398615,0.1448089699398615,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,96.0,-0.02179675473881841,0.02179675473881841,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,120.0,-0.09168209546815805,0.09168209546815805,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,144.0,-0.0248461836556634,0.0248461836556634,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,168.0,-0.09487114817349718,0.09487114817349718,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,192.0,-0.06508755323532728,0.06508755323532728,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,216.0,-0.05036827225078338,0.05036827225078338,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,240.0,-0.12328006379413681,0.12328006379413681,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,264.0,0.017485034060162042,0.017485034060162042,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,288.0,0.014227063142272867,0.014227063142272867,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,312.0,-0.04517872276207009,0.04517872276207009,0.6077947886654546,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,0.0,-0.6721187820760469,0.6721187820760469,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,24.0,-0.4166173499823522,0.4166173499823522,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,48.0,-0.2816020172701989,0.2816020172701989,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,72.0,-0.21245353979764947,0.21245353979764947,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,96.0,-0.1698857802772715,0.1698857802772715,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,120.0,-0.12880461962148723,0.12880461962148723,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,144.0,-0.13288066622733977,0.13288066622733977,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,168.0,-0.11702834732902087,0.11702834732902087,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,192.0,-0.11170598049951017,0.11170598049951017,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,216.0,-0.08010206838175048,0.08010206838175048,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,240.0,-0.06889129337796557,0.06889129337796557,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,264.0,-0.0789428894296861,0.0789428894296861,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,288.0,-0.07866692584566329,0.07866692584566329,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,312.0,-0.09655407673555919,0.09655407673555919,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,336.0,-0.055979472226768204,0.055979472226768204,0.8725584560521702,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,0.0,-1.133917395498968,1.133917395498968,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,24.0,-0.9407968392694949,0.9407968392694949,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,48.0,-0.9629984621821438,0.9629984621821438,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,72.0,-1.0212022974774162,1.0212022974774162,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,96.0,-1.0044079861368833,1.0044079861368833,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,120.0,-0.9325372619029624,0.9325372619029624,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,144.0,-0.7619348420094546,0.7619348420094546,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,168.0,-0.7709478019075873,0.7709478019075873,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,192.0,-0.7454856711916431,0.7454856711916431,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,216.0,-0.7238372524175823,0.7238372524175823,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,240.0,-0.7850664104911713,0.7850664104911713,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,264.0,-0.7255611718410381,0.7255611718410381,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,288.0,-0.7678102639916026,0.7678102639916026,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,312.0,-0.6686675083405159,0.6686675083405159,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,336.0,-0.7101435253264579,0.7101435253264579,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,360.0,-0.6064090299842005,0.6064090299842005,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,384.0,-0.6003818492877048,0.6003818492877048,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,408.0,-0.6802813680888059,0.6802813680888059,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,432.0,-0.6848396147205984,0.6848396147205984,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,456.0,-0.704246590109726,0.704246590109726,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,480.0,-0.6539491412217524,0.6539491412217524,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,504.0,-0.6746458817055807,0.6746458817055807,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,528.0,-0.6177261081682877,0.6177261081682877,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,552.0,-0.6890705468148303,0.6890705468148303,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,576.0,-0.5990037108284324,0.5990037108284324,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,600.0,-0.7034398344461487,0.7034398344461487,0.9092702441979007,200.0,drop_complete
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,624.0,-0.6909656568151352,0.6909656568151352,0.9092702441979007,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,0.0,-0.6474585958645894,0.6474585958645894,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,24.0,-0.19697013409073916,0.19697013409073916,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,48.0,-0.14608021664875634,0.14608021664875634,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,72.0,-0.14480896993986145,0.14480896993986145,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,96.0,-0.021796754738818407,0.021796754738818407,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,120.0,-0.091682095468158,0.091682095468158,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,144.0,-0.02484618365566341,0.02484618365566341,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,168.0,-0.09487114817349714,0.09487114817349714,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,192.0,-0.06508755323532722,0.06508755323532722,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,216.0,-0.05036827225078333,0.05036827225078333,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,240.0,-0.12328006379413675,0.12328006379413675,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,264.0,0.017485034060162066,0.017485034060162066,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,288.0,0.014227063142272912,0.014227063142272912,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,312.0,-0.04517872276207003,0.04517872276207003,0.6077947886654543,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,0.0,-0.6721187820760469,0.6721187820760469,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,24.0,-0.4166173499823519,0.4166173499823519,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,48.0,-0.28160201727019885,0.28160201727019885,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,72.0,-0.21245353979764947,0.21245353979764947,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,96.0,-0.16988578027727147,0.16988578027727147,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,120.0,-0.1288046196214872,0.1288046196214872,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,144.0,-0.1328806662273397,0.1328806662273397,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,168.0,-0.11702834732902084,0.11702834732902084,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,192.0,-0.11170598049951015,0.11170598049951015,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,216.0,-0.08010206838175046,0.08010206838175046,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,240.0,-0.06889129337796555,0.06889129337796555,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,264.0,-0.07894288942968605,0.07894288942968605,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,288.0,-0.07866692584566326,0.07866692584566326,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,312.0,-0.09655407673555916,0.09655407673555916,0.8725584560521701,200.0,drop_complete
+hurricane_beryl_across_southeastern_texas_us,"Hurricane Beryl Across Southeastern Texas, US",hurricane,336.0,-0.05597947222676819,0.05597947222676819,0.8725584560521701,200.0,drop_complete
 hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,72.0,-0.6256051294713876,0.6256051294713876,0.9896588987115015,200.0,drop_complete
-hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,264.0,-0.4280190234303076,0.4280190234303076,0.9896588987115015,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,0.0,0.176108669683169,0.176108669683169,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,24.0,0.40687247657055703,0.40687247657055703,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,48.0,0.4715040255396148,0.4715040255396148,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,72.0,0.4693824318376398,0.4693824318376398,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,96.0,0.4752546201033462,0.4752546201033462,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,120.0,0.5067596607156352,0.5067596607156352,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,144.0,0.5047559372166109,0.5047559372166109,0.9450025882685946,200.0,drop_complete
+hurricane_ernesto_puerto_rico_14_august_2024,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,264.0,-0.4280190234303075,0.4280190234303075,0.9896588987115015,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,0.0,0.17610866968316893,0.17610866968316893,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,24.0,0.4068724765705574,0.4068724765705574,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,48.0,0.4715040255396149,0.4715040255396149,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,72.0,0.46938243183763984,0.46938243183763984,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,96.0,0.4752546201033463,0.4752546201033463,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,120.0,0.5067596607156353,0.5067596607156353,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,144.0,0.504755937216611,0.504755937216611,0.9450025882685946,200.0,drop_complete
 hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,168.0,0.5203305162134224,0.5203305162134224,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,192.0,0.610131565100581,0.610131565100581,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,216.0,0.5627204258989748,0.5627204258989748,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,240.0,0.5411622241432679,0.5411622241432679,0.9450025882685946,200.0,drop_complete
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,264.0,0.589328502462363,0.589328502462363,0.9450025882685946,200.0,drop_complete
-hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,0.0,0.44707655210914654,0.44707655210914654,0.931529661461368,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,192.0,0.6101315651005811,0.6101315651005811,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,216.0,0.562720425898975,0.562720425898975,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,240.0,0.541162224143268,0.541162224143268,0.9450025882685946,200.0,drop_complete
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,264.0,0.5893285024623631,0.5893285024623631,0.9450025882685946,200.0,drop_complete
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,0.0,0.4470765521091464,0.4470765521091464,0.931529661461368,200.0,drop_complete
 hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,24.0,0.39974982504229317,0.39974982504229317,0.931529661461368,200.0,drop_complete
-hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,48.0,0.322267358820157,0.322267358820157,0.931529661461368,200.0,drop_complete
-hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,72.0,0.36642668988122135,0.36642668988122135,0.931529661461368,200.0,drop_complete
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,48.0,0.32226735882015695,0.32226735882015695,0.931529661461368,200.0,drop_complete
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,72.0,0.3664266898812212,0.3664266898812212,0.931529661461368,200.0,drop_complete
 hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,96.0,0.39053660771174376,0.39053660771174376,0.931529661461368,200.0,drop_complete
-hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,120.0,0.3941028251534783,0.3941028251534783,0.931529661461368,200.0,drop_complete
-hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,144.0,0.3834706472689022,0.3834706472689022,0.931529661461368,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,0.0,0.5091821110733821,0.5091821110733821,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,24.0,0.5202058112482429,0.5202058112482429,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,48.0,0.7203384869881937,0.7203384869881937,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,72.0,0.752203635139156,0.752203635139156,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,96.0,0.5601520870205521,0.5601520870205521,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,120.0,0.5251144860859228,0.5251144860859228,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,144.0,0.515372085709282,0.515372085709282,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,168.0,0.3909208924539784,0.3909208924539784,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,192.0,0.41111020034080964,0.41111020034080964,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,216.0,0.3344049632789037,0.3344049632789037,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,240.0,0.2184556136308893,0.2184556136308893,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,264.0,0.2578774125584805,0.2578774125584805,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,288.0,0.2006471763298051,0.2006471763298051,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,312.0,0.2873805748788463,0.2873805748788463,0.5468610254851537,200.0,drop_complete
-hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,336.0,0.18862753881022726,0.18862753881022726,0.5468610254851537,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,0.0,0.4535072844831395,0.4535072844831395,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,24.0,0.4532877647253437,0.4532877647253437,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,48.0,0.5770782133826781,0.5770782133826781,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,72.0,0.6089918289214004,0.6089918289214004,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,96.0,0.5881653574164752,0.5881653574164752,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,120.0,0.5859083479411649,0.5859083479411649,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,144.0,0.45913094189822296,0.45913094189822296,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,168.0,0.5370379569349323,0.5370379569349323,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,192.0,0.4863364738391331,0.4863364738391331,0.904385473372197,200.0,drop_complete
-hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,216.0,0.5444446459198773,0.5444446459198773,0.904385473372197,200.0,drop_complete
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,0.0,0.08248246952601544,0.08248246952601544,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,24.0,0.06827975426448968,0.06827975426448968,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,48.0,0.0657977101759417,0.0657977101759417,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,72.0,0.08190573325149257,0.08190573325149257,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,96.0,0.06178203214426575,0.06178203214426575,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,120.0,0.06593069736942496,0.06593069736942496,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,144.0,0.07349024748677241,0.07349024748677241,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,168.0,0.06427369666118522,0.06427369666118522,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,192.0,0.048771664713968294,0.048771664713968294,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,216.0,0.06707830832691049,0.06707830832691049,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,240.0,0.09822665320838897,0.09822665320838897,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,264.0,0.08038082315852414,0.08038082315852414,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,288.0,1.5922800986183394,1.5922800986183394,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,312.0,0.08408365379578012,0.08408365379578012,0.6948528179368363,200.0,fill_missing_fallback
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,0.0,0.15375634173262448,0.15375634173262448,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,24.0,0.2920781718930675,0.2920781718930675,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,48.0,0.4706295144861207,0.4706295144861207,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,72.0,0.4093806711164265,0.4093806711164265,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,96.0,0.3556321077834181,0.3556321077834181,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,120.0,0.6862565210341186,0.6862565210341186,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,144.0,0.3984473747623708,0.3984473747623708,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,168.0,0.8521745421690744,0.8521745421690744,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,192.0,1.02242611693316,1.02242611693316,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,216.0,1.0919743769737793,1.0919743769737793,0.8754725284409375,200.0,drop_complete
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,240.0,1.2043349106212882,1.2043349106212882,0.8754725284409375,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,0.0,-0.18191785969385504,0.18191785969385504,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,24.0,0.09667793501398275,0.09667793501398275,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,48.0,0.04324544582963771,0.04324544582963771,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,72.0,-0.0402952711552416,0.0402952711552416,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,96.0,-0.21060728217422572,0.21060728217422572,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,120.0,-0.21161676125118054,0.21161676125118054,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,144.0,-0.02739254217011537,0.02739254217011537,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,168.0,-0.05724075696042398,0.05724075696042398,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,192.0,-0.10273696434107399,0.10273696434107399,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,216.0,-0.08111388032049956,0.08111388032049956,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,240.0,-0.09895259350708008,0.09895259350708008,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,264.0,-0.1886073820229401,0.1886073820229401,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,288.0,-0.46290026596430983,0.46290026596430983,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,312.0,-0.31284647864766246,0.31284647864766246,0.8506176062351863,200.0,drop_complete
-tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,336.0,-0.4391683463824883,0.4391683463824883,0.8506176062351863,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,-8.0,0.008844698972264451,0.008844698972264451,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,16.0,1.5024572431079977,1.5024572431079977,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,40.0,1.396063543656025,1.396063543656025,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,64.0,1.4602740720078018,1.4602740720078018,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,88.0,1.2867174682289333,1.2867174682289333,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,112.0,1.2993373657394165,1.2993373657394165,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,136.0,1.4199920073673202,1.4199920073673202,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,160.0,1.4458034127118364,1.4458034127118364,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,184.0,1.3348438076241989,1.3348438076241989,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,208.0,1.2540964916757882,1.2540964916757882,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,232.0,1.225433329791088,1.225433329791088,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,256.0,1.1910192802868684,1.1910192802868684,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,280.0,1.2156797850821006,1.2156797850821006,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,304.0,1.215251823354046,1.215251823354046,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,328.0,1.2240910504618014,1.2240910504618014,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,352.0,1.402495080074125,1.402495080074125,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,376.0,1.2479423179752196,1.2479423179752196,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,400.0,1.2447587331210974,1.2447587331210974,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,424.0,1.1814052988838522,1.1814052988838522,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,448.0,1.2294621639016023,1.2294621639016023,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,472.0,1.2647417338210978,1.2647417338210978,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,496.0,1.2231571201800773,1.2231571201800773,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,520.0,1.1830504947317209,1.1830504947317209,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,544.0,1.2048729924040442,1.2048729924040442,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,568.0,1.1836210827211107,1.1836210827211107,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,592.0,1.154743114249526,1.154743114249526,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,616.0,1.2502809132129011,1.2502809132129011,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,640.0,1.1619051378024727,1.1619051378024727,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,664.0,1.234447616217446,1.234447616217446,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,688.0,1.1089580149787799,1.1089580149787799,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,712.0,1.084738154489881,1.084738154489881,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,736.0,1.1096372447891696,1.1096372447891696,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,760.0,1.108779621803337,1.108779621803337,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,784.0,1.0782485555052437,1.0782485555052437,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,808.0,1.1523963401494381,1.1523963401494381,0.883757850174362,200.0,drop_complete
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,832.0,1.2860978003078083,1.2860978003078083,0.883757850174362,200.0,drop_complete
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,120.0,0.3941028251534782,0.3941028251534782,0.931529661461368,200.0,drop_complete
+hurricane_john_across_southeastern_guerrero_mexico,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,144.0,0.3834706472689021,0.3834706472689021,0.931529661461368,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,0.0,0.5091821110733818,0.5091821110733818,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,24.0,0.5202058112482417,0.5202058112482417,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,48.0,0.7203384869881947,0.7203384869881947,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,72.0,0.7522036351391563,0.7522036351391563,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,96.0,0.5601520870205517,0.5601520870205517,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,120.0,0.5251144860859228,0.5251144860859228,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,144.0,0.5153720857092815,0.5153720857092815,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,168.0,0.390920892453978,0.390920892453978,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,192.0,0.4111102003408091,0.4111102003408091,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,216.0,0.3344049632789033,0.3344049632789033,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,240.0,0.2184556136308889,0.2184556136308889,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,264.0,0.25787741255848023,0.25787741255848023,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,288.0,0.20064717632980478,0.20064717632980478,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,312.0,0.2873805748788459,0.2873805748788459,0.5468610254851539,200.0,drop_complete
+hurricane_john_southern_mexico_25_september_2024,Hurricane John Southern Mexico 25 September 2024,hurricane,336.0,0.188627538810227,0.188627538810227,0.5468610254851539,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,0.0,0.45350728448313904,0.45350728448313904,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,24.0,0.45328776472534427,0.45328776472534427,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,48.0,0.5770782133826782,0.5770782133826782,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,72.0,0.6089918289214005,0.6089918289214005,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,96.0,0.5881653574164754,0.5881653574164754,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,120.0,0.5859083479411651,0.5859083479411651,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,144.0,0.45913094189822307,0.45913094189822307,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,168.0,0.5370379569349324,0.5370379569349324,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,192.0,0.48633647383913314,0.48633647383913314,0.9043854733721971,200.0,drop_complete
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,216.0,0.5444446459198774,0.5444446459198774,0.9043854733721971,200.0,drop_complete
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,0.0,0.08248246952601537,0.08248246952601537,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,24.0,0.0682797542644904,0.0682797542644904,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,48.0,0.06579771017594149,0.06579771017594149,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,72.0,0.08190573325149304,0.08190573325149304,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,96.0,0.06178203214426612,0.06178203214426612,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,120.0,0.06593069736942542,0.06593069736942542,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,144.0,0.07349024748677314,0.07349024748677314,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,168.0,0.06427369666118574,0.06427369666118574,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,192.0,0.048771664713968536,0.048771664713968536,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,216.0,0.06707830832691086,0.06707830832691086,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,240.0,0.09822665320838968,0.09822665320838968,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,264.0,0.08038082315852468,0.08038082315852468,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,288.0,1.592280098618339,1.592280098618339,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,312.0,0.08408365379578073,0.08408365379578073,0.6948528179368364,200.0,fill_missing_fallback
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,0.0,-0.33053885944210426,0.33053885944210426,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,24.0,0.1582029894074107,0.1582029894074107,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,48.0,0.29136442836368215,0.29136442836368215,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,72.0,0.47000648923165694,0.47000648923165694,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,96.0,0.40833280421585605,0.40833280421585605,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,120.0,0.3574086944675864,0.3574086944675864,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,144.0,0.685308358443025,0.685308358443025,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,168.0,0.39581501222553234,0.39581501222553234,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,192.0,0.8523406210060824,0.8523406210060824,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,216.0,1.022341957741141,1.022341957741141,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,240.0,1.0926846023527172,1.0926846023527172,0.8478312742039663,200.0,drop_complete
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,264.0,1.2029020553381053,1.2029020553381053,0.8478312742039663,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,0.0,-0.18191785969385513,0.18191785969385513,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,24.0,0.09667793501398268,0.09667793501398268,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,48.0,0.04324544582963768,0.04324544582963768,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,72.0,-0.040295271155241605,0.040295271155241605,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,96.0,-0.21060728217422578,0.21060728217422578,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,120.0,-0.21161676125118054,0.21161676125118054,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,144.0,-0.02739254217011537,0.02739254217011537,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,168.0,-0.057240756960424015,0.057240756960424015,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,192.0,-0.10273696434107402,0.10273696434107402,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,216.0,-0.08111388032049957,0.08111388032049957,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,240.0,-0.0989525935070801,0.0989525935070801,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,264.0,-0.18860738202294014,0.18860738202294014,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,288.0,-0.46290026596430994,0.46290026596430994,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,312.0,-0.3128464786476626,0.3128464786476626,0.8506176062351865,200.0,drop_complete
+tropical_storm_yagi_philippines_2_september_2024,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,336.0,-0.4391683463824884,0.4391683463824884,0.8506176062351865,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,-8.0,0.00884469897226211,0.00884469897226211,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,16.0,1.5024572431079946,1.5024572431079946,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,40.0,1.396063543656022,1.396063543656022,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,64.0,1.4602740720077994,1.4602740720077994,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,88.0,1.286717468228932,1.286717468228932,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,112.0,1.2993373657394152,1.2993373657394152,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,136.0,1.4199920073673185,1.4199920073673185,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,160.0,1.4458034127118342,1.4458034127118342,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,184.0,1.334843807624197,1.334843807624197,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,208.0,1.2540964916757866,1.2540964916757866,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,232.0,1.2254333297910867,1.2254333297910867,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,256.0,1.1910192802868662,1.1910192802868662,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,280.0,1.2156797850820988,1.2156797850820988,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,304.0,1.2152518233540448,1.2152518233540448,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,328.0,1.2240910504618003,1.2240910504618003,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,352.0,1.4024950800741232,1.4024950800741232,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,376.0,1.2479423179752187,1.2479423179752187,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,400.0,1.244758733121096,1.244758733121096,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,424.0,1.1814052988838508,1.1814052988838508,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,448.0,1.2294621639016015,1.2294621639016015,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,472.0,1.2647417338210958,1.2647417338210958,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,496.0,1.2231571201800762,1.2231571201800762,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,520.0,1.1830504947317197,1.1830504947317197,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,544.0,1.2048729924040429,1.2048729924040429,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,568.0,1.1836210827211096,1.1836210827211096,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,592.0,1.1547431142495246,1.1547431142495246,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,616.0,1.2502809132129,1.2502809132129,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,640.0,1.1619051378024714,1.1619051378024714,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,664.0,1.2344476162174445,1.2344476162174445,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,688.0,1.1089580149787786,1.1089580149787786,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,712.0,1.0847381544898802,1.0847381544898802,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,736.0,1.1096372447891683,1.1096372447891683,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,760.0,1.108779621803336,1.108779621803336,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,784.0,1.0782485555052428,1.0782485555052428,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,808.0,1.1523963401494368,1.1523963401494368,0.883757850174362,200.0,drop_complete
+turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,832.0,1.2860978003078072,1.2860978003078072,0.883757850174362,200.0,drop_complete
 typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,0.0,0.45267619134821463,0.45267619134821463,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,24.0,0.4249921075738303,0.4249921075738303,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,48.0,0.4413245579577496,0.4413245579577496,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,72.0,0.3996049420656019,0.3996049420656019,0.9684214939926664,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,24.0,0.4249921075738306,0.4249921075738306,0.9684214939926664,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,48.0,0.4413245579577497,0.4413245579577497,0.9684214939926664,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,72.0,0.3996049420656021,0.3996049420656021,0.9684214939926664,200.0,drop_complete
 typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,96.0,0.4427156475268114,0.4427156475268114,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,120.0,0.4126981160456341,0.4126981160456341,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,144.0,0.5295061363526209,0.5295061363526209,0.9684214939926664,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,120.0,0.4126981160456343,0.4126981160456343,0.9684214939926664,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,144.0,0.529506136352621,0.529506136352621,0.9684214939926664,200.0,drop_complete
 typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,168.0,0.5033872175415947,0.5033872175415947,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,192.0,0.42093735972160323,0.42093735972160323,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,216.0,0.4045481229828806,0.4045481229828806,0.9684214939926664,200.0,drop_complete
-typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,240.0,0.35022256063771573,0.35022256063771573,0.9684214939926664,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,29.0,-1.7176117387696457,1.7176117387696457,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,53.0,-1.336658960197121,1.336658960197121,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,77.0,-1.0336631600704527,1.0336631600704527,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,101.0,-0.8202687991699255,0.8202687991699255,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,125.0,-0.6125758941179483,0.6125758941179483,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,149.0,-0.4998238358446922,0.4998238358446922,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,173.0,-0.5507148660869904,0.5507148660869904,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,197.0,-0.48670086999065726,0.48670086999065726,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,221.0,-0.4600251533278419,0.4600251533278419,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,245.0,-0.26640148417814413,0.26640148417814413,0.926156258036644,200.0,drop_complete
-typhoon_yagi_across_northeastern_vietnam,typhoon_yagi_across_northeastern_vietnam,typhoon,269.0,-0.3569819875789307,0.3569819875789307,0.926156258036644,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,192.0,0.4209373597216034,0.4209373597216034,0.9684214939926664,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,216.0,0.4045481229828807,0.4045481229828807,0.9684214939926664,200.0,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,240.0,0.35022256063771584,0.35022256063771584,0.9684214939926664,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,29.0,-1.7176117387696457,1.7176117387696457,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,53.0,-1.336658960197121,1.336658960197121,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,77.0,-1.0336631600704524,1.0336631600704524,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,101.0,-0.8202687991699258,0.8202687991699258,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,125.0,-0.6125758941179484,0.6125758941179484,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,149.0,-0.4998238358446923,0.4998238358446923,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,173.0,-0.55071486608699,0.55071486608699,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,197.0,-0.4867008699906575,0.4867008699906575,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,221.0,-0.46002515332784166,0.46002515332784166,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,245.0,-0.2664014841781442,0.2664014841781442,0.926156258036644,200.0,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,269.0,-0.35698198757893074,0.35698198757893074,0.926156258036644,200.0,drop_complete

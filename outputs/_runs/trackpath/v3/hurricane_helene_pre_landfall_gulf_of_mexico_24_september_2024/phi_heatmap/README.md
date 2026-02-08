@@ -13,9 +13,12 @@
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Helene
  - distance_mode: path
+ - path_distance_method: equirect
  - path_clip_pad_hours: 24.0
  - path_clip_spatial_pad_km: 100.0
- - path_sector_n: 12
+ - path_sector_n: 0
+ - track_dt_default_hours: 6.0
+ - track_gap_factor: 1.5
  - t0_pt: 2024-09-27 08:00:00
  - hours_pt: [8]
 

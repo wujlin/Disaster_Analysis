@@ -1,2 +1,0 @@
-slug,value_col,dev_mode,time_min,time_max,min_tiles_overlap,complete_only,mode_used,n_r_bins_used,n_time_used,nan_frac_raw_matrix,sigma1,sigma1_energy_frac,rank1_rel_error,singular_values
-typhoon_yagi_across_northeastern_vietnam,phi_overlap,signed,0.0,200.0,0,0,fill_missing,18,9,0.0,2.80833505334725,0.9386107780380383,0.24776848460198034,"[2.80833505334725, 0.6478472353114983, 0.2741245098973394, 0.10495362862807257, 0.06279368702765747, 0.049728038711743465, 0.045333290214282486, 0.03061556267864786, 0.02352732867094612]"
