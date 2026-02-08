@@ -1,0 +1,17 @@
+{
+  "slug": "typhoon_yagi_across_northeastern_vietnam",
+  "value_col": "phi_overlap",
+  "dev_mode": "signed",
+  "time_min": 0.0,
+  "time_max": 200.0,
+  "min_tiles_overlap": 0,
+  "complete_only": 0,
+  "mode_used": "fill_missing",
+  "n_r_bins_used": 18,
+  "n_time_used": 9,
+  "nan_frac_raw_matrix": 0.0,
+  "sigma1": 2.80833505334725,
+  "sigma1_energy_frac": 0.9386107780380383,
+  "rank1_rel_error": 0.24776848460198034,
+  "singular_values": "[2.80833505334725, 0.6478472353114983, 0.2741245098973394, 0.10495362862807257, 0.06279368702765747, 0.049728038711743465, 0.045333290214282486, 0.03061556267864786, 0.02352732867094612]"
+}

@@ -275,16 +275,19 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
 
     # t0：优先对齐 track anchor（landfall/closest approach），否则退化为“首个可用 population 窗口”（并显式 WARNING）。
     t0_method = "provided_exact"
+    t0_snap_pt: pd.Timestamp | None = None  # 用于选择“最接近 t0 的可用窗口文件”（center 自动估计用）
     if spec.t0_pt is None:
         track_df = _load_track_points_for_spec(spec)
         if track_df is not None:
             anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(first_ts))
             t0_pt, t0_file, snap_meta = _snap_t0_to_nearest_window(windows, anchor_ts=anchor_ts)
+            t0_snap_pt = pd.Timestamp(t0_pt)
             t0_method = "auto_track_anchor_nearest_window"
         else:
             anchor_meta = {"track_anchor_ok": 0}
             snap_meta = {"t0_snap_ok": 0, "t0_snap_window_pt": "", "t0_snap_delta_hours": float("nan")}
             t0_pt = pd.Timestamp(first_ts)
+            t0_snap_pt = pd.Timestamp(t0_pt)
             t0_method = "auto_first_population_window"
             t0_file = Path(first["path"])
             print(
@@ -293,25 +296,24 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
             )
     else:
         t0_raw = pd.Timestamp(spec.t0_pt)
-        t0_pt, t0_file, snap_meta = _snap_t0_to_nearest_window(windows, anchor_ts=t0_raw)
+        t0_pt = pd.Timestamp(t0_raw)
+        t0_snap_pt, t0_file, snap_meta = _snap_t0_to_nearest_window(windows, anchor_ts=t0_raw)
         track_df = _load_track_points_for_spec(spec)
         if track_df is not None:
             anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(t0_raw))
         else:
             anchor_meta = {"track_anchor_ok": 0}
             anchor_ts = None
-        if pd.Timestamp(t0_pt) == pd.Timestamp(t0_raw):
-            t0_method = "provided_exact"
-        else:
-            t0_method = "provided_snapped_nearest_window"
-            delta_h = float(snap_meta.get("t0_snap_delta_hours", float("nan")))
-            if np.isfinite(delta_h) and delta_h > 12.0:
-                print(
-                    f"[cross_disaster_phi_tau][WARNING] {spec.slug}: 提供的 t0_pt={t0_raw} 与最近窗口差 {delta_h:.1f}h；"
-                    "请检查 catalog 或数据窗口时间戳"
-                )
+        t0_method = "provided_exact"
+        delta_h = float(snap_meta.get("t0_snap_delta_hours", float("nan")))
+        if np.isfinite(delta_h) and delta_h > 12.0:
+            print(
+                f"[cross_disaster_phi_tau][WARNING] {spec.slug}: 提供的 t0_pt={t0_raw} 与最近窗口差 {delta_h:.1f}h；"
+                "若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。"
+            )
 
-    center_source_ts = pd.Timestamp(t0_pt)
+    # center_source_ts：用于 center 自动估计的窗口时间戳（t0_pt 本身不一定有对应文件）
+    center_source_ts = pd.Timestamp(t0_snap_pt) if t0_snap_pt is not None else pd.Timestamp(t0_pt)
     center_source_file: Path | None = t0_file
 
     center_method = "provided"
