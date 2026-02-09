@@ -1,0 +1,23 @@
+slug,name,event_type,hours_since_quake,abs_g1,sigma1_energy,mode_used
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,29.0,1.7176117387696457,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,53.0,1.336658960197121,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,77.0,1.0336631600704524,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,101.0,0.8202687991699258,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,125.0,0.6125758941179484,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,149.0,0.4998238358446923,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,173.0,0.55071486608699,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,197.0,0.4867008699906575,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,221.0,0.46002515332784166,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,245.0,0.2664014841781442,0.926156258036644,drop_complete
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,269.0,0.35698198757893074,0.926156258036644,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,0.0,0.45267619134821463,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,24.0,0.4249921075738306,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,48.0,0.4413245579577497,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,72.0,0.3996049420656021,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,96.0,0.4427156475268114,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,120.0,0.4126981160456343,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,144.0,0.529506136352621,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,168.0,0.5033872175415947,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,192.0,0.4209373597216034,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,216.0,0.4045481229828807,0.9684214939926664,drop_complete
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,240.0,0.35022256063771584,0.9684214939926664,drop_complete

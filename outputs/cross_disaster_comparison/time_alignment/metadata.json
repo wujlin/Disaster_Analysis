@@ -1,0 +1,10 @@
+{
+  "n_events": 14,
+  "roots": [
+    "outputs/_runs/trackpath/v3",
+    "outputs/_runs/trackpath/v4_yagi_fix"
+  ],
+  "events": [
+    "outputs:turkiye_earthquake_2023"
+  ]
+}

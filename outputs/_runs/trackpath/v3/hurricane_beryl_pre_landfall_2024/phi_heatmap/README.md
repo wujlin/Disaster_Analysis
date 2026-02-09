@@ -8,7 +8,7 @@
 
 ## 配置
 
- - center: (20.2000, -87.5000)
+ - center: (12.2000, -61.1000)
  - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Beryl
@@ -19,7 +19,7 @@
  - path_sector_n: 0
  - track_dt_default_hours: 6.0
  - track_gap_factor: 1.5
- - t0_pt: 2024-07-05 08:00:00
+ - t0_pt: 2024-07-01 08:00:00
  - hours_pt: [8]
 
 ## 输出
@@ -33,4 +33,4 @@
 
 ## 覆盖时间（PT）
 
-- None → None
+- 2024-07-01 08:00:00 → 2024-07-31 08:00:00

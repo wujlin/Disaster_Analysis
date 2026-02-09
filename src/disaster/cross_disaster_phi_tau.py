@@ -14,6 +14,7 @@ except ModuleNotFoundError as e:
 
 from disaster.physical_model_phi_rt import Config as PhysicalConfig
 from disaster.physical_model_phi_rt import run as run_physical
+from disaster.geo import haversine_km
 from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 from disaster.population_redistribution import Config as RedistributionConfig
 from disaster.population_redistribution import run as run_redistribution
@@ -201,15 +202,33 @@ def _choose_track_anchor(track: pd.DataFrame, *, ref_ts: pd.Timestamp) -> tuple[
     else:
         land = track.iloc[0:0].copy()
 
-    cand = land if not land.empty else track
-    cand["dt_abs_h"] = (pd.to_datetime(cand["datetime_local"]) - pd.Timestamp(ref_ts)).abs() / pd.to_timedelta(1, unit="h")
+    ref_ts = pd.Timestamp(ref_ts)
+    method = "nearest_in_time"
+    cand = track
+    if not land.empty:
+        land_dt = (pd.to_datetime(land["datetime_local"]) - ref_ts).abs()
+        land_idx = int(land_dt.astype("timedelta64[ns]").idxmin())
+        land_row = land.loc[land_idx]
+        land_ts = pd.Timestamp(land_row["datetime_local"])
+
+        # Pre-landfall datasets can start many days before the first tracked landfall. In that case,
+        # anchoring to a far-future landfall snaps t0 too late and can drop all tiles by distance.
+        if land_ts >= ref_ts and (land_ts - ref_ts) > pd.Timedelta(hours=48):
+            cand = track
+            method = "nearest_in_time"
+        else:
+            cand = land
+            method = "landfall_nearest_in_time"
+
+    cand = cand.copy()
+    cand["dt_abs_h"] = (pd.to_datetime(cand["datetime_local"]) - ref_ts).abs() / pd.to_timedelta(1, unit="h")
     idx = int(cand["dt_abs_h"].astype(float).idxmin())
     row = cand.loc[idx]
     anchor_ts = pd.Timestamp(row["datetime_local"])
     meta = {
         "track_anchor_ok": 1,
         "track_anchor_pt": str(anchor_ts),
-        "track_anchor_method": "landfall_nearest_in_time" if not land.empty else "nearest_in_time",
+        "track_anchor_method": method,
         "track_anchor_status": str(row.get("status", "")).strip(),
         "track_anchor_lat": float(row["lat"]),
         "track_anchor_lon": float(row["lon"]),
@@ -280,9 +299,55 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
         track_df = _load_track_points_for_spec(spec)
         if track_df is not None:
             anchor_ts, anchor_meta = _choose_track_anchor(track_df, ref_ts=pd.Timestamp(first_ts))
+            use_centroid_anchor = False
+            if "status" in track_df.columns:
+                st = track_df["status"].astype(str).str.strip().str.lower()
+                land = track_df[st == "landfall"].copy()
+            else:
+                land = track_df.iloc[0:0].copy()
+
+            if not land.empty:
+                land_dt = (pd.to_datetime(land["datetime_local"]) - pd.Timestamp(first_ts)).abs()
+                land_idx = int(land_dt.astype("timedelta64[ns]").idxmin())
+                land_ts = pd.Timestamp(land.loc[land_idx, "datetime_local"])
+                if land_ts >= pd.Timestamp(first_ts) and (land_ts - pd.Timestamp(first_ts)) > pd.Timedelta(hours=48):
+                    use_centroid_anchor = True
+
+            if use_centroid_anchor:
+                df0 = load_population_file(Path(first["path"]))
+                lat0 = pd.to_numeric(df0["lat"], errors="coerce").to_numpy(dtype=float)
+                lon0 = pd.to_numeric(df0["lon"], errors="coerce").to_numpy(dtype=float)
+                w0 = pd.to_numeric(df0.get("n_baseline", np.nan), errors="coerce").to_numpy(dtype=float)
+                cen = _weighted_centroid(lat0, lon0, w0)
+                if cen is not None:
+                    cen_lat, cen_lon = cen
+                    d = haversine_km(
+                        pd.to_numeric(track_df["lat"], errors="coerce").to_numpy(dtype=float),
+                        pd.to_numeric(track_df["lon"], errors="coerce").to_numpy(dtype=float),
+                        float(cen_lat),
+                        float(cen_lon),
+                    )
+                    j = int(np.nanargmin(d)) if d.size else 0
+                    row = track_df.iloc[int(j)]
+                    anchor_ts = pd.Timestamp(row["datetime_local"])
+                    anchor_meta = {
+                        "track_anchor_ok": 1,
+                        "track_anchor_pt": str(anchor_ts),
+                        "track_anchor_method": "centroid_nearest_in_space",
+                        "track_anchor_status": str(row.get("status", "")).strip(),
+                        "track_anchor_lat": float(row["lat"]),
+                        "track_anchor_lon": float(row["lon"]),
+                        "first_window_baseline_centroid_lat": float(cen_lat),
+                        "first_window_baseline_centroid_lon": float(cen_lon),
+                    }
+                    t0_method = "auto_centroid_nearest_track_nearest_window"
+                else:
+                    t0_method = "auto_track_anchor_nearest_window"
+            else:
+                t0_method = "auto_track_anchor_nearest_window"
+
             t0_pt, t0_file, snap_meta = _snap_t0_to_nearest_window(windows, anchor_ts=anchor_ts)
             t0_snap_pt = pd.Timestamp(t0_pt)
-            t0_method = "auto_track_anchor_nearest_window"
         else:
             anchor_meta = {"track_anchor_ok": 0}
             snap_meta = {"t0_snap_ok": 0, "t0_snap_window_pt": "", "t0_snap_delta_hours": float("nan")}

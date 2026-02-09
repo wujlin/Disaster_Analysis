@@ -291,7 +291,24 @@ def _choose_track_anchor(track: CenterTrack, *, t0_pt: pd.Timestamp) -> tuple[np
     else:
         is_land = np.zeros(t_ns.shape[0], dtype=bool)
 
-    cand = np.where(is_land)[0] if np.any(is_land) else np.arange(t_ns.size, dtype=int)
+    # Default: prefer landfall anchors. For "pre-landfall" datasets that start many days before the
+    # first tracked landfall, anchoring to a far-future landfall will clip the path segment away
+    # from the affected tiles and can drop all data by distance. In that case, fall back to the
+    # nearest track point to t0.
+    method = "nearest_t0"
+    cand = np.arange(t_ns.size, dtype=int)
+    if np.any(is_land):
+        cand_land = np.where(is_land)[0]
+        d_land = np.abs(t_ns[cand_land].astype(np.int64) - t0_ns)
+        j_land = int(cand_land[int(np.argmin(d_land))])
+        land_ts = pd.to_datetime(int(t_ns[j_land]))
+        if land_ts >= pd.Timestamp(t0_pt) and (land_ts - pd.Timestamp(t0_pt)) > pd.Timedelta(hours=48):
+            cand = np.arange(t_ns.size, dtype=int)
+            method = "nearest_t0"
+        else:
+            cand = cand_land
+            method = "landfall_nearest_t0"
+
     d = np.abs(t_ns[cand].astype(np.int64) - t0_ns)
     j = int(cand[int(np.argmin(d))])
 
@@ -299,7 +316,7 @@ def _choose_track_anchor(track: CenterTrack, *, t0_pt: pd.Timestamp) -> tuple[np
     meta = {
         "path_track_anchor_ok": 1,
         "path_track_anchor_pt": str(pd.to_datetime(int(anchor_ns))),
-        "path_track_anchor_method": "landfall_nearest_t0" if np.any(is_land) else "nearest_t0",
+        "path_track_anchor_method": method,
         "path_track_anchor_status": str(track.status[j]) if track.status is not None else "",
     }
     return anchor_ns, meta
@@ -363,11 +380,11 @@ def _clip_track_for_path(track: CenterTrack, cfg: Config) -> tuple[tuple[np.ndar
     clip_kind = "time_and_spatial"
     out = _apply_keep(keep_both)
     if out is None:
-        clip_kind = "spatial_only"
-        out = _apply_keep(keep_spatial)
-    if out is None:
         clip_kind = "time_only"
         out = _apply_keep(keep_time)
+    if out is None:
+        clip_kind = "spatial_only"
+        out = _apply_keep(keep_spatial)
     if out is None:
         clip_kind = "full"
         lat2 = track.lat.astype(float)

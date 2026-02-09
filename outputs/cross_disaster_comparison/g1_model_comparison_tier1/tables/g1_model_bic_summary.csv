@@ -1,0 +1,3 @@
+slug,name,event_type,output_root,fit_ok,best_model,best_bic_log,best_alpha,best_tau,best_beta,best_logA,n_fit,t_start,sigma1_energy
+typhoon_yagi_across_northeastern_vietnam,Typhoon Yagi Across Northeastern Vietnam,typhoon,outputs/_runs/trackpath/v4_yagi_fix,1,power_law,-38.64234257484824,0.782428400056531,,,3.322886886977208,11,29.0,0.926156258036644
+typhoon_krathon_across_taiwan,Typhoon Krathon Across Taiwan,typhoon,outputs/_runs/trackpath/v3,1,exponential,-32.49404664992308,,229.59019248764488,,0.007942979906480732,5,144.0,0.9684214939926664
