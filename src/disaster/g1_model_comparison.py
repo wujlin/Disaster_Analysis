@@ -258,6 +258,7 @@ def run(
     roots: list[Path],
     events: list[EventRef],
     slugs: list[str],
+    exclude_slugs: list[str],
     out_dir: Path,
     value_col: str,
     r_max_km: float,
@@ -267,6 +268,8 @@ def run(
     fit_mode: str,
     fit_tmin_hours: float,
     min_fit_points: int,
+    skip_figures: bool,
+    max_plot_panels: int,
 ) -> None:
     out_dir = Path(out_dir)
     tabs = out_dir / "tables"
@@ -284,8 +287,16 @@ def run(
         raise SystemExit("未发现任何可用事件（请检查 --root/--event）")
 
     want = [str(s).strip() for s in slugs if str(s).strip()]
+    if want and len(want) == 1 and want[0].lower() == "all":
+        want = []
     if not want:
-        raise SystemExit("--slugs 为空")
+        want = sorted(refs.keys())
+
+    exclude = {str(s).strip() for s in (exclude_slugs or []) if str(s).strip()}
+    if exclude:
+        want = [s for s in want if s not in exclude]
+    if not want:
+        raise SystemExit("筛选后 slugs 为空（请检查 --slugs/--exclude-slugs）")
 
     value_col = str(value_col).strip()
     if value_col not in {"phi_overlap", "phi_aggregate"}:
@@ -429,6 +440,32 @@ def run(
     best_df.to_csv(tabs / "g1_model_bic_summary.csv", index=False)
     series_df.to_csv(tabs / "g1_abs_series.csv", index=False)
 
+    meta = {
+        "roots": [str(p) for p in roots],
+        "events": [f"{e.output_root}:{e.slug}" for e in events],
+        "slugs": want,
+        "exclude_slugs": sorted(exclude),
+        "value_col": value_col,
+        "r_max_km": float(r_max_km),
+        "time_min": time_min,
+        "time_max": time_max,
+        "complete_only": int(bool(complete_only)),
+        "fit_mode": str(fit_mode),
+        "fit_tmin_hours": float(fit_tmin_hours),
+        "min_fit_points": int(min_fit_points),
+        "skip_figures": int(bool(skip_figures)),
+        "max_plot_panels": int(max_plot_panels),
+    }
+
+    if bool(skip_figures):
+        (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        return
+
+    if int(max_plot_panels) > 0 and len(want) > int(max_plot_panels):
+        meta = {**meta, "figures_skipped_reason": f"too_many_slugs({len(want)})"}
+        (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        return
+
     # Plot: for each slug, show data + best-fit curves for all models (if available).
     apply_paper_style()
     import matplotlib.pyplot as plt
@@ -492,22 +529,8 @@ def run(
             ax.plot(t_grid, y_hat, color=color, lw=2.0, alpha=0.9, label=model)
         ax.legend(frameon=False)
 
-    save_figure(fig, figs / "g1_model_comparison_tier1.png")
-    save_figure(fig, figs / "g1_model_comparison_tier1.pdf")
-
-    meta = {
-        "roots": [str(p) for p in roots],
-        "events": [f"{e.output_root}:{e.slug}" for e in events],
-        "slugs": want,
-        "value_col": value_col,
-        "r_max_km": float(r_max_km),
-        "time_min": time_min,
-        "time_max": time_max,
-        "complete_only": int(bool(complete_only)),
-        "fit_mode": str(fit_mode),
-        "fit_tmin_hours": float(fit_tmin_hours),
-        "min_fit_points": int(min_fit_points),
-    }
+    save_figure(fig, figs / "g1_model_comparison.png")
+    save_figure(fig, figs / "g1_model_comparison.pdf")
     (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
@@ -533,7 +556,8 @@ def cli_main() -> None:
     parser = argparse.ArgumentParser(description="对指定事件的 |g1(t)| 做模型族比较（power-law/exponential/stretched-exp）并输出 BIC 表")
     parser.add_argument("--root", type=Path, action="append", default=[], help="扫描的输出根目录（可多次提供）")
     parser.add_argument("--event", type=str, action="append", default=[], help="额外事件：<output_root>:<slug>")
-    parser.add_argument("--slugs", type=str, nargs="*", default=["typhoon_yagi_across_northeastern_vietnam", "typhoon_krathon_across_taiwan"], help="要比较的事件 slugs")
+    parser.add_argument("--slugs", type=str, nargs="*", default=[], help="要比较的事件 slugs（空或 all=自动发现）")
+    parser.add_argument("--exclude-slugs", type=str, nargs="*", default=[], help="可选：从 slugs 中剔除的事件")
     parser.add_argument("--out-dir", type=Path, default=Path("outputs/cross_disaster_comparison/g1_model_comparison_tier1"), help="输出目录")
     parser.add_argument("--value-col", type=str, default="phi_overlap", choices=["phi_overlap", "phi_aggregate"])
     parser.add_argument("--r-max-km", type=float, default=200.0)
@@ -543,6 +567,8 @@ def cli_main() -> None:
     parser.add_argument("--fit-mode", type=str, default="from_peak", choices=["from_peak", "from_tmin"])
     parser.add_argument("--fit-tmin-hours", type=float, default=24.0)
     parser.add_argument("--min-fit-points", type=int, default=4)
+    parser.add_argument("--skip-figures", action="store_true", help="只输出表，不出图")
+    parser.add_argument("--max-plot-panels", type=int, default=6, help="超过该数量时自动跳过出图（默认 6；0=不限制）")
     args = parser.parse_args()
 
     if args.root:
@@ -557,6 +583,7 @@ def cli_main() -> None:
         roots=roots,
         events=events,
         slugs=list(args.slugs or []),
+        exclude_slugs=list(args.exclude_slugs or []),
         out_dir=Path(args.out_dir),
         value_col=str(args.value_col),
         r_max_km=float(args.r_max_km),
@@ -566,6 +593,8 @@ def cli_main() -> None:
         fit_mode=str(args.fit_mode),
         fit_tmin_hours=float(args.fit_tmin_hours),
         min_fit_points=int(args.min_fit_points),
+        skip_figures=bool(args.skip_figures),
+        max_plot_panels=int(args.max_plot_panels),
     )
 
 

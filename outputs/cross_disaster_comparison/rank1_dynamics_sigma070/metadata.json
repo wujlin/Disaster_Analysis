@@ -1,0 +1,19 @@
+{
+  "n_events": 14,
+  "value_col": "phi_overlap",
+  "r_max_km": 200.0,
+  "time_min": null,
+  "time_max": null,
+  "complete_only": 0,
+  "sigma1_threshold": 0.7,
+  "fit_mode": "from_peak",
+  "fit_tmin_hours": 24.0,
+  "min_fit_points": 6,
+  "roots": [
+    "outputs/_runs/trackpath/v3",
+    "outputs/_runs/trackpath/v4_yagi_fix"
+  ],
+  "events": [
+    "outputs:turkiye_earthquake_2023"
+  ]
+}

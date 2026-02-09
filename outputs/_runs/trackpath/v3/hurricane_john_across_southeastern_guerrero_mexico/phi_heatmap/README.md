@@ -19,7 +19,7 @@
  - path_sector_n: 0
  - track_dt_default_hours: 6.0
  - track_gap_factor: 1.5
- - t0_pt: 2024-10-01 08:00:00
+ - t0_pt: 2024-09-28 08:00:00
  - hours_pt: [8]
 
 ## 输出
