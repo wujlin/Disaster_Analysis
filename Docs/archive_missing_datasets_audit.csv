@@ -1,20 +1,20 @@
-archive_name,archive_dir,has_population,staged_slug,staged_data_root,staged_n_windows,sample_counts_population,sample_counts_movement,sample_counts_network_coverage,sample_counts_business_activity,sample_counts_unknown
-Bangladesh Political Crisis Aug 16 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Bangladesh Political Crisis Aug 16 2024,0,,,0,0,0,0,0,15
-Cambodia Monsoon Season Study 9 May 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Cambodia Monsoon Season Study 9 May 2024,1,cambodia_monsoon_season_study_2024_05_09,datasets/staged/cambodia_monsoon_season_study_2024_05_09,552,0,16,0,0,184
-Hurricane Helene Across Southeastern US,/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Helene Across Southeastern US,0,,,0,0,0,21,0,21
-Hurricane Milton Pre Landfall 7 October 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Milton Pre Landfall 7 October 2024,0,,,0,0,0,15,0,0
-India Monsoon Season Study Nct Delhi Uttar Pradesh Bihar States 9 May 2024,/mnt/e/newdesktop/archive/facebook/disaster data/India Monsoon Season Study Nct Delhi Uttar Pradesh Bihar States 9 May 2024,1,india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,datasets/staged/india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,546,0,114,86,0,0
-Landslides In Kerala India 30 July 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Landslides In Kerala India 30 July 2024,0,,,0,0,30,15,0,0
-Pakistan Monsoon Season Study Sindh Province 9 May 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Pakistan Monsoon Season Study Sindh Province 9 May 2024,1,pakistan_monsoon_season_study_sindh_2024_05_09,datasets/staged/pakistan_monsoon_season_study_sindh_2024_05_09,552,0,16,0,0,184
-Philippines 2024 Typhoon Season Sept 5 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Philippines 2024 Typhoon Season Sept 5 2024,0,,,0,0,0,65,0,65
-Thailand Dengue Study 7 August 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Thailand Dengue Study 7 August 2024,0,,,0,0,0,35,0,35
-"The Flooding Across Southern Johor, Malaysia","/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding Across Southern Johor, Malaysia",0,,,0,0,0,0,0,4
-"The Flooding in Himachal Pradesh and Uttarakhand, India","/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding in Himachal Pradesh and Uttarakhand, India",0,,,0,0,26,13,0,0
-"The Palisades Fire in Los Angeles, California, US","/mnt/e/newdesktop/archive/facebook/disaster data/The Palisades Fire in Los Angeles, California, US",0,,,0,0,8,0,0,0
-The volcanic eruption at mount lewotobi laki laki,/mnt/e/newdesktop/archive/facebook/disaster data/The volcanic eruption at mount lewotobi laki laki,0,,,0,0,0,8,0,0
-Tropical Cyclone Dana India Post-landfall 30 October 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Cyclone Dana India Post-landfall 30 October 2024,0,,,0,0,30,29,0,0
-Tropical Cyclone Yagi Regional Response Sept 16 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Cyclone Yagi Regional Response Sept 16 2024,0,,,0,0,24,15,0,0
-Tropical Cyclone Yinxing-24 Philippines 5 November 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Cyclone Yinxing-24 Philippines 5 November 2024,0,,,0,0,0,4,0,0
-Tropical Storm Francine Gulf Of Mexico 9 September 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Storm Francine Gulf Of Mexico 9 September 2024,0,,,0,0,30,15,0,0
-"Typhoon Nika Across Northern Luzon, Philippines","/mnt/e/newdesktop/archive/facebook/disaster data/Typhoon Nika Across Northern Luzon, Philippines",1,typhoon_nika_across_northern_luzon_philippines,datasets/staged/typhoon_nika_across_northern_luzon_philippines,6,6,4,1,0,2
-Typhoon Ofel Usagi 13 November 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Typhoon Ofel Usagi 13 November 2024,0,,,0,0,0,1,0,0
+archive_name,archive_dir,has_population,population_window_csv_n,movement_window_csv_n,network_coverage_window_csv_n,business_activity_window_csv_n,unknown_window_csv_n,staged_slug,staged_data_root,staged_n_windows
+Bangladesh Political Crisis Aug 16 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Bangladesh Political Crisis Aug 16 2024,0,0,0,0,0,15,,,0
+Cambodia Monsoon Season Study 9 May 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Cambodia Monsoon Season Study 9 May 2024,1,552,306,184,0,184,cambodia_monsoon_season_study_2024_05_09,datasets/staged/cambodia_monsoon_season_study_2024_05_09,552
+Hurricane Helene Across Southeastern US,/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Helene Across Southeastern US,0,0,0,21,0,21,,,0
+Hurricane Milton Pre Landfall 7 October 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Milton Pre Landfall 7 October 2024,0,0,0,15,0,0,,,0
+India Monsoon Season Study Nct Delhi Uttar Pradesh Bihar States 9 May 2024,/mnt/e/newdesktop/archive/facebook/disaster data/India Monsoon Season Study Nct Delhi Uttar Pradesh Bihar States 9 May 2024,1,546,114,184,0,0,india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,datasets/staged/india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,546
+Landslides In Kerala India 30 July 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Landslides In Kerala India 30 July 2024,0,0,30,15,0,0,,,0
+Pakistan Monsoon Season Study Sindh Province 9 May 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Pakistan Monsoon Season Study Sindh Province 9 May 2024,1,552,368,184,0,184,pakistan_monsoon_season_study_sindh_2024_05_09,datasets/staged/pakistan_monsoon_season_study_sindh_2024_05_09,552
+Philippines 2024 Typhoon Season Sept 5 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Philippines 2024 Typhoon Season Sept 5 2024,0,0,0,65,0,65,,,0
+Thailand Dengue Study 7 August 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Thailand Dengue Study 7 August 2024,0,0,0,35,0,35,,,0
+"The Flooding Across Southern Johor, Malaysia","/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding Across Southern Johor, Malaysia",0,0,0,0,0,4,,,0
+"The Flooding in Himachal Pradesh and Uttarakhand, India","/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding in Himachal Pradesh and Uttarakhand, India",0,0,26,13,0,0,,,0
+"The Palisades Fire in Los Angeles, California, US","/mnt/e/newdesktop/archive/facebook/disaster data/The Palisades Fire in Los Angeles, California, US",0,0,8,0,0,0,,,0
+The volcanic eruption at mount lewotobi laki laki,/mnt/e/newdesktop/archive/facebook/disaster data/The volcanic eruption at mount lewotobi laki laki,0,0,0,8,0,0,,,0
+Tropical Cyclone Dana India Post-landfall 30 October 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Cyclone Dana India Post-landfall 30 October 2024,0,0,30,29,0,0,,,0
+Tropical Cyclone Yagi Regional Response Sept 16 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Cyclone Yagi Regional Response Sept 16 2024,0,0,24,15,0,0,,,0
+Tropical Cyclone Yinxing-24 Philippines 5 November 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Cyclone Yinxing-24 Philippines 5 November 2024,0,0,0,4,0,0,,,0
+Tropical Storm Francine Gulf Of Mexico 9 September 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Tropical Storm Francine Gulf Of Mexico 9 September 2024,0,0,30,15,0,0,,,0
+"Typhoon Nika Across Northern Luzon, Philippines","/mnt/e/newdesktop/archive/facebook/disaster data/Typhoon Nika Across Northern Luzon, Philippines",1,6,4,1,0,2,typhoon_nika_across_northern_luzon_philippines,datasets/staged/typhoon_nika_across_northern_luzon_philippines,6
+Typhoon Ofel Usagi 13 November 2024,/mnt/e/newdesktop/archive/facebook/disaster data/Typhoon Ofel Usagi 13 November 2024,0,0,0,1,0,0,,,0
