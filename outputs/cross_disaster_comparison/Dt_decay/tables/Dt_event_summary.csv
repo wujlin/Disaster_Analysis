@@ -1,20 +1,31 @@
 slug,short_name,name,disaster_type,output_root,n_time_windows,t_peak_hours,D_peak,event_type,near_delta_peak_windows_mean
+flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,Flooding In Central And Eastern Europe Sept 16 2024,flood,outputs,81,320.0,0.1168031915078486,INFL,0.07690929241032438
+global_earthquake_model_research_2025_sep_18,global_earthquake_mode,Global Earthquake Model Research 2025 Sep 18,earthquake,outputs,6,64.0,0.06348962583710134,INFL,0.02810295845150333
 hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,outputs,14,-8.0,0.12183737847793855,EVAC,-0.2182305293802359
 hurricane_beryl_across_southeastern_texas_us,beryl_tx,"Hurricane Beryl Across Southeastern Texas, US",hurricane,outputs,15,-8.0,0.11823524674694585,EVAC,-0.16866740124210078
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03,beryl_pre,Hurricane Beryl Jamaica And Western Caribbean Pre Landfall July 3 2024,hurricane,outputs,7,0.0,0.215685017369247,EVAC,-0.3778096997796471
 hurricane_beryl_pre_landfall_2024,beryl_pre,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,outputs,32,16.0,0.1714251397966239,NEUTRAL,0.00428138280842398
+hurricane_debby_across_florida_and_georgia_us,debby_pre,"Hurricane Debby Across Florida and Georgia, US",hurricane,outputs,24,176.0,0.05461389727986112,NEUTRAL,-0.018455126110578642
 hurricane_ernesto_puerto_rico_14_august_2024,ernesto_pr,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,outputs,15,-8.0,0.11221423538369692,INFL,0.04443239834579975
 hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,helene_pre,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,outputs,15,328.0,0.17415395812046633,INFL,0.11449476753122213
 hurricane_john_across_southeastern_guerrero_mexico,john_gue,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,outputs,7,-8.0,0.10131234143207328,INFL,0.07476547421331281
 hurricane_john_southern_mexico_25_september_2024,john_sm,Hurricane John Southern Mexico 25 September 2024,hurricane,outputs,15,136.0,0.11693105353575652,INFL,0.08452853227565481
+hurricane_melissa_10_27_2025,melissa,Hurricane Melissa 10 27 2025,hurricane,outputs,11,48.0,0.4859721502432578,NEUTRAL,
+hurricane_melissa_aftermath_2025_11_03,melissa,Hurricane Melissa Aftermath 2025 11 03,hurricane,outputs,13,64.0,0.3421497483762107,EVAC,-0.5332749552464813
 hurricane_milton_across_florida_us,milton_fl,"Hurricane Milton Across Florida, US",hurricane,outputs,10,64.0,0.14026091970829224,INFL,0.11790225271303449
 line_fire_southern_california_9_september_2024,line_fire,Line Fire Southern California 9 September 2024,wildfire,outputs,15,280.0,0.11380356812147989,INFL,0.10692956348128577
 moldova_flooding_2024,moldova,Moldova Flooding Sept 16 2024,flood,outputs,28,448.0,0.06299469886468742,INFL,0.04545334325701815
+mountain_fire_in_california,mountain_fire_in_calif,Mountain fire in California (Ventura County),wildfire,outputs,3,-8.0,0.07026450922991515,EXCLUDED_SHORT,
 park_fire_2024,park_fire1,"The Park Fire in Northern California, US",wildfire,outputs,17,376.0,0.05971293563843387,INFL,0.035741591833645565
 park_fire_california_29_july_2024,park_fire2,Park Fire California 29 July 2024,wildfire,outputs,15,280.0,0.03320846854836,NEUTRAL,0.017786271876340173
+spain_flood,spain_flood,Spain Flood (Valencia and Castilla-La Mancha Regions),flood,outputs,30,104.0,0.16151920612811863,INFL,0.1679373549421601
+the_earthquake_across_central_mexico,the_earthquake_across_,The Earthquake Across Central Mexico,earthquake,outputs,13,24.0,0.267017840376538,INFL,0.29924561516172205
+the_earthquake_across_dhaka_division_bangladesh,the_earthquake_across_,"The Earthquake Across Dhaka Division, Bangladesh",earthquake,outputs,13,40.0,0.11442485689622457,INFL,0.059888076592714265
 the_flooding_across_antioquia_and_choc_departments_colombia,the_flooding_across_an,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,outputs,1,-8.0,0.12307398646675656,EXCLUDED_SHORT,
 the_flooding_across_bagmati_and_koshi_provinces_nepal,nepal_fld,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,outputs,15,-8.0,0.1846441741699349,EVAC,-0.10368253121562315
 the_flooding_across_eastern_bangladesh,bangladesh_fld,The Flooding Across Eastern Bangladesh,flood,outputs,12,16.0,0.08444372699984103,INFL,0.06173985204288176
 the_flooding_across_gujarat_india,gujarat_fld,"The Flooding Across Gujarat, India",flood,outputs,8,16.0,0.12486911695932487,EVAC,-0.07816008356582643
+the_flooding_across_rio_grande_do_sul_state_brazil,the_flooding_across_ri,"The Flooding Across Rio Grande do Sul State, Brazil",flood,outputs,88,296.0,0.14754148935211234,INFL,0.11649850618994627
 the_flooding_in_benue_and_kogi_states_nigeria,the_flooding_in_benue_,"The Flooding in Benue and Kogi States, Nigeria",flood,outputs,7,136.0,0.18314127430718508,INFL,0.15076063994331462
 the_flooding_in_conakry_city_conakry_guinea,the_flooding_in_conakr,"The Flooding in Conakry City, Conakry, Guinea",flood,outputs,13,160.0,0.09034747846038298,INFL,0.07320680902139885
 the_wildfires_in_quito_pichincha_province_ecuador,quito_fire,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,outputs,15,16.0,0.09663185404386196,EVAC,-0.10290066472646175
