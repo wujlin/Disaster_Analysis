@@ -96,7 +96,7 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 ```
-
+苹果
 ### 2.4 ❌ 坑4：PowerShell 不支持 `&&` 连接符
 
 **现象**：`cd dir && python script.py` 在 PowerShell 中报语法错误。
