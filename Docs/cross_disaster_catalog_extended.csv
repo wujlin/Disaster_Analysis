@@ -37,3 +37,7 @@ hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03,Hurricane Bery
 hurricane_debby_across_florida_and_georgia_us,"Hurricane Debby Across Florida and Georgia, US",datasets/staged/hurricane_debby_across_florida_and_georgia_us,hurricane,,,,8,0.9,1.1,Docs/storm_tracks/nhc_best_track_2024_landfalls.csv,America/Los_Angeles,Debby
 spain_flood,Spain Flood (Valencia and Castilla-La Mancha Regions),datasets/staged/spain_flood,flood,,,,8,0.9,1.1,,America/Los_Angeles,
 mountain_fire_in_california,Mountain fire in California (Ventura County),datasets/staged/mountain_fire_in_california,wildfire,,,,8,0.9,1.1,,America/Los_Angeles,
+cambodia_monsoon_season_study_2024_05_09,Cambodia Monsoon Season Study 9 May 2024,datasets/staged/cambodia_monsoon_season_study_2024_05_09,monsoon,,,,8,0.9,1.1,,America/Los_Angeles,
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,"India Monsoon Season Study (NCT Delhi, UP, Bihar) 9 May 2024",datasets/staged/india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,monsoon,,,,8,0.9,1.1,,America/Los_Angeles,
+pakistan_monsoon_season_study_sindh_2024_05_09,Pakistan Monsoon Season Study (Sindh Province) 9 May 2024,datasets/staged/pakistan_monsoon_season_study_sindh_2024_05_09,monsoon,,,,8,0.9,1.1,,America/Los_Angeles,
+typhoon_nika_across_northern_luzon_philippines,"Typhoon Nika Across Northern Luzon, Philippines",datasets/staged/typhoon_nika_across_northern_luzon_philippines,typhoon,,,,8,0.9,1.1,,America/Los_Angeles,

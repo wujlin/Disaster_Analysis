@@ -128,6 +128,14 @@ outputs/*
 !outputs/spain_flood/**
 !outputs/mountain_fire_in_california/
 !outputs/mountain_fire_in_california/**
+!outputs/cambodia_monsoon_season_study_2024_05_09/
+!outputs/cambodia_monsoon_season_study_2024_05_09/**
+!outputs/india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar/
+!outputs/india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar/**
+!outputs/pakistan_monsoon_season_study_sindh_2024_05_09/
+!outputs/pakistan_monsoon_season_study_sindh_2024_05_09/**
+!outputs/typhoon_nika_across_northern_luzon_philippines/
+!outputs/typhoon_nika_across_northern_luzon_philippines/**
 !outputs/cross_disaster_comparison/
 !outputs/cross_disaster_comparison/**
 !outputs/_tmp_two_phase_dynamics/

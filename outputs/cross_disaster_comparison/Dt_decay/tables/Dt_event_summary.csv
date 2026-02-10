@@ -1,4 +1,5 @@
 slug,short_name,name,disaster_type,output_root,n_time_windows,t_peak_hours,D_peak,event_type,near_delta_peak_windows_mean
+cambodia_monsoon_season_study_2024_05_09,cambodia_monsoon_seaso,Cambodia Monsoon Season Study 9 May 2024,monsoon,outputs,106,536.0,0.4964454015277994,EVAC,-0.32969873617727646
 flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,Flooding In Central And Eastern Europe Sept 16 2024,flood,outputs,81,320.0,0.1168031915078486,INFL,0.07690929241032438
 global_earthquake_model_research_2025_sep_18,global_earthquake_mode,Global Earthquake Model Research 2025 Sep 18,earthquake,outputs,6,64.0,0.06348962583710134,INFL,0.02810295845150333
 hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,outputs,14,-8.0,0.12183737847793855,EVAC,-0.2182305293802359
@@ -13,9 +14,11 @@ hurricane_john_southern_mexico_25_september_2024,john_sm,Hurricane John Southern
 hurricane_melissa_10_27_2025,melissa,Hurricane Melissa 10 27 2025,hurricane,outputs,11,48.0,0.4859721502432578,NEUTRAL,
 hurricane_melissa_aftermath_2025_11_03,melissa,Hurricane Melissa Aftermath 2025 11 03,hurricane,outputs,13,64.0,0.3421497483762107,EVAC,-0.5332749552464813
 hurricane_milton_across_florida_us,milton_fl,"Hurricane Milton Across Florida, US",hurricane,outputs,10,64.0,0.14026091970829224,INFL,0.11790225271303449
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,india_monsoon_season_s,"India Monsoon Season Study (NCT Delhi, UP, Bihar) 9 May 2024",monsoon,outputs,106,536.0,0.37435637926550475,INFL,0.14144180240485982
 line_fire_southern_california_9_september_2024,line_fire,Line Fire Southern California 9 September 2024,wildfire,outputs,15,280.0,0.11380356812147989,INFL,0.10692956348128577
 moldova_flooding_2024,moldova,Moldova Flooding Sept 16 2024,flood,outputs,28,448.0,0.06299469886468742,INFL,0.04545334325701815
 mountain_fire_in_california,mountain_fire_in_calif,Mountain fire in California (Ventura County),wildfire,outputs,3,-8.0,0.07026450922991515,EXCLUDED_SHORT,
+pakistan_monsoon_season_study_sindh_2024_05_09,pakistan_monsoon_seaso,Pakistan Monsoon Season Study (Sindh Province) 9 May 2024,monsoon,outputs,106,824.0,0.10811436994722916,NEUTRAL,0.008672313704429462
 park_fire_2024,park_fire1,"The Park Fire in Northern California, US",wildfire,outputs,17,376.0,0.05971293563843387,INFL,0.035741591833645565
 park_fire_california_29_july_2024,park_fire2,Park Fire California 29 July 2024,wildfire,outputs,15,280.0,0.03320846854836,NEUTRAL,0.017786271876340173
 spain_flood,spain_flood,Spain Flood (Valencia and Castilla-La Mancha Regions),flood,outputs,30,104.0,0.16151920612811863,INFL,0.1679373549421601
@@ -35,5 +38,6 @@ tropical_storm_kristine_in_bicol_and_calabarzon_philippines,kristine_ph,"Tropica
 tropical_storm_yagi_philippines_2_september_2024,yagi_ph,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,outputs,15,280.0,0.08850171957692196,EVAC,-0.04800929302101292
 turkiye_earthquake_2023,turkiye,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,outputs,36,16.0,0.40114008822652447,INFL,0.05663369481729249
 typhoon_krathon_across_taiwan,krathon_tw,Typhoon Krathon Across Taiwan,typhoon,outputs,12,-8.0,0.13430304258593542,INFL,0.09670015070573769
+typhoon_nika_across_northern_luzon_philippines,nika_ph,"Typhoon Nika Across Northern Luzon, Philippines",typhoon,outputs,6,24.0,0.1356138421512193,INFL,0.09306029827927964
 typhoon_yagi_across_northeastern_vietnam,yagi_vn,Typhoon Yagi Across Northeastern Vietnam,typhoon,outputs,11,-8.0,0.25648113051572646,EVAC,-0.2739356164808162
 wildfires_in_boise_county_idaho_27_august_2024,boise_fire,Wildfires In Boise County Idaho 27 August 2024,wildfire,outputs,15,136.0,0.13709144407795817,INFL,0.04030056317673647

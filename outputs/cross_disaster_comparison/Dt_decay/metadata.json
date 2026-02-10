@@ -1,6 +1,6 @@
 {
   "output_root": "outputs",
-  "n_events": 38,
+  "n_events": 42,
   "r_max_km": 200.0,
   "near_r_km": 50.0,
   "min_tiles_overlap": 3,
@@ -14,6 +14,7 @@
   "near_thresh": 0.02,
   "mono_tol_up": 1.05,
   "slugs": [
+    "cambodia_monsoon_season_study_2024_05_09",
     "flooding_in_central_and_eastern_europe_sept_16_2024",
     "global_earthquake_model_research_2025_sep_18",
     "hurricane_beryl_across_quintana_roo_and_yucatan_mexico",
@@ -28,9 +29,11 @@
     "hurricane_melissa_10_27_2025",
     "hurricane_melissa_aftermath_2025_11_03",
     "hurricane_milton_across_florida_us",
+    "india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar",
     "line_fire_southern_california_9_september_2024",
     "moldova_flooding_2024",
     "mountain_fire_in_california",
+    "pakistan_monsoon_season_study_sindh_2024_05_09",
     "park_fire_2024",
     "park_fire_california_29_july_2024",
     "spain_flood",
@@ -50,6 +53,7 @@
     "tropical_storm_yagi_philippines_2_september_2024",
     "turkiye_earthquake_2023",
     "typhoon_krathon_across_taiwan",
+    "typhoon_nika_across_northern_luzon_philippines",
     "typhoon_yagi_across_northeastern_vietnam",
     "wildfires_in_boise_county_idaho_27_august_2024"
   ],

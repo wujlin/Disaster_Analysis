@@ -1,4 +1,5 @@
 slug,short_name,disaster_type,event_type,D_peak,t_peak_hours,n_mono,n_total_post,alpha,logA,r2,t_decay_start,t_decay_end
+cambodia_monsoon_season_study_2024_05_09,cambodia_monsoon_seaso,monsoon,EVAC,0.4964454015277994,536.0,1,37,,,,8.0,8.0
 flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,flood,INFL,0.1168031915078486,320.0,1,39,,,,8.0,8.0
 global_earthquake_model_research_2025_sep_18,global_earthquake_mode,earthquake,INFL,0.06348962583710134,64.0,1,1,,,,8.0,8.0
 hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,hurricane,EVAC,0.12183737847793855,-8.0,5,13,0.5939242630297676,0.9003928118633289,0.8967379651088068,24.0,120.0
@@ -13,8 +14,10 @@ hurricane_john_southern_mexico_25_september_2024,john_sm,hurricane,INFL,0.116931
 hurricane_melissa_10_27_2025,melissa,hurricane,NEUTRAL,0.4859721502432578,48.0,5,9,0.3559383066739184,0.84814733623894,0.9358343520216504,8.0,264.0
 hurricane_melissa_aftermath_2025_11_03,melissa,hurricane,EVAC,0.3421497483762107,64.0,3,8,0.08931786395325769,0.05460173081728966,0.9306654553846969,8.0,376.0
 hurricane_milton_across_florida_us,milton_fl,hurricane,INFL,0.14026091970829224,64.0,3,6,0.2091651414158482,0.641606270610107,0.6298260700785984,24.0,72.0
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,india_monsoon_season_s,monsoon,INFL,0.37435637926550475,536.0,1,37,,,,8.0,8.0
 line_fire_southern_california_9_september_2024,line_fire,wildfire,INFL,0.11380356812147989,280.0,2,2,,,,24.0,48.0
 moldova_flooding_2024,moldova,flood,INFL,0.06299469886468742,448.0,4,8,0.18283202892269831,0.15519735361140136,0.8763066217453457,24.0,96.0
+pakistan_monsoon_season_study_sindh_2024_05_09,pakistan_monsoon_seaso,monsoon,NEUTRAL,0.10811436994722916,824.0,1,1,,,,8.0,8.0
 park_fire_2024,park_fire1,wildfire,INFL,0.05971293563843387,376.0,0,0,,,,,
 park_fire_california_29_july_2024,park_fire2,wildfire,NEUTRAL,0.03320846854836,280.0,2,2,,,,24.0,48.0
 spain_flood,spain_flood,flood,INFL,0.16151920612811863,104.0,1,15,,,,8.0,8.0
@@ -33,5 +36,6 @@ tropical_storm_kristine_in_bicol_and_calabarzon_philippines,kristine_ph,tropical
 tropical_storm_yagi_philippines_2_september_2024,yagi_ph,tropical_storm,EVAC,0.08850171957692196,280.0,1,2,,,,24.0,24.0
 turkiye_earthquake_2023,turkiye,earthquake,INFL,0.40114008822652447,16.0,4,34,0.2228386744457223,0.4673588092926708,0.9593725850264299,24.0,96.0
 typhoon_krathon_across_taiwan,krathon_tw,typhoon,INFL,0.13430304258593542,-8.0,2,11,,,,24.0,48.0
+typhoon_nika_across_northern_luzon_philippines,nika_ph,typhoon,INFL,0.1356138421512193,24.0,1,1,,,,8.0,8.0
 typhoon_yagi_across_northeastern_vietnam,yagi_vn,typhoon,EVAC,0.25648113051572646,-8.0,5,10,0.8332010653890045,2.3950422130796314,0.9967433972852875,24.0,120.0
 wildfires_in_boise_county_idaho_27_august_2024,boise_fire,wildfire,INFL,0.13709144407795817,136.0,3,8,0.18092357932915537,-0.33301343807966693,0.810094971072026,24.0,72.0
