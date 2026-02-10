@@ -232,11 +232,12 @@ def _compute_dt_timeseries(
     return out
 
 
-def _pick_peak(ts: pd.DataFrame, *, peak_min_hours: float, peak_max_hours: float | None) -> tuple[float, float]:
+def _pick_peak(ts: pd.DataFrame, *, peak_min_hours: float | None, peak_max_hours: float | None) -> tuple[float, float]:
     if ts.empty:
         return float("nan"), float("nan")
     sub = ts.copy()
-    sub = sub[pd.to_numeric(sub["hours_since_quake"], errors="coerce") >= float(peak_min_hours)].copy()
+    if peak_min_hours is not None:
+        sub = sub[pd.to_numeric(sub["hours_since_quake"], errors="coerce") >= float(peak_min_hours)].copy()
     if peak_max_hours is not None:
         sub = sub[pd.to_numeric(sub["hours_since_quake"], errors="coerce") <= float(peak_max_hours)].copy()
     if sub.empty:
@@ -450,7 +451,7 @@ def run(
     min_tiles_overlap: int,
     min_r_bins: int,
     min_near_bins: int,
-    peak_min_hours: float,
+    peak_min_hours: float | None,
     peak_max_hours: float | None,
     D_peak_min: float,
     min_time_windows: int,
@@ -497,7 +498,7 @@ def run(
             min_near_bins=int(min_near_bins),
         )
 
-        t_peak, D_peak = _pick_peak(ts, peak_min_hours=float(peak_min_hours), peak_max_hours=peak_max_hours)
+        t_peak, D_peak = _pick_peak(ts, peak_min_hours=peak_min_hours, peak_max_hours=peak_max_hours)
         event_type, near_mean = _classify_event(
             ts,
             D_peak=float(D_peak),
@@ -928,7 +929,7 @@ def run(
         "min_tiles_overlap": int(min_tiles_overlap),
         "min_r_bins": int(min_r_bins),
         "min_near_bins": int(min_near_bins),
-        "peak_min_hours": float(peak_min_hours),
+        "peak_min_hours": (float(peak_min_hours) if peak_min_hours is not None else None),
         "peak_max_hours": (float(peak_max_hours) if peak_max_hours is not None else None),
         "D_peak_min": float(D_peak_min),
         "min_time_windows": int(min_time_windows),
@@ -954,7 +955,7 @@ def cli_main() -> None:
     p.add_argument("--min-r-bins", type=int, default=5)
     p.add_argument("--min-near-bins", type=int, default=2)
 
-    p.add_argument("--peak-min-hours", type=float, default=0.0)
+    p.add_argument("--peak-min-hours", type=float, default=None, help="peak 搜索的最小 t（小时）。默认不限制（允许灾前 peak）。")
     p.add_argument("--peak-max-hours", type=float, default=None)
     p.add_argument("--D-peak-min", type=float, default=0.03)
     p.add_argument("--min-time-windows", type=int, default=5)
@@ -975,7 +976,7 @@ def cli_main() -> None:
         min_tiles_overlap=int(args.min_tiles_overlap),
         min_r_bins=int(args.min_r_bins),
         min_near_bins=int(args.min_near_bins),
-        peak_min_hours=float(args.peak_min_hours),
+        peak_min_hours=args.peak_min_hours,
         peak_max_hours=(float(args.peak_max_hours) if args.peak_max_hours is not None else None),
         D_peak_min=float(args.D_peak_min),
         min_time_windows=int(args.min_time_windows),

@@ -6,7 +6,7 @@
   "min_tiles_overlap": 3,
   "min_r_bins": 5,
   "min_near_bins": 2,
-  "peak_min_hours": 0.0,
+  "peak_min_hours": null,
   "peak_max_hours": null,
   "D_peak_min": 0.03,
   "min_time_windows": 5,
