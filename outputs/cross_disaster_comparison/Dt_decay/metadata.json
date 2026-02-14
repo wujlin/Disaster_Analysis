@@ -13,6 +13,13 @@
   "peak_frac": 0.5,
   "near_thresh": 0.02,
   "mono_tol_up": 1.05,
+  "route_b_min_n_mono": 3,
+  "route_b_low_r2_threshold": 0.6,
+  "route_b_exclude_slugs": [
+    "hurricane_melissa_aftermath_2025_11_03",
+    "the_flooding_across_rio_grande_do_sul_state_brazil"
+  ],
+  "route_b_teach_highlight_slugs": [],
   "slugs": [
     "flooding_in_central_and_eastern_europe_sept_16_2024",
     "global_earthquake_model_research_2025_sep_18",

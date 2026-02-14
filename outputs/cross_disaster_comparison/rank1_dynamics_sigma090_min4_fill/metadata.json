@@ -1,0 +1,36 @@
+{
+  "n_events": 14,
+  "value_col": "phi_overlap",
+  "r_max_km": 200.0,
+  "time_min": null,
+  "time_max": null,
+  "complete_only": 0,
+  "sigma1_threshold": 0.9,
+  "fit_mode": "from_peak",
+  "fit_tmin_hours": 24.0,
+  "min_fit_points": 4,
+  "roots": [
+    "outputs/_runs/trackpath/v3",
+    "outputs/_runs/trackpath/v4_yagi_fix"
+  ],
+  "events": [
+    "outputs:turkiye_earthquake_2023"
+  ],
+  "slugs": [
+    "hurricane_beryl_across_quintana_roo_and_yucatan_mexico",
+    "hurricane_beryl_across_southeastern_texas_us",
+    "hurricane_beryl_pre_landfall_2024",
+    "hurricane_ernesto_puerto_rico_14_august_2024",
+    "hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024",
+    "hurricane_john_across_southeastern_guerrero_mexico",
+    "hurricane_john_southern_mexico_25_september_2024",
+    "hurricane_milton_across_florida_us",
+    "tropical_storm_debby_united_states_pre_landfall_4_august_2024",
+    "tropical_storm_kristine_in_bicol_and_calabarzon_philippines",
+    "tropical_storm_yagi_philippines_2_september_2024",
+    "turkiye_earthquake_2023",
+    "typhoon_krathon_across_taiwan",
+    "typhoon_yagi_across_northeastern_vietnam"
+  ],
+  "exclude_slugs": []
+}

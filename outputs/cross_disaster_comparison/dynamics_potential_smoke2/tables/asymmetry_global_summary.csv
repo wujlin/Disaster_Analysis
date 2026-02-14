@@ -1,0 +1,2 @@
+n_events_total,n_events_with_both_types,ratio_median,ratio_ci2p5,ratio_ci97p5,ratio_gt1_fraction,wilcoxon_stat_infl_gt_evac,wilcoxon_p_infl_gt_evac
+3,3,0.32073407462715314,0.1641158035475306,1.3154883172619538,0.3333333333333333,2.0,0.75

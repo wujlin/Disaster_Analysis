@@ -246,6 +246,8 @@ def run(
     fit_mode: str,
     fit_tmin_hours: float,
     min_fit_points: int,
+    slugs: list[str],
+    exclude_slugs: list[str],
 ) -> None:
     out_dir = Path(out_dir)
     tabs = out_dir / "tables"
@@ -268,7 +270,16 @@ def run(
 
     ts_rows: list[dict] = []
     fit_rows: list[dict] = []
-    for slug in sorted(refs.keys()):
+    want = [str(s).strip() for s in (slugs or []) if str(s).strip()]
+    if want and len(want) == 1 and want[0].lower() == "all":
+        want = []
+    if not want:
+        want = sorted(refs.keys())
+    exclude = {str(s).strip() for s in (exclude_slugs or []) if str(s).strip()}
+    if exclude:
+        want = [s for s in want if s not in exclude]
+
+    for slug in want:
         ref = refs[slug]
         name, event_type = _load_metadata(ref.output_root, ref.slug)
         df = _load_phi_rt_long(ref.output_root, ref.slug)
@@ -348,7 +359,7 @@ def run(
     fit_df.to_csv(tabs / "g1_powerlaw_fits.csv", index=False)
 
     meta = {
-        "n_events": int(len(refs)),
+        "n_events": int(len(want)),
         "value_col": value_col,
         "r_max_km": float(r_max_km),
         "time_min": time_min,
@@ -360,6 +371,8 @@ def run(
         "min_fit_points": int(min_fit_points),
         "roots": [str(r) for r in roots],
         "events": [f"{str(e.output_root)}:{e.slug}" for e in events],
+        "slugs": want,
+        "exclude_slugs": sorted(exclude),
     }
     (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -426,6 +439,8 @@ def cli_main() -> None:
     p.add_argument("--event", type=str, action="append", default=None, help="额外指定单个事件：<output_root>:<slug>（可重复）")
     p.add_argument("--out-dir", type=Path, default=Path("outputs/cross_disaster_comparison/rank1_dynamics"))
     p.add_argument("--value-col", type=str, default="phi_overlap", choices=["phi_overlap", "phi_aggregate"])
+    p.add_argument("--slugs", type=str, nargs="*", default=[], help="可选：只跑指定 slugs（空或 all=自动发现）")
+    p.add_argument("--exclude-slugs", type=str, nargs="*", default=[], help="可选：剔除指定 slugs")
     p.add_argument("--r-max-km", type=float, default=200.0)
     p.add_argument("--time-min", type=float, default=None)
     p.add_argument("--time-max", type=float, default=None)
@@ -457,6 +472,8 @@ def cli_main() -> None:
         events=events,
         out_dir=Path(args.out_dir),
         value_col=str(args.value_col),
+        slugs=list(args.slugs or []),
+        exclude_slugs=list(args.exclude_slugs or []),
         r_max_km=float(args.r_max_km),
         time_min=(float(args.time_min) if args.time_min is not None else None),
         time_max=(float(args.time_max) if args.time_max is not None else None),
@@ -470,4 +487,3 @@ def cli_main() -> None:
 
 if __name__ == "__main__":
     cli_main()
-
