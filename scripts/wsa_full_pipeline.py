@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import shlex
 import subprocess
@@ -68,6 +69,35 @@ def _run_step(step: Step, *, cwd: Path, log_dir: Path, master_log: Path) -> int:
     return rc
 
 
+def _check_catalog_report(report_csv: Path, *, allow_missing_events: bool) -> tuple[int, int]:
+    if not report_csv.exists():
+        raise SystemExit(f"未找到 catalog 校验报告：{report_csv}")
+
+    total = 0
+    ready = 0
+    with report_csv.open("r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            total += 1
+            v = str(row.get("ready_for_phi_heatmap", row.get("path_exists", "0"))).strip()
+            try:
+                ok = int(float(v))
+            except Exception:
+                ok = 0
+            if ok == 1:
+                ready += 1
+    missing = max(0, total - ready)
+    if total <= 0:
+        raise SystemExit(f"catalog 校验报告为空：{report_csv}")
+    if (not allow_missing_events) and missing > 0:
+        raise SystemExit(
+            f"检测到数据不一致：catalog 共 {total} 个事件，可运行 {ready}，缺失 {missing}。"
+            f"\n请先查看 {report_csv} 修复路径后再跑。"
+            f"\n如你确认要跳过缺失事件，可加 `--allow-missing-events 1`。"
+        )
+    return total, ready
+
+
 def build_steps(args: argparse.Namespace) -> list[Step]:
     py = sys.executable
     steps: list[Step] = []
@@ -118,6 +148,8 @@ def build_steps(args: argparse.Namespace) -> list[Step]:
                 str(args.distance_bin_km),
                 "--max-distance-km",
                 str(args.max_distance_km),
+                "--on-error",
+                "fail",
             ],
         )
     )
@@ -187,6 +219,12 @@ def cli_main() -> None:
         default=Path("Docs/cross_disaster_catalog_extended_wsa_existing_only.csv"),
     )
     p.add_argument("--catalog-report", type=Path, default=Path("Docs/cross_disaster_catalog_extended_wsa_path_check.csv"))
+    p.add_argument(
+        "--allow-missing-events",
+        type=int,
+        default=0,
+        help="0=严格要求catalog全部事件就绪（默认）；1=允许缺失事件，仅跑existing_only子集",
+    )
 
     p.add_argument("--output-root", type=Path, default=Path("outputs"))
     p.add_argument("--distance-mode", type=str, choices=["radial", "path"], default="radial")
@@ -252,6 +290,15 @@ def cli_main() -> None:
             _write_json(run_dir / "status.json", status)
             print(f"[{_now()}] pipeline failed at {step.name}, exit={rc}")
             sys.exit(rc)
+        if step.name == "01_remap_catalog":
+            total, ready = _check_catalog_report(
+                project_root / args.catalog_report,
+                allow_missing_events=bool(int(args.allow_missing_events)),
+            )
+            msg = f"[{_now()}] catalog readiness: total={total}, ready={ready}, missing={max(0, total-ready)}"
+            print(msg)
+            with master_log.open("a", encoding="utf-8") as m:
+                m.write(msg + "\n")
 
     status["status"] = "success"
     status["finished_at"] = _now()

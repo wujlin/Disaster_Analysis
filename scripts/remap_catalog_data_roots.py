@@ -47,6 +47,18 @@ def _first_exists(paths: list[Path]) -> Path | None:
     return None
 
 
+def _has_population_csv(root: Path) -> bool:
+    checks = [
+        root / "population",
+        root / "raw" / "population",
+        root / "Facebook_Population_During_Crisis" / "raw",
+    ]
+    for p in checks:
+        if p.exists() and p.is_dir() and any(p.glob("*.csv")):
+            return True
+    return False
+
+
 def _resolve_one(
     row: pd.Series,
     *,
@@ -108,6 +120,7 @@ def run(
     facebook_root: Path,
     datasets_root: Path,
     prefer: str,
+    require_population_csv: bool,
 ) -> None:
     if not catalog_in.exists():
         raise FileNotFoundError(f"未找到 catalog：{catalog_in}")
@@ -134,6 +147,8 @@ def run(
         rr["data_root_old"] = str(row.get("data_root", ""))
         rr["data_root"] = str(new_root) if new_root is not None else str(row.get("data_root", ""))
         rr["path_exists"] = int(new_root is not None and Path(new_root).exists())
+        rr["has_population_csv"] = int(new_root is not None and _has_population_csv(Path(new_root)))
+        rr["ready_for_phi_heatmap"] = int(rr["path_exists"] == 1 and (rr["has_population_csv"] == 1 or not bool(require_population_csv)))
         rr["resolved_source"] = str(source)
         rr["resolved_folder"] = str(folder)
         out_rows.append(rr)
@@ -142,11 +157,11 @@ def run(
     out.to_csv(catalog_out, index=False)
     out.to_csv(report_out, index=False)
 
-    keep = out[out["path_exists"] == 1].copy()
-    keep = keep.drop(columns=["path_exists", "resolved_source", "resolved_folder"], errors="ignore")
+    keep = out[out["ready_for_phi_heatmap"] == 1].copy()
+    keep = keep.drop(columns=["path_exists", "has_population_csv", "ready_for_phi_heatmap", "resolved_source", "resolved_folder"], errors="ignore")
     keep.to_csv(existing_only_out, index=False)
 
-    missing = out[out["path_exists"] == 0].copy()
+    missing = out[out["ready_for_phi_heatmap"] == 0].copy()
     print(f"total={len(out)}")
     print(f"exists={len(keep)}")
     print(f"missing={len(missing)}")
@@ -173,6 +188,12 @@ def cli_main() -> None:
     p.add_argument("--facebook-root", type=Path, required=True)
     p.add_argument("--datasets-root", type=Path, required=True)
     p.add_argument("--prefer", type=str, choices=["facebook", "datasets"], default="facebook")
+    p.add_argument(
+        "--require-population-csv",
+        type=int,
+        default=1,
+        help="1=仅将包含 population CSV 的目录写入 existing-only（默认 1）",
+    )
     args = p.parse_args()
 
     run(
@@ -183,6 +204,7 @@ def cli_main() -> None:
         facebook_root=Path(args.facebook_root),
         datasets_root=Path(args.datasets_root),
         prefer=str(args.prefer),
+        require_population_csv=bool(int(args.require_population_csv)),
     )
 
 

@@ -37,7 +37,7 @@ export DS_ROOT=$PROJ_ROOT/datasets
 它会自动做三件事：
 - 优先从 `FB_ROOT` 匹配目录；
 - 对缺失项回退到 `DS_ROOT`（已覆盖 5 个补充事件）；
-- 生成“全量映射表 + 仅存在路径子集 + 校验报告”。
+- 生成“全量映射表 + 仅存在且含 population CSV 的子集 + 校验报告”。
 
 执行命令：
 
@@ -64,6 +64,7 @@ python scripts/cross_disaster_phi_heatmap.py \
   --catalog Docs/cross_disaster_catalog_extended_wsa_existing_only.csv \
   --output-root outputs \
   --distance-mode radial \
+  --on-error fail \
   --hours-pt 0 8 16 \
   --min-hours -16 \
   --max-hours 832 \
@@ -105,7 +106,8 @@ python scripts/dynamics_potential.py \
 python scripts/wsa_full_pipeline.py \
   --project-root /home/jinlin/projects/Disaster_Analysis \
   --facebook-root /home/jinlin/data/Facebook_Disaster \
-  --datasets-root /home/jinlin/projects/Disaster_Analysis/datasets
+  --datasets-root /home/jinlin/projects/Disaster_Analysis/datasets \
+  --allow-missing-events 0
 ```
 
 它会自动执行：
@@ -131,6 +133,7 @@ nohup python scripts/wsa_full_pipeline.py \
   --project-root /home/jinlin/projects/Disaster_Analysis \
   --facebook-root /home/jinlin/data/Facebook_Disaster \
   --datasets-root /home/jinlin/projects/Disaster_Analysis/datasets \
+  --allow-missing-events 0 \
   > /tmp/wsa_full_pipeline_stdout.log 2>&1 &
 
 echo $!   # 记录 PID
