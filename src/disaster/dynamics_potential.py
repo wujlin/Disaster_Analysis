@@ -293,35 +293,115 @@ def _exp_model(t: np.ndarray, A: float, tau: float, C: float) -> np.ndarray:
     return A * np.exp(-np.asarray(t, dtype=float) / np.clip(float(tau), 1e-8, np.inf)) + C
 
 
+def _exp_model_c0(t: np.ndarray, A: float, tau: float) -> np.ndarray:
+    return A * np.exp(-np.asarray(t, dtype=float) / np.clip(float(tau), 1e-8, np.inf))
+
+
 def _fit_exp_abs(t: np.ndarray, y: np.ndarray) -> dict:
     tt = np.asarray(t, dtype=float)
     yy = np.asarray(y, dtype=float)
     ok = np.isfinite(tt) & np.isfinite(yy) & (tt > 0) & (yy >= 0)
     tt = tt[ok]
     yy = yy[ok]
-    if tt.size < 4:
+    if tt.size < 2:
         return {"ok": 0}
 
     A0 = float(max(yy[0] - yy[-1], 1e-3))
     tau0 = float(max(np.median(tt), 1.0))
     C0 = float(max(min(yy[-1], yy[0]), 0.0))
-    try:
-        popt, _ = curve_fit(
-            _exp_model,
-            tt,
-            yy,
-            p0=(A0, tau0, C0),
-            bounds=([0.0, 1e-3, 0.0], [5.0, 1e5, 5.0]),
-            maxfev=20000,
-        )
-        A, tau, C = float(popt[0]), float(popt[1]), float(popt[2])
-        yh = _exp_model(tt, A, tau, C)
-        sse = float(np.sum(np.square(yy - yh)))
-        sst = float(np.sum(np.square(yy - float(np.mean(yy))))) if yy.size else float("nan")
-        r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
-        return {"ok": 1, "A": A, "tau": tau, "C": C, "r2": r2, "n_points": int(tt.size), "sse": sse}
-    except Exception:
-        return {"ok": 0}
+    # 1) full model (A, tau, C)
+    if tt.size >= 4:
+        try:
+            popt, _ = curve_fit(
+                _exp_model,
+                tt,
+                yy,
+                p0=(A0, tau0, C0),
+                bounds=([0.0, 1e-3, 0.0], [5.0, 1e5, 5.0]),
+                maxfev=20000,
+            )
+            A, tau, C = float(popt[0]), float(popt[1]), float(popt[2])
+            yh = _exp_model(tt, A, tau, C)
+            sse = float(np.sum(np.square(yy - yh)))
+            sst = float(np.sum(np.square(yy - float(np.mean(yy))))) if yy.size else float("nan")
+            r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
+            return {
+                "ok": 1,
+                "A": A,
+                "tau": tau,
+                "C": C,
+                "r2": r2,
+                "n_points": int(tt.size),
+                "sse": sse,
+                "fit_method": "exp3",
+            }
+        except Exception:
+            pass
+
+    # 2) reduced model (A, tau), C fixed to 0
+    if tt.size >= 3:
+        try:
+            popt, _ = curve_fit(
+                _exp_model_c0,
+                tt,
+                yy,
+                p0=(max(float(np.nanmax(yy)), 1e-4), tau0),
+                bounds=([0.0, 1e-3], [5.0, 1e5]),
+                maxfev=20000,
+            )
+            A, tau = float(popt[0]), float(popt[1])
+            C = 0.0
+            yh = _exp_model_c0(tt, A, tau)
+            sse = float(np.sum(np.square(yy - yh)))
+            sst = float(np.sum(np.square(yy - float(np.mean(yy))))) if yy.size else float("nan")
+            r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
+            return {
+                "ok": 1,
+                "A": A,
+                "tau": tau,
+                "C": C,
+                "r2": r2,
+                "n_points": int(tt.size),
+                "sse": sse,
+                "fit_method": "exp2_c0",
+            }
+        except Exception:
+            pass
+
+    # 3) two-point closed-form tau with C=0 (last-resort to avoid dropping event)
+    #    tau_ij = -(dt) / ln(yj/yi), valid only when yi>yj>0
+    if tt.size >= 2:
+        ord_idx = np.argsort(tt)
+        t2 = tt[ord_idx]
+        y2 = yy[ord_idx]
+        taus = []
+        for i in range(y2.size - 1):
+            yi = float(y2[i])
+            yj = float(y2[i + 1])
+            dt = float(t2[i + 1] - t2[i])
+            if yi > 0 and yj > 0 and yj < yi and dt > 0:
+                val = -dt / np.log(yj / yi)
+                if np.isfinite(val) and val > 1e-3:
+                    taus.append(float(val))
+        if taus:
+            tau = float(np.median(np.asarray(taus, dtype=float)))
+            A = float(np.median(y2 * np.exp(t2 / max(tau, 1e-6))))
+            C = 0.0
+            yh = _exp_model_c0(t2, A, tau)
+            sse = float(np.sum(np.square(y2 - yh)))
+            sst = float(np.sum(np.square(y2 - float(np.mean(y2))))) if y2.size else float("nan")
+            r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
+            return {
+                "ok": 1,
+                "A": A,
+                "tau": tau,
+                "C": C,
+                "r2": r2,
+                "n_points": int(t2.size),
+                "sse": sse,
+                "fit_method": "exp2_closed_form",
+            }
+    return {"ok": 0}
 
 
 def _monotone_segment(t: np.ndarray, y: np.ndarray, tol_up: float = 1.05) -> tuple[np.ndarray, np.ndarray]:
@@ -699,6 +779,7 @@ def run(
     sim_validation_batches: int,
     seed: int,
     run_until_exp: int,
+    exp2_require_all_events: bool,
 ) -> None:
     output_root = Path(output_root)
     out_dir = Path(out_dir)
@@ -785,6 +866,7 @@ def run(
                     "r2": float(fit.get("r2", float("nan"))),
                     "n_points": int(fit.get("n_points", int(np.sum(np.isfinite(tp) & np.isfinite(yp) & (tp > 0) & (yp >= 0))))),
                     "fit_ok": int(fit.get("ok", 0)),
+                    "tau_fit_method": str(fit.get("fit_method", "")),
                     "daily_avg_applied": int(daily_applied),
                     "median_step_hours_raw": float(med_step),
                 }
@@ -947,6 +1029,34 @@ def run(
     nl_df = pd.DataFrame(nl_rows)
     nl_df.to_csv(tabs / "nonlinearity_test.csv", index=False)
     ev_df.to_csv(tabs / "nonlinearity_event_level.csv", index=False)
+
+    # Route B 口径下，实验2事件级结果默认要求覆盖全部入样事件；否则直接报错，避免静默不一致
+    all_events = sorted(bin_df["slug"].dropna().astype(str).unique().tolist())
+    ev_events = sorted(ev_df["slug"].dropna().astype(str).unique().tolist()) if not ev_df.empty else []
+    ev_set = set(ev_events)
+    missing_exp2 = [s for s in all_events if s not in ev_set]
+    diag_rows = []
+    for s in missing_exp2:
+        g = bin_df[bin_df["slug"].astype(str) == s].copy()
+        x = pd.to_numeric(g["delta0_abs"], errors="coerce")
+        y = pd.to_numeric(g["tau"], errors="coerce")
+        ok = x.notna() & y.notna()
+        diag_rows.append(
+            {
+                "slug": str(s),
+                "n_rows": int(g.shape[0]),
+                "n_valid_xy": int(ok.sum()),
+                "sum_abs_delta0_valid": float(x[ok].sum()) if int(ok.sum()) > 0 else 0.0,
+            }
+        )
+    pd.DataFrame(diag_rows).to_csv(tabs / "exp2_coverage_diagnostics.csv", index=False)
+    if bool(exp2_require_all_events) and bool(use_route_b_selected) and missing_exp2:
+        raise SystemExit(
+            "实验2事件级结果覆盖不足："
+            f"expect={len(all_events)}, got={len(ev_events)}, missing={missing_exp2}。"
+            f"详情见 {tabs / 'exp2_coverage_diagnostics.csv'}"
+        )
+
     if run_until <= 2:
         meta = {
             "output_root": str(output_root),
@@ -955,6 +1065,7 @@ def run(
             "events": [e.slug for e in events],
             "use_route_b_selected": bool(use_route_b_selected),
             "run_until_exp": int(run_until),
+            "exp2_require_all_events": bool(exp2_require_all_events),
             "seed": int(seed),
         }
         (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -1413,6 +1524,7 @@ def run(
         "events": [e.slug for e in events],
         "use_route_b_selected": bool(use_route_b_selected),
         "run_until_exp": int(run_until),
+        "exp2_require_all_events": bool(exp2_require_all_events),
         "r_max_km": float(r_max_km),
         "min_tiles_overlap": int(min_tiles_overlap),
         "peak_frac": float(peak_frac),
@@ -1490,6 +1602,7 @@ def cli_main() -> None:
     p.add_argument("--sim-validation-batches", type=int, default=200)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--run-until-exp", type=int, default=4, help="阶段执行：1/2/3/4，默认4（全跑）")
+    p.add_argument("--exp2-require-all-events", type=int, default=1, help="1=实验2事件级必须覆盖全部Route B事件，否则报错")
 
     args = p.parse_args()
     run(
@@ -1522,6 +1635,7 @@ def cli_main() -> None:
         sim_validation_batches=int(args.sim_validation_batches),
         seed=int(args.seed),
         run_until_exp=int(args.run_until_exp),
+        exp2_require_all_events=bool(int(args.exp2_require_all_events)),
     )
 
 
