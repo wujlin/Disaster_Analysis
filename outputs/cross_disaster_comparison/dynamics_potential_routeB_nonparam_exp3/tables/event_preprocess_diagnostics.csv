@@ -1,8 +1,8 @@
 slug,short_name,n_bins_used,t_peak_source,t_peak_hours_used,daily_avg_applied,median_step_hours_raw
 flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,21,preferred_snap,416.0,1,8.0
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,21,preferred_snap,-8.0,0,24.0
-hurricane_beryl_across_southeastern_texas_us,beryl_tx,21,preferred_snap,-8.0,0,24.0
-hurricane_beryl_pre_landfall_2024,beryl_pre,15,preferred_snap,16.0,0,24.0
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,21,fallback_short_series_first,-8.0,1,8.0
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,21,fallback_short_series_first,-8.0,1,8.0
+hurricane_beryl_pre_landfall_2024,beryl_pre,13,fallback_short_series_first,-8.0,1,8.0
 hurricane_john_across_southeastern_guerrero_mexico,john_gue,21,preferred_snap,-8.0,0,24.0
 hurricane_john_southern_mexico_25_september_2024,john_sm,21,preferred_snap,136.0,0,24.0
 hurricane_milton_across_florida_us,milton_fl,21,preferred_snap,64.0,0,24.0

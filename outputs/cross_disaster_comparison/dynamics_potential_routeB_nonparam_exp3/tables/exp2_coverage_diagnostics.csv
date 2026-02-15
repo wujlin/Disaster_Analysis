@@ -1,1 +1,4 @@
 slug,n_rows,n_valid_xy,n_positive_abs_delta0_valid,sum_abs_delta0_valid,participated_exp2_event_level,exclude_reason
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,21,0,0,0.0,0,no_valid_tau_pairs
+hurricane_beryl_across_southeastern_texas_us,21,0,0,0.0,0,no_valid_tau_pairs
+hurricane_beryl_pre_landfall_2024,13,0,0,0.0,0,no_valid_tau_pairs
