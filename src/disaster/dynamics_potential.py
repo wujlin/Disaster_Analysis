@@ -276,8 +276,8 @@ def _resolve_t_peak_for_postfit(
         idx_best = int(idx_candidates[np.nanargmax(d[idx_candidates])])
         return float(t[idx_best]), D_peak_global, "fallback_local_peak"
 
-    idx_global = int(np.nanargmax(d))
-    return float(t[idx_global]), D_peak_global, "fallback_global_peak"
+    # 序列过短时，优先选最早点以最大化峰后可用点数
+    return float(t[0]), D_peak_global, "fallback_short_series_first"
 
 
 def _classify_bins(
@@ -1057,15 +1057,24 @@ def run(
         ok = np.isfinite(x) & np.isfinite(y)
         x = x[ok]
         y = y[ok]
-        if x.size == 0 or float(np.sum(x)) <= 0:
+        if x.size == 0:
             continue
-        w_tau = float(np.sum(x * y) / np.sum(x))
+        sum_x = float(np.sum(x))
+        if np.isfinite(sum_x) and sum_x > 0:
+            w_tau = float(np.sum(x * y) / sum_x)
+            tau_weight_method = "abs_delta0_weighted"
+        else:
+            w_tau = float(np.nanmean(y))
+            tau_weight_method = "tau_unweighted_fallback"
+        if not np.isfinite(w_tau):
+            continue
         meta = next((m for m in events if m.slug == str(slug)), None)
         ev_rows.append(
             {
                 "slug": str(slug),
                 "short_name": str(meta.short_name if meta else _short_name(str(slug))),
                 "weighted_tau_by_abs_delta0": float(w_tau),
+                "tau_weight_method": str(tau_weight_method),
                 "D_peak": float(meta.D_peak if meta else float("nan")),
                 "near_delta": float(meta.near_delta if meta else float("nan")),
             }
@@ -1096,12 +1105,16 @@ def run(
         x = pd.to_numeric(g["delta0_abs"], errors="coerce")
         y = pd.to_numeric(g["tau"], errors="coerce")
         ok = x.notna() & y.notna()
+        n_valid_xy = int(ok.sum())
+        sum_abs = float(x[ok].sum()) if n_valid_xy > 0 else 0.0
+        n_positive_abs = int((x[ok] > 0).sum()) if n_valid_xy > 0 else 0
         diag_rows.append(
             {
                 "slug": str(s),
                 "n_rows": int(g.shape[0]),
-                "n_valid_xy": int(ok.sum()),
-                "sum_abs_delta0_valid": float(x[ok].sum()) if int(ok.sum()) > 0 else 0.0,
+                "n_valid_xy": int(n_valid_xy),
+                "n_positive_abs_delta0_valid": int(n_positive_abs),
+                "sum_abs_delta0_valid": float(sum_abs),
             }
         )
     pd.DataFrame(diag_rows).to_csv(tabs / "exp2_coverage_diagnostics.csv", index=False)
