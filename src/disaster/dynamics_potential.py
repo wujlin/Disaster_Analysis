@@ -1049,37 +1049,59 @@ def run(
         rho, p, n = _safe_spearman(x, y)
         nl_rows.append({"subset": subset, "n": int(n), "spearman_rho_tau_vs_abs_delta0": float(rho), "spearman_p": float(p)})
 
-    # 事件级加权 tau 与 D_peak
+    # 事件级加权 tau 与 D_peak（标准口径：仅使用 abs_delta0 加权；不做无权重 fallback）
     ev_rows = []
-    for slug, g in bin_df.groupby("slug", sort=True):
+    exp2_report_rows = []
+    all_events = sorted(bin_df["slug"].dropna().astype(str).unique().tolist())
+    for slug in all_events:
+        g = bin_df[bin_df["slug"].astype(str) == str(slug)].copy()
         x = pd.to_numeric(g["delta0_abs"], errors="coerce").to_numpy(dtype=float)
         y = pd.to_numeric(g["tau"], errors="coerce").to_numpy(dtype=float)
         ok = np.isfinite(x) & np.isfinite(y)
         x = x[ok]
         y = y[ok]
-        if x.size == 0:
-            continue
-        sum_x = float(np.sum(x))
-        if np.isfinite(sum_x) and sum_x > 0:
+        n_valid_xy = int(x.size)
+        sum_x = float(np.sum(x)) if n_valid_xy > 0 else 0.0
+        n_positive_abs = int(np.sum(x > 0)) if n_valid_xy > 0 else 0
+        reason = ""
+        participated = 0
+        w_tau = float("nan")
+        if n_valid_xy <= 0:
+            reason = "no_valid_tau_pairs"
+        elif (not np.isfinite(sum_x)) or sum_x <= 0:
+            reason = "nonpositive_abs_delta0_weight_sum"
+        else:
             w_tau = float(np.sum(x * y) / sum_x)
             tau_weight_method = "abs_delta0_weighted"
-        else:
-            w_tau = float(np.nanmean(y))
-            tau_weight_method = "tau_unweighted_fallback"
-        if not np.isfinite(w_tau):
-            continue
-        meta = next((m for m in events if m.slug == str(slug)), None)
-        ev_rows.append(
+            if np.isfinite(w_tau):
+                participated = 1
+                meta = next((m for m in events if m.slug == str(slug)), None)
+                ev_rows.append(
+                    {
+                        "slug": str(slug),
+                        "short_name": str(meta.short_name if meta else _short_name(str(slug))),
+                        "weighted_tau_by_abs_delta0": float(w_tau),
+                        "tau_weight_method": str(tau_weight_method),
+                        "D_peak": float(meta.D_peak if meta else float("nan")),
+                        "near_delta": float(meta.near_delta if meta else float("nan")),
+                    }
+                )
+            else:
+                reason = "weighted_tau_nan"
+
+        exp2_report_rows.append(
             {
                 "slug": str(slug),
-                "short_name": str(meta.short_name if meta else _short_name(str(slug))),
-                "weighted_tau_by_abs_delta0": float(w_tau),
-                "tau_weight_method": str(tau_weight_method),
-                "D_peak": float(meta.D_peak if meta else float("nan")),
-                "near_delta": float(meta.near_delta if meta else float("nan")),
+                "n_rows": int(g.shape[0]),
+                "n_valid_xy": int(n_valid_xy),
+                "n_positive_abs_delta0_valid": int(n_positive_abs),
+                "sum_abs_delta0_valid": float(sum_x) if np.isfinite(sum_x) else float("nan"),
+                "participated_exp2_event_level": int(participated),
+                "exclude_reason": str(reason),
             }
         )
     ev_df = pd.DataFrame(ev_rows)
+    exp2_report_df = pd.DataFrame(exp2_report_rows)
     if not ev_df.empty:
         x = pd.to_numeric(ev_df["weighted_tau_by_abs_delta0"], errors="coerce").to_numpy(dtype=float)
         y = pd.to_numeric(ev_df["D_peak"], errors="coerce").to_numpy(dtype=float)
@@ -1093,31 +1115,14 @@ def run(
     nl_df = pd.DataFrame(nl_rows)
     nl_df.to_csv(tabs / "nonlinearity_test.csv", index=False)
     ev_df.to_csv(tabs / "nonlinearity_event_level.csv", index=False)
+    exp2_report_df.to_csv(tabs / "exp2_participation_report.csv", index=False)
 
     # Route B 口径下，实验2事件级结果默认要求覆盖全部入样事件；否则直接报错，避免静默不一致
-    all_events = sorted(bin_df["slug"].dropna().astype(str).unique().tolist())
     ev_events = sorted(ev_df["slug"].dropna().astype(str).unique().tolist()) if not ev_df.empty else []
     ev_set = set(ev_events)
     missing_exp2 = [s for s in all_events if s not in ev_set]
-    diag_rows = []
-    for s in missing_exp2:
-        g = bin_df[bin_df["slug"].astype(str) == s].copy()
-        x = pd.to_numeric(g["delta0_abs"], errors="coerce")
-        y = pd.to_numeric(g["tau"], errors="coerce")
-        ok = x.notna() & y.notna()
-        n_valid_xy = int(ok.sum())
-        sum_abs = float(x[ok].sum()) if n_valid_xy > 0 else 0.0
-        n_positive_abs = int((x[ok] > 0).sum()) if n_valid_xy > 0 else 0
-        diag_rows.append(
-            {
-                "slug": str(s),
-                "n_rows": int(g.shape[0]),
-                "n_valid_xy": int(n_valid_xy),
-                "n_positive_abs_delta0_valid": int(n_positive_abs),
-                "sum_abs_delta0_valid": float(sum_abs),
-            }
-        )
-    pd.DataFrame(diag_rows).to_csv(tabs / "exp2_coverage_diagnostics.csv", index=False)
+    diag_df = exp2_report_df[exp2_report_df["participated_exp2_event_level"] == 0].copy()
+    diag_df.to_csv(tabs / "exp2_coverage_diagnostics.csv", index=False)
     if bool(exp2_require_all_events) and bool(use_route_b_selected) and missing_exp2:
         raise ValueError(
             "实验2事件级结果覆盖不足："
@@ -1681,7 +1686,7 @@ def cli_main() -> None:
     p.add_argument("--sim-validation-batches", type=int, default=200)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--run-until-exp", type=int, default=4, help="阶段执行：1/2/3/4，默认4（全跑）")
-    p.add_argument("--exp2-require-all-events", type=int, default=1, help="1=实验2事件级必须覆盖全部Route B事件，否则报错")
+    p.add_argument("--exp2-require-all-events", type=int, default=0, help="1=实验2事件级必须覆盖全部Route B事件，否则报错；0=允许缺失并输出原因报告")
 
     args = p.parse_args()
     run(
