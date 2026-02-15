@@ -10,13 +10,13 @@ import numpy as np
 try:
     import pandas as pd
 except ModuleNotFoundError as e:
-    raise SystemExit("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
+    raise ModuleNotFoundError("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 try:
     from scipy.optimize import curve_fit, least_squares
     from scipy.stats import spearmanr, wilcoxon
 except ModuleNotFoundError as e:
-    raise SystemExit("缺少依赖：scipy。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
+    raise ModuleNotFoundError("缺少依赖：scipy。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 
 @dataclass(frozen=True)
@@ -110,14 +110,14 @@ def _load_event_meta(
     route_b_selected_set: set[str] = set()
     if use_route_b_selected:
         if not p_flags.exists():
-            raise SystemExit(f"未找到 Route B 事件标记表：{p_flags}")
+            raise FileNotFoundError(f"未找到 Route B 事件标记表：{p_flags}")
         f = pd.read_csv(p_flags)
         if "route_b_selected" not in f.columns:
-            raise SystemExit(f"{p_flags} 缺少 route_b_selected 列，无法保证口径一致。")
+            raise ValueError(f"{p_flags} 缺少 route_b_selected 列，无法保证口径一致。")
         f["route_b_selected"] = f["route_b_selected"].astype(bool)
         route_b_selected_set = set(f.loc[f["route_b_selected"], "slug"].astype(str).tolist())
         if not route_b_selected_set:
-            raise SystemExit(f"{p_flags} 中 route_b_selected 全为空或全 False，请检查上游筛选结果。")
+            raise ValueError(f"{p_flags} 中 route_b_selected 全为空或全 False，请检查上游筛选结果。")
 
     rows: list[EventMeta] = []
     chosen = {str(s).strip() for s in (selected_slugs or []) if str(s).strip()}
@@ -163,7 +163,7 @@ def _load_phi_rt_long(output_root: Path, slug: str) -> pd.DataFrame:
     need = {"hours_since_quake", "r_bin_km", "phi_overlap", "n_tiles_overlap"}
     miss = sorted(need - set(df.columns))
     if miss:
-        raise SystemExit(f"{p} 缺少列：{miss}")
+        raise ValueError(f"{p} 缺少列：{miss}")
     for c in ["hours_since_quake", "r_bin_km", "phi_overlap", "n_tiles_overlap"]:
         df[c] = pd.to_numeric(df[c], errors="coerce")
     df = df.dropna(subset=["hours_since_quake", "r_bin_km", "phi_overlap", "n_tiles_overlap"]).copy()
@@ -796,7 +796,7 @@ def run(
         route_b_min_n_mono=route_b_min_n_mono,
     )
     if not events:
-        raise SystemExit("没有可用事件（请检查 Dt 表或 --slugs 设置）。")
+        raise ValueError("没有可用事件（请检查 Dt 表或 --slugs 设置）。")
 
     run_until = int(np.clip(int(run_until_exp), 1, 4))
 
@@ -884,7 +884,7 @@ def run(
 
     bin_df = pd.DataFrame(bin_rows)
     if bin_df.empty:
-        raise SystemExit("实验1未产出可用 bin 拟合结果。")
+        raise ValueError("实验1未产出可用 bin 拟合结果。")
     bin_df.to_csv(tabs / "bin_relaxation_times.csv", index=False)
     pd.DataFrame(event_diag_rows).to_csv(tabs / "event_preprocess_diagnostics.csv", index=False)
 
@@ -1051,7 +1051,7 @@ def run(
         )
     pd.DataFrame(diag_rows).to_csv(tabs / "exp2_coverage_diagnostics.csv", index=False)
     if bool(exp2_require_all_events) and bool(use_route_b_selected) and missing_exp2:
-        raise SystemExit(
+        raise ValueError(
             "实验2事件级结果覆盖不足："
             f"expect={len(all_events)}, got={len(ev_events)}, missing={missing_exp2}。"
             f"详情见 {tabs / 'exp2_coverage_diagnostics.csv'}"
