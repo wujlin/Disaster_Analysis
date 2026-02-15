@@ -13,7 +13,7 @@ except ModuleNotFoundError as e:
     raise ModuleNotFoundError("缺少依赖：pandas。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
 try:
-    from scipy.optimize import curve_fit, least_squares
+    from scipy.optimize import least_squares
     from scipy.stats import spearmanr, wilcoxon
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError("缺少依赖：scipy。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
@@ -334,121 +334,6 @@ def _classify_bins(
     return pd.DataFrame(rows)
 
 
-def _exp_model(t: np.ndarray, A: float, tau: float, C: float) -> np.ndarray:
-    return A * np.exp(-np.asarray(t, dtype=float) / np.clip(float(tau), 1e-8, np.inf)) + C
-
-
-def _exp_model_c0(t: np.ndarray, A: float, tau: float) -> np.ndarray:
-    return A * np.exp(-np.asarray(t, dtype=float) / np.clip(float(tau), 1e-8, np.inf))
-
-
-def _fit_exp_abs(t: np.ndarray, y: np.ndarray) -> dict:
-    tt = np.asarray(t, dtype=float)
-    yy = np.asarray(y, dtype=float)
-    ok = np.isfinite(tt) & np.isfinite(yy) & (tt > 0) & (yy >= 0)
-    tt = tt[ok]
-    yy = yy[ok]
-    if tt.size < 2:
-        return {"ok": 0}
-
-    A0 = float(max(yy[0] - yy[-1], 1e-3))
-    tau0 = float(max(np.median(tt), 1.0))
-    C0 = float(max(min(yy[-1], yy[0]), 0.0))
-    # 1) full model (A, tau, C)
-    if tt.size >= 4:
-        try:
-            popt, _ = curve_fit(
-                _exp_model,
-                tt,
-                yy,
-                p0=(A0, tau0, C0),
-                bounds=([0.0, 1e-3, 0.0], [5.0, 1e5, 5.0]),
-                maxfev=20000,
-            )
-            A, tau, C = float(popt[0]), float(popt[1]), float(popt[2])
-            yh = _exp_model(tt, A, tau, C)
-            sse = float(np.sum(np.square(yy - yh)))
-            sst = float(np.sum(np.square(yy - float(np.mean(yy))))) if yy.size else float("nan")
-            r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
-            return {
-                "ok": 1,
-                "A": A,
-                "tau": tau,
-                "C": C,
-                "r2": r2,
-                "n_points": int(tt.size),
-                "sse": sse,
-                "fit_method": "exp3",
-            }
-        except Exception:
-            pass
-
-    # 2) reduced model (A, tau), C fixed to 0
-    if tt.size >= 3:
-        try:
-            popt, _ = curve_fit(
-                _exp_model_c0,
-                tt,
-                yy,
-                p0=(max(float(np.nanmax(yy)), 1e-4), tau0),
-                bounds=([0.0, 1e-3], [5.0, 1e5]),
-                maxfev=20000,
-            )
-            A, tau = float(popt[0]), float(popt[1])
-            C = 0.0
-            yh = _exp_model_c0(tt, A, tau)
-            sse = float(np.sum(np.square(yy - yh)))
-            sst = float(np.sum(np.square(yy - float(np.mean(yy))))) if yy.size else float("nan")
-            r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
-            return {
-                "ok": 1,
-                "A": A,
-                "tau": tau,
-                "C": C,
-                "r2": r2,
-                "n_points": int(tt.size),
-                "sse": sse,
-                "fit_method": "exp2_c0",
-            }
-        except Exception:
-            pass
-
-    # 3) two-point closed-form tau with C=0 (last-resort to avoid dropping event)
-    #    tau_ij = -(dt) / ln(yj/yi), valid only when yi>yj>0
-    if tt.size >= 2:
-        ord_idx = np.argsort(tt)
-        t2 = tt[ord_idx]
-        y2 = yy[ord_idx]
-        taus = []
-        for i in range(y2.size - 1):
-            yi = float(y2[i])
-            yj = float(y2[i + 1])
-            dt = float(t2[i + 1] - t2[i])
-            if yi > 0 and yj > 0 and yj < yi and dt > 0:
-                val = -dt / np.log(yj / yi)
-                if np.isfinite(val) and val > 1e-3:
-                    taus.append(float(val))
-        if taus:
-            tau = float(np.median(np.asarray(taus, dtype=float)))
-            A = float(np.median(y2 * np.exp(t2 / max(tau, 1e-6))))
-            C = 0.0
-            yh = _exp_model_c0(t2, A, tau)
-            sse = float(np.sum(np.square(y2 - yh)))
-            sst = float(np.sum(np.square(y2 - float(np.mean(y2))))) if y2.size else float("nan")
-            r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
-            return {
-                "ok": 1,
-                "A": A,
-                "tau": tau,
-                "C": C,
-                "r2": r2,
-                "n_points": int(t2.size),
-                "sse": sse,
-                "fit_method": "exp2_closed_form",
-            }
-    return {"ok": 0}
-
-
 def _monotone_segment(t: np.ndarray, y: np.ndarray, tol_up: float = 1.05) -> tuple[np.ndarray, np.ndarray]:
     tt = np.asarray(t, dtype=float)
     yy = np.asarray(y, dtype=float)
@@ -487,6 +372,76 @@ def _fit_powerlaw_alpha(t: np.ndarray, y: np.ndarray) -> tuple[float, float]:
     r2 = float(1.0 - sse / sst) if np.isfinite(sst) and sst > 0 else float("nan")
     alpha = float(-slope)
     return alpha, r2
+
+
+def _interp_at(t: np.ndarray, y: np.ndarray, target_h: float) -> float:
+    tt = np.asarray(t, dtype=float)
+    yy = np.asarray(y, dtype=float)
+    ok = np.isfinite(tt) & np.isfinite(yy)
+    tt = tt[ok]
+    yy = yy[ok]
+    if tt.size == 0:
+        return float("nan")
+    ord_idx = np.argsort(tt)
+    tt = tt[ord_idx]
+    yy = yy[ord_idx]
+    if float(target_h) < float(tt[0]) or float(target_h) > float(tt[-1]):
+        return float("nan")
+    return float(np.interp(float(target_h), tt, yy))
+
+
+def _nonparam_relax_metrics(t_post: np.ndarray, y_abs: np.ndarray, delta0_abs: float) -> dict:
+    tp = np.asarray(t_post, dtype=float)
+    yp = np.asarray(y_abs, dtype=float)
+    ok = np.isfinite(tp) & np.isfinite(yp) & (tp > 0) & (yp >= 0)
+    tp = tp[ok]
+    yp = yp[ok]
+    if tp.size == 0:
+        return {
+            "n_post_points": 0,
+            "t50_h": float("nan"),
+            "abs_delta_24h": float("nan"),
+            "abs_delta_72h": float("nan"),
+            "R24_72": float("nan"),
+            "metric_ok_t50": 0,
+            "metric_ok_R24_72": 0,
+            "metric_primary": "",
+        }
+
+    ord_idx = np.argsort(tp)
+    tp = tp[ord_idx]
+    yp = yp[ord_idx]
+
+    t50_h = float("nan")
+    d0 = float(delta0_abs)
+    if np.isfinite(d0) and d0 > 0:
+        thr = 0.5 * d0
+        idx = np.where(yp <= float(thr))[0]
+        if idx.size > 0:
+            t50_h = float(tp[int(idx[0])])
+
+    y24 = _interp_at(tp, yp, 24.0)
+    y72 = _interp_at(tp, yp, 72.0)
+    R24_72 = float("nan")
+    if np.isfinite(y24) and np.isfinite(y72) and y24 > 0:
+        R24_72 = float(y72 / y24)
+
+    metric_primary = ""
+    if np.isfinite(R24_72):
+        metric_primary = "R24_72"
+    elif np.isfinite(t50_h):
+        metric_primary = "t50_h"
+
+    return {
+        "n_post_points": int(tp.size),
+        "t50_h": float(t50_h),
+        "abs_delta_24h": float(y24),
+        "abs_delta_72h": float(y72),
+        "R24_72": float(R24_72),
+        "metric_ok_t50": int(np.isfinite(t50_h)),
+        "metric_ok_R24_72": int(np.isfinite(R24_72)),
+        "metric_primary": str(metric_primary),
+    }
 
 
 def _safe_spearman(x: np.ndarray, y: np.ndarray) -> tuple[float, float, int]:
@@ -897,7 +852,7 @@ def run(
             post = t > float(t_peak_use)
             tp = (t[post] - float(t_peak_use)).astype(float)
             yp = np.abs(d[post]).astype(float)
-            fit = _fit_exp_abs(tp, yp)
+            np_metrics = _nonparam_relax_metrics(tp, yp, float(meta["delta0_abs"]))
             bin_rows.append(
                 {
                     "slug": em.slug,
@@ -913,13 +868,14 @@ def run(
                     "peak_delta_mean": float(meta["peak_delta_mean"]),
                     "delta0_signed": float(meta["delta0_signed"]),
                     "delta0_abs": float(meta["delta0_abs"]),
-                    "tau": float(fit.get("tau", float("nan"))),
-                    "A": float(fit.get("A", float("nan"))),
-                    "C": float(fit.get("C", float("nan"))),
-                    "r2": float(fit.get("r2", float("nan"))),
-                    "n_points": int(fit.get("n_points", int(np.sum(np.isfinite(tp) & np.isfinite(yp) & (tp > 0) & (yp >= 0))))),
-                    "fit_ok": int(fit.get("ok", 0)),
-                    "tau_fit_method": str(fit.get("fit_method", "")),
+                    "n_post_points": int(np_metrics.get("n_post_points", 0)),
+                    "t50_h": float(np_metrics.get("t50_h", float("nan"))),
+                    "abs_delta_24h": float(np_metrics.get("abs_delta_24h", float("nan"))),
+                    "abs_delta_72h": float(np_metrics.get("abs_delta_72h", float("nan"))),
+                    "R24_72": float(np_metrics.get("R24_72", float("nan"))),
+                    "metric_ok_t50": int(np_metrics.get("metric_ok_t50", 0)),
+                    "metric_ok_R24_72": int(np_metrics.get("metric_ok_R24_72", 0)),
+                    "metric_primary": str(np_metrics.get("metric_primary", "")),
                     "daily_avg_applied": int(daily_applied),
                     "median_step_hours_raw": float(med_step),
                 }
@@ -945,11 +901,17 @@ def run(
 
     asym_rows: list[dict] = []
     for slug, g in bin_df.groupby("slug", sort=True):
-        ge = g[(g["bin_type"] == "EVAC") & pd.to_numeric(g["tau"], errors="coerce").notna()].copy()
-        gi = g[(g["bin_type"] == "INFL") & pd.to_numeric(g["tau"], errors="coerce").notna()].copy()
-        tau_e = float(np.nanmedian(pd.to_numeric(ge["tau"], errors="coerce").to_numpy(dtype=float))) if not ge.empty else float("nan")
-        tau_i = float(np.nanmedian(pd.to_numeric(gi["tau"], errors="coerce").to_numpy(dtype=float))) if not gi.empty else float("nan")
-        ratio = float(tau_i / tau_e) if np.isfinite(tau_i) and np.isfinite(tau_e) and tau_e > 0 else float("nan")
+        ge = g[(g["bin_type"] == "EVAC") & pd.to_numeric(g["R24_72"], errors="coerce").notna()].copy()
+        gi = g[(g["bin_type"] == "INFL") & pd.to_numeric(g["R24_72"], errors="coerce").notna()].copy()
+        R_e = float(np.nanmedian(pd.to_numeric(ge["R24_72"], errors="coerce").to_numpy(dtype=float))) if not ge.empty else float("nan")
+        R_i = float(np.nanmedian(pd.to_numeric(gi["R24_72"], errors="coerce").to_numpy(dtype=float))) if not gi.empty else float("nan")
+        ratio = float(R_i / R_e) if np.isfinite(R_i) and np.isfinite(R_e) and R_e > 0 else float("nan")
+        t50_e_arr = pd.to_numeric(ge["t50_h"], errors="coerce").to_numpy(dtype=float) if not ge.empty else np.array([], dtype=float)
+        t50_i_arr = pd.to_numeric(gi["t50_h"], errors="coerce").to_numpy(dtype=float) if not gi.empty else np.array([], dtype=float)
+        t50_e_arr = t50_e_arr[np.isfinite(t50_e_arr)]
+        t50_i_arr = t50_i_arr[np.isfinite(t50_i_arr)]
+        t50_e = float(np.median(t50_e_arr)) if t50_e_arr.size > 0 else float("nan")
+        t50_i = float(np.median(t50_i_arr)) if t50_i_arr.size > 0 else float("nan")
         meta = next((x for x in events if x.slug == str(slug)), None)
         asym_rows.append(
             {
@@ -957,9 +919,11 @@ def run(
                 "short_name": str(meta.short_name if meta else _short_name(str(slug))),
                 "disaster_type": str(meta.disaster_type if meta else ""),
                 "event_type": str(meta.event_type if meta else ""),
-                "tau_median_evac": float(tau_e),
-                "tau_median_infl": float(tau_i),
-                "ratio": float(ratio),
+                "R24_72_median_evac": float(R_e),
+                "R24_72_median_infl": float(R_i),
+                "R24_72_ratio_infl_over_evac": float(ratio),
+                "t50_median_evac_h": float(t50_e),
+                "t50_median_infl_h": float(t50_i),
                 "n_evac_bins": int(ge.shape[0]),
                 "n_infl_bins": int(gi.shape[0]),
                 "near_delta": float(meta.near_delta if meta else float("nan")),
@@ -969,8 +933,11 @@ def run(
     asym_df = pd.DataFrame(asym_rows)
     asym_df.to_csv(tabs / "asymmetry_summary.csv", index=False)
 
-    both = asym_df[pd.to_numeric(asym_df["tau_median_evac"], errors="coerce").notna() & pd.to_numeric(asym_df["tau_median_infl"], errors="coerce").notna()].copy()
-    ratio_arr = pd.to_numeric(both["ratio"], errors="coerce").to_numpy(dtype=float)
+    both = asym_df[
+        pd.to_numeric(asym_df["R24_72_median_evac"], errors="coerce").notna()
+        & pd.to_numeric(asym_df["R24_72_median_infl"], errors="coerce").notna()
+    ].copy()
+    ratio_arr = pd.to_numeric(both["R24_72_ratio_infl_over_evac"], errors="coerce").to_numpy(dtype=float)
     ratio_arr = ratio_arr[np.isfinite(ratio_arr)]
     ratio_median = float(np.nanmedian(ratio_arr)) if ratio_arr.size else float("nan")
     ratio_gt1_frac = float(np.mean(ratio_arr > 1.0)) if ratio_arr.size else float("nan")
@@ -989,8 +956,8 @@ def run(
     if both.shape[0] >= 3:
         try:
             res_w = wilcoxon(
-                pd.to_numeric(both["tau_median_infl"], errors="coerce").to_numpy(dtype=float),
-                pd.to_numeric(both["tau_median_evac"], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(both["R24_72_median_infl"], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(both["R24_72_median_evac"], errors="coerce").to_numpy(dtype=float),
                 alternative="greater",
                 zero_method="wilcox",
             )
@@ -1040,23 +1007,23 @@ def run(
         else:
             ss = bin_df[bin_df["bin_type"].astype(str) == subset].copy()
         x = pd.to_numeric(ss["delta0_abs"], errors="coerce").to_numpy(dtype=float)
-        y = pd.to_numeric(ss["tau"], errors="coerce").to_numpy(dtype=float)
+        y = pd.to_numeric(ss["R24_72"], errors="coerce").to_numpy(dtype=float)
         ok = np.isfinite(x) & np.isfinite(y)
         x = x[ok]
         y = y[ok]
         rho = float("nan")
         p = float("nan")
         rho, p, n = _safe_spearman(x, y)
-        nl_rows.append({"subset": subset, "n": int(n), "spearman_rho_tau_vs_abs_delta0": float(rho), "spearman_p": float(p)})
+        nl_rows.append({"subset": subset, "n": int(n), "spearman_rho_R24_72_vs_abs_delta0": float(rho), "spearman_p": float(p)})
 
-    # 事件级加权 tau 与 D_peak（标准口径：仅使用 abs_delta0 加权；不做无权重 fallback）
+    # 事件级加权 R24_72 与 D_peak（标准口径：仅使用 abs_delta0 加权；不做无权重 fallback）
     ev_rows = []
     exp2_report_rows = []
     all_events = sorted(bin_df["slug"].dropna().astype(str).unique().tolist())
     for slug in all_events:
         g = bin_df[bin_df["slug"].astype(str) == str(slug)].copy()
         x = pd.to_numeric(g["delta0_abs"], errors="coerce").to_numpy(dtype=float)
-        y = pd.to_numeric(g["tau"], errors="coerce").to_numpy(dtype=float)
+        y = pd.to_numeric(g["R24_72"], errors="coerce").to_numpy(dtype=float)
         ok = np.isfinite(x) & np.isfinite(y)
         x = x[ok]
         y = y[ok]
@@ -1067,27 +1034,27 @@ def run(
         participated = 0
         w_tau = float("nan")
         if n_valid_xy <= 0:
-            reason = "no_valid_tau_pairs"
+            reason = "no_valid_R24_72_pairs"
         elif (not np.isfinite(sum_x)) or sum_x <= 0:
             reason = "nonpositive_abs_delta0_weight_sum"
         else:
-            w_tau = float(np.sum(x * y) / sum_x)
-            tau_weight_method = "abs_delta0_weighted"
-            if np.isfinite(w_tau):
+            w_R = float(np.sum(x * y) / sum_x)
+            R_weight_method = "abs_delta0_weighted"
+            if np.isfinite(w_R):
                 participated = 1
                 meta = next((m for m in events if m.slug == str(slug)), None)
                 ev_rows.append(
                     {
                         "slug": str(slug),
                         "short_name": str(meta.short_name if meta else _short_name(str(slug))),
-                        "weighted_tau_by_abs_delta0": float(w_tau),
-                        "tau_weight_method": str(tau_weight_method),
+                        "weighted_R24_72_by_abs_delta0": float(w_R),
+                        "R_weight_method": str(R_weight_method),
                         "D_peak": float(meta.D_peak if meta else float("nan")),
                         "near_delta": float(meta.near_delta if meta else float("nan")),
                     }
                 )
             else:
-                reason = "weighted_tau_nan"
+                reason = "weighted_R24_72_nan"
 
         exp2_report_rows.append(
             {
@@ -1103,7 +1070,7 @@ def run(
     ev_df = pd.DataFrame(ev_rows)
     exp2_report_df = pd.DataFrame(exp2_report_rows)
     if not ev_df.empty:
-        x = pd.to_numeric(ev_df["weighted_tau_by_abs_delta0"], errors="coerce").to_numpy(dtype=float)
+        x = pd.to_numeric(ev_df["weighted_R24_72_by_abs_delta0"], errors="coerce").to_numpy(dtype=float)
         y = pd.to_numeric(ev_df["D_peak"], errors="coerce").to_numpy(dtype=float)
         ok = np.isfinite(x) & np.isfinite(y)
         x = x[ok]
@@ -1111,7 +1078,7 @@ def run(
         rho = float("nan")
         p = float("nan")
         rho, p, n = _safe_spearman(x, y)
-        nl_rows.append({"subset": "event_weighted_tau_vs_Dpeak", "n": int(n), "spearman_rho_tau_vs_abs_delta0": float(rho), "spearman_p": float(p)})
+        nl_rows.append({"subset": "event_weighted_R24_72_vs_Dpeak", "n": int(n), "spearman_rho_R24_72_vs_abs_delta0": float(rho), "spearman_p": float(p)})
     nl_df = pd.DataFrame(nl_rows)
     nl_df.to_csv(tabs / "nonlinearity_test.csv", index=False)
     ev_df.to_csv(tabs / "nonlinearity_event_level.csv", index=False)
@@ -1191,8 +1158,14 @@ def run(
         if len(trajs) == 0:
             continue
         bsub = bin_df[bin_df["slug"].astype(str) == em.slug].copy()
-        tau_guess_e = float(np.nanmedian(pd.to_numeric(bsub.loc[bsub["bin_type"] == "EVAC", "tau"], errors="coerce").to_numpy(dtype=float)))
-        tau_guess_i = float(np.nanmedian(pd.to_numeric(bsub.loc[bsub["bin_type"] == "INFL", "tau"], errors="coerce").to_numpy(dtype=float)))
+        t50_e_arr = pd.to_numeric(bsub.loc[bsub["bin_type"] == "EVAC", "t50_h"], errors="coerce").to_numpy(dtype=float)
+        t50_i_arr = pd.to_numeric(bsub.loc[bsub["bin_type"] == "INFL", "t50_h"], errors="coerce").to_numpy(dtype=float)
+        t50_e_arr = t50_e_arr[np.isfinite(t50_e_arr)]
+        t50_i_arr = t50_i_arr[np.isfinite(t50_i_arr)]
+        t50_e = float(np.median(t50_e_arr)) if t50_e_arr.size > 0 else float("nan")
+        t50_i = float(np.median(t50_i_arr)) if t50_i_arr.size > 0 else float("nan")
+        tau_guess_e = float(t50_e / np.log(2.0)) if np.isfinite(t50_e) and t50_e > 0 else float("nan")
+        tau_guess_i = float(t50_i / np.log(2.0)) if np.isfinite(t50_i) and t50_i > 0 else float("nan")
         fit = _fit_langevin_models(trajs, tau_guess_evac=tau_guess_e, tau_guess_infl=tau_guess_i)
         if int(fit.get("ok", 0)) != 1:
             continue
@@ -1423,36 +1396,46 @@ def run(
         (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
         return
 
-    # Fig 1: tau_infl vs tau_evac
+    # Fig 1: median R24_72 (INFL vs EVAC)
     if not both.empty:
         with ps.paper_style():
             fig, ax = plt.subplots(figsize=(5.4, 4.4))
-            x = pd.to_numeric(both["tau_median_evac"], errors="coerce").to_numpy(dtype=float)
-            y = pd.to_numeric(both["tau_median_infl"], errors="coerce").to_numpy(dtype=float)
+            x = pd.to_numeric(both["R24_72_median_evac"], errors="coerce").to_numpy(dtype=float)
+            y = pd.to_numeric(both["R24_72_median_infl"], errors="coerce").to_numpy(dtype=float)
             ok = np.isfinite(x) & np.isfinite(y) & (x > 0) & (y > 0)
             x = x[ok]
             y = y[ok]
             b2 = both.loc[ok].copy()
             ax.scatter(x, y, s=44, color=ps.OKABE_ITO["blue"], alpha=0.9, linewidths=0)
             for _, r in b2.iterrows():
-                ax.text(float(r["tau_median_evac"]), float(r["tau_median_infl"]), str(r.get("short_name", "")), fontsize=7, ha="left", va="bottom")
+                ax.text(
+                    float(r["R24_72_median_evac"]),
+                    float(r["R24_72_median_infl"]),
+                    str(r.get("short_name", "")),
+                    fontsize=7,
+                    ha="left",
+                    va="bottom",
+                )
             if x.size > 0:
                 lo = float(min(np.min(x), np.min(y)))
                 hi = float(max(np.max(x), np.max(y)))
                 ax.plot([lo, hi], [lo, hi], color=ps.OKABE_ITO["gray"], ls="--", lw=1.2)
             ax.set_xscale("log")
             ax.set_yscale("log")
-            ax.set_xlabel("τ_EVAC (hours)")
-            ax.set_ylabel("τ_INFL (hours)")
-            ax.set_title("Exp-1: Median relaxation time by event")
+            ax.set_xlabel("Median R24_72 (EVAC bins)")
+            ax.set_ylabel("Median R24_72 (INFL bins)")
+            ax.set_title("Exp-1: Nonparametric relaxation asymmetry")
             ps.despine(ax)
             fig.tight_layout()
-            ps.save_figure(fig, figs / "tau_infl_vs_evac_scatter.png", dpi=220)
-            ps.save_figure(fig, figs / "tau_infl_vs_evac_scatter.pdf")
+            ps.save_figure(fig, figs / "R24_72_infl_vs_evac_scatter.png", dpi=220)
+            ps.save_figure(fig, figs / "R24_72_infl_vs_evac_scatter.pdf")
             plt.close(fig)
 
-    # Fig 2: tau vs |delta0|
-    bplot = bin_df[pd.to_numeric(bin_df["tau"], errors="coerce").notna() & pd.to_numeric(bin_df["delta0_abs"], errors="coerce").notna()].copy()
+    # Fig 2: R24_72 vs |delta0|
+    bplot = bin_df[
+        pd.to_numeric(bin_df["R24_72"], errors="coerce").notna()
+        & pd.to_numeric(bin_df["delta0_abs"], errors="coerce").notna()
+    ].copy()
     if not bplot.empty:
         with ps.paper_style():
             fig, ax = plt.subplots(figsize=(5.6, 4.2))
@@ -1460,7 +1443,7 @@ def run(
             for bt, g in bplot.groupby("bin_type", sort=True):
                 ax.scatter(
                     pd.to_numeric(g["delta0_abs"], errors="coerce").to_numpy(dtype=float),
-                    pd.to_numeric(g["tau"], errors="coerce").to_numpy(dtype=float),
+                    pd.to_numeric(g["R24_72"], errors="coerce").to_numpy(dtype=float),
                     s=20,
                     alpha=0.6,
                     linewidths=0,
@@ -1468,14 +1451,14 @@ def run(
                     label=str(bt),
                 )
             ax.set_xlabel("|δ0| at peak")
-            ax.set_ylabel("τ (hours)")
+            ax.set_ylabel("R24_72 = |δ(72h)| / |δ(24h)|")
             ax.set_yscale("log")
-            ax.set_title("Exp-2: τ vs |δ0|")
+            ax.set_title("Exp-2: Nonlinearity with nonparametric relaxation metric")
             ax.legend(frameon=False)
             ps.despine(ax)
             fig.tight_layout()
-            ps.save_figure(fig, figs / "tau_vs_abs_delta0_scatter.png", dpi=220)
-            ps.save_figure(fig, figs / "tau_vs_abs_delta0_scatter.pdf")
+            ps.save_figure(fig, figs / "R24_72_vs_abs_delta0_scatter.png", dpi=220)
+            ps.save_figure(fig, figs / "R24_72_vs_abs_delta0_scatter.pdf")
             plt.close(fig)
 
     # Fig 3a: k_ratio vs delta_near
