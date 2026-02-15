@@ -108,17 +108,16 @@ def _load_event_meta(
     )
 
     route_b_selected_set: set[str] = set()
-    if use_route_b_selected and p_flags.exists():
+    if use_route_b_selected:
+        if not p_flags.exists():
+            raise SystemExit(f"未找到 Route B 事件标记表：{p_flags}")
         f = pd.read_csv(p_flags)
-        if "route_b_selected" in f.columns:
-            f["route_b_selected"] = f["route_b_selected"].astype(bool)
-            route_b_selected_set = set(f.loc[f["route_b_selected"], "slug"].astype(str).tolist())
-        else:
-            f["n_mono"] = pd.to_numeric(f.get("n_mono"), errors="coerce")
-            f["near_delta_peak_windows_mean"] = pd.to_numeric(f.get("near_delta_peak_windows_mean"), errors="coerce")
-            route_b_selected_set = set(
-                f.loc[(f["n_mono"] >= int(route_b_min_n_mono)) & f["near_delta_peak_windows_mean"].notna(), "slug"].astype(str).tolist()
-            )
+        if "route_b_selected" not in f.columns:
+            raise SystemExit(f"{p_flags} 缺少 route_b_selected 列，无法保证口径一致。")
+        f["route_b_selected"] = f["route_b_selected"].astype(bool)
+        route_b_selected_set = set(f.loc[f["route_b_selected"], "slug"].astype(str).tolist())
+        if not route_b_selected_set:
+            raise SystemExit(f"{p_flags} 中 route_b_selected 全为空或全 False，请检查上游筛选结果。")
 
     rows: list[EventMeta] = []
     chosen = {str(s).strip() for s in (selected_slugs or []) if str(s).strip()}
@@ -699,6 +698,7 @@ def run(
     sim_gamma_n: int,
     sim_validation_batches: int,
     seed: int,
+    run_until_exp: int,
 ) -> None:
     output_root = Path(output_root)
     out_dir = Path(out_dir)
@@ -716,6 +716,8 @@ def run(
     )
     if not events:
         raise SystemExit("没有可用事件（请检查 Dt 表或 --slugs 设置）。")
+
+    run_until = int(np.clip(int(run_until_exp), 1, 4))
 
     # -------- 实验 1：逐 bin 弛豫时间 --------
     bin_rows: list[dict] = []
@@ -874,6 +876,24 @@ def run(
         ]
     )
     asym_global.to_csv(tabs / "asymmetry_global_summary.csv", index=False)
+    if run_until <= 1:
+        meta = {
+            "output_root": str(output_root),
+            "dt_tables_dir": str(dt_tables_dir),
+            "n_events": int(len(events)),
+            "events": [e.slug for e in events],
+            "use_route_b_selected": bool(use_route_b_selected),
+            "run_until_exp": int(run_until),
+            "seed": int(seed),
+        }
+        (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        readme = """# 动力学模型输出（阶段运行）
+
+本次仅执行：
+- 实验1：逐 bin 弛豫时间（`bin_relaxation_times.csv`, `asymmetry_summary.csv`）
+"""
+        (out_dir / "README.md").write_text(readme, encoding="utf-8")
+        return
 
     # -------- 实验 2：非线性检验 --------
     nl_rows: list[dict] = []
@@ -927,6 +947,25 @@ def run(
     nl_df = pd.DataFrame(nl_rows)
     nl_df.to_csv(tabs / "nonlinearity_test.csv", index=False)
     ev_df.to_csv(tabs / "nonlinearity_event_level.csv", index=False)
+    if run_until <= 2:
+        meta = {
+            "output_root": str(output_root),
+            "dt_tables_dir": str(dt_tables_dir),
+            "n_events": int(len(events)),
+            "events": [e.slug for e in events],
+            "use_route_b_selected": bool(use_route_b_selected),
+            "run_until_exp": int(run_until),
+            "seed": int(seed),
+        }
+        (out_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        readme = """# 动力学模型输出（阶段运行）
+
+本次仅执行：
+- 实验1：逐 bin 弛豫时间（`bin_relaxation_times.csv`, `asymmetry_summary.csv`）
+- 实验2：非线性检验（`nonlinearity_test.csv`, `nonlinearity_event_level.csv`）
+"""
+        (out_dir / "README.md").write_text(readme, encoding="utf-8")
+        return
 
     # -------- 实验 3：势模型拟合 --------
     fit_rows: list[dict] = []
@@ -1373,6 +1412,7 @@ def run(
         "n_events": int(len(events)),
         "events": [e.slug for e in events],
         "use_route_b_selected": bool(use_route_b_selected),
+        "run_until_exp": int(run_until),
         "r_max_km": float(r_max_km),
         "min_tiles_overlap": int(min_tiles_overlap),
         "peak_frac": float(peak_frac),
@@ -1431,7 +1471,7 @@ def cli_main() -> None:
     p.add_argument("--peak-frac", type=float, default=0.5)
     p.add_argument("--min-post-points", type=int, default=4)
     p.add_argument("--near-zero-eps", type=float, default=1e-3)
-    p.add_argument("--daily-average-if-high-freq", type=int, default=0, help="1=8h事件先按日均化再拟合")
+    p.add_argument("--daily-average-if-high-freq", type=int, default=1, help="1=8h事件先按日均化再拟合")
     p.add_argument("--high-freq-thresh-h", type=float, default=16.0)
 
     p.add_argument("--sim-sigma", type=float, default=0.03)
@@ -1449,6 +1489,7 @@ def cli_main() -> None:
     p.add_argument("--sim-gamma-n", type=int, default=12)
     p.add_argument("--sim-validation-batches", type=int, default=200)
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--run-until-exp", type=int, default=4, help="阶段执行：1/2/3/4，默认4（全跑）")
 
     args = p.parse_args()
     run(
@@ -1480,6 +1521,7 @@ def cli_main() -> None:
         sim_gamma_n=int(args.sim_gamma_n),
         sim_validation_batches=int(args.sim_validation_batches),
         seed=int(args.seed),
+        run_until_exp=int(args.run_until_exp),
     )
 
 

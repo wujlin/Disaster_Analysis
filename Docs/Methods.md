@@ -24,7 +24,7 @@
 
 ### 1.2 样本
 
-分析覆盖 **18 个自然灾害事件**（地震、飓风、台风、洪水、野火），涵盖全球多个地理区域。每个事件经独立预处理后纳入跨灾难比较。最终统计样本为 **$n = 16$ 个事件**（排除规则见 §4）。
+分析覆盖 **38 个自然灾害事件**（地震、飓风、台风、洪水、野火），涵盖全球多个地理区域。每个事件经独立预处理后纳入跨灾难比较。最终统计样本为 **$n = 16$ 个事件**（排除规则见 §4）。
 
 ### 1.3 空间预处理：tile → 径向距离分箱
 
@@ -148,6 +148,29 @@ Pipeline 原始实现使用自适应单调截断：从 peak 后第一个点起�
 | `flooding_rio_grande_do_sul` | 多阶段洪水，$D(t)$ 无明确单峰结构，违反"单次淬火→弛豫"分析框架 |
 
 排除后最终样本：**$n = 16$**。
+
+### 4.4 Route B 最终样本清单（$n=16$）
+
+本研究的**唯一权威样本来源**为 `outputs/cross_disaster_comparison/Dt_decay/tables/Dt_routeB_sample_flags.csv` 中 `route_b_selected == True` 的事件。为避免文档漂移，以下仅列出事件标识与方向符号（数值以该表为准）。
+
+| slug | short_name | $\delta_{\text{near}}$ 符号 |
+|---|---|---|
+| flooding_in_central_and_eastern_europe_sept_16_2024 | flooding_eu | + |
+| hurricane_beryl_across_quintana_roo_and_yucatan_mexico | beryl_qr | − |
+| hurricane_beryl_across_southeastern_texas_us | beryl_tx | − |
+| hurricane_beryl_pre_landfall_2024 | beryl_pre | 0 |
+| hurricane_john_across_southeastern_guerrero_mexico | john_gue | + |
+| hurricane_john_southern_mexico_25_september_2024 | john_sm | + |
+| hurricane_milton_across_florida_us | milton_fl | + |
+| moldova_flooding_2024 | moldova | + |
+| spain_flood | spain_flood | + |
+| the_earthquake_across_central_mexico | mexico_eq | + |
+| the_flooding_across_bagmati_and_koshi_provinces_nepal | nepal_fld | − |
+| the_flooding_across_eastern_bangladesh | bangladesh_fld | + |
+| the_flooding_across_gujarat_india | gujarat_fld | − |
+| turkiye_earthquake_2023 | turkiye | + |
+| typhoon_yagi_across_northeastern_vietnam | yagi_vn | − |
+| wildfires_in_boise_county_idaho_27_august_2024 | boise_fire | + |
 
 ### 4.3 低 $R^2$ 事件处理
 

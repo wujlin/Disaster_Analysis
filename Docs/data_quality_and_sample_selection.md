@@ -1,4 +1,8 @@
-# D(t) Power-Law Decay 分析：数据质量评估与样本筛选
+# D(t) Power-Law Decay 分析：数据质量评估与样本筛选（旧口径）
+
+> **说明**：本文件记录的是**旧口径**（要求 BIC 最优模型为 power-law）的筛选链路，最终样本为 **12 个事件**。  
+> **现行口径（Route B）**已放弃对函数形式的强约束，仅要求 `n_mono ≥ 3`、`δ_near` 非缺失，并排除少数非独立事件；最终样本为 **16 个事件**。  
+> **权威名单**请以 `outputs/cross_disaster_comparison/Dt_decay/tables/Dt_routeB_sample_flags.csv` 中 `route_b_selected == True` 为准，详见 `Docs/Methods.md` §4.4。
 
 > **用途**：本文档系统记录从 38 个灾害事件到最终分析样本的筛选过程。每一步筛选均基于先验的方法学标准，而非后验的统计显著性。可直接用于正文 Methods / Results 或 Supplementary Information。
 
