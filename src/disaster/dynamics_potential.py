@@ -235,6 +235,51 @@ def _compute_D_timeseries(phi: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def _resolve_t_peak_for_postfit(
+    D_series: pd.DataFrame,
+    *,
+    preferred_t_peak: float | None,
+    min_post_points: int,
+) -> tuple[float, float, str]:
+    """
+    统一峰值时间选择：
+    1) 先尝试外部传入的 preferred_t_peak（snap 到现有时间网格）；
+    2) 若峰后点不足，回退到当前序列中“可留出足够峰后点”的最大 D 时刻；
+    3) 仍不足则回退全局最大 D 时刻（会导致后续拟合不足，由上游诊断报错）。
+    返回：(t_peak_use, D_peak_global, source)
+    """
+    ts = D_series.sort_values("hours_since_quake", kind="stable").copy()
+    t = pd.to_numeric(ts["hours_since_quake"], errors="coerce").to_numpy(dtype=float)
+    d = pd.to_numeric(ts["D"], errors="coerce").to_numpy(dtype=float)
+    ok = np.isfinite(t) & np.isfinite(d)
+    t = t[ok]
+    d = d[ok]
+    if t.size == 0:
+        return float("nan"), float("nan"), "empty"
+
+    D_peak_global = float(np.nanmax(d))
+    n = int(t.size)
+    min_post = int(max(1, min_post_points))
+    max_peak_idx = n - min_post - 1  # 需确保 t > t_peak 至少 min_post 个时间点
+
+    def _idx_from_preferred(tp: float | None) -> int | None:
+        if tp is None or (not np.isfinite(float(tp))):
+            return None
+        return int(np.argmin(np.abs(t - float(tp))))
+
+    idx_pref = _idx_from_preferred(preferred_t_peak)
+    if idx_pref is not None and idx_pref <= max_peak_idx:
+        return float(t[idx_pref]), D_peak_global, "preferred_snap"
+
+    if max_peak_idx >= 0:
+        idx_candidates = np.arange(0, max_peak_idx + 1, dtype=int)
+        idx_best = int(idx_candidates[np.nanargmax(d[idx_candidates])])
+        return float(t[idx_best]), D_peak_global, "fallback_local_peak"
+
+    idx_global = int(np.nanargmax(d))
+    return float(t[idx_global]), D_peak_global, "fallback_global_peak"
+
+
 def _classify_bins(
     phi: pd.DataFrame,
     *,
@@ -818,8 +863,15 @@ def run(
         D_ts = _compute_D_timeseries(phi)
         if D_ts.empty:
             continue
-        D_peak_use = float(em.D_peak) if np.isfinite(em.D_peak) and em.D_peak > 0 else float(np.nanmax(pd.to_numeric(D_ts["D"], errors="coerce")))
-        t_peak_use = float(em.t_peak_hours)
+        preferred_peak = float(em.t_peak_hours) if np.isfinite(em.t_peak_hours) else None
+        t_peak_use, D_peak_global, t_peak_source = _resolve_t_peak_for_postfit(
+            D_ts,
+            preferred_t_peak=preferred_peak,
+            min_post_points=int(min_post_points),
+        )
+        D_peak_use = float(D_peak_global) if np.isfinite(D_peak_global) else float(
+            em.D_peak if np.isfinite(em.D_peak) and em.D_peak > 0 else np.nan
+        )
         cls = _classify_bins(
             phi,
             t_peak=float(t_peak_use),
@@ -853,6 +905,7 @@ def run(
                     "disaster_type": em.disaster_type,
                     "event_type": em.event_type,
                     "t_peak_hours": float(t_peak_use),
+                    "t_peak_source": str(t_peak_source),
                     "D_peak": float(D_peak_use),
                     "near_delta": float(em.near_delta),
                     "r_bin_km": float(r_bin),
@@ -877,6 +930,8 @@ def run(
                 "slug": em.slug,
                 "short_name": em.short_name,
                 "n_bins_used": int(cls.shape[0]),
+                "t_peak_source": str(t_peak_source),
+                "t_peak_hours_used": float(t_peak_use),
                 "daily_avg_applied": int(daily_applied),
                 "median_step_hours_raw": float(med_step),
             }
@@ -1097,13 +1152,24 @@ def run(
             continue
         cls = _classify_bins(
             phi,
-            t_peak=float(em.t_peak_hours),
+            t_peak=float(
+                _resolve_t_peak_for_postfit(
+                    D_ts,
+                    preferred_t_peak=float(em.t_peak_hours) if np.isfinite(em.t_peak_hours) else None,
+                    min_post_points=int(min_post_points),
+                )[0]
+            ),
             D_series=D_ts,
             D_peak=float(em.D_peak),
             peak_frac=float(peak_frac),
             near_zero_eps=float(near_zero_eps),
         )
-        trajs = _event_trajs_for_model(phi, cls, t_peak=float(em.t_peak_hours), min_post_points=int(min_post_points))
+        t_peak_for_model = _resolve_t_peak_for_postfit(
+            D_ts,
+            preferred_t_peak=float(em.t_peak_hours) if np.isfinite(em.t_peak_hours) else None,
+            min_post_points=int(min_post_points),
+        )[0]
+        trajs = _event_trajs_for_model(phi, cls, t_peak=float(t_peak_for_model), min_post_points=int(min_post_points))
         if len(trajs) == 0:
             continue
         bsub = bin_df[bin_df["slug"].astype(str) == em.slug].copy()
