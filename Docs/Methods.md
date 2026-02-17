@@ -233,18 +233,111 @@ $\alpha$ 的两个预测变量（$\delta_{\text{near}}$ 和 $D_{\text{peak}}$）
 | 最小重叠 tile | — | 3 | 每个 $(r, t)$ 格点的最小 tile 数 |
 | $\alpha$ 时间窗口 | — | [24h, 120h] | 固定窗口 log-log 拟合范围 |
 | 单调容忍度 | `tol_up` | 1.05 | 备选方法中的反弹容忍阈值 |
+| PDE 径向边界 | $R$ | 200 km | Bessel 展开的径向域 |
+| Bessel 模态数 | $N$ | 20 | 展开截断阶数（含基模态） |
+| PDE 全局衰减率 | $k$ | 0.00418 h⁻¹ | 网格搜索最优值 |
+| PDE 扩散系数 | $D_s$ | 0.304 km² h⁻¹ | 网格搜索最优值 |
 
 ---
 
 ## 7. 软件与可复现性
 
 - **语言**：Python 3.9+
-- **核心依赖**：pandas, numpy, scipy (spearmanr, theilslopes, curve_fit), matplotlib
-- **管线入口**：`python scripts/dt_decay.py --output-root outputs/`
+- **核心依赖**：pandas, numpy, scipy (spearmanr, theilslopes, curve_fit, jn_zeros, j0), matplotlib
+- **经验分析管线**：`python scripts/dt_decay.py --output-root outputs/`
+- **PDE 模型管线**：`python -m scripts.spatial_diffusion --run-until 4 --pred-mode E --t-start 1.0 --exp2-align-to-exp3 1`
 - **中间产物**：`phi_rt_long.csv`（tile→距离分箱聚合）、`Dt_all_events.csv`（日均 D(t) 序列）
-- **输出表格**：`Dt_powerlaw_fits.csv`（$\alpha$ 拟合）、`Dt_event_summary.csv`（事件级汇总）、`Dt_routeB_*.csv`（相关性与稳健性统计）
+- **经验分析输出**：`Dt_powerlaw_fits.csv`、`Dt_event_summary.csv`、`Dt_routeB_*.csv`
+- **PDE 模型输出**：`pde_optimal_params.csv`、`pde_alpha_predictions.csv`、`counterfactual_results.csv`
 
 ---
 
-*文档版本：v1.0*  
-*最后更新：2025-01*
+## 8. 空间扩散-弛豫 PDE 模型
+
+### 8.1 动机
+
+§5.1 的经验发现——$\rho(\alpha, \delta_{\text{near}}) = -0.538$——表明初始空间剖面的形状编码了恢复速度的信息。但相关性本身不构成机制解释。本节建立一个最小化的偏微分方程模型，检验以下因果假说：**空间扩散与指数衰减的联合作用，是否足以让初始剖面形状决定后续的衰减速率？**
+
+### 8.2 控制方程
+
+将灾害参考点视为原点，假设径向对称，人口偏移场 $\delta(r, t)$ 满足扩散-弛豫方程：
+
+$$\frac{\partial \delta}{\partial t} = \frac{D_s}{r} \frac{\partial}{\partial r}\left(r \frac{\partial \delta}{\partial r}\right) - k \, \delta$$
+
+其中 $D_s$ 为空间扩散系数（km² h⁻¹），$k$ 为均匀衰减率（h⁻¹）。
+
+- **扩散项**描述人口偏移沿径向的空间扩展（Fick 定律在柱坐标下的形式）。
+- **衰减项** $-k\delta$ 描述人口向稳态的均匀弛豫（工作恢复、设施重开等驱动力）。
+
+边界条件：Neumann（零通量），$\partial \delta / \partial r |_{r=0} = \partial \delta / \partial r |_{r=R} = 0$，其中 $R = 200$ km。
+
+### 8.3 Bessel 展开与解析解
+
+方程的解在 Neumann 边界条件下可用零阶 Bessel 函数 $J_0$ 展开：
+
+$$\delta(r, t) = \sum_{n=0}^{N-1} c_n \, J_0\!\left(\frac{\alpha_n \, r}{R}\right) \exp(-\lambda_n \, t)$$
+
+其中 $\alpha_0 = 0$，$\alpha_n$（$n \geq 1$）为 $J_0'(x) = 0$ 的正零点，模态衰减率为：
+
+$$\lambda_n = k + D_s \left(\frac{\alpha_n}{R}\right)^2$$
+
+**关键物理机制**：高阶模态（$n \gg 1$）具有更大的空间波数 $\alpha_n/R$，因此衰减更快。不同事件的初始剖面 $\delta(r, 0)$ 具有不同的模态系数 $\{c_n\}$——空间结构越复杂（高阶成分越多），总体衰减越快。这正是为什么初始剖面形状能预测 $\alpha$。
+
+### 8.4 初始条件的确定
+
+对每个事件，取峰值时刻 $t_{\text{peak}}$ 的径向剖面 $\delta(r, t_{\text{peak}})$ 作为 PDE 的初始条件。通过 $r$-加权的最小二乘分解（利用 Bessel 函数的正交关系 $\int_0^R J_0(\alpha_m r/R) J_0(\alpha_n r/R) \, r \, dr = 0, \, m \neq n$）求得展开系数：
+
+$$c_n = \frac{\int_0^R \delta(r, 0) \, J_0(\alpha_n r / R) \, r \, dr}{\int_0^R J_0^2(\alpha_n r / R) \, r \, dr}$$
+
+实际操作中，$\delta(r, 0)$ 先从观测的 10 km 分箱数据插值到 200 点的均匀 $r$ 网格，再用数值梯形积分计算上述投影。展开截断为 $N = 20$ 个模态。
+
+### 8.5 预测衰减率 $\alpha_{\text{pred}}$
+
+给定全局参数 $(k, D_s)$ 和事件特有的系数 $\{c_n\}$，PDE 解可以解析计算任意时刻的空间场 $\delta(r, t)$。定义能量度量：
+
+$$E(t) = \frac{\int_0^R \delta^2(r, t) \, r \, dr}{\int_0^R r \, dr}$$
+
+其中 $r$-加权确保与 Bessel 正交性一致（Parseval 等式）。对 $E(t)$ 在与经验 $\alpha$ 相同的时间窗口 $[24\text{h}, 120\text{h}]$ 做 log-log OLS 拟合，负斜率即为 $\alpha_{\text{pred}}$。
+
+**设计要点**：
+- 时间采样在 $[0, 24)$ h 使用 1 h 步长（捕捉高阶模态的快速衰减），$[24, 240]$ h 使用 8 h 步长，共 51 个时间点。
+- $k$ 和 $D_s$ 是两个**全局参数**，所有事件共享同一组值——事件间的 $\alpha_{\text{pred}}$ 差异完全来自初始剖面的空间结构。
+
+### 8.6 参数估计
+
+在对数均匀的二维网格上搜索最优 $(k, D_s)$。对每组候选参数，计算全部 16 个事件的 $\alpha_{\text{pred}}$，评估四个准则：
+
+1. **max Spearman**：最大化 $\rho(\alpha_{\text{pred}}, \alpha_{\text{emp}})$
+2. **max Pearson**：最大化 $r(\alpha_{\text{pred}}, \alpha_{\text{emp}})$
+3. **min MAE**：最小化 $|\alpha_{\text{pred}} - \alpha_{\text{emp}}|$ 的均值
+4. **min joint rank**（主准则）：三个指标排名之和最小化
+
+主准则 (min joint rank) 的最优参数为 $k = 0.00418$ h⁻¹、$D_s = 0.304$ km² h⁻¹。
+
+### 8.7 反事实实验
+
+为验证 PDE 模型复现 $\rho(\alpha, \delta_{\text{near}})$ 的信号确实源于空间扩散 + 剖面形状的联合作用，设计三组反事实实验：
+
+| 反事实 | 操作 | 预期 | 观测 |
+|--------|------|------|------|
+| **Ds = 0**（无扩散） | 关闭扩散项，所有模态以相同速率 $k$ 衰减 | $\alpha_{\text{pred}}$ 对所有事件相同 → $\rho = 0$ | $\rho = 0.0$, $p = 1.0$ ✓ |
+| **仅基模态** | 只保留 $c_0$（空间均匀成分） | 剖面形状信息被移除 → $\rho = 0$ | $\rho = 0.0$, $p = 1.0$ ✓ |
+| **Shuffle 剖面** | 随机打乱事件-剖面的配对 | 破坏因果关系 → $\rho \approx 0$ | $\rho = -0.008$, 95% CI $[-0.52, 0.52]$ ✓ |
+
+三组反事实均符合预期，排除了以下替代解释：
+- 信号来自 $k$ 本身（Ds=0 排除）
+- 信号来自剖面的整体幅度而非空间结构（c₀-only 排除）
+- 信号来自全局参数偏差的伪关联（shuffle 排除）
+
+### 8.8 Bootstrap 稳健性
+
+对初始剖面施加 ±10% 的随机扰动，重复 500 次：
+
+- Bootstrap $\rho$ 均值 = $-0.482$，中位数 = $-0.513$
+- 95% CI = $[-0.763, -0.079]$，**不含零**
+- 98.4% 的 bootstrap 重复中 $\rho < 0$
+
+---
+
+*文档版本：v2.0*  
+*最后更新：2025-02*

@@ -66,6 +66,17 @@ def _ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
+def _build_t_eval(t_end: float = 120.0, t_max: float = 240.0) -> np.ndarray:
+    """构造密化早期采样的 t_eval 向量。
+
+    0-24h 区间使用 1h 步长捕捉高阶模态衰减，
+    24h 之后使用 8h 步长。
+    """
+    t_early = np.arange(0.0, 24.0, 1.0, dtype=float)
+    t_late = np.arange(24.0, max(float(t_max), float(t_end) + 8.0) + 0.1, 8.0, dtype=float)
+    return np.unique(np.concatenate([t_early, t_late]))
+
+
 def _safe_float(x: Any) -> float | None:
     if x is None:
         return None
@@ -410,6 +421,8 @@ def _spearman_pair(x: np.ndarray, y: np.ndarray) -> tuple[float, float, int]:
     n = int(np.sum(ok))
     if n < 3:
         return float("nan"), float("nan"), n
+    if np.std(xx[ok]) < 1e-12 or np.std(yy[ok]) < 1e-12:
+        return 0.0, 1.0, n
     rho, p = spearmanr(xx[ok], yy[ok], nan_policy="omit")
     return float(rho), float(p), n
 
@@ -469,6 +482,34 @@ def predict_D_from_profile(
     return D_vals
 
 
+def predict_DE_from_profile(
+    c_n: np.ndarray,
+    zeros: np.ndarray,
+    k: float,
+    Ds: float,
+    t_array: np.ndarray,
+    R_max: float = 200.0,
+    n_r_eval: int = 200,
+) -> tuple[np.ndarray, np.ndarray]:
+    c = np.asarray(c_n, dtype=float)
+    z = np.asarray(zeros, dtype=float)
+    t = np.asarray(t_array, dtype=float)
+    if c.size != z.size:
+        raise ValueError("predict_DE_from_profile: c_n 与 zeros 长度不一致。")
+    if c.size == 0:
+        raise ValueError("predict_DE_from_profile: 空系数。")
+
+    r_eval = np.linspace(0.0, float(R_max), int(n_r_eval))
+    basis = np.vstack([_bessel_basis(r_eval, float(root), float(R_max)) for root in z])
+    lambdas = float(k) + float(Ds) * (z / float(R_max)) ** 2
+    decays = np.exp(-np.outer(t, lambdas))
+    delta_rt = decays @ (c[:, None] * basis)
+    D_vals = np.mean(np.abs(delta_rt), axis=1)
+    w = np.maximum(r_eval, 1e-12)
+    E_vals = np.average(delta_rt**2, weights=w, axis=1)
+    return D_vals, E_vals
+
+
 def _fit_alpha_from_D_detail(
     D_array: np.ndarray,
     t_array: np.ndarray,
@@ -502,7 +543,7 @@ def fit_alpha_from_D(
     return float(alpha)
 
 
-def _predict_D_from_model(model: ProfileModel, *, k: float, Ds: float, t_array: np.ndarray) -> np.ndarray:
+def _predict_DE_from_model(model: ProfileModel, *, k: float, Ds: float, t_array: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     z = model.roots
     c = model.coeffs
     t = np.asarray(t_array, dtype=float)
@@ -510,7 +551,26 @@ def _predict_D_from_model(model: ProfileModel, *, k: float, Ds: float, t_array: 
     decays = np.exp(-np.outer(t, lambdas))
     delta_rt = decays @ (c[:, None] * model.basis_matrix)
     D_vals = np.mean(np.abs(delta_rt), axis=1)
-    return D_vals
+    w = np.maximum(model.r_grid, 1e-12)
+    E_vals = np.average(delta_rt**2, weights=w, axis=1)
+    return D_vals, E_vals
+
+
+def _fit_alpha_with_mode(
+    *,
+    D_array: np.ndarray,
+    E_array: np.ndarray,
+    t_array: np.ndarray,
+    mode: str,
+    t_start: float,
+    t_end: float,
+) -> tuple[float, float, int]:
+    m = str(mode).strip().upper()
+    if m == "D":
+        return _fit_alpha_from_D_detail(D_array, t_array, t_start=t_start, t_end=t_end)
+    if m == "E":
+        return _fit_alpha_from_D_detail(E_array, t_array, t_start=t_start, t_end=t_end)
+    raise ValueError(f"未知 mode={mode}，仅支持 D/E。")
 
 
 def _estimate_global_params_grid(
@@ -529,37 +589,72 @@ def _estimate_global_params_grid(
 
     for k in k_grid:
         for ds in ds_grid:
-            pred = []
+            pred_d = []
+            pred_e = []
             valid = True
             for m in models:
-                Dp = _predict_D_from_model(m, k=float(k), Ds=float(ds), t_array=t_eval)
-                alpha_pred = fit_alpha_from_D(Dp, t_eval, t_start=float(t_start), t_end=float(t_end))
-                if not np.isfinite(alpha_pred):
+                Dp, Ep = _predict_DE_from_model(m, k=float(k), Ds=float(ds), t_array=t_eval)
+                a_d, _, _ = _fit_alpha_with_mode(
+                    D_array=Dp,
+                    E_array=Ep,
+                    t_array=t_eval,
+                    mode="D",
+                    t_start=float(t_start),
+                    t_end=float(t_end),
+                )
+                a_e, _, _ = _fit_alpha_with_mode(
+                    D_array=Dp,
+                    E_array=Ep,
+                    t_array=t_eval,
+                    mode="E",
+                    t_start=float(t_start),
+                    t_end=float(t_end),
+                )
+                if (not np.isfinite(a_d)) or (not np.isfinite(a_e)):
                     valid = False
                     break
-                pred.append(float(alpha_pred))
+                pred_d.append(float(a_d))
+                pred_e.append(float(a_e))
             if not valid:
                 continue
-            alpha_pred_arr = np.array(pred, dtype=float)
-            rho_s, p_s, n_s = _spearman_pair(alpha_pred_arr, alpha_emp)
-            rho_p, p_p = pearsonr(alpha_pred_arr, alpha_emp)
-            mae = float(np.mean(np.abs(alpha_pred_arr - alpha_emp)))
-            rho_dn, p_dn, _ = _spearman_pair(alpha_pred_arr, delta_near)
-            rho_dp, p_dp, _ = _spearman_pair(alpha_pred_arr, D_peak)
+            alpha_pred_d = np.array(pred_d, dtype=float)
+            alpha_pred_e = np.array(pred_e, dtype=float)
+
+            rho_s_d, p_s_d, n_s_d = _spearman_pair(alpha_pred_d, alpha_emp)
+            rho_p_d, p_p_d = pearsonr(alpha_pred_d, alpha_emp)
+            mae_d = float(np.mean(np.abs(alpha_pred_d - alpha_emp)))
+            rho_dn_d, p_dn_d, _ = _spearman_pair(alpha_pred_d, delta_near)
+            rho_dp_d, p_dp_d, _ = _spearman_pair(alpha_pred_d, D_peak)
+
+            rho_s_e, p_s_e, n_s_e = _spearman_pair(alpha_pred_e, alpha_emp)
+            rho_p_e, p_p_e = pearsonr(alpha_pred_e, alpha_emp)
+            mae_e = float(np.mean(np.abs(alpha_pred_e - alpha_emp)))
+            rho_dn_e, p_dn_e, _ = _spearman_pair(alpha_pred_e, delta_near)
+            rho_dp_e, p_dp_e, _ = _spearman_pair(alpha_pred_e, D_peak)
             rows.append(
                 {
                     "k": float(k),
                     "Ds": float(ds),
-                    "spearman_rho_alpha_emp": float(rho_s),
-                    "spearman_p_alpha_emp": float(p_s),
-                    "pearson_r_alpha_emp": float(rho_p),
-                    "pearson_p_alpha_emp": float(p_p),
-                    "mae_alpha": float(mae),
-                    "n_events": int(n_s),
-                    "spearman_rho_alpha_pred_vs_delta_near": float(rho_dn),
-                    "spearman_p_alpha_pred_vs_delta_near": float(p_dn),
-                    "spearman_rho_alpha_pred_vs_D_peak": float(rho_dp),
-                    "spearman_p_alpha_pred_vs_D_peak": float(p_dp),
+                    "spearman_rho_alpha_emp_D": float(rho_s_d),
+                    "spearman_p_alpha_emp_D": float(p_s_d),
+                    "pearson_r_alpha_emp_D": float(rho_p_d),
+                    "pearson_p_alpha_emp_D": float(p_p_d),
+                    "mae_alpha_D": float(mae_d),
+                    "n_events_D": int(n_s_d),
+                    "spearman_rho_alpha_pred_vs_delta_near_D": float(rho_dn_d),
+                    "spearman_p_alpha_pred_vs_delta_near_D": float(p_dn_d),
+                    "spearman_rho_alpha_pred_vs_D_peak_D": float(rho_dp_d),
+                    "spearman_p_alpha_pred_vs_D_peak_D": float(p_dp_d),
+                    "spearman_rho_alpha_emp_E": float(rho_s_e),
+                    "spearman_p_alpha_emp_E": float(p_s_e),
+                    "pearson_r_alpha_emp_E": float(rho_p_e),
+                    "pearson_p_alpha_emp_E": float(p_p_e),
+                    "mae_alpha_E": float(mae_e),
+                    "n_events_E": int(n_s_e),
+                    "spearman_rho_alpha_pred_vs_delta_near_E": float(rho_dn_e),
+                    "spearman_p_alpha_pred_vs_delta_near_E": float(p_dn_e),
+                    "spearman_rho_alpha_pred_vs_D_peak_E": float(rho_dp_e),
+                    "spearman_p_alpha_pred_vs_D_peak_E": float(p_dp_e),
                 }
             )
 
@@ -581,16 +676,25 @@ def _estimate_global_params_least_squares(
     ds_max: float,
     k_init: float,
     ds_init: float,
+    mode: str,
 ) -> dict[str, float]:
     alpha_emp = np.array([m.meta.alpha for m in models], dtype=float)
     delta_near = np.array([m.meta.delta_near for m in models], dtype=float)
     D_peak = np.array([m.meta.D_peak for m in models], dtype=float)
+    mode_key = str(mode).strip().upper()
 
     def _alpha_pred(k: float, ds: float) -> np.ndarray:
         out = []
         for m in models:
-            Dp = _predict_D_from_model(m, k=float(k), Ds=float(ds), t_array=t_eval)
-            a = fit_alpha_from_D(Dp, t_eval, t_start=float(t_start), t_end=float(t_end))
+            Dp, Ep = _predict_DE_from_model(m, k=float(k), Ds=float(ds), t_array=t_eval)
+            a, _, _ = _fit_alpha_with_mode(
+                D_array=Dp,
+                E_array=Ep,
+                t_array=t_eval,
+                mode=mode_key,
+                t_start=float(t_start),
+                t_end=float(t_end),
+            )
             out.append(float(a))
         return np.array(out, dtype=float)
 
@@ -616,33 +720,67 @@ def _estimate_global_params_least_squares(
     rho_dn, p_dn, _ = _spearman_pair(alpha_pred, delta_near)
     rho_dp, p_dp, _ = _spearman_pair(alpha_pred, D_peak)
     return {
-        "criterion": "min_sse_opt",
+        "criterion": f"min_sse_opt_{mode_key}",
         "k": float(k_opt),
         "Ds": float(ds_opt),
-        "spearman_rho_alpha_emp": float(rho_s),
-        "spearman_p_alpha_emp": float(p_s),
-        "pearson_r_alpha_emp": float(rho_p),
-        "pearson_p_alpha_emp": float(p_p),
-        "mae_alpha": float(mae),
-        "n_events": int(n_s),
-        "spearman_rho_alpha_pred_vs_delta_near": float(rho_dn),
-        "spearman_p_alpha_pred_vs_delta_near": float(p_dn),
-        "spearman_rho_alpha_pred_vs_D_peak": float(rho_dp),
-        "spearman_p_alpha_pred_vs_D_peak": float(p_dp),
+        "spearman_rho_alpha_emp_D": float(rho_s) if mode_key == "D" else float("nan"),
+        "spearman_p_alpha_emp_D": float(p_s) if mode_key == "D" else float("nan"),
+        "pearson_r_alpha_emp_D": float(rho_p) if mode_key == "D" else float("nan"),
+        "pearson_p_alpha_emp_D": float(p_p) if mode_key == "D" else float("nan"),
+        "mae_alpha_D": float(mae) if mode_key == "D" else float("nan"),
+        "n_events_D": int(n_s) if mode_key == "D" else int(len(models)),
+        "spearman_rho_alpha_pred_vs_delta_near_D": float(rho_dn) if mode_key == "D" else float("nan"),
+        "spearman_p_alpha_pred_vs_delta_near_D": float(p_dn) if mode_key == "D" else float("nan"),
+        "spearman_rho_alpha_pred_vs_D_peak_D": float(rho_dp) if mode_key == "D" else float("nan"),
+        "spearman_p_alpha_pred_vs_D_peak_D": float(p_dp) if mode_key == "D" else float("nan"),
+        "spearman_rho_alpha_emp_E": float(rho_s) if mode_key == "E" else float("nan"),
+        "spearman_p_alpha_emp_E": float(p_s) if mode_key == "E" else float("nan"),
+        "pearson_r_alpha_emp_E": float(rho_p) if mode_key == "E" else float("nan"),
+        "pearson_p_alpha_emp_E": float(p_p) if mode_key == "E" else float("nan"),
+        "mae_alpha_E": float(mae) if mode_key == "E" else float("nan"),
+        "n_events_E": int(n_s) if mode_key == "E" else int(len(models)),
+        "spearman_rho_alpha_pred_vs_delta_near_E": float(rho_dn) if mode_key == "E" else float("nan"),
+        "spearman_p_alpha_pred_vs_delta_near_E": float(p_dn) if mode_key == "E" else float("nan"),
+        "spearman_rho_alpha_pred_vs_D_peak_E": float(rho_dp) if mode_key == "E" else float("nan"),
+        "spearman_p_alpha_pred_vs_D_peak_E": float(p_dp) if mode_key == "E" else float("nan"),
         "optimizer_success": int(bool(res.success)),
         "optimizer_fun": float(res.fun),
+        "mode": mode_key,
     }
 
 
-def _pick_best_rows(param_grid: pd.DataFrame) -> pd.DataFrame:
+def _pick_best_rows(param_grid: pd.DataFrame, *, mode: str = "E") -> pd.DataFrame:
     if param_grid.empty:
         raise ValueError("空参数网格。")
-    idx_s = int(param_grid["spearman_rho_alpha_emp"].astype(float).idxmax())
-    idx_p = int(param_grid["pearson_r_alpha_emp"].astype(float).idxmax())
-    idx_m = int(param_grid["mae_alpha"].astype(float).idxmin())
+    m = str(mode).strip().upper()
+    c_s = f"spearman_rho_alpha_emp_{m}"
+    c_p = f"pearson_r_alpha_emp_{m}"
+    c_m = f"mae_alpha_{m}"
+    if c_s not in param_grid.columns or c_p not in param_grid.columns or c_m not in param_grid.columns:
+        raise ValueError(f"参数网格缺少 {m} 模式所需列。")
+
+    work = param_grid.copy()
+    work["_rank_s"] = work[c_s].rank(ascending=False, method="min")
+    work["_rank_p"] = work[c_p].rank(ascending=False, method="min")
+    work["_rank_m"] = work[c_m].rank(ascending=True, method="min")
+    work["_joint"] = work["_rank_s"] + work["_rank_p"] + work["_rank_m"]
+
+    idx_s = int(work[c_s].astype(float).idxmax())
+    idx_p = int(work[c_p].astype(float).idxmax())
+    idx_m = int(work[c_m].astype(float).idxmin())
+    idx_j = int(work["_joint"].astype(float).idxmin())
     rows = []
-    for criterion, idx in [("max_spearman", idx_s), ("max_pearson", idx_p), ("min_mae", idx_m)]:
-        row = param_grid.loc[idx].to_dict()
+    for criterion, idx in [
+        (f"max_spearman_{m}", idx_s),
+        (f"max_pearson_{m}", idx_p),
+        (f"min_mae_{m}", idx_m),
+        (f"min_joint_{m}", idx_j),
+    ]:
+        row = work.loc[idx].to_dict()
+        row.pop("_rank_s", None)
+        row.pop("_rank_p", None)
+        row.pop("_rank_m", None)
+        row.pop("_joint", None)
         row["criterion"] = criterion
         rows.append(row)
     return pd.DataFrame(rows)
@@ -656,9 +794,11 @@ def _loo_cross_validation(
     t_eval: np.ndarray,
     t_start: float,
     t_end: float,
+    mode: str,
 ) -> pd.DataFrame:
     if len(models) < 4:
         raise ValueError("LOO 至少需要 4 个事件。")
+    mode_key = str(mode).strip().upper()
     rows: list[dict[str, float | str]] = []
     for i, hold in enumerate(models):
         train = [m for j, m in enumerate(models) if j != i]
@@ -670,21 +810,47 @@ def _loo_cross_validation(
             t_start=t_start,
             t_end=t_end,
         )
-        best_idx = int(grid_train["spearman_rho_alpha_emp"].astype(float).idxmax())
-        best = grid_train.loc[best_idx]
+        best_train = _pick_best_rows(grid_train, mode=mode_key)
+        best = best_train.loc[best_train["criterion"] == f"min_joint_{mode_key}"].iloc[0]
         k_best = float(best["k"])
         ds_best = float(best["Ds"])
-        D_pred = _predict_D_from_model(hold, k=k_best, Ds=ds_best, t_array=t_eval)
-        alpha_pred = fit_alpha_from_D(D_pred, t_eval, t_start=t_start, t_end=t_end)
+        D_pred, E_pred = _predict_DE_from_model(hold, k=k_best, Ds=ds_best, t_array=t_eval)
+        alpha_pred, _, _ = _fit_alpha_with_mode(
+            D_array=D_pred,
+            E_array=E_pred,
+            t_array=t_eval,
+            mode=mode_key,
+            t_start=t_start,
+            t_end=t_end,
+        )
+        alpha_pred_d, _, _ = _fit_alpha_with_mode(
+            D_array=D_pred,
+            E_array=E_pred,
+            t_array=t_eval,
+            mode="D",
+            t_start=t_start,
+            t_end=t_end,
+        )
+        alpha_pred_e, _, _ = _fit_alpha_with_mode(
+            D_array=D_pred,
+            E_array=E_pred,
+            t_array=t_eval,
+            mode="E",
+            t_start=t_start,
+            t_end=t_end,
+        )
         rows.append(
             {
                 "slug": hold.meta.slug,
                 "short_name": hold.meta.short_name,
                 "alpha_emp": float(hold.meta.alpha),
                 "alpha_pred_loo": float(alpha_pred),
+                "alpha_pred_loo_D": float(alpha_pred_d),
+                "alpha_pred_loo_E": float(alpha_pred_e),
                 "abs_error": float(abs(alpha_pred - hold.meta.alpha)),
                 "k_best_train": k_best,
                 "Ds_best_train": ds_best,
+                "pred_mode": mode_key,
             }
         )
     out = pd.DataFrame(rows)
@@ -705,8 +871,10 @@ def _bootstrap_simulation(
     t_end: float,
     n_iter: int,
     seed: int,
+    mode: str,
 ) -> pd.DataFrame:
     rng = np.random.default_rng(int(seed))
+    mode_key = str(mode).strip().upper()
     n = len(models)
     rows: list[dict[str, float | int]] = []
     for i in range(int(n_iter)):
@@ -718,7 +886,7 @@ def _bootstrap_simulation(
             amp = float(rng.uniform(0.8, 1.2))
             noise = rng.normal(loc=0.0, scale=0.02 * (np.std(m.coeffs) + 1e-6), size=m.coeffs.size)
             c_mod = m.coeffs * amp + noise
-            D_pred = predict_D_from_profile(
+            D_pred, E_pred = predict_DE_from_profile(
                 c_mod,
                 m.roots,
                 float(k),
@@ -727,7 +895,14 @@ def _bootstrap_simulation(
                 R_max=float(m.r_grid[-1]),
                 n_r_eval=int(m.r_grid.size),
             )
-            a = fit_alpha_from_D(D_pred, t_eval, t_start=t_start, t_end=t_end)
+            a, _, _ = _fit_alpha_with_mode(
+                D_array=D_pred,
+                E_array=E_pred,
+                t_array=t_eval,
+                mode=mode_key,
+                t_start=t_start,
+                t_end=t_end,
+            )
             if not np.isfinite(a):
                 continue
             alpha_pred_list.append(float(a))
@@ -735,7 +910,15 @@ def _bootstrap_simulation(
         if len(alpha_pred_list) < 4:
             continue
         rho, p, n_eff = _spearman_pair(np.array(alpha_pred_list, dtype=float), np.array(delta_near_list, dtype=float))
-        rows.append({"iter": i, "rho_alpha_pred_vs_delta_near": float(rho), "p_value": float(p), "n_eff": int(n_eff)})
+        rows.append(
+            {
+                "iter": i,
+                "rho_alpha_pred_vs_delta_near": float(rho),
+                "p_value": float(p),
+                "n_eff": int(n_eff),
+                "mode": mode_key,
+            }
+        )
     out = pd.DataFrame(rows)
     if out.empty:
         raise ValueError("bootstrap_simulation 未生成有效样本。")
@@ -752,8 +935,10 @@ def _counterfactual_shuffle(
     t_end: float,
     n_iter: int,
     seed: int,
+    mode: str,
 ) -> dict[str, float]:
     rng = np.random.default_rng(int(seed))
+    mode_key = str(mode).strip().upper()
     n = len(models)
     near = np.array([m.meta.delta_near for m in models], dtype=float)
     rho_list: list[float] = []
@@ -762,8 +947,15 @@ def _counterfactual_shuffle(
         alpha_pred = []
         for idx_model in perm:
             m = models[int(idx_model)]
-            D_pred = _predict_D_from_model(m, k=k, Ds=Ds, t_array=t_eval)
-            a = fit_alpha_from_D(D_pred, t_eval, t_start=t_start, t_end=t_end)
+            D_pred, E_pred = _predict_DE_from_model(m, k=k, Ds=Ds, t_array=t_eval)
+            a, _, _ = _fit_alpha_with_mode(
+                D_array=D_pred,
+                E_array=E_pred,
+                t_array=t_eval,
+                mode=mode_key,
+                t_start=t_start,
+                t_end=t_end,
+            )
             alpha_pred.append(float(a))
         rho, _, _ = _spearman_pair(np.array(alpha_pred, dtype=float), near)
         if np.isfinite(rho):
@@ -776,6 +968,7 @@ def _counterfactual_shuffle(
         "rho_ci_low": float(np.quantile(arr, 0.025)),
         "rho_ci_high": float(np.quantile(arr, 0.975)),
         "n_iter": int(arr.size),
+        "mode": mode_key,
     }
 
 
@@ -786,16 +979,25 @@ def _counterfactual_no_diffusion(
     t_eval: np.ndarray,
     t_start: float,
     t_end: float,
+    mode: str,
 ) -> dict[str, float]:
+    mode_key = str(mode).strip().upper()
     alpha_pred = []
     near = []
     for m in models:
-        D_pred = _predict_D_from_model(m, k=float(k), Ds=0.0, t_array=t_eval)
-        a = fit_alpha_from_D(D_pred, t_eval, t_start=t_start, t_end=t_end)
+        D_pred, E_pred = _predict_DE_from_model(m, k=float(k), Ds=0.0, t_array=t_eval)
+        a, _, _ = _fit_alpha_with_mode(
+            D_array=D_pred,
+            E_array=E_pred,
+            t_array=t_eval,
+            mode=mode_key,
+            t_start=t_start,
+            t_end=t_end,
+        )
         alpha_pred.append(float(a))
         near.append(float(m.meta.delta_near))
     rho, p, n = _spearman_pair(np.array(alpha_pred, dtype=float), np.array(near, dtype=float))
-    return {"rho": float(rho), "p_value": float(p), "n_events": int(n)}
+    return {"rho": float(rho), "p_value": float(p), "n_events": int(n), "mode": mode_key}
 
 
 def _counterfactual_uniform_profile(
@@ -806,13 +1008,15 @@ def _counterfactual_uniform_profile(
     t_eval: np.ndarray,
     t_start: float,
     t_end: float,
+    mode: str,
 ) -> dict[str, float]:
+    mode_key = str(mode).strip().upper()
     alpha_pred = []
     near = []
     for m in models:
         c = np.zeros_like(m.coeffs)
         c[0] = m.coeffs[0]
-        D_pred = predict_D_from_profile(
+        D_pred, E_pred = predict_DE_from_profile(
             c,
             m.roots,
             float(k),
@@ -821,11 +1025,18 @@ def _counterfactual_uniform_profile(
             R_max=float(m.r_grid[-1]),
             n_r_eval=int(m.r_grid.size),
         )
-        a = fit_alpha_from_D(D_pred, t_eval, t_start=t_start, t_end=t_end)
+        a, _, _ = _fit_alpha_with_mode(
+            D_array=D_pred,
+            E_array=E_pred,
+            t_array=t_eval,
+            mode=mode_key,
+            t_start=t_start,
+            t_end=t_end,
+        )
         alpha_pred.append(float(a))
         near.append(float(m.meta.delta_near))
     rho, p, n = _spearman_pair(np.array(alpha_pred, dtype=float), np.array(near, dtype=float))
-    return {"rho": float(rho), "p_value": float(p), "n_events": int(n)}
+    return {"rho": float(rho), "p_value": float(p), "n_events": int(n), "mode": mode_key}
 
 
 def _write_readme(out_dir: Path) -> None:
@@ -907,9 +1118,11 @@ def _plot_param_heatmap(
     *,
     k_values: np.ndarray,
     ds_values: np.ndarray,
+    mode: str,
     out_path: Path,
 ) -> None:
     apply_paper_style()
+    mode_key = str(mode).strip().upper()
     k_sorted = np.array(sorted(np.unique(k_values)), dtype=float)
     ds_sorted = np.array(sorted(np.unique(ds_values)), dtype=float)
     n_k, n_ds = k_sorted.size, ds_sorted.size
@@ -925,13 +1138,17 @@ def _plot_param_heatmap(
                 mat[i, j] = float(row[col])
         return mat
 
-    m_s = make_matrix("spearman_rho_alpha_emp")
-    m_mae = make_matrix("mae_alpha")
-    m_dn = make_matrix("spearman_rho_alpha_pred_vs_delta_near")
+    m_s = make_matrix(f"spearman_rho_alpha_emp_{mode_key}")
+    m_mae = make_matrix(f"mae_alpha_{mode_key}")
+    m_dn = make_matrix(f"spearman_rho_alpha_pred_vs_delta_near_{mode_key}")
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.2), sharex=True, sharey=True)
     mats = [m_s, m_mae, m_dn]
-    titles = ["Spearman(α_pred, α_emp)", "MAE(α)", "Spearman(α_pred, δ_near)"]
+    titles = [
+        f"Spearman(α_pred({mode_key}), α_emp)",
+        f"MAE(α,{mode_key})",
+        f"Spearman(α_pred({mode_key}), δ_near)",
+    ]
     cmaps = ["RdBu_r", "viridis", "RdBu_r"]
     for ax, m, ttl, cmap in zip(axes, mats, titles, cmaps):
         im = ax.imshow(
@@ -989,7 +1206,7 @@ def _plot_D_comparison_gallery(
         t = d_emp["hours_since_peak"].to_numpy(dtype=float)
         y_emp = d_emp["D"].to_numpy(dtype=float)
         model = models_by_slug[ev.meta.slug]
-        y_pred = _predict_D_from_model(model, k=k, Ds=Ds, t_array=t)
+        y_pred, _ = _predict_DE_from_model(model, k=k, Ds=Ds, t_array=t)
         if np.isfinite(y_emp[0]) and y_emp[0] > 1e-12:
             y_emp_n = y_emp / y_emp[0]
             y_pred_n = y_pred / y_pred[0]
@@ -1260,7 +1477,7 @@ def _run_exp2(
         ("mixed_ring", "MIXED", -0.20 * np.exp(-(r / 30.0) ** 2) + 0.16 * np.exp(-((r - 120.0) / 28.0) ** 2)),
         ("mixed_weak", "MIXED", -0.12 * np.exp(-(r / 50.0) ** 2) + 0.10 * np.exp(-((r - 145.0) / 35.0) ** 2)),
     ]
-    t_eval = np.arange(0.0, 241.0, 8.0, dtype=float)
+    t_eval = _build_t_eval(t_end=float(t_end))
     rows_curve: list[dict[str, Any]] = []
     rows_pred: list[dict[str, Any]] = []
     roots_ref: np.ndarray | None = None
@@ -1318,7 +1535,11 @@ def _run_exp3(
     ds_max: float,
     t_start: float,
     t_end: float,
+    pred_mode: str,
+    refine_grid_n: int,
+    refine_factor: float,
 ) -> tuple[float, float, pd.DataFrame]:
+    mode_key = str(pred_mode).strip().upper()
     models: list[ProfileModel] = []
     for slug in sorted(event_data):
         ev = event_data[slug]
@@ -1327,11 +1548,11 @@ def _run_exp3(
             raise ValueError(f"{slug} 缺少 profile model（请先运行 Exp1）。")
         models.append(model)
 
-    t_eval = np.arange(0.0, max(240.0, float(t_end) + 8.0), 8.0, dtype=float)
+    t_eval = _build_t_eval(t_end=float(t_end))
     k_grid = np.logspace(np.log10(float(k_min)), np.log10(float(k_max)), int(k_grid_n))
     ds_grid = np.logspace(np.log10(float(ds_min)), np.log10(float(ds_max)), int(ds_grid_n))
 
-    param_grid = _estimate_global_params_grid(
+    param_grid_global = _estimate_global_params_grid(
         models,
         k_grid=k_grid,
         ds_grid=ds_grid,
@@ -1339,10 +1560,41 @@ def _run_exp3(
         t_start=float(t_start),
         t_end=float(t_end),
     )
+    best_global = _pick_best_rows(param_grid_global, mode=mode_key)
+    best_anchor = best_global.loc[best_global["criterion"] == f"min_joint_{mode_key}"].iloc[0]
+    k_anchor = float(best_anchor["k"])
+    ds_anchor = float(best_anchor["Ds"])
+
+    k_low = max(float(k_min), k_anchor / float(refine_factor))
+    k_high = min(float(k_max), k_anchor * float(refine_factor))
+    ds_low = max(float(ds_min), ds_anchor / float(refine_factor))
+    ds_high = min(float(ds_max), ds_anchor * float(refine_factor))
+    if k_low >= k_high:
+        k_low, k_high = float(k_min), float(k_max)
+    if ds_low >= ds_high:
+        ds_low, ds_high = float(ds_min), float(ds_max)
+
+    k_refine = np.logspace(np.log10(k_low), np.log10(k_high), int(refine_grid_n))
+    ds_refine = np.logspace(np.log10(ds_low), np.log10(ds_high), int(refine_grid_n))
+    param_grid_local = _estimate_global_params_grid(
+        models,
+        k_grid=k_refine,
+        ds_grid=ds_refine,
+        t_eval=t_eval,
+        t_start=float(t_start),
+        t_end=float(t_end),
+    )
+
+    param_grid = (
+        pd.concat([param_grid_global, param_grid_local], ignore_index=True)
+        .drop_duplicates(subset=["k", "Ds"], keep="first")
+        .sort_values(["k", "Ds"], kind="stable")
+        .reset_index(drop=True)
+    )
     param_grid.to_csv(tables_dir / "pde_param_grid.csv", index=False)
 
-    best_df = _pick_best_rows(param_grid)
-    best_s = best_df.loc[best_df["criterion"] == "max_spearman"].iloc[0]
+    best_df = _pick_best_rows(param_grid, mode=mode_key)
+    best_s = best_df.loc[best_df["criterion"] == f"min_joint_{mode_key}"].iloc[0]
     opt_row = _estimate_global_params_least_squares(
         models,
         t_eval=t_eval,
@@ -1354,17 +1606,36 @@ def _run_exp3(
         ds_max=float(ds_max),
         k_init=float(best_s["k"]),
         ds_init=float(best_s["Ds"]),
+        mode=mode_key,
     )
     best_df = pd.concat([best_df, pd.DataFrame([opt_row])], ignore_index=True)
     best_df.to_csv(tables_dir / "pde_optimal_params.csv", index=False)
-    best_s = best_df.loc[best_df["criterion"] == "max_spearman"].iloc[0]
+    best_s = best_df.loc[best_df["criterion"] == f"min_joint_{mode_key}"].iloc[0]
     k_best = float(best_s["k"])
     ds_best = float(best_s["Ds"])
 
     pred_rows: list[dict[str, Any]] = []
     for m in models:
-        D_pred = _predict_D_from_model(m, k=k_best, Ds=ds_best, t_array=t_eval)
-        alpha_pred, fit_r2, n_fit = _fit_alpha_from_D_detail(D_pred, t_eval, t_start=float(t_start), t_end=float(t_end))
+        D_pred, E_pred = _predict_DE_from_model(m, k=k_best, Ds=ds_best, t_array=t_eval)
+        alpha_pred_d, fit_r2_d, n_fit_d = _fit_alpha_with_mode(
+            D_array=D_pred,
+            E_array=E_pred,
+            t_array=t_eval,
+            mode="D",
+            t_start=float(t_start),
+            t_end=float(t_end),
+        )
+        alpha_pred_e, fit_r2_e, n_fit_e = _fit_alpha_with_mode(
+            D_array=D_pred,
+            E_array=E_pred,
+            t_array=t_eval,
+            mode="E",
+            t_start=float(t_start),
+            t_end=float(t_end),
+        )
+        alpha_pred = float(alpha_pred_e if mode_key == "E" else alpha_pred_d)
+        fit_r2 = float(fit_r2_e if mode_key == "E" else fit_r2_d)
+        n_fit = int(n_fit_e if mode_key == "E" else n_fit_d)
         pred_rows.append(
             {
                 "slug": m.meta.slug,
@@ -1373,6 +1644,8 @@ def _run_exp3(
                 "event_type": m.meta.event_type,
                 "alpha_emp": float(m.meta.alpha),
                 "alpha_pred": float(alpha_pred),
+                "alpha_pred_D": float(alpha_pred_d),
+                "alpha_pred_E": float(alpha_pred_e),
                 "residual": float(alpha_pred - m.meta.alpha),
                 "abs_error": float(abs(alpha_pred - m.meta.alpha)),
                 "delta_near": float(m.meta.delta_near),
@@ -1381,6 +1654,9 @@ def _run_exp3(
                 "Ds_best": ds_best,
                 "fit_r2": float(fit_r2),
                 "n_fit": int(n_fit),
+                "fit_r2_D": float(fit_r2_d),
+                "fit_r2_E": float(fit_r2_e),
+                "pred_mode": mode_key,
             }
         )
     pred_df = pd.DataFrame(pred_rows).sort_values(["slug"], kind="stable").reset_index(drop=True)
@@ -1393,10 +1669,17 @@ def _run_exp3(
         t_eval=t_eval,
         t_start=float(t_start),
         t_end=float(t_end),
+        mode=mode_key,
     )
     loo_df.to_csv(tables_dir / "pde_loo_results.csv", index=False)
 
-    _plot_param_heatmap(param_grid, k_values=k_grid, ds_values=ds_grid, out_path=figures_dir / "pde_param_heatmap.png")
+    _plot_param_heatmap(
+        param_grid,
+        k_values=np.unique(param_grid["k"].to_numpy(dtype=float)),
+        ds_values=np.unique(param_grid["Ds"].to_numpy(dtype=float)),
+        mode=mode_key,
+        out_path=figures_dir / "pde_param_heatmap.png",
+    )
     _plot_alpha_scatter(pred_df, figures_dir / "pde_alpha_scatter.png")
 
     models_map = {m.meta.slug: m for m in models}
@@ -1421,9 +1704,11 @@ def _run_exp4(
     t_end: float,
     n_bootstrap: int,
     seed: int,
+    pred_mode: str,
 ) -> None:
+    mode_key = str(pred_mode).strip().upper()
     models: list[ProfileModel] = [event_data[s].__dict__["_profile_model"] for s in sorted(event_data)]
-    t_eval = np.arange(0.0, max(240.0, float(t_end) + 8.0), 8.0, dtype=float)
+    t_eval = _build_t_eval(t_end=float(t_end))
 
     boot_df = _bootstrap_simulation(
         models,
@@ -1434,6 +1719,7 @@ def _run_exp4(
         t_end=float(t_end),
         n_iter=int(n_bootstrap),
         seed=int(seed),
+        mode=mode_key,
     )
     boot_df.to_csv(tables_dir / "simulation_bootstrap.csv", index=False)
 
@@ -1446,6 +1732,7 @@ def _run_exp4(
         t_end=float(t_end),
         n_iter=max(200, int(n_bootstrap)),
         seed=int(seed) + 17,
+        mode=mode_key,
     )
     no_diff = _counterfactual_no_diffusion(
         models,
@@ -1453,6 +1740,7 @@ def _run_exp4(
         t_eval=t_eval,
         t_start=float(t_start),
         t_end=float(t_end),
+        mode=mode_key,
     )
     uniform = _counterfactual_uniform_profile(
         models,
@@ -1461,6 +1749,7 @@ def _run_exp4(
         t_eval=t_eval,
         t_start=float(t_start),
         t_end=float(t_end),
+        mode=mode_key,
     )
 
     rho_emp, p_emp, n_emp = _spearman_pair(pred_df["alpha_emp"].to_numpy(dtype=float), pred_df["delta_near"].to_numpy(dtype=float))
@@ -1469,34 +1758,40 @@ def _run_exp4(
 
     cf_rows = [
         {"scenario": "observed_empirical", "rho": float(rho_emp), "p_value": float(p_emp), "n_events": int(n_emp), "note": "α_emp vs δ_near"},
-        {"scenario": "pde_predicted", "rho": float(rho_model), "p_value": float(p_model), "n_events": int(n_model), "note": "α_pred vs δ_near"},
+        {
+            "scenario": "pde_predicted",
+            "rho": float(rho_model),
+            "p_value": float(p_model),
+            "n_events": int(n_model),
+            "note": f"α_pred({mode_key}) vs δ_near",
+        },
         {
             "scenario": "bootstrap_profile_perturbation",
             "rho": float(np.mean(rho_boot)),
             "p_value": float("nan"),
             "n_events": int(len(models)),
-            "note": f"95%CI=[{np.quantile(rho_boot,0.025):.3f},{np.quantile(rho_boot,0.975):.3f}]",
+            "note": f"mode={mode_key};95%CI=[{np.quantile(rho_boot,0.025):.3f},{np.quantile(rho_boot,0.975):.3f}]",
         },
         {
             "scenario": "counterfactual_shuffle_profiles",
             "rho": float(shuffled["rho_mean"]),
             "p_value": float("nan"),
             "n_events": int(len(models)),
-            "note": f"95%CI=[{shuffled['rho_ci_low']:.3f},{shuffled['rho_ci_high']:.3f}], n_iter={int(shuffled['n_iter'])}",
+            "note": f"mode={mode_key};95%CI=[{shuffled['rho_ci_low']:.3f},{shuffled['rho_ci_high']:.3f}], n_iter={int(shuffled['n_iter'])}",
         },
         {
             "scenario": "counterfactual_no_diffusion_Ds0",
             "rho": float(no_diff["rho"]),
             "p_value": float(no_diff["p_value"]),
             "n_events": int(no_diff["n_events"]),
-            "note": "Ds=0",
+            "note": f"Ds=0;mode={mode_key}",
         },
         {
             "scenario": "counterfactual_uniform_profile_only_c0",
             "rho": float(uniform["rho"]),
             "p_value": float(uniform["p_value"]),
             "n_events": int(uniform["n_events"]),
-            "note": "仅保留 c0",
+            "note": f"仅保留 c0;mode={mode_key}",
         },
     ]
     counterfactual_df = pd.DataFrame(cf_rows)
@@ -1543,13 +1838,17 @@ def run(
     k_max: float = 1.0,
     ds_min: float = 1e-2,
     ds_max: float = 1e3,
-    t_start: float = 24.0,
+    t_start: float = 1.0,
     t_end: float = 120.0,
     n_bootstrap: int = 500,
     seed: int = 42,
     run_until: int = 4,
     k_synth: float = 0.02,
     ds_synth: float = 30.0,
+    pred_mode: str = "E",
+    refine_grid_n: int = 30,
+    refine_factor: float = 10.0,
+    exp2_align_to_exp3: bool = True,
 ) -> None:
     out_dir = Path(out_dir)
     tables_dir = out_dir / "tables"
@@ -1580,18 +1879,6 @@ def run(
             n_bessel_modes=int(n_bessel_modes),
         )
 
-    if int(run_until) >= 2:
-        _run_exp2(
-            tables_dir=tables_dir,
-            figures_dir=figures_dir,
-            r_max_km=float(r_max_km),
-            n_bessel_modes=int(n_bessel_modes),
-            t_start=float(t_start),
-            t_end=float(t_end),
-            k_synth=float(k_synth),
-            ds_synth=float(ds_synth),
-        )
-
     k_best = float("nan")
     ds_best = float("nan")
     pred_df = pd.DataFrame()
@@ -1609,7 +1896,31 @@ def run(
             ds_max=float(ds_max),
             t_start=float(t_start),
             t_end=float(t_end),
+            pred_mode=str(pred_mode),
+            refine_grid_n=int(refine_grid_n),
+            refine_factor=float(refine_factor),
         )
+
+    if int(run_until) >= 2:
+        k_for_exp2 = float(k_synth)
+        ds_for_exp2 = float(ds_synth)
+        exp2_param_source = "manual"
+        if int(run_until) >= 3 and bool(exp2_align_to_exp3) and np.isfinite(k_best) and np.isfinite(ds_best):
+            k_for_exp2 = float(k_best)
+            ds_for_exp2 = float(ds_best)
+            exp2_param_source = "exp3_best"
+        _run_exp2(
+            tables_dir=tables_dir,
+            figures_dir=figures_dir,
+            r_max_km=float(r_max_km),
+            n_bessel_modes=int(n_bessel_modes),
+            t_start=float(t_start),
+            t_end=float(t_end),
+            k_synth=float(k_for_exp2),
+            ds_synth=float(ds_for_exp2),
+        )
+    else:
+        exp2_param_source = "not_run"
 
     if int(run_until) >= 4:
         if pred_df.empty or not np.isfinite(k_best) or not np.isfinite(ds_best):
@@ -1624,6 +1935,7 @@ def run(
             t_end=float(t_end),
             n_bootstrap=int(n_bootstrap),
             seed=int(seed),
+            pred_mode=str(pred_mode),
         )
 
     metadata = {
@@ -1641,16 +1953,23 @@ def run(
         "high_freq_thresh_h": float(high_freq_thresh_h),
         "k_grid_n": int(k_grid_n),
         "ds_grid_n": int(ds_grid_n),
+        "refine_grid_n": int(refine_grid_n),
+        "refine_factor": float(refine_factor),
         "k_min": float(k_min),
         "k_max": float(k_max),
         "ds_min": float(ds_min),
         "ds_max": float(ds_max),
+        "pred_mode": str(pred_mode).strip().upper(),
         "t_start": float(t_start),
         "t_end": float(t_end),
         "n_bootstrap": int(n_bootstrap),
         "seed": int(seed),
         "k_synth": float(k_synth),
         "ds_synth": float(ds_synth),
+        "exp2_param_source": exp2_param_source,
+        "exp2_k_used": float(k_for_exp2) if int(run_until) >= 2 else float("nan"),
+        "exp2_ds_used": float(ds_for_exp2) if int(run_until) >= 2 else float("nan"),
+        "exp2_align_to_exp3": bool(exp2_align_to_exp3),
         "exp0_profile_rows": int(radial_df.shape[0]),
         "exp0_event_diag_rows": int(diag_df.shape[0]),
     }
@@ -1673,16 +1992,20 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     p.add_argument("--k-grid-n", type=int, default=30)
     p.add_argument("--ds-grid-n", type=int, default=30)
+    p.add_argument("--refine-grid-n", type=int, default=30)
+    p.add_argument("--refine-factor", type=float, default=10.0)
     p.add_argument("--k-min", type=float, default=1e-4)
     p.add_argument("--k-max", type=float, default=1.0)
     p.add_argument("--ds-min", type=float, default=1e-2)
     p.add_argument("--ds-max", type=float, default=1e3)
 
-    p.add_argument("--t-start", type=float, default=24.0)
+    p.add_argument("--t-start", type=float, default=1.0)
     p.add_argument("--t-end", type=float, default=120.0)
     p.add_argument("--n-bootstrap", type=int, default=500)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--run-until", type=int, choices=[1, 2, 3, 4], default=4)
+    p.add_argument("--pred-mode", type=str, choices=["D", "E", "d", "e"], default="E")
+    p.add_argument("--exp2-align-to-exp3", type=int, choices=[0, 1], default=1)
 
     p.add_argument("--k-synth", type=float, default=0.02)
     p.add_argument("--ds-synth", type=float, default=30.0)
@@ -1703,6 +2026,8 @@ def cli_main() -> None:
         high_freq_thresh_h=float(args.high_freq_thresh_h),
         k_grid_n=int(args.k_grid_n),
         ds_grid_n=int(args.ds_grid_n),
+        refine_grid_n=int(args.refine_grid_n),
+        refine_factor=float(args.refine_factor),
         k_min=float(args.k_min),
         k_max=float(args.k_max),
         ds_min=float(args.ds_min),
@@ -1714,4 +2039,6 @@ def cli_main() -> None:
         run_until=int(args.run_until),
         k_synth=float(args.k_synth),
         ds_synth=float(args.ds_synth),
+        pred_mode=str(args.pred_mode),
+        exp2_align_to_exp3=bool(args.exp2_align_to_exp3),
     )

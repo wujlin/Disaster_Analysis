@@ -1,6 +1,6 @@
 metric,langevin,diffusion_relaxation
-"rho(alpha_pred, alpha_emp)",,-0.3529411764705882
-"rho(param_or_alpha, delta_near)",0.2718144542566024,-0.3529411764705882
-"bootstrap_rho(alpha,delta_near)_95ci",,"[-0.744, 0.343]"
-counterfactual_Ds0_rho,,0.29411764705882354
+"rho(alpha_pred, alpha_emp)",,-0.5529411764705882
+"rho(param_or_alpha, delta_near)",0.2718144542566024,-0.5529411764705882
+"bootstrap_rho(alpha,delta_near)_95ci",,"[-0.763, -0.079]"
+counterfactual_Ds0_rho,,0.0
 global_param_count,>=2 per event,2 global
