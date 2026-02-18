@@ -384,6 +384,11 @@ def _prepare_events(
             "center_lat": np.nan,
             "center_lon": np.nan,
             "center_source": "",
+            "t0_method": "",
+            "center_method": "",
+            "t0_snap_delta_hours": np.nan,
+            "track_anchor_ok": np.nan,
+            "warning_flags": "",
             "note": "",
         }
         spec = spec_map.get(meta.slug)
@@ -395,7 +400,7 @@ def _prepare_events(
         row["has_catalog"] = 1
 
         try:
-            t0_pt, c_lat, c_lon, _ = auto_t0_and_center(spec)
+            t0_pt, c_lat, c_lon, auto_meta = auto_t0_and_center(spec)
         except Exception as e:
             row["note"] = f"auto_t0_and_center_failed:{type(e).__name__}:{e}"
             avail_rows.append(row)
@@ -407,6 +412,21 @@ def _prepare_events(
         center_lat = float(c_lat)
         center_lon = float(c_lon)
         center_source = "static_or_auto"
+        t0_method = str(auto_meta.get("t0_method", ""))
+        center_method = str(auto_meta.get("center_method", ""))
+        t0_snap_delta_hours = auto_meta.get("t0_snap_delta_hours", np.nan)
+        track_anchor_ok = auto_meta.get("track_anchor_ok", np.nan)
+        warning_flags: list[str] = []
+        if t0_method == "auto_first_population_window":
+            warning_flags.append("t0_auto_first_window")
+        try:
+            td = float(t0_snap_delta_hours)
+            if np.isfinite(td) and td > 12.0:
+                warning_flags.append("t0_snap_delta_gt12h")
+        except Exception:
+            pass
+        if center_method.startswith("auto_"):
+            warning_flags.append("center_auto_estimated")
 
         if use_track_center_at_peak:
             try:
@@ -453,6 +473,11 @@ def _prepare_events(
                 "center_lat": float(center_lat),
                 "center_lon": float(center_lon),
                 "center_source": center_source,
+                "t0_method": t0_method,
+                "center_method": center_method,
+                "t0_snap_delta_hours": t0_snap_delta_hours,
+                "track_anchor_ok": track_anchor_ok,
+                "warning_flags": "|".join(warning_flags),
                 "note": "ok",
             }
         )
@@ -898,6 +923,14 @@ def run(
         require_all_events=bool(require_all_events),
     )
     avail_df.to_csv(tables_dir / "movement_data_availability.csv", index=False)
+    warn_df = avail_df.copy()
+    warn_df["status"] = np.where(
+        warn_df["note"] != "ok",
+        "fatal",
+        np.where(warn_df["warning_flags"].astype(str).str.len() > 0, "warning", "clean"),
+    )
+    warn_df = warn_df.sort_values(["status", "slug"], kind="stable").reset_index(drop=True)
+    warn_df.to_csv(tables_dir / "movement_warning_registry.csv", index=False)
     if require_all_events and missing:
         missing_df = avail_df.loc[avail_df["slug"].isin(missing), ["slug", "note"]].copy()
         missing_pairs = [f"{r.slug} -> {r.note}" for r in missing_df.itertuples(index=False)]
