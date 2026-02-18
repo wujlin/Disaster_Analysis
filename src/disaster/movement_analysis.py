@@ -616,7 +616,20 @@ def _aggregate_event_metrics(
                 "n_vectors_return": int(np.sum(mask_ret.to_numpy(dtype=bool))),
             }
         )
-    return_df = pd.DataFrame(return_rows).sort_values("hours_since_peak", kind="stable").reset_index(drop=True)
+    return_cols = [
+        "slug",
+        "short_name",
+        "window_start_pt",
+        "hours_since_peak",
+        "return_flow",
+        "R_return",
+        "denominator_F_out_near_pos",
+        "n_vectors_return",
+    ]
+    if return_rows:
+        return_df = pd.DataFrame(return_rows).sort_values("hours_since_peak", kind="stable").reset_index(drop=True)
+    else:
+        return_df = pd.DataFrame(columns=return_cols)
     alpha_return = float("nan")
     alpha_return_r2 = float("nan")
     alpha_return_n = 0
