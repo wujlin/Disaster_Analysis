@@ -365,7 +365,7 @@ def _prepare_events(
     use_track_center_at_peak: bool,
     allow_track_extrapolation: bool,
     require_all_events: bool,
-) -> tuple[list[EventPrepared], pd.DataFrame]:
+) -> tuple[list[EventPrepared], pd.DataFrame, list[str]]:
     prepared: list[EventPrepared] = []
     avail_rows: list[dict[str, Any]] = []
     missing: list[str] = []
@@ -471,9 +471,7 @@ def _prepare_events(
         avail_rows.append(row)
 
     avail_df = pd.DataFrame(avail_rows).sort_values("slug", kind="stable").reset_index(drop=True)
-    if require_all_events and missing:
-        raise ValueError(f"movement 数据或事件配置不完整，缺失事件：{sorted(missing)}")
-    return prepared, avail_df
+    return prepared, avail_df, sorted(missing)
 
 
 def _aggregate_event_metrics(
@@ -877,7 +875,7 @@ def run(
     if missing_catalog:
         raise ValueError(f"catalog 缺失 Route B 事件：{missing_catalog}")
 
-    prepared, avail_df = _prepare_events(
+    prepared, avail_df, missing = _prepare_events(
         route_b_events=route_b,
         spec_map=spec_map,
         catalog_path=Path(catalog),
@@ -887,6 +885,14 @@ def run(
         require_all_events=bool(require_all_events),
     )
     avail_df.to_csv(tables_dir / "movement_data_availability.csv", index=False)
+    if require_all_events and missing:
+        missing_df = avail_df.loc[avail_df["slug"].isin(missing), ["slug", "note"]].copy()
+        missing_pairs = [f"{r.slug} -> {r.note}" for r in missing_df.itertuples(index=False)]
+        raise ValueError(
+            "movement 数据或事件配置不完整，缺失事件："
+            f"{missing}。详情：{missing_pairs}。"
+            f"详情文件：{tables_dir / 'movement_data_availability.csv'}"
+        )
 
     metrics_rows: list[dict[str, Any]] = []
     return_rows: list[pd.DataFrame] = []
