@@ -1,0 +1,593 @@
+% ============================================================
+%  Supplementary Information
+%  Displacement geometry and perturbation amplitude predict
+%  post-disaster population recovery across hazard types
+%  and development levels
+% ============================================================
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{array}
+\usepackage{xcolor}
+
+% ---- macros (same as main.tex) ----
+\newcommand{\dnear}{\delta_{\mathrm{near}}}
+\newcommand{\dpeak}{D_{\mathrm{peak}}}
+\newcommand{\apred}{\alpha_{\mathrm{pred}}}
+\newcommand{\aemp}{\alpha_{\mathrm{emp}}}
+\newcommand{\Ds}{D_s}
+
+\title{\textbf{Supplementary Information}\\[4pt]
+Displacement geometry and perturbation amplitude predict\\
+post-disaster population recovery across hazard types and development levels}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+% ============================================================
+%  S1  Event Catalogue
+% ============================================================
+\section{Event catalogue and sample selection}
+\label{sec:si_events}
+
+Table~\ref{tab:events} lists the 16~events included in the main
+analysis, ordered by hazard type and then by descending~$\aemp$.
+Events were selected from the Facebook Disaster Maps archive using
+the \textit{Route B} quality criteria: (i) sufficient post-peak
+monotone-decay observations ($n_{\mathrm{mono}} \geq 3$), (ii) the
+event was not manually excluded for data artefacts, and (iii) the
+goodness-of-fit $R^2 \geq 0.6$ was not the sole reason for
+exclusion.  Four events with comparatively low goodness-of-fit
+($R^2 < 0.75$; marked with $\dagger$ in the $R^2$ column) are
+retained in the primary analysis but shown with open markers in all
+scatter plots.
+
+\begin{table}[h]
+\centering
+\caption{Event catalogue.  $\dpeak$: aggregated peak displacement
+(dimensionless population ratio deviation).  $\aemp$: empirical
+log--log decay rate (monotone-truncation method, window
+$[t_{\mathrm{start}},\,t_{\mathrm{end}}]$~h).
+$\dnear$: mean near-field displacement at peak time.
+$D_\infty$: normalised residual displacement.
+$^\dagger$: $R^2 < 0.75$.}
+\label{tab:events}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}llllrrrrcr@{}}
+\toprule
+Event & Country & Hazard & Type
+  & $\dpeak$ & $\aemp$ & $R^2$ & $\dnear$
+  & Window (h) & $D_\infty$ \\
+\midrule
+\multicolumn{10}{l}{\textit{Earthquake}} \\[2pt]
+2024 Central Mexico EQ        & Mexico   & EQ & INFL & 0.248 & 0.348 & 0.893 &  0.250 & 24--96  & 0.387 \\
+2023 T\"{u}rkiye--Syria EQ    & T\"{u}rkiye & EQ & INFL & 0.401 & 0.223 & 0.959 &  0.057 & 24--96  & 0.569 \\
+\midrule
+\multicolumn{10}{l}{\textit{Hurricane / Typhoon}} \\[2pt]
+Typhoon Yagi (N.~Vietnam)       & Vietnam  & TC & EVAC & 0.256 & 0.833 & 0.997 & $-0.274$ & 24--120 & 0.244 \\
+Hurricane Beryl (Texas, US)     & USA      & TC & EVAC & 0.118 & 0.647 & 0.982 & $-0.169$ & 24--144 & 0.202 \\
+Hurricane Beryl (QR, Mexico)    & Mexico   & TC & EVAC & 0.122 & 0.594 & 0.897 & $-0.218$ & 24--120 & 0.262 \\
+Hurricane Beryl (Pre-landfall)  & Jamaica  & TC & NEUT & 0.171 & 0.425 & 0.913 &  0.004 & 24--144 & 0.449 \\
+Hurricane Milton (Florida, US)  & USA      & TC & INFL & 0.140 & 0.209 & 0.630$^\dagger$ &  0.118 & 24--72  & 0.794 \\
+Hurricane John (Oaxaca, Mexico) & Mexico   & TC & INFL & 0.117 & 0.082 & 0.624$^\dagger$ &  0.085 & 24--72  & 0.636 \\
+Hurricane John (Guerrero, MX)   & Mexico   & TC & INFL & 0.101 & $-0.019$ & 0.951 &  0.075 & 24--72  & 0.834 \\
+\midrule
+\multicolumn{10}{l}{\textit{Flood}} \\[2pt]
+2024 Nepal Floods (Bagmati/Koshi) & Nepal      & FL & EVAC & 0.185 & 1.135 & 0.939 & $-0.104$ & 24--120 & 0.544 \\
+2024 Spain Floods (DANA)          & Spain      & FL & INFL & 0.129 & 0.267 & 0.976 &  0.138 & 24--96  & 0.785 \\
+2024 Moldova Floods               & Moldova    & FL & INFL & 0.063 & 0.183 & 0.876 &  0.045 & 24--96  & 0.644 \\
+2024 E.~Bangladesh Floods         & Bangladesh & FL & INFL & 0.084 & 0.169 & 0.722 &  0.062 & 24--120 & 0.549 \\
+2024 Gujarat Floods               & India      & FL & EVAC & 0.125 & 0.161 & 0.715$^\dagger$ & $-0.078$ & 24--144 & 0.652 \\
+2024 C.--E.~Europe Floods         & Poland     & FL & INFL & 0.101 & 0.098 & 0.662$^\dagger$ &  0.066 & 24--96  & 0.867 \\
+\midrule
+\multicolumn{10}{l}{\textit{Wildfire}} \\[2pt]
+2024 Idaho Wildfire (Boise Co.)   & USA        & WF & INFL & 0.137 & 0.181 & 0.810 &  0.040 & 24--72  & 0.351 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+\textbf{Abbreviations.}  EQ = earthquake; TC = tropical cyclone
+(hurricane or typhoon); FL = flood; WF = wildfire.
+EVAC = net near-field population loss ($\dnear < 0$);
+INFL = net influx ($\dnear > 0$);
+NEUT = near-zero near-field signal ($|\dnear| < 0.01$).
+
+
+% ============================================================
+%  S2  Multi-method Robustness of alpha
+% ============================================================
+\section{Multi-method robustness of the decay-rate definition}
+\label{sec:si_robustness}
+
+Table~\ref{tab:multimethod} reports Spearman correlations of~$\aemp$
+with~$\dnear$ and~$\dpeak$ under five distinct definitions of the
+decay rate.  The primary method (monotone truncation) uses a fixed
+start at $t' = 24$~h and a data-adaptive end determined by the first
+structural rebound in $D_{\mathrm{norm}}(t')$; the four fixed-window
+methods use $[24,\,w]$~h for $w \in \{72, 96, 120, 144\}$.
+
+\begin{table}[h]
+\centering
+\caption{Multi-method robustness of $\aemp$.  ``Sign stable'' = same
+sign as the primary (monotone) estimate.}
+\label{tab:multimethod}
+\small
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Method & Window (h) & $\rho(\aemp,\dnear)$ & $p$
+       & $\rho(\aemp,\dpeak)$ & $p$ & Sign stable? \\
+\midrule
+Monotone truncation & 24--var  & $-0.526$ & 0.036 & $+0.600$ & 0.014 & \checkmark \\
+Fixed $[24,72]$     & 24--72   & $-0.500$ & 0.049 & $+0.644$ & 0.007 & \checkmark \\
+Fixed $[24,96]$     & 24--96   & $-0.482$ & 0.059 & $+0.512$ & 0.043 & \checkmark \\
+Fixed $[24,120]$    & 24--120  & $-0.538$ & 0.032 & $+0.491$ & 0.053 & \checkmark \\
+Fixed $[24,144]$    & 24--144  & $-0.515$ & 0.041 & $+0.574$ & 0.020 & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The five estimates are highly correlated: Pearson $r \geq 0.88$
+between the monotone-truncation~$\aemp$ and any fixed-window
+alternative.  The sign of both correlations is stable across all
+five methods (100\% sign stability); four of five reach $p < 0.05$
+for $\rho(\aemp,\dnear)$ and for $\rho(\aemp,\dpeak)$.
+
+
+% ============================================================
+%  S3  PDE Model Details
+% ============================================================
+\section{PDE model: derivation, Bessel decomposition, and parameter
+search}
+\label{sec:si_pde}
+
+\subsection*{S3.1 Governing equation}
+
+We model the post-peak evolution of the radial displacement field
+$\delta(r,t)$ by a diffusion--relaxation equation in cylindrical
+coordinates under radial symmetry:
+\begin{equation}
+  \frac{\partial\delta}{\partial t}
+    = \frac{\Ds}{r}\frac{\partial}{\partial r}
+      \!\left(r\,\frac{\partial\delta}{\partial r}\right)
+    - k\,\delta, \quad 0 \leq r \leq R,
+  \label{si:eq:pde}
+\end{equation}
+where $\Ds$~[km$^2$\,h$^{-1}$] is a lateral diffusion coefficient
+and $k$~[h$^{-1}$] is a uniform first-order relaxation rate.  The
+domain radius $R = 200$~km matches the analysis window.
+
+\noindent\textbf{Boundary conditions.}
+Neumann (zero-flux) conditions are imposed at both boundaries:
+\[
+  \left.\frac{\partial\delta}{\partial r}\right|_{r=0} = 0, \qquad
+  \left.\frac{\partial\delta}{\partial r}\right|_{r=R} = 0 .
+\]
+
+\subsection*{S3.2 Analytical Bessel-series solution}
+
+Because $\delta(r,t)$ satisfies a separable linear PDE with Neumann
+boundaries on a disk, the general solution is a superposition of
+Bessel-$J_0$ modes~\citep{Crank1975}:
+\begin{equation}
+  \delta(r,t) = \sum_{n=0}^{N-1} c_n\,J_0\!\left(\frac{\mu_n r}{R}\right)
+    e^{-\lambda_n (t-t_{\mathrm{peak}})},
+  \label{si:eq:bessel}
+\end{equation}
+where:
+\begin{itemize}
+  \item $\mu_n$ are the non-negative zeros of $J_0'(x) = -J_1(x)$
+        ($\mu_0 = 0$, $\mu_1 = 3.832$, $\mu_2 = 7.016$, \ldots;
+        \textbf{note}: $\mu_n$ here denotes Bessel zeros, distinct from the
+        empirical decay rate~$\aemp$ used throughout the paper),
+  \item $N = 10$ modes (convergence verified; adding modes
+        $n > 10$ changes $\apred$ by $< 0.3\%$),
+  \item $\lambda_n = k + \Ds\,(\mu_n/R)^2$ is the modal decay rate.
+\end{itemize}
+
+The key physics: higher-order modes (larger $\mu_n$, finer spatial
+structure) decay exponentially faster than the fundamental mode.
+An initial profile rich in high-order components therefore relaxes
+faster in aggregate than a smooth, low-mode profile.
+
+\subsection*{S3.3 Projection of observed profiles onto Bessel basis}
+
+At $t = t_{\mathrm{peak}}$, the expansion coefficients $\{c_n\}$
+are determined by $r$-weighted least squares from the observed
+10-km-binned radial profile $\hat\delta(r_i)$:
+\begin{equation}
+  \{c_n\} = \arg\min_{\{c_n\}} \sum_i r_i\,
+  \left[\hat\delta(r_i)
+        - \sum_{n=0}^{N-1} c_n\,J_0\!\left(\frac{\mu_n r_i}{R}\right)
+  \right]^2 .
+  \label{si:eq:lsq}
+\end{equation}
+The weight $r_i$ reflects the area of each annular bin and ensures
+that outer bins (larger $r$, more tiles) do not numerically dominate
+the fit.
+
+\subsection*{S3.4 Computation of $\apred$}
+
+Rather than tracking $\delta(r,t)$ directly, we use an energy-type
+metric:
+\begin{equation}
+  E(t) = \frac{\int_0^R [\delta(r,t)]^2\,r\,\mathrm{d}r}
+               {\int_0^R r\,\mathrm{d}r}
+       \;\approx\; \sum_{n=0}^{N-1} c_n^2\,e^{-2\lambda_n
+               (t-t_{\mathrm{peak}})}
+  \quad\text{(Parseval approximation)}.
+  \label{si:eq:energy}
+\end{equation}
+$E(t)$ is the $L^2$ energy norm, whereas the empirical $D(t)$ is an
+$L^1$ mean-absolute-deviation.  Both summarize aggregate relaxation,
+but $E(t)$ has an exact Parseval representation that facilitates
+interpretation.  We fit $\log E$ vs.\ $\log(t - t_{\mathrm{peak}})$
+by OLS over $[1,\,120]$~h to obtain~$\apred$.  The starting point
+$1$~h (versus $24$~h for~$\aemp$) is chosen to capture the rapid
+initial decay of high-order modes; the model's role is to predict the
+\emph{ranking} of recovery rates, not their absolute magnitude.
+
+\subsection*{S3.5 Global parameter estimation}
+
+Parameters $k$ and $\Ds$ are shared across all 16~events.  We search
+a log-uniform $30 \times 30$ grid ($k \in [10^{-4},\,10^{0}]$~h$^{-1}$,
+$\Ds \in [10^{-2},\,10^{1}]$~km$^2$\,h$^{-1}$), then refine with a
+$30 \times 30$ sub-grid around the coarse optimum (grid spacing reduced
+by $10\times$).  The joint optimisation criterion minimises the sum of
+three normalised rank statistics:
+\begin{equation}
+  \mathcal{L}(k, \Ds)
+    = \mathrm{rank}\!\left[-\rho(\apred,\aemp)\right]
+    + \mathrm{rank}\!\left[-\rho(\apred,\dnear)\right]
+    + \mathrm{rank}\!\left[\mathrm{MAE}(\apred,\aemp)\right] ,
+  \label{si:eq:criterion}
+\end{equation}
+where $\rho$ denotes Spearman correlation and MAE is mean absolute
+error.  The optimal parameters under this criterion are:
+\[
+  k^* = 0.00418\;\mathrm{h}^{-1}, \quad
+  \Ds^* = 0.304\;\mathrm{km}^2\,\mathrm{h}^{-1} .
+\]
+
+\subsection*{S3.6 Counterfactual experiments}
+
+Three counterfactual conditions test the necessity of diffusion and
+spatial profile structure (Table~\ref{tab:counterfactual}):
+
+\begin{enumerate}
+  \item \textbf{No diffusion} ($\Ds = 0$): all modes collapse to the
+        same rate~$k$; $E(t) \propto e^{-2kt}$ is profile-independent,
+        so $\apred$ is identical for all events and
+        $\rho(\apred,\dnear) = 0.0$.
+  \item \textbf{$c_0$-only}: only the uniform (zero-wavenumber) mode
+        is retained; the spatially heterogeneous structure of the
+        profile is erased, again yielding $\rho(\apred,\dnear) = 0.0$.
+  \item \textbf{Shuffled profiles}: the observed profile of event~$j$
+        is assigned to event~$k$ at random (500~permutations).
+        The median $\rho = -0.008$ with 95\% CI $[-0.518,\,+0.519]$
+        confirms that the signal requires each event's \emph{own}
+        spatial profile.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\caption{Counterfactual experiment results.}
+\label{tab:counterfactual}
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Scenario & $\rho(\apred,\dnear)$ & $p$ & 95\% CI \\
+\midrule
+Baseline PDE (observed) & $-0.553$ & 0.026 & --- \\
+No diffusion ($\Ds = 0$) & $0.000$ & 1.000 & --- \\
+$c_0$-only & $0.000$ & 1.000 & --- \\
+Shuffled profiles & $-0.008$ & --- & $[-0.518,\;+0.519]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{S3.7 Bootstrap robustness of $\rho(\apred, \dnear)$}
+
+To assess sensitivity to the observed radial profiles, we perturb
+each event's profile by multiplicative Gaussian noise ($\pm 10\%$)
+and refit $\{c_n\}$ for 500~realisations.  The resulting bootstrap
+distribution of $\rho(\apred,\dnear)$ has:
+\begin{itemize}
+  \item median $\rho = -0.482$,
+  \item 95\% CI $= [-0.763,\,-0.079]$,
+  \item 98.4\% of realisations yield $\rho < 0$.
+\end{itemize}
+The mechanism is robust to profile measurement uncertainty.
+
+
+% ============================================================
+%  S4  Socioeconomic Covariate Analysis
+% ============================================================
+\section{Socioeconomic covariate analysis}
+\label{sec:si_socio}
+
+Country-level indicators were matched to each of the 16~events by
+country of occurrence.  Because the sample covers 11~unique countries
+(several countries contribute multiple events: Mexico~4, USA~3), the
+effective independent sample size is $n_{\mathrm{eff}} = 11$ for the
+socioeconomic correlations.
+
+\subsection*{S4.1 Country-level indicators}
+
+\begin{table}[h]
+\centering
+\caption{Socioeconomic indicators for the 11~countries in the sample.
+HDI: UNDP Human Development Report 2024/25~\citep{UNDP2024}
+(reference year 2023).
+GDP: World Bank 2023~\citep{WorldBank2024} (current international \$, PPP).
+INFORM: INFORM Risk Index 2024 v0.67~\citep{INFORM2024}.}
+\label{tab:sociocon_countries}
+\small
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Country & HDI & GDP PPP & INFORM & Lack of & Vulner- \\
+        &     & (\$k)   & Risk   & Coping  & ability \\
+\midrule
+United States & 0.938 & 85.8 & 3.4 & 2.1 & 3.0 \\
+Spain         & 0.918 & 56.9 & 2.1 & 1.7 & 2.4 \\
+Poland        & 0.906 & 50.4 & 1.6 & 2.9 & 1.0 \\
+T\"{u}rkiye  & 0.853 & 43.9 & 4.9 & 3.1 & 4.8 \\
+Vietnam       & 0.766 & 16.4 & 3.7 & 4.2 & 2.2 \\
+Moldova       & 0.785 & 18.7 & 2.8 & 4.5 & 1.8 \\
+Mexico        & 0.789 & 25.7 & 4.9 & 4.5 & 3.9 \\
+Jamaica       & 0.720 & 11.7 & 3.1 & 3.6 & 2.5 \\
+India         & 0.685 & 11.2 & 5.2 & 4.4 & 4.8 \\
+Bangladesh    & 0.685 &  9.6 & 5.7 & 5.0 & 5.4 \\
+Nepal         & 0.622 &  5.7 & 5.0 & 5.7 & 4.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+HDI spans 0.622 (Nepal) to 0.938 (USA); GDP~PPP spans \$5.7k to
+\$85.8k---a 15-fold range---providing meaningful variation to test
+the hypothesis that national development mediates the
+amplitude--recovery link.
+
+\subsection*{S4.2 Bivariate Spearman correlations}
+
+\begin{table}[h]
+\centering
+\caption{Bivariate Spearman correlations between country-level
+socioeconomic indicators and each of the three main analysis
+variables ($n = 16$ event--country pairs).  None reaches $p < 0.05$.}
+\label{tab:bivariate}
+\small
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Indicator
+  & $\rho$ vs $\dpeak$ & $p$
+  & $\rho$ vs $\aemp$ & $p$
+  & $\rho$ vs $\dnear$ & $p$ \\
+\midrule
+HDI                    & $+0.000$ & 1.000 & $-0.113$ & 0.677 & $+0.329$ & 0.251 \\
+GDP per capita PPP     & $+0.009$ & 0.974 & $-0.114$ & 0.673 & $+0.317$ & 0.269 \\
+INFORM Risk (overall)  & $+0.114$ & 0.675 & $-0.048$ & 0.860 & $-0.185$ & 0.526 \\
+INFORM Lack of Coping  & $-0.207$ & 0.443 & $-0.042$ & 0.877 & $-0.196$ & 0.501 \\
+INFORM Vulnerability   & $+0.128$ & 0.637 & $-0.113$ & 0.677 & $+0.047$ & 0.874 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{S4.3 Partial Spearman correlations}
+
+Partial correlations confirm that neither the $\dpeak$--$\aemp$
+association nor the $\dnear$--$\aemp$ association is attributable to
+national-level socioeconomic factors.
+
+\begin{table}[h]
+\centering
+\caption{Partial Spearman correlation of $\dpeak$ with $\aemp$
+after controlling for socioeconomic indicators.  All values remain
+near the bivariate estimate ($+0.600$).}
+\label{tab:partial_dpeak}
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Controlled variable(s) & $\rho(\dpeak,\aemp\mid\cdot)$ & $p$ \\
+\midrule
+None (bivariate)              & $+0.600$ & 0.014 \\
+HDI                           & $+0.604$ & 0.017 \\
+GDP per capita PPP            & $+0.605$ & 0.017 \\
+INFORM Risk                   & $+0.610$ & 0.016 \\
+INFORM Lack of Coping         & $+0.605$ & 0.017 \\
+INFORM Vulnerability          & $+0.624$ & 0.013 \\
+HDI $+$ $\dnear$              & $+0.630$ & 0.021 \\
+INFORM Lack of Coping $+$ $\dnear$ & $+0.624$ & 0.023 \\
+GDP per capita PPP $+$ $\dnear$    & $+0.629$ & 0.021 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Partial Spearman correlation of $\dnear$ with $\aemp$
+after controlling for socioeconomic indicators.}
+\label{tab:partial_dnear}
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Controlled variable(s) & $\rho(\dnear,\aemp\mid\cdot)$ & $p$ \\
+\midrule
+None (bivariate)              & $-0.526$ & 0.036 \\
+HDI                           & $-0.522$ & 0.046 \\
+GDP per capita PPP            & $-0.521$ & 0.046 \\
+INFORM Risk                   & $-0.541$ & 0.037 \\
+INFORM Lack of Coping         & $-0.535$ & 0.040 \\
+INFORM Vulnerability          & $-0.530$ & 0.042 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ============================================================
+%  S5  Distance-Segment Analysis
+% ============================================================
+\section{Distance-segment robustness of the shape--rate correlation}
+\label{sec:si_distance}
+
+To test whether the shape--rate signal is driven by a specific radial
+zone, we compute $\rho(\aemp,\bar\delta_{\mathrm{zone}})$ separately
+for near-field ($r < 50$~km), mid-field (50--100~km), and far-field
+($100$--$200$~km) segments.  $\bar\delta_{\mathrm{zone}}$ is the
+spatial mean of the displacement field within each zone at
+$t_{\mathrm{peak}}$.
+
+\begin{itemize}
+  \item \textbf{Near-field} ($r < 50$~km, $n = 16$):
+        $\rho = -0.526$, $p = 0.036$.
+  \item \textbf{Mid-field} (50--100~km, $n = 9$ events with
+        sufficient tiles):
+        $\rho = -0.733$, $p = 0.025$.  The stronger correlation
+        reflects the sharper spatial gradient in the evacuation
+        shadow.  The reduced sample ($n = 9$) limits
+        generalisation.
+  \item \textbf{Far-field} ($100$--$200$~km, $n = 16$):
+        $\rho = -0.20$, $p = 0.46$ (not significant).
+        Far-field displacement is predominantly diffuse and
+        weakly correlated with recovery rate.
+\end{itemize}
+
+The primary predictor $\dnear$ (near-field average) is chosen because
+it maximises sample coverage while remaining physically interpretable
+as the net population flux near the disaster epicenter.
+
+
+% ============================================================
+%  S6  Additional Robustness Results
+% ============================================================
+\section{Additional robustness results}
+\label{sec:si_additional}
+
+\subsection*{S6.1 Leave-one-out jackknife}
+
+Jackknife resampling (leave-one-out, $n=16$ iterations) yields a
+95\% CI for $\rho(\aemp,\dnear)$ that does not cross zero: the
+pseudo-value distribution spans $[-0.61,\,-0.42]$, confirming that
+no single event drives the correlation.
+
+\subsection*{S6.2 High-goodness-of-fit subsample}
+
+Restricting to events with $R^2 \geq 0.8$ ($n = 11$), the
+correlation strengthens: $\rho = -0.673$, $p = 0.023$.  This
+indicates that measurement noise from imperfect power-law fits
+attenuates the observed association; the true signal is plausibly
+stronger.
+
+\subsection*{S6.3 Sensitivity to $r_{\mathrm{near}}$ and
+$R_{\max}$}
+
+Varying the near-field radius $r_{\mathrm{near}}$ from 10 to 200~km
+shows a broad plateau of significant negative $\rho$ (peak at
+$\approx 50$~km), confirming the result is not threshold-sensitive.
+Varying the domain radius $R_{\max}$ from 50 to 400~km yields
+qualitatively identical results for $100 \leq R_{\max} \leq 250$~km;
+the primary analysis uses $R_{\max} = 200$~km.
+
+\subsection*{S6.4 Residual displacement vs.\ decay rate}
+
+The residual displacement $D_\infty$ (mean of normalised $D(t)$
+over the post-peak tail) is strongly anticorrelated with~$\aemp$:
+$\rho(\aemp, D_\infty) = -0.703$, $p = 0.002$.  Events with
+faster decay also reach lower residual levels, consistent with the
+interpretation that $\aemp$ captures genuine recovery rather than a
+transient fluctuation.
+
+\subsection*{S6.5 Excluded candidate predictors}
+
+The following variables were tested as potential predictors of
+$\aemp$ but produced $|\rho| < 0.15$ and $p > 0.5$ in bivariate
+analysis: spatial concentration index of the initial displacement
+profile, recovery gradient ($\mathrm{d}D/\mathrm{d}t$ at
+$t_{\mathrm{peak}}$), and observation window length.  None was
+retained in the main analysis.
+
+
+% ============================================================
+%  Supplementary Figures
+% ============================================================
+\section{Supplementary figures}
+\label{sec:si_figures}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{%
+  figures_supp/figS1_individual_panels}
+\caption{Individual $D(t)$ curves for all 16~events.  Each panel
+shows the raw aggregated displacement (grey background region
+indicates pre-peak period) and the normalised decay fit (orange line).
+Event label includes hazard type and~$\aemp$.}
+\label{fig:S1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\linewidth]{%
+  figures_supp/figS2_robustness_sweeps}
+\caption{Parameter sensitivity. \textbf{(a)}
+$\rho(\aemp,\dnear)$ as a function of near-field radius
+$r_{\mathrm{near}}$ (10--200~km).  Dashed line: significance
+threshold at $p = 0.05$ ($|\rho| = 0.496$ for $n = 16$).
+\textbf{(b)}~Same as (a) for domain radius $R_{\max}$.}
+\label{fig:S2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.55\linewidth]{%
+  figures_supp/figS3_jackknife}
+\caption{Leave-one-out jackknife distribution of
+$\rho(\aemp,\dnear)$.  Points show the pseudo-value for each
+removed event; the horizontal bar is the full-sample estimate
+($\rho = -0.526$); error bars span 95\% CI.}
+\label{fig:S3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.70\linewidth]{%
+  figures_supp/figS4_pde_param_heatmap}
+\caption{PDE parameter search heatmap.  Spearman
+$\rho(\apred,\dnear)$ across the $(k,\,\Ds)$ grid under the
+joint-rank criterion.  The star marks the selected optimum
+($k^* = 0.00418$~h$^{-1}$, $\Ds^* = 0.304$~km$^2$\,h$^{-1}$).}
+\label{fig:S4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{%
+  figures_supp/figS5_profile_gallery}
+\caption{Peak-time radial displacement profiles
+$\delta(r,t_{\mathrm{peak}})$ for all 16~events, coloured by
+$\aemp$.  Profiles with net near-field loss ($\dnear < 0$; EVAC
+pattern) correspond to higher decay rates.}
+\label{fig:S5}
+\end{figure}
+
+
+\bibliographystyle{pnas2009}
+\bibliography{references}
+
+\end{document}
