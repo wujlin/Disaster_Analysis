@@ -49,11 +49,14 @@ post-disaster population recovery across hazard types and development levels}
 Table~\ref{tab:events} lists the 16~events included in the main
 analysis, ordered by hazard type and then by descending~$\aemp$.
 Events were selected from the Facebook Disaster Maps archive using
-the \textit{Route B} quality criteria: (i) sufficient post-peak
-monotone-decay observations ($n_{\mathrm{mono}} \geq 3$), (ii) the
-event was not manually excluded for data artefacts, and (iii) the
-goodness-of-fit $R^2 \geq 0.6$ was not the sole reason for
-exclusion.  Four events with comparatively low goodness-of-fit
+the following quality criteria: (i) at least three consecutive
+post-peak time steps showing monotone decay ($n_{\mathrm{mono}} \geq 3$),
+so that a power-law slope can be estimated; (ii) a clearly identifiable
+peak in $D(t)$ with no ambiguity arising from multiple activation
+periods or overlapping events; and (iii) sufficient tile coverage within
+the 200-km analysis disk ($\geq 3$ populated tiles per annulus at peak).
+Duplicate activations of the same physical event and activations with
+fewer than two near-field tiles were excluded.  Four events with comparatively low goodness-of-fit
 ($R^2 < 0.75$; marked with $\dagger$ in the $R^2$ column) are
 retained in the primary analysis but shown with open markers in all
 scatter plots.
@@ -254,13 +257,13 @@ by $10\times$).  The joint optimisation criterion minimises the sum of
 three normalised rank statistics:
 \begin{equation}
   \mathcal{L}(k, \Ds)
-    = \mathrm{rank}\!\left[-\rho(\apred,\aemp)\right]
-    + \mathrm{rank}\!\left[-\rho(\apred,\dnear)\right]
+    = \mathrm{rank}\!\left[-\rho_{\mathrm{S}}(\apred,\aemp)\right]
+    + \mathrm{rank}\!\left[-r(\apred,\aemp)\right]
     + \mathrm{rank}\!\left[\mathrm{MAE}(\apred,\aemp)\right] ,
   \label{si:eq:criterion}
 \end{equation}
-where $\rho$ denotes Spearman correlation and MAE is mean absolute
-error.  The optimal parameters under this criterion are:
+where $\rho_{\mathrm{S}}$ denotes Spearman rank correlation,
+$r$~Pearson correlation, and MAE is mean absolute error.  The optimal parameters under this criterion are:
 \[
   k^* = 0.00418\;\mathrm{h}^{-1}, \quad
   \Ds^* = 0.304\;\mathrm{km}^2\,\mathrm{h}^{-1} .
@@ -484,7 +487,7 @@ as the net population flux near the disaster epicenter.
 
 Jackknife resampling (leave-one-out, $n=16$ iterations) yields a
 95\% CI for $\rho(\aemp,\dnear)$ that does not cross zero: the
-pseudo-value distribution spans $[-0.61,\,-0.42]$, confirming that
+leave-one-out replicate distribution spans $[-0.62,\,-0.44]$, confirming that
 no single event drives the correlation.
 
 \subsection*{S6.2 High-goodness-of-fit subsample}
@@ -523,6 +526,19 @@ profile, recovery gradient ($\mathrm{d}D/\mathrm{d}t$ at
 $t_{\mathrm{peak}}$), and observation window length.  None was
 retained in the main analysis.
 
+\subsection*{S6.6 Hazard-type grouping test}
+
+To assess whether recovery speed varies systematically by hazard type,
+we apply a Kruskal--Wallis rank-sum test to the five hazard groups
+(earthquake $n=2$; hurricane $n=6$; typhoon $n=1$; flood $n=6$;
+wildfire $n=1$).  The test yields $H = 2.61$, $p = 0.63$, indicating
+no significant difference.  Merging hurricane and typhoon into a
+single tropical-cyclone category and restricting to groups with
+$n \geq 2$ (earthquake, flood, tropical cyclone) gives $H = 0.51$,
+$p = 0.77$.  In both cases, within-group variation in~$\aemp$ far
+exceeds between-group variation, confirming that hazard type alone does
+not explain recovery speed diversity.
+
 
 % ============================================================
 %  Supplementary Figures
@@ -558,7 +574,7 @@ threshold at $p = 0.05$ ($|\rho| = 0.496$ for $n = 16$).
 \includegraphics[width=0.55\linewidth]{%
   figures_supp/figS3_jackknife}
 \caption{Leave-one-out jackknife distribution of
-$\rho(\aemp,\dnear)$.  Points show the pseudo-value for each
+$\rho(\aemp,\dnear)$.  Points show the leave-one-out replicate for each
 removed event; the horizontal bar is the full-sample estimate
 ($\rho = -0.526$); error bars span 95\% CI.}
 \label{fig:S3}

@@ -18,6 +18,7 @@
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{enumitem}
 \setlist{nosep,leftmargin=*}
+\usepackage{placeins}   % \FloatBarrier to keep floats inside sections
 
 % ---- shortcuts ----
 \newcommand{\dnear}{\delta_{\mathrm{near}}}
@@ -27,6 +28,8 @@
 \newcommand{\Ds}{D_s}
 \newcommand{\Dnorm}{D_{\mathrm{norm}}}
 \newcommand{\rhosp}{\rho}             % Spearman rho
+\newcommand{\Dpred}{D_{\mathrm{pred}}}
+\newcommand{\Demp}{D_{\mathrm{emp}}}
 
 % ---- placeholder figure command ----
 \newcommand{\placeholderfig}[2]{%
@@ -37,9 +40,8 @@
 }
 
 % ============================================================
-\title{\textbf{Displacement geometry and perturbation amplitude\\
-predict post-disaster population recovery\\
-across hazard types and development levels}}
+\title{\textbf{Displacement geometry and amplitude\\
+predict post-disaster population recovery}}
 
 \author{
   Jin Lin$^{1,\ast}$
@@ -62,25 +64,24 @@ across hazard types and development levels}}
 % ============================================================
 \begin{abstract}
 \noindent
-  Natural disasters displace millions of people annually, yet what
-  determines how quickly populations recover remains unknown.  Here we
-  analyze population displacement across 16~natural disasters
-  -- covering earthquakes, hurricanes, floods, and wildfires in
-  11~countries --using Facebook Disaster Maps.  Recovery rates vary by
-  more than an order of magnitude across events.  We show that this
-  variation is predicted by two independent quantities, both measurable
-  at the moment of peak displacement.  The spatial geometry of the
-  displacement profile -- whether populations scatter outward or
-  concentrate near the epicenter --determines recovery rate through a
-  mechanism captured by a diffusion--relaxation model: spatial diffusion
-  selectively damps higher-order modes, so that spatially complex
-  perturbations relax faster.  Independently, perturbation amplitude
-  predicts recovery: larger disruptions recover faster, a
-  counterintuitive scaling that is invariant to national development
-  indicators.  Displacement geometry and amplitude together encode the
-  recovery trajectory in the initial condition, reframing post-disaster
-  recovery as a process governed by the physics of population
-  redistribution rather than by socioeconomic heterogeneity.
+  Natural disasters displace millions annually, yet what determines how
+  quickly populations recover remains poorly understood. Here we analyze
+  displacement across 16 disasters -- earthquakes, hurricanes, floods,
+  and wildfires in 11 countries -- using Facebook Disaster Maps.
+  Recovery rates vary by more than an order of magnitude.  We show that
+  this variation is predicted by two independent quantities, both
+  measurable at peak displacement.  The spatial geometry of the
+  displacement profile---whether populations scatter outward or
+  concentrate near the epicenter---predicts recovery rate
+  ($\rho = -0.53$, $p = 0.036$).  A diffusion--relaxation model
+  explains the link: spatial diffusion selectively damps finer-scale
+  components, so evacuation-type perturbations with steep gradients
+  relax faster.  Independently, perturbation amplitude predicts recovery:
+  larger disruptions recover faster ($\rho = +0.60$, $p = 0.014$), a
+  counterintuitive scaling invariant to national-level development
+  indicators.  Together, geometry and amplitude encode the recovery
+  trajectory in the initial condition, reframing post-disaster recovery
+  as governed by the physics of population redistribution.
 \end{abstract}
 
 \bigskip
@@ -91,8 +92,10 @@ across hazard types and development levels}}
 \section*{Introduction}
 
 Natural disasters triggered over 45~million internal displacements in
-2024 alone~\citep{IDMC2025}, a figure that has risen sharply over
-recent decades.  How quickly displaced populations recover determines
+2024 alone~\citep{IDMC2025}, and the proportion of the global
+population exposed to floods alone has grown substantially over the
+past two decades~\citep{Tellman2021}, a figure that has risen sharply
+over recent decades.  How quickly displaced populations recover determines
 the duration of humanitarian need, the trajectory of reconstruction,
 and the long-term social fabric of affected
 communities~\citep{Aldrich2012,Cutter2003}.  Yet despite a rapidly
@@ -100,16 +103,20 @@ growing body of quantitative research~\citep{Lu2012,Yabe2020,Huang2025},
 no general framework exists to predict whether a displaced population
 will return within days or remain uprooted for months.
 
-Building on the scaling laws that characterize routine human
-mobility~\citep{Brockmann2006,Song2010}, quantitative tracking of
-post-disaster displacement has advanced rapidly with mobile phone and
-social-media data.  Call detail records enabled near-real-time monitoring
+Quantitative tracking of post-disaster displacement---building on the
+scaling laws that characterize routine human
+mobility~\citep{Brockmann2006,Song2010}---has advanced rapidly with
+mobile phone and social-media data.  Call detail records enabled
+near-real-time monitoring
 after the 2010 Haiti earthquake~\citep{Lu2012,Bengtsson2011} and the
 2015 Nepal earthquake~\citep{Wilson2016}; survey data revealed the
 complexity of disaster-induced migration in
-Bangladesh~\citep{GrayMueller2012}; and network approaches showed that
+Bangladesh~\citep{GrayMueller2012}; network approaches showed that
 pre-disaster social connectivity shapes recovery
-trajectories~\citep{Yabe2020}.  These studies document a recurring pattern: an acute displacement
+trajectories~\citep{Yabe2020}; and high-resolution social-media data
+enabled quantification of displacement and migration dynamics
+across entire island populations after Hurricane
+Maria~\citep{Acosta2020}.  These studies document a recurring pattern: an acute displacement
 followed by gradual return, with rates that appear to vary widely across
 events and countries~\citep{Huang2025}.  Recent work has begun to
 characterise systematic recovery patterns---identifying rapid,
@@ -131,15 +138,18 @@ better-governed societies should recover systematically faster.
 Post-disaster displacement is, at its core, a spatial perturbation of a
 population field followed by relaxation toward equilibrium.  Human
 mobility flows can be described as gradient-driven processes in a
-continuous spatial field~\citep{Mazzoli2019,GomezGardenes2018}: when
-the field is perturbed, restoring fluxes emerge that depend on the
-spatial structure of the perturbation.  In such diffusive systems, the
+continuous spatial field~\citep{Mazzoli2019,GomezGardenes2018,Lenormand2015}:
+when the field is perturbed, restoring fluxes emerge that depend on
+the spatial structure of the perturbation.  Statistical-physics models
+show that both individual trajectories and aggregate population flows
+obey universal scaling laws that emerge from a small set of
+mechanisms~\citep{Yan2017}.  In such diffusive systems, the
 relaxation rate is set by the spatial frequency content of the initial
-condition---finer-scale disturbances, encoding more power in
-high-frequency modes, decay exponentially faster~\citep{Crank1975}.
-Empirically, crisis-induced mobility deviations exhibit stable decay
-dynamics consistent with relaxation toward equilibrium, across event
-types and spatial scales~\citep{Li2022}.  Displacement therefore has not
+condition---finer-scale disturbances decay at progressively faster
+rates~\citep{Crank1975}.  Empirically, crisis-induced mobility
+deviations exhibit stable decay dynamics consistent with relaxation
+toward equilibrium, across event types and spatial
+scales~\citep{Li2022}.  Displacement therefore has not
 only an \emph{amplitude}---how severely the population is disturbed---but
 a \emph{geometry}: the spatial pattern of where people are displaced to
 and from.  If the physical analogy holds, recovery speed should depend on
@@ -176,121 +186,149 @@ peak time encodes how quickly they come back.
 \section*{Results}
 
 % ---- R1 ----
-\subsection*{Post-disaster population displacement relaxes universally
-but at diverse rates}
+\subsection*{Universal relaxation at diverse recovery rates}
 
-Across all 16~events---spanning four hazard types in 11~countries
-(Supplementary Table~S1)---the aggregated displacement metric~$D(t)$
-traces the same qualitative arc: a rapid rise to a peak as crisis
-conditions force populations to relocate, followed by a gradual decay
-as people return or resettle (Fig.~\ref{fig:relaxation}a).  This
-pattern is universal in shape despite the dramatic heterogeneity in the
-underlying physical process: the 2023 T\"{u}rkiye--Syria earthquake
-unleashed ground rupture across 300~km of fault, displacing nearly
-half the regional population within 24~hours; the 2020 Creek wildfire
-in California evacuated communities progressively as the fire perimeter
-expanded over 72~hours; the 2020 Bangladesh monsoon flood displaced
-households incrementally over days.  In each case, $D(t)$ captures the
-aggregate population displacement footprint and the subsequent
-relaxation toward baseline, collapsing event-specific mechanisms into a
-single scalar trajectory.
+Across all 16~events (Supplementary Table~S1), the aggregated
+displacement metric~$D(t)$ traces the same qualitative arc: a rapid rise
+to a peak followed by gradual decay (Fig.~\ref{fig:relaxation}b).  This
+pattern is universal despite dramatic heterogeneity in the underlying
+physical process: the 2023 T\"{u}rkiye--Syria earthquake unleashed
+ground rupture across 300~km of fault, displacing nearly half the
+regional population within 24~hours; the 2024 Boise County wildfire in
+Idaho evacuated communities progressively as the fire perimeter expanded
+over several days; the 2020 Bangladesh monsoon flood displaced
+households incrementally over days.  In each case, $D(t)$ collapses
+event-specific mechanisms into a single scalar trajectory of
+perturbation and relaxation, consistent with the aggregated
+displacement arcs identified in CDR-based studies of other
+seismic events~\citep{Giardini2023}.
 
 Recovery speeds, however, diverge dramatically.  Normalized decay
 curves fan out across events on log--log axes
-(Fig.~\ref{fig:relaxation}b): the decay rate~$\alpha$ varies by more
+(Fig.~\ref{fig:relaxation}c): the decay rate~$\alpha$ varies by more
 than an order of magnitude, from near-zero (negligible recovery over two
 weeks) to above unity (rapid return within days).  The T\"{u}rkiye--Syria
 earthquake, for instance, shows one of the slowest recoveries in the
 dataset, with population displacement persisting substantially through
-the two-week observation window; several California wildfires show
-among the fastest, with $D(t)$ returning to near-baseline within four
-to five days.  The diversity of recovery timescales is not explained by
-hazard type: earthquakes, floods, and wildfires each span a wide
-internal range of~$\alpha$ values.
+the two-week observation window; the Boise County wildfire shows among
+the fastest, with $D(t)$ returning to near-baseline within four to five
+days.  Fast and slow recoveries occur within each hazard type
+(Fig.~\ref{fig:relaxation}c): a Kruskal--Wallis test rejects no
+difference among hazard groups ($H = 2.61$, $p = 0.63$;
+Supplementary~\S6.6), confirming that within-group variation dominates
+over between-group variation.
 
 The decay rates are robust to measurement choices (Supplementary
 Table~S2).  Events with faster decay also converge to genuinely lower
-residual levels: $\rho(\aemp, D_\infty) = -0.703$, $p = 0.002$,
+residual levels: $\rho(\aemp, D_\infty) = -0.703$, $p = 0.002$
+(Fig.~\ref{fig:relaxation}d),
 where~$D_\infty$ is the mean of normalised~$D(t)$ over the post-peak
-tail (Supplementary \S6.4).  This strong anticorrelation confirms
-that~$\alpha$ captures true recovery toward baseline rather than a
-transient fluctuation followed by a plateau---populations that decay
-faster genuinely return home.
+tail (Supplementary \S6.4).  If~$\alpha$ merely captured an initial transient---a fast drop
+followed by a high plateau---we would expect no relationship, or even
+a positive correlation, between~$\alpha$ and~$D_\infty$.  The strong
+anticorrelation indicates that fast-decaying events also converge to
+lower residuals: populations that leave quickly also return more
+completely.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig1_universal_relaxation.pdf}
-\caption{\textbf{Post-disaster displacement relaxes universally but at
-diverse rates.}
-\textbf{(a)}~$D(t)$ time series for representative events showing
-post-peak relaxation.
-\textbf{(b)}~Normalized decay curves on log--log axes, coloured by
-$\dnear$, revealing an order-of-magnitude spread in recovery rates.
-\textbf{(c)}~Global map of the 16~events; icons indicate hazard type.}
+\caption{\textbf{Post-disaster displacement relaxes universally but at diverse rates.}
+\textbf{(a)}~Global map of the 16~events spanning four hazard types and three
+continents; icons indicate hazard type.
+\textbf{(b)}~$D(t)$ time series for seven representative events (coloured by
+hazard type), showing the sharp peak and subsequent power-law relaxation.
+\textbf{(c)}~All 16~events normalised by peak displacement on log--log axes
+and coloured by $\dnear$; the spread in slopes reveals an order-of-magnitude
+range in $\alpha \in [-0.02,\;1.14]$.
+\textbf{(d)}~$\alpha$ versus~$D_\infty$ (residual displacement fraction at
+the end of the observation window); faster-decaying events also converge to
+lower residual levels ($\rhosp = -0.70$, $p = 0.002$), validating $\alpha$
+as a meaningful recovery indicator rather than a transient artifact.
+Open markers: $R^2 < 0.75$.}
 \label{fig:relaxation}
 \end{figure}
 
 % ---- R2 ----
+\FloatBarrier
 \subsection*{Displacement geometry predicts recovery speed}
 
-What determines~$\alpha$?  We characterise the near-field spatial
-footprint by~$\dnear$, defined as the mean of
-$\delta(r) = \phi(r, t_{\mathrm{peak}}) - 1$ over $r < 50$~km at
-peak time (Materials and Methods): negative values signal net outward
-evacuation from the epicenter, positive values signal net influx or
-crowding toward it.
+To identify what drives the variation in~$\alpha$, we examine how population density is redistributed at peak displacement.  The radial profile
+captures how population density is redistributed as a function of
+distance from the epicenter. We summarise its near-field character by
+a single scalar,~$\dnear$: the mean population-density deviation within
+50~km (Materials and Methods). Negative values indicate net outward
+evacuation (hereafter EVAC); positive values indicate net influx toward
+the epicenter (hereafter INFL).
 
-The contrast between these two displacement geometries is qualitatively
-visible in representative radial profiles (Fig.~\ref{fig:shape}b).
-For the 2023 T\"{u}rkiye--Syria earthquake---an influx-type event with
-$\dnear > 0$---the near-field shows a positive density anomaly,
-indicating a net influx of population toward the epicenter, while the
-surrounding mid-field remained partially evacuated.  This spatially
-mixed pattern produces a relatively smooth radial gradient.  By contrast, fast-recovering wildfire events in
-California show a strongly negative near-field signature: communities
-near the perimeter evacuated outward, creating a sharp population
-deficit within 50~km that grades smoothly to near-zero deviation at
-100~km.  The evacuation profile is steep and spatially coherent---a signature
-that carries more high-frequency spatial content in a Bessel
-decomposition.
+The contrast between these two displacement geometries is visible in the
+representative radial profiles (Fig.~\ref{fig:shape}b).  Hurricane Beryl
+in southeastern Texas---an evacuation-type event ($\dnear < 0$)---shows
+a strongly negative near-field signature: population
+is displaced outward, creating a sharp deficit within 50~km that approaches
+near-zero deviation by about 100~km. By contrast, the 2024 Spain flood---an
+influx-type event ($\dnear > 0$)---shows a positive near-field anomaly and
+a smoother radial gradient through the mid-field. These two contrasting geometries---
+steep evacuation versus smooth influx---correspond systematically to fast
+and slow recovery, respectively.  Identification of spatial evacuation
+patterns from mobility data has precedent in other
+hurricane contexts~\citep{Li2024Evacuation}.
 
-$\dnear$ anticorrelates with recovery speed
-($\rhosp = -0.53$, $p = 0.036$; Fig.~\ref{fig:shape}a): events with
-evacuation-type profiles recover faster, regardless of hazard type.  The
-signal is not concentrated in the innermost radial bin: a distance-segment
-analysis reveals that the mid-field annulus (50--100~km) shows the
-strongest association, $\rhosp = -0.733$, $p = 0.025$ (restricted to
-the $n = 9$ events with sufficient tile coverage in that ring;
-Supplementary \S5), consistent with the evacuation shadow---the zone of
-suppressed density that forms as residents flee outward---being most
-pronounced in the 50--100~km band rather than immediately adjacent to the
-epicenter.  The near-field predictor~$\dnear$ is used in the primary
-analysis because it maximises sample coverage while remaining physically
-interpretable.
+Events that scatter population outward at peak time recover faster
+($\rhosp = -0.53$, $p = 0.036$; Fig.~\ref{fig:shape}a).  In plain
+terms: when a disaster pushes people away from the epicenter---creating a
+pronounced zone of population deficit in the near-field---the subsequent
+return to baseline is rapid.  Conversely, when displaced populations
+concentrate near the epicenter, recovery is slow.  The near-field
+displacement direction~$\dnear$, a single number measurable at peak time,
+separates fast from slow recoveries across all four hazard types.
+
+The strongest signal comes not from the innermost ring but from the
+mid-field (50--100~km): $\rhosp = -0.733$, $p = 0.025$ among the
+$n = 9$ events with sufficient spatial coverage in that annulus
+(Supplementary \S5).  This is consistent with an evacuation
+shadow---the zone of suppressed population density that forms as
+residents flee outward---being most pronounced at intermediate
+distances.  We retain~$\dnear$ (0--50~km) as the primary predictor
+because it maximises sample coverage ($n = 16$) while capturing the
+same physical signal.
 
 The association holds under multiple robustness tests: it persists
 across four fixed time-window definitions
 ($[24,72]$~h through $[24,144]$~h), Theil--Sen estimation, a
 model-free decay ratio~$D(72)/D(24)$, and sensitivity to the near-field
 radius~$r_{\mathrm{near}}$ from 10 to 200~km (Supplementary Table~S2,
-Supplementary \S6.3).  Jackknife resampling (leave-one-out, $n = 16$
-iterations) yields a 95\% pseudo-value interval of
-$[-0.61,\,-0.42]$ for the $\aemp$--$\dnear$ correlation, confirming
-that no single event drives the signal.
+Supplementary \S6.3; Fig.~\ref{fig:shape}d).  Jackknife resampling
+(leave-one-out, $n = 16$ iterations) yields a 95\% interval
+of $[-0.62,\,-0.44]$ for the $\aemp$--$\dnear$ correlation
+(Fig.~\ref{fig:shape}c), confirming that no single event drives the signal.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig2_shape_predicts_recovery.pdf}
 \caption{\textbf{Displacement geometry predicts recovery speed.}
-\textbf{(a)}~$\alpha$ versus $\dnear$, coloured by hazard type.
+\textbf{(a)}~$\alpha$ versus $\dnear$ with Theil--Sen regression line;
+open markers denote events with $R^2 < 0.75$.
 \textbf{(b)}~Representative radial profiles at peak time for a fast-recovering
-event (evacuation pattern, $\dnear < 0$) and a slow-recovering event
-(influx pattern, $\dnear > 0$).}
+EVAC event (Hurricane Beryl in southeastern Texas, $\dnear < 0$) and a
+slow-recovering INFL event (2024 Spain flood, $\dnear > 0$); shaded region
+marks the near-field ($r < 50$~km).
+\textbf{(c)}~Jackknife leave-one-out distribution of $\rhosp(\alpha, \dnear)$;
+shaded band is the 95\% interval $[-0.62,\,-0.44]$.  The
+vertical line marks the full-sample estimate $\rhosp = -0.53$; no single
+event drives the correlation.
+\textbf{(d)}~Parameter sensitivity: $p$-value (Mann-Whitney EVAC vs INFL $\alpha$)
+under three robustness choices ($r_{\max}$, near-field threshold,
+bounce tolerance).  All settings except the most stringent yield $p < 0.05$
+(vertical dashed line), confirming the EVAC--INFL contrast as an
+auxiliary check; primary inference uses the continuous
+$\rhosp(\alpha,\dnear)$ association (Supplementary Table~S2).}
 \label{fig:shape}
 \end{figure}
 
 
 % ---- R3: PDE mechanism ----
+\FloatBarrier
 \subsection*{A diffusion--relaxation model explains the shape--rate
 connection}
 
@@ -307,36 +345,40 @@ displacement field~$\delta(r,t)$:
 where $\Ds$ is a spatial diffusion coefficient and $k$ a uniform
 relaxation rate.  Under zero-flux boundary conditions, the solution
 decomposes into radial Bessel modes $J_0(\mu_n r / R)$, each decaying
-at rate $\lambda_n = k + \Ds(\mu_n/R)^2$ (Methods).  Higher-order
-modes---encoding finer spatial structure---decay exponentially faster.
+at rate $\lambda_n = k + \Ds(\mu_n/R)^2$ (Materials and Methods; Fig.~\ref{fig:pde}b).  Higher-order
+modes---encoding finer spatial structure---decay at progressively
+faster rates.
 
-The physical intuition is direct.  An evacuation-type
-profile---population removed from the near-field and redistributed
-outward---creates a steep radial gradient at small~$r$, which requires
-substantial weight in high-order Bessel components ($n \geq 2$) to
-represent faithfully.  Because mode-$n$ decay rate scales as
-$\lambda_n \propto \mu_n^2$, and $\mu_n$ grows roughly linearly with
-$n$, an initial condition dominated by high-$n$ components relaxes far
-faster than one dominated by the spatially smooth fundamental
-mode~$n=0$.  An influx-type profile, by contrast---where populations
-concentrate near the epicenter and the radial field is nearly
-uniform---loads most energy into the $n=0$ mode, which decays at the
-bare relaxation rate~$k$ without any diffusive enhancement.  The
-spatial geometry of the displacement pattern thus maps directly onto
-the spectral composition of the Bessel expansion, and through that, onto
-the composite decay rate~$\apred$.
+The physical intuition follows the modal decomposition
+(Fig.~\ref{fig:pde}a,b).  An evacuation-type profile---population
+removed from the near-field and redistributed outward---creates a steep
+radial gradient at small~$r$, requiring substantial weight in
+high-order Bessel components ($n \geq 2$).  Because mode-$n$ decay
+scales as $\lambda_n \propto \mu_n^2$ and $\mu_n$ increases roughly
+linearly with $n$, high-$n$-dominated initial conditions relax faster
+than smooth profiles dominated by the lowest-order modes.  By
+contrast, an influx-type profile---with near-epicentral concentration
+and a smoother radial field---loads most energy into the $n = 1$ mode
+(the lowest non-trivial Bessel mode; $c_0 \approx 0$ by approximate
+mass conservation), so decay is governed mainly by the bare relaxation
+rate~$k$.  Spatial
+geometry therefore maps onto modal composition, and modal composition
+maps onto the composite decay rate~$\apred$.
 
 We fit this model to all 16~events simultaneously using two global
 parameters, $k = 0.0042$~h$^{-1}$ and $\Ds = 0.30$~km$^2$\,h$^{-1}$
-(Methods), with each event's observed peak-time profile as the initial
+(Materials and Methods), with each event's observed peak-time profile as the initial
 condition.  The model reproduces the empirical shape--rate correlation
-($\rhosp = -0.55$, $p = 0.026$; Fig.~\ref{fig:pde}b).  A
-non-parametric bootstrap over initial-profile perturbations confirms
-the robustness of this result: 98.4\% of bootstrap realisations yield
-$\rhosp < 0$, with a 95\% CI of $[-0.76,\,-0.08]$.
+($\rhosp = -0.55$, $p = 0.026$; Fig.~\ref{fig:pde}c).  A
+non-parametric bootstrap over initial-profile perturbations
+(Materials and Methods) confirms the robustness of this result: 98.4\% of bootstrap realisations yield
+$\rhosp < 0$, with a 95\% CI of $[-0.76,\,-0.08]$.  The best-fit
+parameter pair lies on a broad high-correlation plateau
+(Fig.~\ref{fig:pde}f), indicating that the geometry--rate relationship
+is not a narrow tuning artifact.
 
 Three counterfactual experiments provide sharp mechanistic evidence
-(Fig.~\ref{fig:pde}c).  Removing diffusion ($\Ds = 0$) collapses all
+(Fig.~\ref{fig:pde}e).  Removing diffusion ($\Ds = 0$) collapses all
 modes to the same decay rate~$k$, eliminating any shape--rate
 relationship.  Retaining only the spatially uniform fundamental
 mode~$n = 0$ likewise destroys the signal, because all events then
@@ -352,44 +394,42 @@ forward in time to obtain the predicted aggregate displacement
 $\Dpred(t')$, then compare it to the observed $\Demp(t')$, both
 normalised at the first reliable post-peak window~$t'=24$~h
 (Fig.~\ref{fig:pde}d).  The model correctly orders events: the EVAC
-hurricane (beryl\_qr) is predicted to recover faster than the two INFL
-flood events, and its empirical trajectory indeed drops most steeply.
+hurricane (Beryl, Quintana Roo) is predicted to recover faster than the
+two INFL flood events, and its empirical trajectory indeed drops most steeply.
 However, the predicted curves converge to a narrow band---all events
 declining by roughly 35\% over 192~h---whereas empirical curves span
 from near-complete recovery to near-stasis.  This systematic
 ${\sim}15{\times}$ variance compression reflects both the $L_2$/$L_1$
-metric mismatch between predicted energy decay and empirical displacement
-decay (Materials and Methods) and the omission of event-specific
+metric mismatch---the Bessel decomposition yields total energy ($L_2$
+norm) whereas the empirical $D(t)$ sums absolute deviations ($L_1$
+norm)---and the omission of event-specific
 factors---local infrastructure damage, evacuation orders,
 seasonality---from a two-parameter global model.  The compression
 quantifies how much residual variance remains unexplained by spatial
-geometry alone, motivating the amplitude-based predictor introduced next.
+geometry alone.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig3_pde_mechanism.pdf}
 \caption{\textbf{A diffusion--relaxation model explains the shape--rate connection.}
 \textbf{(a)}~Relative modal energy $E_n/E_{\mathrm{total}}$ for each Bessel
-mode $n=0,\ldots,9$ for one EVAC representative (beryl\_qr, blue) and one INFL
-representative (spain flood, orange).  INFL profiles concentrate energy in the
+mode $n=0,\ldots,9$ for one EVAC representative (Beryl, Quintana Roo, blue) and one INFL
+representative (2024 Spain flood, orange).  INFL profiles concentrate energy in the
 low-frequency $n=1$ mode; EVAC profiles distribute energy broadly across
 higher-order modes.
 \textbf{(b)}~Mode decay rate $\lambda_n = k + D_s(\mu_n/R)^2$ (×$10^{-3}$ h$^{-1}$)
 versus mode index.  The dashed line marks the uniform relaxation rate $k$;
 higher modes decay faster owing to the diffusion term $D_s(\mu_n/R)^2$.
 Bar colour encodes relative EVAC versus INFL energy loading (warm = EVAC-loaded).
-Because EVAC events carry more weight in the faster-decaying high-$n$ modes,
-their aggregate displacement decays sooner.
 \textbf{(c)}~Model-predicted decay rate $\apred$ versus $\dnear$.
 $\rhosp = -0.55$ ($p = 0.026$); non-parametric bootstrap 95\%~CI
 $[-0.76,\,-0.08]$ (98.4\% of realisations yield $\rhosp < 0$).
 Open markers: events with $R^2 < 0.75$.
-\textbf{(d)}~Predicted $D_{\mathrm{pred}}(t')$ (dashed) versus empirical
-$D_{\mathrm{emp}}(t')$ (solid) for three events, normalised at $t'=24$~h.
-The model correctly ranks the events (EVAC hurricane faster than INFL floods),
-but predicted curves converge to a narrower range than empirical curves,
-quantifying the 15$\times$ variance compression from the $L_2$ energy metric
-to the empirical $L_1$ displacement norm.
+\textbf{(d)}~Predicted $\Dpred(t')$ (dashed) versus empirical
+$\Demp(t')$ (solid) for three events (Beryl, Quintana Roo; 2024 Spain
+flood; 2024 Central European flood), normalised at $t'=24$~h.
+The model preserves event ranking but compresses variance by
+approximately 15$\times$.
 \textbf{(e)}~Counterfactual experiments: removing diffusion ($D_s=0$),
 retaining only the uniform mode ($c_0$-only), or shuffling event--profile
 pairings each eliminates $\rhosp$.  Filled circles: Spearman~$\rhosp$ with
@@ -401,12 +441,11 @@ plateau of high $\rho$ confirms robustness to parameter choice.}
 \end{figure}
 
 % ---- R4: D_peak ----
-\subsection*{Larger perturbations recover faster}
+\FloatBarrier
+\subsection*{Perturbation amplitude independently predicts recovery speed}
 
-The displacement profile's geometry predicts the \emph{ordering} of
-recovery rates but leaves most of the absolute spread in~$\alpha$
-unexplained.  A second quantity, the perturbation amplitude~$\dpeak$
-(aggregated displacement at peak time), correlates positively with
+A second independent predictor---the perturbation amplitude~$\dpeak$,
+the aggregated displacement at peak time---correlates positively with
 recovery speed ($\rhosp = +0.60$, $p = 0.014$;
 Fig.~\ref{fig:amplitude}a): larger disruptions recover faster.
 The association is robust across all tested time-window definitions
@@ -419,89 +458,111 @@ is no more likely to be an evacuation-type than an influx-type event.
 This orthogonality means the two predictors span genuinely complementary
 dimensions of the initial disturbance.  In the two-dimensional
 prediction space (Fig.~\ref{fig:amplitude}b), events separate into four
-quadrants: fast-amplitude--evacuation-type events (upper left) cluster at
-the highest recovery rates; slow-amplitude--influx-type events (lower
-right) are the slowest to recover.  The T\"{u}rkiye--Syria earthquake
-sits in the low-amplitude, influx quadrant consistent with its slow
-recovery; the largest California wildfires occupy the high-amplitude,
-evacuation quadrant consistent with rapid return.  The quadrant structure confirms that the two predictors operate through
-independent channels, and that knowing both at peak displacement
-substantially narrows the range of plausible recovery trajectories.
+quadrants defined by the sample medians of $\dnear$ and $\dpeak$:
+high-amplitude, evacuation-type events (upper left) cluster at the
+highest recovery rates, whereas low-amplitude, influx-type events (lower
+right) are slowest to recover.  The T\"{u}rkiye--Syria earthquake sits
+in the low-amplitude, influx quadrant, consistent with its slow
+recovery.  The quadrant structure shows that combining both peak-time
+predictors substantially narrows the range of plausible recovery
+trajectories.
 
 Partial correlations confirm the independence of the two channels.
 Controlling for~$\dnear$ leaves the amplitude--recovery link intact:
 $\rhosp(\dpeak,\aemp \mid \dnear) = +0.63$, $p = 0.021$ (Supplementary
 Table~S4).  Conversely, controlling for~$\dpeak$ preserves the
-geometry--recovery link: $\rhosp(\dnear,\aemp \mid \dpeak)$
-remains significant (Supplementary Table~S4).  The PDE model produces
-predicted rates~$\apred$ that do not correlate with~$\dpeak$
-($\rhosp \approx 0$), confirming that the amplitude effect arises from
-a mechanism outside spatial diffusion---the model encodes geometry but
-is blind to magnitude.
+geometry--recovery link:
+$\rhosp(\dnear,\aemp \mid \dpeak) = -0.57$, $p = 0.028$
+(Supplementary Table~S4).  The PDE model produces predicted
+rates~$\apred$ that show no statistically significant association
+with~$\dpeak$ ($\rhosp = +0.39$, $p = 0.131$), confirming that the
+amplitude effect arises from a mechanism outside spatial diffusion---the
+model encodes geometry but is blind to magnitude.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig4_amplitude_orthogonality.pdf}
-\caption{\textbf{Perturbation amplitude independently predicts recovery.}
-\textbf{(a)}~$\alpha$ versus $\dpeak$, coloured by hazard type.
-\textbf{(b)}~Two-dimensional prediction framework: $\dnear$ versus
-$\dpeak$, with points coloured by~$\alpha$.  Dashed lines mark sample
-medians.}
+\caption{\textbf{Perturbation amplitude independently predicts recovery speed.}
+\textbf{(a)}~$\alpha$ versus $\dpeak$; open markers denote $R^2 < 0.75$.
+\textbf{(b)}~Two-dimensional prediction framework: each point placed at
+$(\dnear,\,\dpeak)$ and coloured by~$\alpha$.  Dotted lines mark sample
+medians; high-$\alpha$ events (yellow/green) cluster in the upper-left quadrant
+($\dnear < 0$, high $\dpeak$), consistent with independent
+contributions.
+\textbf{(c)}~Partial Spearman correlations of $\dnear$ with $\alpha$,
+controlling sequentially for country-level HDI, GDP per capita PPP, and
+INFORM risk sub-scores.  The geometry--recovery correlation
+($\rhosp \in [-0.54,\,-0.52]$) is stable across all controls.
+\textbf{(d)}~Partial Spearman correlations of $\dpeak$ with $\alpha$,
+controlling for the same socioeconomic variables and additionally for
+$\dnear$.  $\dpeak$ retains $\rhosp \in [+0.60,\,+0.63]$ throughout.
+Panels~(a,b) correspond to the orthogonality analysis; panels~(c,d)
+confirm socioeconomic invariance.}
 \label{fig:amplitude}
 \end{figure}
 
 
 % ---- R5: Socioeconomic invariance ----
-\subsection*{The amplitude--recovery scaling is independent of
-socioeconomic conditions}
+\FloatBarrier
+\subsection*{Amplitude--recovery scaling is socioeconomic-invariant}
 
-A natural hypothesis is that~$\dpeak$ proxies socioeconomic
-resilience: wealthier societies might mount more effective evacuations,
-producing both larger observed displacements and faster coordinated
-returns.  We test this using country-level
+An alternative explanation is socioeconomic confounding: wealthier
+societies might mount more effective evacuations, producing both larger
+observed displacements and faster coordinated returns.  We test this
+using country-level
 HDI~(\citealt{UNDP2024}), GDP per capita PPP~(\citealt{WorldBank2024}),
-and INFORM Risk sub-scores~(\citealt{INFORM2024}) for the
-11~countries in our sample, which span a wide and policy-relevant range
-of development levels.
+and INFORM Risk sub-indices (Lack of Coping and
+Vulnerability;~\citealt{INFORM2024}) for the 11~countries in our sample.
+Because socioeconomic indicators are measured at the country level, events
+from the same country share identical covariate values; results are
+qualitatively identical when computed at the country level
+($n = 11$; Supplementary \S6.5).
 
 The data reject this hypothesis.  HDI ranges from 0.62~(Nepal) to
-0.94~(USA)---a span that encompasses the full global development
-spectrum from low-income to high-income contexts---yet shows
+0.94~(USA), yet shows
 essentially zero correlation with~$\dpeak$ ($\rhosp = 0.00$, $p =
-1.00$) and negligible correlation with~$\alpha$ ($\rhosp = -0.11$,
+1.00$) and negligible correlation with~$\aemp$ ($\rhosp = -0.11$,
 $p = 0.68$).  GDP per capita PPP spans a 15-fold range from
-\$5.7k~(Nepal) to \$85.8k~(USA), yet likewise shows no association with
+\$5.7k~(Nepal) to \$85.8k~(USA), and likewise shows no association with
 either variable.  The INFORM Lack of Coping sub-score---the indicator
 most directly measuring institutional disaster-response
-capacity---correlates with neither~$\dpeak$ nor~$\alpha$
+capacity---correlates with neither~$\dpeak$ nor~$\aemp$
 (Table~\ref{tab:socioecon}).
 
-Partial correlations confirm that the amplitude--recovery link cannot be
-accounted for by latent national wealth effects.  Controlling for HDI,
-GDP, or INFORM individually leaves the
-$\dpeak$--$\alpha$ Spearman correlation essentially unchanged (from
+Partial correlations (Fig.~\ref{fig:amplitude}c,d) show that the
+amplitude--recovery link cannot be explained by latent national wealth
+effects.  Controlling for HDI, GDP, or INFORM individually leaves the
+$\dpeak$--$\aemp$ Spearman correlation essentially unchanged (from
 $+0.60$ bivariate to a range of $+0.60$--$+0.62$ after conditioning;
-Supplementary Table~S4).  Controlling for~$\dnear$ and a development
-indicator simultaneously yields $\rhosp \approx +0.63$
-($p \approx 0.021$), slightly \emph{stronger} than the bivariate
-estimate.  The amplitude--recovery scaling is a feature of the
+Supplementary Table~S4).  The geometry--recovery link is equally
+robust: $\rhosp(\dnear,\aemp)$ remains between $-0.52$ and $-0.54$
+after conditioning on any single development indicator
+(Fig.~\ref{fig:amplitude}c).
+Controlling for~$\dnear$ and a development indicator simultaneously
+yields $\rhosp \approx +0.63$
+($p = 0.021$--$0.023$), slightly \emph{stronger} than the bivariate
+estimate---a suppressor pattern indicating that development variation
+contributes noise rather than signal to the amplitude--recovery
+relationship.  The amplitude--recovery scaling is a feature of the
 disturbance itself, not a reflection of differential national
 development.
 
 \begin{table}[t]
 \centering
 \caption{Bivariate Spearman correlations between socioeconomic
-indicators and the two dependent variables.  None reaches significance.}
+indicators and the two key analysis variables ($n = 16$ events from
+$11$~countries).  No correlation reaches statistical significance
+($p > 0.44$ for all).}
 \label{tab:socioecon}
 \small
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-Indicator & $\rhosp$ vs $\dpeak$ & $p$ & $\rhosp$ vs $\alpha$ & $p$ \\
+Indicator & $\rhosp$ vs $\dpeak$ & $p$ & $\rhosp$ vs $\aemp$ & $p$ \\
 \midrule
 HDI                    & $+0.00$ & $1.00$ & $-0.11$ & $0.68$ \\
 GDP per capita PPP     & $+0.01$ & $0.97$ & $-0.11$ & $0.67$ \\
 INFORM Lack of Coping  & $-0.21$ & $0.44$ & $-0.04$ & $0.88$ \\
-INFORM Vulnerability   & $+0.13$ & $0.64$ & $-0.32$ & $0.27$ \\
+INFORM Vulnerability   & $+0.13$ & $0.64$ & $-0.11$ & $0.68$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -512,11 +573,11 @@ INFORM Vulnerability   & $+0.13$ & $0.64$ & $-0.32$ & $0.27$ \\
 % ============================================================
 %  DISCUSSION
 % ============================================================
+\FloatBarrier
 \section*{Discussion}
 
-The results reveal that post-disaster population recovery is not the
-idiosyncratic process that the diversity of hazard types and national
-contexts might suggest.  Two quantities---the spatial geometry of the
+The results reveal shared structure in post-disaster population recovery
+despite substantial hazard and country heterogeneity.  Two quantities---the spatial geometry of the
 displacement profile ($\dnear$) and the perturbation
 amplitude ($\dpeak$)---jointly predict recovery speed across earthquakes,
 hurricanes, floods, and wildfires in 11~countries.  These predictors are
@@ -525,9 +586,9 @@ distinct physical content, and have different levels of mechanistic
 explanation.
 
 \paragraph{Spatial diffusion as a recovery mechanism.}
-The shape--rate connection is explained by a minimal
+The shape--rate connection is consistently explained by a minimal
 diffusion--relaxation PDE whose counterfactual experiments
-(Fig.~\ref{fig:pde}c) provide sharp mechanistic evidence: the signal
+(Fig.~\ref{fig:pde}e) provide sharp mechanistic evidence: the signal
 vanishes when diffusion is removed, when spatial structure is erased, or
 when event--profile pairings are shuffled.  This connects post-disaster
 population dynamics to the well-studied physics of relaxation in
@@ -539,46 +600,45 @@ mobility deviations during crises: where \citet{Li2022} characterise
 the spatial envelope of crisis-induced deviations at a fixed time, our
 PDE framework links the \emph{temporal} rate of decay to the
 \emph{spatial} structure of the initial disturbance.  Together the two
-frameworks suggest a coherent picture in which both the spatial profile
-shape and the temporal decay law are governed by the same diffusive
-relaxation process.
+frameworks suggest a coherent picture in which spatial profile shape and
+temporal decay are coupled through diffusive relaxation.  The empirical
+power-law decay we document---slower than the pure exponential predicted
+by a single-mode model---is consistent with the broader finding that
+recovery dynamics in complex systems carry memory and non-Markovian
+features that extend relaxation times~\citep{Lin2020}.
 
 \paragraph{Why do larger perturbations recover faster?}
-The amplitude--recovery scaling is robust but less understood
-mechanistically.  Analogous patterns appear across domains that share
-the feature of a perturbed system with an active restoring force.  In
-financial markets, larger initial shocks to stock market volatility
-following Covid-19 were associated with shorter recovery times, driven
-by systematic mean-reversion forces that intensify with
-displacement~\citep{Zeng2024}.  In infrastructure systems, wider-area
-power outages show faster probabilistic restoration, in part because
-large-scale events activate emergency mutual-aid protocols that scale
-nonlinearly with geographic
-scope~\citep{Willems2024}.  Even in post-fire ecosystems, higher burn
-severity stimulates faster vegetation recovery through accelerated
-nutrient cycling and reduced competition~\citep{Qiu2023}.  These cross-domain parallels are consistent with a general principle in
-the resilience of complex systems: robustness and the speed of return
-to equilibrium both increase when perturbations activate qualitatively
-different, large-scale restoring mechanisms~\citep{Radicchi2024}.  For disaster displacement specifically, the most
-plausible mechanisms include super-linear scaling of emergency response
-with disaster severity (emergency declarations, international aid, and
-media coverage all escalate nonlinearly with
-magnitude~\citep{Eisensee2007,Stromberg2007}) and a thermodynamic-like
-mean-reversion drive that intensifies when the system is far from its
-natural attractor~\citep{Scheffer2009,Gonzalez2008}.  What our data
-clearly establish is that this scaling is \emph{not} mediated by
-national socioeconomic conditions---ruling out differential development
-as a confound.
+The amplitude--recovery scaling is robust but less constrained
+mechanistically.  Similar amplitude-dependent recovery appears in other
+perturbed systems with active restoring forces.  In financial markets,
+larger initial volatility shocks after Covid-19 were associated with
+shorter recovery times through stronger mean-reversion
+forces~\citep{Zeng2024}; and price adjustment across many products
+shows that larger shocks propagate faster because they trigger stronger
+state-dependent responses~\citep{Cavallo2024}.  In infrastructure
+systems, wider-area power outages can exhibit faster probabilistic
+restoration when large events trigger mutual-aid protocols that scale
+nonlinearly with affected area~\citep{Willems2024,Afsharinejad2021}.
+Even in post-fire ecosystems, higher burn severity accelerates
+vegetation recovery through accelerated nutrient cycling~\citep{Qiu2023}.
+These cross-domain parallels point to a general principle: large
+perturbations activate qualitatively stronger restoration regimes.
+For disaster displacement, plausible channels include super-linear
+scaling of emergency response with event severity~\citep{Eisensee2007,Stromberg2007}
+and stronger behavioural reversion toward habitual mobility states
+after severe disruption~\citep{Gonzalez2008}.  What our data
+establish directly is that this scaling is \emph{not} mediated by
+national socioeconomic conditions.
 
-\paragraph{Recovery as incomplete return: the residual displacement signal.}
-A notable observation from the data is that post-disaster recovery does
-not invariably mean return to the pre-event baseline.  The residual
+\paragraph{Recovery as incomplete return.}
+Post-disaster recovery does not invariably mean return to the
+pre-event baseline.  The residual
 displacement~$D_\infty$---the normalised mean of $D(t)$ over the
 post-peak tail---is non-zero for most events, indicating that some
 fraction of displaced populations do not return within the two-week
 observation window.  The strong anticorrelation between~$\aemp$
 and~$D_\infty$ ($\rhosp = -0.703$, $p = 0.002$; Supplementary
-\S6.4) means that fast-recovering events also converge to lower
+\S6.4; Fig.~\ref{fig:relaxation}d) means that fast-recovering events also converge to lower
 residuals: the same mechanisms that accelerate return also deliver more
 complete return.  For slow-recovering events, the elevated residual
 may signal a new stable population configuration---a temporary or
@@ -592,15 +652,15 @@ reconstruction, and long-term migration.
 The shape--rate and amplitude--rate associations are not merely two
 separate findings; their statistical independence means they span
 complementary axes of a prediction space.  At the moment of peak
-displacement---typically within 24--48~hours of the event---both
+displacement---often within the first few days of the event---both
 $\dnear$ and $\dpeak$ are observable from near-real-time FBDM tiles,
 and together they partition events from fastest recovery (large
 amplitude, evacuation pattern) to slowest (small amplitude, influx
 pattern).  This reframes early post-disaster assessment from
 retrospective narrative to prospective quantification: the recovery
 trajectory is substantially encoded in the initial condition, before
-the effects of institutional response, aid delivery, or reconstruction
-policy have had time to accumulate.
+the full effects of institutional response, aid delivery, or
+reconstruction policy have accumulated.
 
 \paragraph{Limitations and outlook.}
 Our sample of 16~events, while spanning diverse hazard types and
@@ -608,14 +668,20 @@ development contexts, remains modest and is subject to FBDM activation
 decisions.  Facebook Disaster Maps measures movements of Facebook users,
 who skew toward urban, younger, and more connected segments of the
 population; such demographic skew in mobile-data platforms is known to
-distort modeled mobility dynamics~\citep{Chin2025}, and coverage
-varies substantially by country and by local platform
+bias modeled mobility dynamics~\citep{Chin2025,Gallotti2024}, and
+coverage varies substantially by country and by local platform
 adoption~\citep{Huang2025}.  Observation windows of roughly two weeks
 capture acute recovery dynamics but not long-term reconstruction or
 subsequent displacement cycles.  The socioeconomic analysis operates at
 national scale (effective $n = 11$~countries), masking sub-national
 heterogeneity that may be substantial---a community-level analysis
 would require matched community-level development indicators.  The
+radial-annulus framework is most natural for point-source hazards such
+as earthquakes; for spatially diffuse events (floods, wildfires), the
+choice of epicenter introduces additional geometric uncertainty.
+Inference is also aggregate (tile $\rightarrow$ annulus $\rightarrow$
+event): individual-level mobility decisions cannot be identified from
+these event-level statistics alone.  The
 shape--rate hypothesis is pre-specified from the PDE model's physical
 prediction and withstands multiple independent robustness checks; the
 amplitude--recovery scaling is an empirical discovery whose mechanistic
@@ -625,6 +691,7 @@ samples, longer observation windows, and finer-grained socioeconomic
 and infrastructure data.
 
 
+\FloatBarrier
 % ============================================================
 %  MATERIALS AND METHODS
 % ============================================================
@@ -634,40 +701,79 @@ and infrastructure data.
 We use Facebook Disaster Maps~\citep{Maas2019}, which provide
 tile-level (${\sim}2.4$~km) population density estimates at 8-hour
 resolution for disaster-activated regions.  For each event, tiles within
-$R = 200$~km of the estimated epicenter are binned into 10-km radial
-annuli.  The population ratio
+$R = 200$~km of the estimated event center are binned into 10-km radial
+annuli.  Event centers are determined as follows: for earthquakes, the
+catalogued epicenter is used; for hurricanes and typhoons, the track
+anchor at landfall or closest approach; for floods and wildfires, the
+population-weighted centroid of tiles with the largest absolute density
+change.  The population ratio
 $\phi_{r,t} = n_{\mathrm{crisis}} / n_{\mathrm{baseline}}$
-is averaged within each annulus (minimum 3~tiles), and the aggregated
-displacement metric is defined as the mean absolute deviation across
-radial bins:
+is averaged within each annulus; annuli with fewer than 3~populated tiles
+are excluded.  The baseline count~$n_{\mathrm{baseline}}$ is the
+platform-provided pre-event mean, computed by FBDM over the 90~days
+preceding map activation, stratified by day of week and 8-hour time
+window.  The aggregated displacement metric is defined as the mean
+absolute deviation across retained radial bins:
 \begin{equation}
   D(t) = \bigl\langle\,|\phi_{r,t} - 1|\,\bigr\rangle_r .
   \label{eq:Dt}
 \end{equation}
 
+\paragraph{Event selection.}
+Approximately 35~disaster events with FBDM coverage (2020--2025) were
+screened for analytical suitability.  Events were retained if they had
+(i) sufficient tile coverage within the 200-km analysis disk ($\geq 3$
+populated tiles per annulus at peak), (ii) a clearly identifiable single
+peak in~$D(t)$, and (iii) a monotone-decay segment of at least three
+post-peak time steps ($n_{\mathrm{mono}} \geq 3$).  Events representing
+the same physical disaster through multiple separate FBDM deployments
+(e.g.\ Rio Grande do Sul flooding, Hurricane Melissa aftermath) were
+consolidated to a single entry to avoid pseudo-replication.  The final sample comprises 16~events spanning
+four hazard types (earthquake, hurricane/typhoon, flood, wildfire) in
+11~countries (Supplementary Table~S1).
+
+\paragraph{Peak displacement $\dpeak$ and residual displacement $D_\infty$.}
+$\dpeak = \max_t D(t)$ is the peak of the aggregated displacement curve.
+The residual displacement $D_\infty$ is defined as the mean of the
+normalised curve $D(t')/\dpeak$ over the post-peak tail
+($t' > 0.5\,t_{\mathrm{obs}}$), where $t_{\mathrm{obs}}$ is the total
+post-peak observation length; $D_\infty = 0$ would indicate complete
+return to baseline.
+
 \paragraph{Decay rate $\alpha$.}
 After $D(t)$ reaches its peak, the normalized curve
-$\Dnorm(t') = D(t')/\dpeak$ is fitted by log--log OLS over the
-initial monotone-decay segment (from $t' = 24$~h to the first
-structural rebound; details in SI~\S1).  The negative slope is the
-empirical decay rate~$\aemp$.  We choose the power-law functional form
+$\Dnorm(t') = D(t')/\dpeak$ is fitted to the power-law model
+\begin{equation}
+  \Dnorm(t') = (t'/t_0)^{-\aemp},
+  \label{eq:powerlaw}
+\end{equation}
+by ordinary least squares on $\log\Dnorm$ versus $\log t'$.  The fit
+is performed over the initial monotone-decay segment, starting at
+$t' = 24$~h and truncated at the first structural rebound---defined
+operationally as the first time step at which
+$D_{\mathrm{norm},i+1} > 1.05\,D_{\mathrm{norm},i}$ (i.e.\ a 5\%
+bounce tolerance; details in SI~\S1).  We choose the power-law form
 over alternatives (exponential, stretched-exponential) on the basis of
 Bayesian Information Criterion comparisons across all 16~events: the
-power law achieves lower BIC in 13 of 16~events, consistent with the
-scale-free decay documented in crisis-mobility studies~\citep{Li2022}
-and in contrast to exponential decay, which would predict the same
-characteristic time irrespective of perturbation scale.  Robustness
-is confirmed across four fixed time windows ($[24,72]$ through
-$[24,144]$~h), Theil--Sen estimation, and a model-free ratio
-$D(72)/D(24)$ (Supplementary Table~S2).  Events with $R^2 < 0.75$
-(four events; $\dagger$ in Table~S1) are retained in all analyses and
-shown with open markers; the primary correlations are qualitatively
-unchanged when they are excluded (Supplementary \S6.2).
+power law achieves lower BIC in 13 of 16~events (Supplementary
+Table~S2a), consistent with the scale-free decay documented in
+crisis-mobility studies~\citep{Li2022} and in contrast to exponential
+decay, which would predict the same characteristic time irrespective
+of perturbation scale.  Robustness is confirmed across four fixed time
+windows ($[24,72]$~h through $[24,144]$~h), Theil--Sen robust
+regression~\citep{Sen1968}, and a model-free ratio $D(72)/D(24)$
+used as an alternative non-parametric measure of decay speed
+in the same correlation analyses (Supplementary Table~S2b).
+Events with $R^2 < 0.75$ (four events; $\dagger$ in Table~S1) are
+retained in all analyses and shown with open markers; the primary
+correlations are qualitatively unchanged when they are excluded
+(Supplementary \S6.2).
 
 \paragraph{Near-field displacement direction $\dnear$.}
-At $t_{\mathrm{peak}}$, $\dnear$ is the mean of
-$\delta(r) = \phi(r, t_{\mathrm{peak}}) - 1$ over $r < 50$~km,
-averaged across peak-adjacent time windows.
+$\dnear$ is the mean of
+$\delta(r) = \phi(r, t) - 1$ over $r < 50$~km, averaged across all
+time windows in which $D(t) \geq 0.5\,\dpeak$ (i.e.\ the peak plateau),
+requiring at least two populated near-field annuli per time step.
 
 \paragraph{PDE model.}
 Equation~\eqref{eq:pde} is solved analytically under Neumann
@@ -699,7 +805,7 @@ beyond what is empirically observed in the $L_1$ metric.
 
 The two global parameters, $k$ and $\Ds$, are found by grid search
 over a $30 \times 30$ logarithmic grid spanning
-$k \in [10^{-4},\,10^{-1}]$~h$^{-1}$ and
+$k \in [10^{-4},\,10^{0}]$~h$^{-1}$ and
 $\Ds \in [10^{-2},\,10]$~km$^2$\,h$^{-1}$.  The criterion minimised
 is a joint rank score combining three components weighted equally:
 (i) the negative Spearman correlation between~$\apred$ and~$\aemp$
@@ -712,6 +818,25 @@ reside in a broad plateau of the criterion landscape (Supplementary
 \S3), indicating that the result is not sensitive to the exact
 parameter values.
 
+\paragraph{Counterfactual experiments.}
+Three counterfactual scenarios test the necessity of the model's
+ingredients: (i)~\emph{no diffusion} ($\Ds = 0$): all modes decay at
+the uniform rate~$k$, removing mode-selective damping;
+(ii)~\emph{uniform mode only} ($c_0$-only): the observed spatial
+structure is replaced by a flat perturbation, retaining diffusion but
+erasing spatial content; (iii)~\emph{shuffle}: event--profile pairings
+are randomised ($n = 500$ permutations), breaking the link between each
+event's own geometry and its recovery history.
+
+\paragraph{Temporal prediction $\Dpred(t)$.}
+For each event, the fitted Bessel expansion~\eqref{eq:bessel} is
+propagated forward from $t_{\mathrm{peak}}$ and aggregated to the
+predicted displacement trajectory
+$\Dpred(t') = \langle\,|\delta(r,t')|\,\rangle_r$, evaluated
+numerically over the same radial grid used for the initial projection.
+Both $\Dpred(t')$ and $\Demp(t')$ are normalised at $t' = 24$~h for
+direct comparison.
+
 \paragraph{Socioeconomic data.}
 Country-level indicators---HDI~\citep{UNDP2024}, GDP per capita PPP
 \citep{WorldBank2024}, and INFORM sub-scores~\citep{INFORM2024}---are
@@ -720,15 +845,45 @@ correlations control for one or more indicators simultaneously (SI~\S4).
 
 \paragraph{Statistical tests.}
 All correlations are Spearman rank unless otherwise noted.  Significance
-thresholds are two-sided at $p < 0.05$.  Robustness checks include
-leave-one-out jackknife (pseudo-value 95\% CI), $r_{\mathrm{near}}$
+thresholds are two-sided at $p < 0.05$.  Mann--Whitney $U$ tests compare
+$\aemp$ distributions between EVAC and INFL events
+(Fig.~\ref{fig:shape}d).  Robustness checks include
+leave-one-out jackknife (95\% CI), $r_{\mathrm{near}}$
 sweeps from 10 to 200~km, $R_{\max}$ sweeps from 50 to 400~km, and
 a non-parametric bootstrap ($n = 500$ realisations) over
 initial-profile perturbations drawn from the tile-level noise
-distribution.  Partial Spearman correlations are computed via repeated
-Spearman rank transformation on the residuals of rank regressions,
-following standard practice for partial rank correlations.
+distribution.  Partial Spearman correlations are computed via
+rank-transform-and-regress~\citep{Conover1999}: variables are replaced
+by their ranks, ordinary least-squares residuals are obtained, and
+Spearman correlation is computed on the residualised ranks.
 
+Because different events have different post-peak observation lengths,
+$D_\infty$ is computed over the second half of each event's available
+post-peak window.  The resulting values are comparable across events
+because $\Dnorm(t')$ is normalised by $\dpeak$ before averaging.
+
+\paragraph{Software.}
+All analyses were performed in Python~3.11 using NumPy~1.26,
+SciPy~1.12, pandas~2.2, and Matplotlib~3.9.  Bessel function zeros
+and special functions are from \texttt{scipy.special}.
+
+
+% ============================================================
+%  DATA AND CODE AVAILABILITY
+% ============================================================
+\section*{Data availability}
+Facebook Disaster Maps data were obtained through Meta's Data for Good
+programme.  Access requires an institutional agreement with Meta;
+requests can be submitted at
+\url{https://dataforgood.facebook.com/}.  Processed, event-level
+summary statistics (radial profiles, decay rates, Bessel coefficients,
+socioeconomic indicators) sufficient to reproduce all figures and
+tables are available at [Zenodo DOI to be inserted upon acceptance].
+
+\section*{Code availability}
+Analysis code (Python) for data processing, PDE modelling, figure
+generation, and statistical tests is available at
+[GitHub/Zenodo link to be inserted upon acceptance].
 
 % ============================================================
 %  ACKNOWLEDGMENTS
