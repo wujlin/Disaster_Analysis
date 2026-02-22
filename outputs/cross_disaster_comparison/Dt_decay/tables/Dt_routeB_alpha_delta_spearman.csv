@@ -1,2 +1,2 @@
 n_total_fits,n_base_ok,n_selected,n_selected_plot,spearman_rho,spearman_p,min_n_mono,low_r2_threshold,excluded_slugs
-34,18,16,16,-0.5264705882352941,0.036166514972245475,3,0.6,hurricane_melissa_aftermath_2025_11_03;the_flooding_across_rio_grande_do_sul_state_brazil
+37,19,17,17,-0.5049019607843138,0.038721048878706255,3,0.6,hurricane_melissa_aftermath_2025_11_03;the_flooding_across_rio_grande_do_sul_state_brazil

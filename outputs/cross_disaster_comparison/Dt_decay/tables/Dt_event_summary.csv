@@ -1,4 +1,5 @@
 slug,short_name,name,disaster_type,output_root,n_time_windows,n_time_windows_raw,median_step_hours_raw,daily_avg_applied,t_peak_hours,D_peak,event_type,near_delta_peak_windows_mean,D_inf
+cambodia_monsoon_season_study_2024_05_09,cambodia_monsoon_seaso,Cambodia Monsoon Season Study 9 May 2024,monsoon,outputs,36,106,8.0,1,536.0,0.2813058094235828,EVAC,-0.22438986333973152,0.30104830816162287
 flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,Flooding In Central And Eastern Europe Sept 16 2024,flood,outputs,28,81,8.0,1,416.0,0.10059199886783282,INFL,0.06637828175458367,0.8665136001354186
 global_earthquake_model_research_2025_sep_18,global_earthquake_mode,Global Earthquake Model Research 2025 Sep 18,earthquake,outputs,3,6,8.0,1,36.0,0.05385056901479478,EXCLUDED_SHORT,,
 hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,outputs,14,14,24.0,0,-8.0,0.12183737847793855,EVAC,-0.2182305293802359,0.26219576296867736
@@ -13,9 +14,11 @@ hurricane_john_southern_mexico_25_september_2024,john_sm,Hurricane John Southern
 hurricane_melissa_10_27_2025,melissa,Hurricane Melissa 10 27 2025,hurricane,outputs,6,11,8.0,1,52.0,0.4724414077110588,NEUTRAL,,0.34361243731652263
 hurricane_melissa_aftermath_2025_11_03,melissa_aft,Hurricane Melissa Aftermath 2025 11 03,hurricane,outputs,6,13,8.0,1,36.0,0.32761606105846197,EVAC,-0.5420930463020194,0.6725928596577806
 hurricane_milton_across_florida_us,milton_fl,"Hurricane Milton Across Florida, US",hurricane,outputs,10,10,24.0,0,64.0,0.14026091970829224,INFL,0.11790225271303449,0.7943681594503664
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,india_monsoon_season_s,"India Monsoon Season Study (NCT Delhi, UP, Bihar) 9 May 2024",monsoon,outputs,36,106,8.0,1,536.0,0.18148306873830664,INFL,0.07925056582733202,0.3207343844812271
 line_fire_southern_california_9_september_2024,line_fire,Line Fire Southern California 9 September 2024,wildfire,outputs,15,15,24.0,0,280.0,0.11380356812147989,INFL,0.10692956348128577,0.944662965587089
 moldova_flooding_2024,moldova,Moldova Flooding Sept 16 2024,flood,outputs,28,28,24.0,0,448.0,0.06299469886468742,INFL,0.04545334325701815,0.6441664810851007
 mountain_fire_in_california,mountain_fire_in_calif,Mountain fire in California (Ventura County),wildfire,outputs,2,3,8.0,1,-8.0,0.07026450922991515,EXCLUDED_SHORT,,
+pakistan_monsoon_season_study_sindh_2024_05_09,pakistan_monsoon_seaso,Pakistan Monsoon Season Study (Sindh Province) 9 May 2024,monsoon,outputs,36,106,8.0,1,824.0,0.08646891672754135,INFL,0.027424920580333516,
 park_fire_2024,park_fire1,"The Park Fire in Northern California, US",wildfire,outputs,17,17,24.0,0,376.0,0.05971293563843387,INFL,0.035741591833645565,
 park_fire_california_29_july_2024,park_fire2,Park Fire California 29 July 2024,wildfire,outputs,15,15,24.0,0,280.0,0.03320846854836,NEUTRAL,0.017786271876340173,0.9158678848823444
 spain_flood,spain_flood,Spain Flood (Valencia and Castilla-La Mancha Regions),flood,outputs,11,30,8.0,1,104.0,0.12910513786241298,INFL,0.13846800317552516,0.785070108828101
@@ -35,5 +38,6 @@ tropical_storm_kristine_in_bicol_and_calabarzon_philippines,kristine_ph,"Tropica
 tropical_storm_yagi_philippines_2_september_2024,yagi_ph,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,outputs,15,15,24.0,0,280.0,0.08850171957692196,EVAC,-0.04800929302101292,0.9272355997519359
 turkiye_earthquake_2023,turkiye,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,outputs,36,36,24.0,0,16.0,0.40114008822652447,INFL,0.05663369481729249,0.5693644673300816
 typhoon_krathon_across_taiwan,krathon_tw,Typhoon Krathon Across Taiwan,typhoon,outputs,12,12,24.0,0,-8.0,0.13430304258593542,INFL,0.09670015070573769,0.686813106845663
+typhoon_nika_across_northern_luzon_philippines,nika_ph,"Typhoon Nika Across Northern Luzon, Philippines",typhoon,outputs,3,6,8.0,1,28.0,0.10164156332374108,EXCLUDED_SHORT,,
 typhoon_yagi_across_northeastern_vietnam,yagi_vn,Typhoon Yagi Across Northeastern Vietnam,typhoon,outputs,11,11,24.0,0,-8.0,0.25648113051572646,EVAC,-0.2739356164808162,0.24426611879019733
 wildfires_in_boise_county_idaho_27_august_2024,boise_fire,Wildfires In Boise County Idaho 27 August 2024,wildfire,outputs,15,15,24.0,0,136.0,0.13709144407795817,INFL,0.04030056317673647,0.35106560385114505

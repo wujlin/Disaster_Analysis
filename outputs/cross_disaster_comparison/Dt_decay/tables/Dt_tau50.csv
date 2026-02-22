@@ -1,4 +1,5 @@
 slug,short_name,disaster_type,event_type,t_peak_hours,D_peak,tau50_h,tau50_lower_bound
+cambodia_monsoon_season_study_2024_05_09,cambodia_monsoon_seaso,monsoon,EVAC,536.0,0.2813058094235828,24.0,0
 flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,flood,INFL,416.0,0.10059199886783282,212.0,1
 hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,hurricane,EVAC,-8.0,0.12183737847793855,24.0,0
 hurricane_beryl_across_southeastern_texas_us,beryl_tx,hurricane,EVAC,-8.0,0.11823524674694585,48.0,0
@@ -11,8 +12,10 @@ hurricane_john_southern_mexico_25_september_2024,john_sm,hurricane,INFL,136.0,0.
 hurricane_melissa_10_27_2025,melissa,hurricane,NEUTRAL,52.0,0.4724414077110588,248.0,0
 hurricane_melissa_aftermath_2025_11_03,melissa_aft,hurricane,EVAC,36.0,0.32761606105846197,444.0,1
 hurricane_milton_across_florida_us,milton_fl,hurricane,INFL,64.0,0.14026091970829224,144.0,1
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,india_monsoon_season_s,monsoon,INFL,536.0,0.18148306873830664,24.0,0
 line_fire_southern_california_9_september_2024,line_fire,wildfire,INFL,280.0,0.11380356812147989,48.0,1
 moldova_flooding_2024,moldova,flood,INFL,448.0,0.06299469886468742,96.0,0
+pakistan_monsoon_season_study_sindh_2024_05_09,pakistan_monsoon_seaso,monsoon,INFL,824.0,0.08646891672754135,,0
 park_fire_2024,park_fire1,wildfire,INFL,376.0,0.05971293563843387,,0
 park_fire_california_29_july_2024,park_fire2,wildfire,NEUTRAL,280.0,0.03320846854836,48.0,1
 spain_flood,spain_flood,flood,INFL,104.0,0.12910513786241298,116.0,1
