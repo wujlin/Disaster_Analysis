@@ -1,0 +1,73 @@
+{
+  "event_display_name": "The Earthquake Across Central Mexico",
+  "match_mode": "exact",
+  "refresh_catalog": 0,
+  "download": 0,
+  "max_dates": 100,
+  "format": "csv",
+  "strict_collections": 1,
+  "required_collections": [
+    "Facebook Population During Crisis",
+    "Movement Between Places During Crisis",
+    "Network Coverage Maps",
+    "Business Activity Trends During Crisis"
+  ],
+  "min_population_windows": 0,
+  "datasets": [
+    {
+      "dataset_id": "1553039769281990",
+      "collection_title": "Business Activity Trends During Crisis",
+      "date_range_start": "2026-01-02 00:00",
+      "date_range_end": "2026-01-15 00:00",
+      "raw_dir": "/Users/jinlin/Desktop/project/Disaster_Analysis/datasets/The_Earthquake_Across_Central_Mexico/Business_Activity_Trends_During_Crisis/raw",
+      "csv_count": 14,
+      "dt_min": "2026-01-02 00:00",
+      "dt_max": "2026-01-15 00:00",
+      "hour_hist": {
+        "00": 14
+      }
+    },
+    {
+      "dataset_id": "887176223902432",
+      "collection_title": "Facebook Population During Crisis",
+      "date_range_start": "2026-01-02 00:00",
+      "date_range_end": "2026-01-07 16:00",
+      "raw_dir": "/Users/jinlin/Desktop/project/Disaster_Analysis/datasets/The_Earthquake_Across_Central_Mexico/Facebook_Population_During_Crisis/raw",
+      "csv_count": 6,
+      "dt_min": "2026-01-06 00:00",
+      "dt_max": "2026-01-07 16:00",
+      "hour_hist": {
+        "00": 2,
+        "08": 2,
+        "16": 2
+      }
+    },
+    {
+      "dataset_id": "1304029558432254",
+      "collection_title": "Movement Between Places During Crisis",
+      "date_range_start": "2026-01-02 08:00",
+      "date_range_end": "2026-01-16 16:00",
+      "raw_dir": "/Users/jinlin/Desktop/project/Disaster_Analysis/datasets/The_Earthquake_Across_Central_Mexico/Movement_Between_Places_During_Crisis/raw",
+      "csv_count": 20,
+      "dt_min": "2026-01-07 08:00",
+      "dt_max": "2026-01-16 16:00",
+      "hour_hist": {
+        "08": 10,
+        "16": 10
+      }
+    },
+    {
+      "dataset_id": "1384932873142250",
+      "collection_title": "Network Coverage Maps",
+      "date_range_start": "2026-01-02 00:00",
+      "date_range_end": "2026-01-07 00:00",
+      "raw_dir": "/Users/jinlin/Desktop/project/Disaster_Analysis/datasets/The_Earthquake_Across_Central_Mexico/Network_Coverage_Maps/raw",
+      "csv_count": 6,
+      "dt_min": "2026-01-02 00:00",
+      "dt_max": "2026-01-07 00:00",
+      "hour_hist": {
+        "00": 6
+      }
+    }
+  ]
+}
