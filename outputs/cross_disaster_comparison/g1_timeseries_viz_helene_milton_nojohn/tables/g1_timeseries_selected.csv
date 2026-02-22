@@ -1,0 +1,23 @@
+slug,name,event_type,hours_since_quake,g1,abs_g1,sigma1_energy,r_max_km,mode_used,t_days
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,0.0,0.176108669683169,0.176108669683169,0.9450025882685946,200.0,fill_missing,0.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,24.0,0.406872476570557,0.406872476570557,0.9450025882685946,200.0,fill_missing,1.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,48.0,0.4715040255396148,0.4715040255396148,0.9450025882685946,200.0,fill_missing,2.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,72.0,0.4693824318376398,0.4693824318376398,0.9450025882685946,200.0,fill_missing,3.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,96.0,0.4752546201033462,0.4752546201033462,0.9450025882685946,200.0,fill_missing,4.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,120.0,0.5067596607156352,0.5067596607156352,0.9450025882685946,200.0,fill_missing,5.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,144.0,0.5047559372166109,0.5047559372166109,0.9450025882685946,200.0,fill_missing,6.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,168.0,0.5203305162134224,0.5203305162134224,0.9450025882685946,200.0,fill_missing,7.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,192.0,0.610131565100581,0.610131565100581,0.9450025882685946,200.0,fill_missing,8.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,216.0,0.5627204258989748,0.5627204258989748,0.9450025882685946,200.0,fill_missing,9.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,240.0,0.5411622241432679,0.5411622241432679,0.9450025882685946,200.0,fill_missing,10.0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,264.0,0.589328502462363,0.589328502462363,0.9450025882685946,200.0,fill_missing,11.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,0.0,0.4535072844831395,0.4535072844831395,0.904385473372197,200.0,fill_missing,0.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,24.0,0.4532877647253437,0.4532877647253437,0.904385473372197,200.0,fill_missing,1.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,48.0,0.5770782133826781,0.5770782133826781,0.904385473372197,200.0,fill_missing,2.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,72.0,0.6089918289214004,0.6089918289214004,0.904385473372197,200.0,fill_missing,3.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,96.0,0.5881653574164752,0.5881653574164752,0.904385473372197,200.0,fill_missing,4.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,120.0,0.5859083479411649,0.5859083479411649,0.904385473372197,200.0,fill_missing,5.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,144.0,0.4591309418982229,0.4591309418982229,0.904385473372197,200.0,fill_missing,6.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,168.0,0.5370379569349323,0.5370379569349323,0.904385473372197,200.0,fill_missing,7.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,192.0,0.4863364738391331,0.4863364738391331,0.904385473372197,200.0,fill_missing,8.0
+hurricane_milton_across_florida_us,"Hurricane Milton Across Florida, US",hurricane,216.0,0.5444446459198773,0.5444446459198773,0.904385473372197,200.0,fill_missing,9.0

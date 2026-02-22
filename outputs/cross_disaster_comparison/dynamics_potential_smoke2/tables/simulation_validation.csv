@@ -1,0 +1,3 @@
+subset,n_events,rho_alpha_delta_near,p_alpha_delta_near,rho_alpha_D_peak,p_alpha_D_peak,n_batches,rho_alpha_delta_near_mean,rho_alpha_delta_near_ci2p5,rho_alpha_delta_near_ci97p5,rho_alpha_D_peak_mean,rho_alpha_D_peak_ci2p5,rho_alpha_D_peak_ci97p5
+real_data,3,-0.5,0.6666666666666667,0.5,0.6666666666666667,,,,,,,
+synthetic_param_bootstrap,6,,,,,9.0,0.011111111111111084,-0.6599999999999999,0.7399999999999999,0.06666666666666665,-1.0,0.6599999999999999

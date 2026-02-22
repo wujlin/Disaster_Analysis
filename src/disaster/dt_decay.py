@@ -14,6 +14,7 @@ except ModuleNotFoundError as e:
 
 try:
     from scipy.optimize import curve_fit
+    from scipy.stats import spearmanr, theilslopes
 except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：scipy。请先运行 `pip install -r requirements.txt`（或用 conda 安装）。") from e
 
@@ -98,6 +99,8 @@ def _short_name(slug: str) -> str:
             geo = geo_map[t]
 
     if storm_name:
+        if storm_name == "melissa" and "aftermath" in tokens:
+            return "melissa_aft"
         if "pre" in tokens and "landfall" in tokens:
             return f"{storm_name}_pre"
         if storm_name == "john":
@@ -230,6 +233,56 @@ def _compute_dt_timeseries(
     if not out.empty:
         out = out.sort_values("hours_since_quake", kind="stable").reset_index(drop=True)
     return out
+
+
+def _median_step_hours(ts: pd.DataFrame) -> float:
+    if ts is None or ts.empty or "hours_since_quake" not in ts.columns:
+        return float("nan")
+    h = pd.to_numeric(ts["hours_since_quake"], errors="coerce").to_numpy(dtype=float)
+    h = h[np.isfinite(h)]
+    if h.size < 2:
+        return float("nan")
+    h = np.sort(h)
+    dh = np.diff(h)
+    dh = dh[np.isfinite(dh) & (dh > 0)]
+    if dh.size == 0:
+        return float("nan")
+    return float(np.median(dh))
+
+
+def _daily_average_if_high_freq(ts: pd.DataFrame, *, high_freq_thresh_h: float = 16.0) -> tuple[pd.DataFrame, float, int]:
+    """
+    仅当时间步长较高频（如 8h）时，按日做平均，抑制日内周期。
+    返回：(处理后序列, 原始中位步长, 是否做了日均值[0/1])。
+    """
+    if ts is None or ts.empty:
+        return ts.copy(), float("nan"), 0
+    med_step = _median_step_hours(ts)
+    if not np.isfinite(med_step) or med_step >= float(high_freq_thresh_h):
+        return ts.copy(), float(med_step), 0
+
+    tmp = ts.copy()
+    h = pd.to_numeric(tmp["hours_since_quake"], errors="coerce").to_numpy(dtype=float)
+    tmp = tmp[np.isfinite(h)].copy()
+    if tmp.empty:
+        return pd.DataFrame(columns=list(ts.columns)), float(med_step), 0
+    tmp["hours_since_quake"] = pd.to_numeric(tmp["hours_since_quake"], errors="coerce")
+    tmp = tmp.dropna(subset=["hours_since_quake"]).copy()
+    tmp["day_idx"] = np.floor(tmp["hours_since_quake"].to_numpy(dtype=float) / 24.0).astype(int)
+
+    out = (
+        tmp.groupby("day_idx", sort=True, as_index=False)
+        .agg(
+            hours_since_quake=("hours_since_quake", "mean"),
+            D=("D", "mean"),
+            near_delta=("near_delta", "mean"),
+            n_r_bins=("n_r_bins", "mean"),
+        )
+        .sort_values("hours_since_quake", kind="stable")
+        .reset_index(drop=True)
+    )
+    out["n_r_bins"] = pd.to_numeric(out["n_r_bins"], errors="coerce").round().astype("Int64")
+    return out, float(med_step), 1
 
 
 def _pick_peak(ts: pd.DataFrame, *, peak_min_hours: float | None, peak_max_hours: float | None) -> tuple[float, float]:
@@ -458,6 +511,10 @@ def run(
     peak_frac: float,
     near_thresh: float,
     mono_tol_up: float,
+    route_b_min_n_mono: int,
+    route_b_low_r2_threshold: float,
+    route_b_exclude_slugs: list[str],
+    route_b_teach_highlight_slugs: list[str],
 ) -> None:
     output_root = Path(output_root)
     out_dir = Path(out_dir)
@@ -489,7 +546,7 @@ def run(
         name, disaster_type = _load_metadata(ref.output_root, slug)
         df = _load_phi_rt_long(ref.output_root, slug)
 
-        ts = _compute_dt_timeseries(
+        ts_raw = _compute_dt_timeseries(
             df,
             r_max_km=float(r_max_km),
             near_r_km=float(near_r_km),
@@ -497,6 +554,8 @@ def run(
             min_r_bins=int(min_r_bins),
             min_near_bins=int(min_near_bins),
         )
+        n_time_windows_raw = int(ts_raw.shape[0])
+        ts, median_step_hours_raw, daily_avg_applied = _daily_average_if_high_freq(ts_raw, high_freq_thresh_h=16.0)
 
         t_peak, D_peak = _pick_peak(ts, peak_min_hours=peak_min_hours, peak_max_hours=peak_max_hours)
         event_type, near_mean = _classify_event(
@@ -532,10 +591,14 @@ def run(
                 "disaster_type": str(disaster_type),
                 "output_root": str(ref.output_root),
                 "n_time_windows": int(ts.shape[0]),
+                "n_time_windows_raw": int(n_time_windows_raw),
+                "median_step_hours_raw": float(median_step_hours_raw),
+                "daily_avg_applied": int(daily_avg_applied),
                 "t_peak_hours": float(t_peak),
                 "D_peak": float(D_peak),
                 "event_type": str(event_type),
                 "near_delta_peak_windows_mean": float(near_mean),
+                "D_inf": float("nan"),
             }
         )
 
@@ -550,6 +613,17 @@ def run(
         post = post.sort_values("hours_since_quake", kind="stable").reset_index(drop=True)
         post["t_prime_h"] = pd.to_numeric(post["hours_since_quake"], errors="coerce") - float(t_peak)
         post["D_norm"] = pd.to_numeric(post["D"], errors="coerce") / float(D_peak)
+
+        D_inf = float("nan")
+        if not post.empty:
+            tail_n = max(1, int(post.shape[0] // 3))
+            tail = pd.to_numeric(post["D_norm"], errors="coerce").to_numpy(dtype=float)
+            if tail_n > 0:
+                tail = tail[-tail_n:]
+            tail = tail[np.isfinite(tail)]
+            if tail.size:
+                D_inf = float(np.mean(tail))
+        summary_rows[-1]["D_inf"] = float(D_inf)
 
         # Task 2: monotone segment fit（即使 post 为空也写一行，便于全表对齐）
         mono = _monotone_decay_segment(post[["t_prime_h", "D_norm"]].copy(), tol_up=float(mono_tol_up)) if not post.empty else pd.DataFrame()
@@ -572,16 +646,18 @@ def run(
                 "r2": float(r2),
                 "t_decay_start": float(pd.to_numeric(mono["t_prime_h"], errors="coerce").min()) if mono is not None and not mono.empty else float("nan"),
                 "t_decay_end": float(pd.to_numeric(mono["t_prime_h"], errors="coerce").max()) if mono is not None and not mono.empty else float("nan"),
+                "D_inf": float(D_inf),
+                "D_inf_abs": float(D_inf * D_peak) if np.isfinite(D_inf) and np.isfinite(float(D_peak)) else float("nan"),
             }
         )
 
-        # Task 3: BIC compare on full post-peak
+        # Task 3: BIC compare on monotone segment（与 alpha 拟合口径一致）
         bic = (
             _fit_models_bic(
-                pd.to_numeric(post["t_prime_h"], errors="coerce").to_numpy(dtype=float),
-                pd.to_numeric(post["D_norm"], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(mono["t_prime_h"], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(mono["D_norm"], errors="coerce").to_numpy(dtype=float),
             )
-            if not post.empty
+            if mono is not None and not mono.empty
             else {"ok": 0, "n_pts": 0}
         )
         Bp = float(bic.get("BIC_power", float("nan")))
@@ -603,7 +679,7 @@ def run(
                 "short_name": _short_name(slug),
                 "disaster_type": str(disaster_type),
                 "event_type": str(event_type),
-                "n_pts": int(bic.get("n_pts", int(post.shape[0]))),
+                "n_pts": int(bic.get("n_pts", int(mono.shape[0]) if mono is not None else 0)),
                 "best_model": str(best_model),
                 "BIC_power": float(Bp),
                 "BIC_exp": float(Be),
@@ -652,6 +728,159 @@ def run(
     fits_df.to_csv(tabs / "Dt_powerlaw_fits.csv", index=False)
     bic_df.to_csv(tabs / "Dt_model_bic.csv", index=False)
     collapse_df.to_csv(tabs / "Dt_tau50.csv", index=False)
+
+    # Route B sample and correlation stats
+    route_b_sample_df = pd.DataFrame()
+    route_b_stats_df = pd.DataFrame()
+    route_b_jackknife_df = pd.DataFrame()
+    route_b_jackknife_summary_df = pd.DataFrame()
+    route_b_r2_strata_df = pd.DataFrame()
+    route_b_alpha_dinf_df = pd.DataFrame()
+    if not fits_df.empty and not summary_df.empty:
+        route_b_exclude = {str(x).strip() for x in (route_b_exclude_slugs or []) if str(x).strip()}
+        route_b_sample_df = fits_df.merge(
+            summary_df[["slug", "near_delta_peak_windows_mean", "short_name", "event_type", "D_inf"]],
+            on=["slug", "short_name", "event_type"],
+            how="left",
+            suffixes=("", "_summary"),
+        )
+        route_b_sample_df["n_mono"] = pd.to_numeric(route_b_sample_df["n_mono"], errors="coerce")
+        route_b_sample_df["alpha"] = pd.to_numeric(route_b_sample_df["alpha"], errors="coerce")
+        route_b_sample_df["r2"] = pd.to_numeric(route_b_sample_df["r2"], errors="coerce")
+        route_b_sample_df["near_delta_peak_windows_mean"] = pd.to_numeric(route_b_sample_df["near_delta_peak_windows_mean"], errors="coerce")
+        route_b_sample_df["D_inf"] = pd.to_numeric(route_b_sample_df["D_inf"], errors="coerce")
+
+        route_b_sample_df["route_b_base_ok"] = (
+            (route_b_sample_df["n_mono"] >= float(route_b_min_n_mono))
+            & route_b_sample_df["near_delta_peak_windows_mean"].notna()
+            & route_b_sample_df["alpha"].notna()
+        )
+        route_b_sample_df["route_b_excluded_slug"] = route_b_sample_df["slug"].astype(str).isin(route_b_exclude)
+        route_b_sample_df["route_b_low_r2"] = (
+            route_b_sample_df["r2"].notna() & (route_b_sample_df["r2"] < float(route_b_low_r2_threshold))
+        )
+        # 主统计样本：只用 n_mono + delta 非空 + 独立排除清单
+        route_b_sample_df["route_b_selected"] = (
+            route_b_sample_df["route_b_base_ok"]
+            & (~route_b_sample_df["route_b_excluded_slug"])
+        )
+        # 主图高亮样本：在主统计样本上，再把低R²事件置灰
+        route_b_sample_df["route_b_selected_plot"] = (
+            route_b_sample_df["route_b_selected"] & (~route_b_sample_df["route_b_low_r2"])
+        )
+
+        ss = route_b_sample_df[route_b_sample_df["route_b_selected"]].copy()
+        rho, pval = (float("nan"), float("nan"))
+        if ss.shape[0] >= 3:
+            rho, pval = spearmanr(
+                pd.to_numeric(ss["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(ss["alpha"], errors="coerce").to_numpy(dtype=float),
+            )
+            rho, pval = float(rho), float(pval)
+
+        route_b_stats_df = pd.DataFrame(
+            [
+                {
+                    "n_total_fits": int(route_b_sample_df.shape[0]),
+                    "n_base_ok": int(route_b_sample_df["route_b_base_ok"].sum()),
+                    "n_selected": int(route_b_sample_df["route_b_selected"].sum()),
+                    "n_selected_plot": int(route_b_sample_df["route_b_selected_plot"].sum()),
+                    "spearman_rho": float(rho),
+                    "spearman_p": float(pval),
+                    "min_n_mono": int(route_b_min_n_mono),
+                    "low_r2_threshold": float(route_b_low_r2_threshold),
+                    "excluded_slugs": ";".join(sorted(route_b_exclude)),
+                }
+            ]
+        )
+
+        # Leave-one-out jackknife
+        jk_rows: list[dict] = []
+        if ss.shape[0] >= 4:
+            for removed_slug in ss["slug"].astype(str).tolist():
+                tmp = ss[ss["slug"].astype(str) != str(removed_slug)].copy()
+                if tmp.shape[0] < 3:
+                    continue
+                rho_jk, p_jk = spearmanr(
+                    pd.to_numeric(tmp["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float),
+                    pd.to_numeric(tmp["alpha"], errors="coerce").to_numpy(dtype=float),
+                )
+                jk_rows.append(
+                    {
+                        "removed_slug": str(removed_slug),
+                        "n_after_remove": int(tmp.shape[0]),
+                        "spearman_rho": float(rho_jk),
+                        "spearman_p": float(p_jk),
+                    }
+                )
+        route_b_jackknife_df = pd.DataFrame(jk_rows)
+        if not route_b_jackknife_df.empty:
+            rho_arr = pd.to_numeric(route_b_jackknife_df["spearman_rho"], errors="coerce").to_numpy(dtype=float)
+            p_arr = pd.to_numeric(route_b_jackknife_df["spearman_p"], errors="coerce").to_numpy(dtype=float)
+            rho_arr = rho_arr[np.isfinite(rho_arr)]
+            p_arr = p_arr[np.isfinite(p_arr)]
+            route_b_jackknife_summary_df = pd.DataFrame(
+                [
+                    {
+                        "n_jackknife": int(len(rho_arr)),
+                        "rho_median": float(np.nanmedian(rho_arr)) if len(rho_arr) else float("nan"),
+                        "rho_ci2p5": float(np.nanpercentile(rho_arr, 2.5)) if len(rho_arr) else float("nan"),
+                        "rho_ci97p5": float(np.nanpercentile(rho_arr, 97.5)) if len(rho_arr) else float("nan"),
+                        "p_median": float(np.nanmedian(p_arr)) if len(p_arr) else float("nan"),
+                        "p_ci2p5": float(np.nanpercentile(p_arr, 2.5)) if len(p_arr) else float("nan"),
+                        "p_ci97p5": float(np.nanpercentile(p_arr, 97.5)) if len(p_arr) else float("nan"),
+                    }
+                ]
+            )
+
+        # R² 分层稳健性
+        strata_rows: list[dict] = []
+        for thr in [0.0, 0.8]:
+            tmp = ss[pd.to_numeric(ss["r2"], errors="coerce") >= float(thr)].copy()
+            rho_t, p_t = (float("nan"), float("nan"))
+            if tmp.shape[0] >= 3:
+                rho_t, p_t = spearmanr(
+                    pd.to_numeric(tmp["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float),
+                    pd.to_numeric(tmp["alpha"], errors="coerce").to_numpy(dtype=float),
+                )
+                rho_t, p_t = float(rho_t), float(p_t)
+            strata_rows.append(
+                {
+                    "r2_threshold": float(thr),
+                    "n": int(tmp.shape[0]),
+                    "spearman_rho": float(rho_t),
+                    "spearman_p": float(p_t),
+                }
+            )
+        route_b_r2_strata_df = pd.DataFrame(strata_rows)
+
+        # D_inf 补充：alpha 与 D_inf 是否相关
+        dinf_rows: list[dict] = []
+        for tag, q in [("selected", ss), ("selected_r2_ge_0p8", ss[pd.to_numeric(ss["r2"], errors="coerce") >= 0.8].copy())]:
+            q2 = q[pd.to_numeric(q["D_inf"], errors="coerce").notna()].copy()
+            rho_d, p_d = (float("nan"), float("nan"))
+            if q2.shape[0] >= 3:
+                rho_d, p_d = spearmanr(
+                    pd.to_numeric(q2["alpha"], errors="coerce").to_numpy(dtype=float),
+                    pd.to_numeric(q2["D_inf"], errors="coerce").to_numpy(dtype=float),
+                )
+                rho_d, p_d = float(rho_d), float(p_d)
+            dinf_rows.append(
+                {
+                    "subset": str(tag),
+                    "n": int(q2.shape[0]),
+                    "spearman_rho_alpha_vs_Dinf": float(rho_d),
+                    "spearman_p_alpha_vs_Dinf": float(p_d),
+                }
+            )
+        route_b_alpha_dinf_df = pd.DataFrame(dinf_rows)
+
+    route_b_sample_df.to_csv(tabs / "Dt_routeB_sample_flags.csv", index=False)
+    route_b_stats_df.to_csv(tabs / "Dt_routeB_alpha_delta_spearman.csv", index=False)
+    route_b_jackknife_df.to_csv(tabs / "Dt_routeB_alpha_delta_jackknife.csv", index=False)
+    route_b_jackknife_summary_df.to_csv(tabs / "Dt_routeB_alpha_delta_jackknife_summary.csv", index=False)
+    route_b_r2_strata_df.to_csv(tabs / "Dt_routeB_alpha_delta_r2_strata.csv", index=False)
+    route_b_alpha_dinf_df.to_csv(tabs / "Dt_routeB_alpha_dinf_spearman.csv", index=False)
 
     # collapse quality table
     bins = [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
@@ -735,20 +964,45 @@ def run(
     # palette: EVAC red, INFL blue, others gray
     color_map = {"EVAC": ps.OKABE_ITO["vermillion"], "INFL": ps.OKABE_ITO["blue"], "LOW_SIGNAL": ps.OKABE_ITO["gray"], "NEUTRAL": ps.OKABE_ITO["gray"]}
 
-    # Fig 1: all events decay (log-log) + power-law fit on mono segment (if available)
-    if not dt_df.empty:
-        # compute t' for plotting
+    # Fig 1 (teaching): 灰色底图 + 2-4条代表性高亮，仅用于解释 D(t') 与 α
+    if not dt_df.empty and not route_b_sample_df.empty:
+        base_sample = route_b_sample_df.copy()
+        plot_slugs = set(base_sample.loc[base_sample["route_b_base_ok"], "slug"].astype(str).tolist())
+        pass_df = base_sample[base_sample["route_b_selected_plot"]].copy()
+
+        # 高亮事件：优先使用显式指定，否则自动取低/中/高 alpha 三个代表
+        highlight_slugs: list[str] = []
+        manual = [str(s).strip() for s in (route_b_teach_highlight_slugs or []) if str(s).strip()]
+        if manual:
+            highlight_slugs = [s for s in manual if s in set(pass_df["slug"].astype(str).tolist())]
+        else:
+            tmp = pass_df.copy().sort_values("alpha", kind="stable")
+            if not tmp.empty:
+                low = str(tmp.iloc[0]["slug"])
+                mid = str(tmp.iloc[int(len(tmp) // 2)]["slug"])
+                high = str(tmp.iloc[-1]["slug"])
+                seen = set()
+                for s in [low, mid, high]:
+                    if s not in seen:
+                        highlight_slugs.append(s)
+                        seen.add(s)
+
+        highlight_colors = ["#d55e00", "#0072b2", "#009e73", "#cc79a7"]
+        color_by_slug = {slug: highlight_colors[i % len(highlight_colors)] for i, slug in enumerate(highlight_slugs)}
+
         d = dt_df.copy()
         d = d[pd.to_numeric(d["hours_since_quake"], errors="coerce") > pd.to_numeric(d["t_peak_hours"], errors="coerce")].copy()
         d["t_prime_h"] = pd.to_numeric(d["hours_since_quake"], errors="coerce") - pd.to_numeric(d["t_peak_hours"], errors="coerce")
         d = d[(pd.to_numeric(d["t_prime_h"], errors="coerce") > 0) & (pd.to_numeric(d["D_norm"], errors="coerce") > 0)].copy()
 
         with ps.paper_style():
-            fig, ax = plt.subplots(figsize=(6.6, 4.2))
+            fig, ax = plt.subplots(figsize=(7.2, 4.8))
             for slug, sub in d.groupby("slug", sort=False):
+                slug = str(slug)
+                if plot_slugs and slug not in plot_slugs:
+                    continue
+
                 sub = sub.sort_values("t_prime_h", kind="stable")
-                et = str(sub["event_type"].iloc[0])
-                c = color_map.get(et, ps.OKABE_ITO["gray"])
                 x = pd.to_numeric(sub["t_prime_h"], errors="coerce").to_numpy(dtype=float)
                 y = pd.to_numeric(sub["D_norm"], errors="coerce").to_numpy(dtype=float)
                 ok = np.isfinite(x) & np.isfinite(y) & (x > 0) & (y > 0)
@@ -756,74 +1010,147 @@ def run(
                 y = y[ok]
                 if x.size < 3:
                     continue
-                ax.plot(x, y, color=c, alpha=0.55, lw=1.6)
 
-            # overlay mono-fit lines (light)
-            if not fits_df.empty:
-                for _, r in fits_df.iterrows():
-                    alpha = _safe_float(r.get("alpha"))
-                    logA = _safe_float(r.get("logA"))
-                    t0 = _safe_float(r.get("t_decay_start"))
-                    t1 = _safe_float(r.get("t_decay_end"))
-                    slug = str(r.get("slug", ""))
-                    if alpha is None or logA is None or t0 is None or t1 is None:
-                        continue
-                    et = str(r.get("event_type", ""))
-                    c = color_map.get(et, ps.OKABE_ITO["gray"])
-                    xx = np.geomspace(max(t0, 1e-3), max(t1, t0 * 1.01), 80)
-                    yy = np.exp(float(logA)) * np.power(xx, -float(alpha))
-                    ax.plot(xx, yy, color=c, alpha=0.25, lw=2.2)
+                mono = _monotone_decay_segment(pd.DataFrame({"t_prime_h": x, "D_norm": y}), tol_up=float(mono_tol_up))
+                mx = pd.to_numeric(mono["t_prime_h"], errors="coerce").to_numpy(dtype=float)
+                my = pd.to_numeric(mono["D_norm"], errors="coerce").to_numpy(dtype=float)
+                m_ok = np.isfinite(mx) & np.isfinite(my) & (mx > 0) & (my > 0)
+                mx = mx[m_ok]
+                my = my[m_ok]
+                if mx.size < 3:
+                    continue
+
+                # 背景：全部基础样本统一浅灰
+                ax.plot(mx, my, color="#bfbfbf", alpha=0.55, lw=1.2)
+
+                # 高亮：仅代表事件画拟合与 alpha 标注
+                if slug in color_by_slug:
+                    c = color_by_slug[slug]
+                    ax.plot(mx, my, color=c, alpha=0.98, lw=2.2)
+                    ax.scatter(mx, my, s=16, color=c, alpha=0.9, linewidths=0, rasterized=True)
+                    alpha, logA, _ = _fit_powerlaw_loglog(mx, my)
+                    if np.isfinite(alpha) and np.isfinite(logA):
+                        xx = np.geomspace(max(float(np.min(mx)), 1e-3), max(float(np.max(mx)), float(np.min(mx)) * 1.01), 80)
+                        yy = np.exp(float(logA)) * np.power(xx, -float(alpha))
+                        ax.plot(xx, yy, color=c, alpha=0.95, lw=1.8, ls="--")
+                        lbl = str(base_sample.loc[base_sample["slug"].astype(str) == slug, "short_name"].iloc[0]) if np.any(base_sample["slug"].astype(str) == slug) else slug
+                        ax.text(float(xx[-1]), float(yy[-1]), f"{lbl}: α={alpha:.2f}", fontsize=7, color=c, ha="left", va="center", alpha=0.95)
 
             ax.set_xscale("log")
             ax.set_yscale("log")
+            ax.set_xlim(left=20.0)
             ax.set_xlabel("t' = t - t_peak (hours)")
             ax.set_ylabel("D(t') / D_peak")
-            ax.set_title("Dt decay (all events, r<=200km)")
+            ax.set_title("Dt decay (log-log): monotone segment and slope α")
             ps.despine(ax)
             fig.tight_layout()
             ps.save_figure(fig, figs / "Dt_decay_all_events_loglog.png", dpi=220)
             ps.save_figure(fig, figs / "Dt_decay_all_events_loglog.pdf")
             plt.close(fig)
 
-    # Fig 2: alpha comparison (EVAC vs INFL) + alpha vs D_peak
-    if not fits_df.empty:
-        fd = fits_df.copy()
-        fd["alpha"] = pd.to_numeric(fd["alpha"], errors="coerce")
-        fd["D_peak"] = pd.to_numeric(fd["D_peak"], errors="coerce")
-        fd = fd.dropna(subset=["alpha", "D_peak"]).copy()
-        if not fd.empty:
+    # Fig 1b: Route B 核心散点（alpha vs delta_near）
+    if not route_b_sample_df.empty:
+        import matplotlib.colors as mcolors
+
+        ss = route_b_sample_df[route_b_sample_df["route_b_selected"]].copy()
+        ex = route_b_sample_df[(route_b_sample_df["route_b_base_ok"]) & (~route_b_sample_df["route_b_selected"])].copy()
+
+        if not ss.empty:
             with ps.paper_style():
-                fig, axes = plt.subplots(1, 2, figsize=(6.8, 3.1), constrained_layout=True)
-                ax0, ax1 = axes[0], axes[1]
+                fig, ax = plt.subplots(figsize=(6.0, 4.6))
 
-                # box + strip
-                order = ["EVAC", "INFL", "NEUTRAL", "LOW_SIGNAL"]
-                plot_df = fd[fd["event_type"].astype(str).isin({"EVAC", "INFL"})].copy()
-                labels = [t for t in order if t in set(plot_df["event_type"].astype(str).unique().tolist())]
-                data = [plot_df[plot_df["event_type"] == t]["alpha"].to_numpy(dtype=float) for t in labels]
-                ax0.boxplot(data, labels=labels, showfliers=False)
-                for i, t in enumerate(labels, start=1):
-                    y = plot_df[plot_df["event_type"] == t]["alpha"].to_numpy(dtype=float)
-                    x = np.random.default_rng(0).normal(loc=i, scale=0.06, size=y.size)
-                    ax0.scatter(x, y, s=22, alpha=0.8, color=color_map.get(t, "black"), linewidths=0)
-                ax0.set_ylabel("alpha (monotone decay)")
-                ax0.set_title("alpha by type")
-                ps.despine(ax0)
+                x = pd.to_numeric(ss["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float)
+                y = pd.to_numeric(ss["alpha"], errors="coerce").to_numpy(dtype=float)
+                keep = np.isfinite(x) & np.isfinite(y)
+                x = x[keep]
+                y = y[keep]
+                ss_plot = ss.loc[keep].copy()
 
-                # scatter alpha vs D_peak
-                for _, r in plot_df.iterrows():
-                    et = str(r.get("event_type"))
-                    c = color_map.get(et, ps.OKABE_ITO["gray"])
-                    ax1.scatter(float(r["D_peak"]), float(r["alpha"]), s=28, color=c, alpha=0.85, linewidths=0)
-                    ax1.text(float(r["D_peak"]), float(r["alpha"]), str(r.get("short_name", "")), fontsize=7, ha="left", va="bottom", alpha=0.85)
-                ax1.set_xlabel("D_peak")
-                ax1.set_ylabel("alpha")
-                ax1.set_title("alpha vs D_peak")
-                ps.despine(ax1)
+                vmax = float(max(abs(float(np.nanmin(x))), abs(float(np.nanmax(x))), 1e-6)) if x.size else 1.0
+                cmap = plt.get_cmap("RdBu")
+                norm = mcolors.TwoSlopeNorm(vmin=-vmax, vcenter=0.0, vmax=vmax)
 
-                ps.save_figure(fig, figs / "Dt_alpha_comparison.png", dpi=220)
-                ps.save_figure(fig, figs / "Dt_alpha_comparison.pdf")
+                for _, r in ss_plot.iterrows():
+                    xv = float(r["near_delta_peak_windows_mean"])
+                    yv = float(r["alpha"])
+                    c = cmap(norm(xv))
+                    ax.scatter(xv, yv, s=40, color=c, alpha=0.92, linewidths=0)
+                    ax.text(xv, yv, str(r.get("short_name", "")), fontsize=7, ha="left", va="bottom", alpha=0.9)
+
+                if not ex.empty:
+                    exx = pd.to_numeric(ex["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float)
+                    exy = pd.to_numeric(ex["alpha"], errors="coerce").to_numpy(dtype=float)
+                    k2 = np.isfinite(exx) & np.isfinite(exy)
+                    if np.any(k2):
+                        ax.scatter(exx[k2], exy[k2], s=46, color="#9b9b9b", marker="x", alpha=0.9, linewidths=1.3)
+                        for _, r in ex.loc[k2].iterrows():
+                            ax.text(float(r["near_delta_peak_windows_mean"]), float(r["alpha"]), str(r.get("short_name", "")), fontsize=7, color="#666666", ha="left", va="bottom", alpha=0.85)
+
+                rho, pval = (float("nan"), float("nan"))
+                if ss_plot.shape[0] >= 3:
+                    rho, pval = spearmanr(
+                        pd.to_numeric(ss_plot["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float),
+                        pd.to_numeric(ss_plot["alpha"], errors="coerce").to_numpy(dtype=float),
+                    )
+                    rho, pval = float(rho), float(pval)
+
+                if ss_plot.shape[0] >= 3:
+                    slope, intercept, _, _ = theilslopes(
+                        pd.to_numeric(ss_plot["alpha"], errors="coerce").to_numpy(dtype=float),
+                        pd.to_numeric(ss_plot["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float),
+                        0.95,
+                    )
+                    xmin = float(np.nanmin(pd.to_numeric(ss_plot["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float)))
+                    xmax = float(np.nanmax(pd.to_numeric(ss_plot["near_delta_peak_windows_mean"], errors="coerce").to_numpy(dtype=float)))
+                    xx = np.linspace(xmin, xmax, 100)
+                    yy = float(intercept) + float(slope) * xx
+                    ax.plot(xx, yy, color="#333333", lw=1.6, ls="--", alpha=0.8)
+
+                ax.axvline(0.0, color="#666666", lw=1.0, ls=":", alpha=0.6)
+                ax.set_xlabel("δ_near")
+                ax.set_ylabel("α")
+                ax.set_title("Route B: α vs δ_near")
+                ax.text(0.02, 0.98, f"Spearman ρ={rho:.3f}, p={pval:.3f}", transform=ax.transAxes, ha="left", va="top", fontsize=9)
+
+                sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+                sm.set_array([])
+                cbar = fig.colorbar(sm, ax=ax, pad=0.02, shrink=0.92)
+                cbar.set_label("δ_near")
+
+                ps.despine(ax)
+                fig.tight_layout()
+                ps.save_figure(fig, figs / "Dt_alpha_vs_delta_routeB.png", dpi=220)
+                ps.save_figure(fig, figs / "Dt_alpha_vs_delta_routeB.pdf")
                 plt.close(fig)
+
+    # Fig 1c: Route B 补充（alpha vs D_inf）
+    if not route_b_sample_df.empty:
+        ss_d = route_b_sample_df[route_b_sample_df["route_b_selected"]].copy()
+        ss_d = ss_d[pd.to_numeric(ss_d["D_inf"], errors="coerce").notna()].copy()
+        if ss_d.shape[0] >= 3:
+            with ps.paper_style():
+                fig, ax = plt.subplots(figsize=(5.6, 4.2))
+                x = pd.to_numeric(ss_d["D_inf"], errors="coerce").to_numpy(dtype=float)
+                y = pd.to_numeric(ss_d["alpha"], errors="coerce").to_numpy(dtype=float)
+                k = np.isfinite(x) & np.isfinite(y)
+                x = x[k]
+                y = y[k]
+                ss_d = ss_d.loc[k].copy()
+                ax.scatter(x, y, s=36, color="#4c78a8", alpha=0.85, linewidths=0)
+                for _, r in ss_d.iterrows():
+                    ax.text(float(r["D_inf"]), float(r["alpha"]), str(r.get("short_name", "")), fontsize=7, ha="left", va="bottom", alpha=0.85)
+                rho_d, p_d = spearmanr(x, y)
+                ax.text(0.02, 0.98, f"Spearman ρ={float(rho_d):.3f}, p={float(p_d):.3f}", transform=ax.transAxes, ha="left", va="top", fontsize=9)
+                ax.set_xlabel("D_inf")
+                ax.set_ylabel("α")
+                ax.set_title("Route B: α vs D_inf")
+                ps.despine(ax)
+                fig.tight_layout()
+                ps.save_figure(fig, figs / "Dt_alpha_vs_Dinf_routeB.png", dpi=220)
+                ps.save_figure(fig, figs / "Dt_alpha_vs_Dinf_routeB.pdf")
+                plt.close(fig)
+
+    # Fig 2 已停用：离散EVAC/INFL分组图不再作为主线输出（保留连续变量散点 Fig 1b）。
 
     # Fig 3: collapse plots
     if not dt_df.empty and not collapse_df.empty:
@@ -862,18 +1189,21 @@ def run(
                 plt.close(fig)
 
         _plot_collapse(dt_post, "Dt_collapse_all", "Collapse: all events")
-        _plot_collapse(dt_post[dt_post["event_type"].astype(str).isin({"EVAC", "INFL"})], "Dt_collapse_by_type", "Collapse: EVAC/INFL")
 
     # Fig 4: panels of D(t) absolute (linear) + peak + mono segment highlight
     if not dt_df.empty:
         # build per-event mono segments in original time coordinates
         mono_map: dict[str, tuple[float, float]] = {}
+        d_inf_abs_map: dict[str, float] = {}
         if not fits_df.empty:
             for _, r in fits_df.iterrows():
                 slug = str(r.get("slug", ""))
                 t_peak_h = _safe_float(r.get("t_peak_hours"))
                 t0 = _safe_float(r.get("t_decay_start"))
                 t1 = _safe_float(r.get("t_decay_end"))
+                d_inf_abs = _safe_float(r.get("D_inf_abs"))
+                if slug and d_inf_abs is not None and np.isfinite(d_inf_abs):
+                    d_inf_abs_map[slug] = float(d_inf_abs)
                 if not slug or t_peak_h is None or t0 is None or t1 is None:
                     continue
                 mono_map[slug] = (float(t_peak_h + t0), float(t_peak_h + t1))
@@ -910,6 +1240,9 @@ def run(
                 if slug in mono_map:
                     a, b = mono_map[slug]
                     ax.axvspan(a, b, color=c, alpha=0.12, lw=0)
+                # D_inf 水平线（尾部 1/3 的归一化均值再还原到 D 量纲）
+                if slug in d_inf_abs_map:
+                    ax.axhline(float(d_inf_abs_map[slug]), color="black", lw=1.0, ls="--", alpha=0.4)
                 ax.set_title(str(sub["short_name"].iloc[0]) if not sub.empty else slug, fontsize=9)
                 ax.set_xlabel("t (h)")
                 ax.set_ylabel("D")
@@ -936,6 +1269,10 @@ def run(
         "peak_frac": float(peak_frac),
         "near_thresh": float(near_thresh),
         "mono_tol_up": float(mono_tol_up),
+        "route_b_min_n_mono": int(route_b_min_n_mono),
+        "route_b_low_r2_threshold": float(route_b_low_r2_threshold),
+        "route_b_exclude_slugs": sorted({str(x).strip() for x in (route_b_exclude_slugs or []) if str(x).strip()}),
+        "route_b_teach_highlight_slugs": [str(x).strip() for x in (route_b_teach_highlight_slugs or []) if str(x).strip()],
         "slugs": want,
         "exclude_slugs": sorted(exclude),
     }
@@ -963,6 +1300,25 @@ def cli_main() -> None:
     p.add_argument("--near-thresh", type=float, default=0.02)
 
     p.add_argument("--mono-tol-up", type=float, default=1.05, help="单调衰减段允许的上升比例（默认 1.05=5%）")
+    p.add_argument("--route-b-min-n-mono", type=int, default=3, help="Route B: 基础样本最小单调段点数")
+    p.add_argument("--route-b-low-r2-threshold", type=float, default=0.60, help="Route B: 低R²阈值（低于该值的事件在图中置灰）")
+    p.add_argument(
+        "--route-b-exclude-slugs",
+        type=str,
+        nargs="*",
+        default=[
+            "hurricane_melissa_aftermath_2025_11_03",
+            "the_flooding_across_rio_grande_do_sul_state_brazil",
+        ],
+        help="Route B: 独立排除的事件 slugs",
+    )
+    p.add_argument(
+        "--route-b-teach-highlight-slugs",
+        type=str,
+        nargs="*",
+        default=[],
+        help="教学版log-log高亮事件（默认自动选低/中/高 alpha）",
+    )
 
     args = p.parse_args()
 
@@ -983,6 +1339,10 @@ def cli_main() -> None:
         peak_frac=float(args.peak_frac),
         near_thresh=float(args.near_thresh),
         mono_tol_up=float(args.mono_tol_up),
+        route_b_min_n_mono=int(args.route_b_min_n_mono),
+        route_b_low_r2_threshold=float(args.route_b_low_r2_threshold),
+        route_b_exclude_slugs=list(args.route_b_exclude_slugs or []),
+        route_b_teach_highlight_slugs=list(args.route_b_teach_highlight_slugs or []),
     )
 
 

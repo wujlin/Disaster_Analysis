@@ -1,0 +1,33 @@
+{
+  "catalog": "Docs/cross_disaster_catalog_extended_wsa.csv",
+  "output_root": "outputs",
+  "dt_tables_dir": "outputs/cross_disaster_comparison/Dt_decay/tables",
+  "n_route_b_events": 14,
+  "n_prepared_events": 14,
+  "use_route_b_selected": true,
+  "selected_slugs": [
+    "flooding_in_central_and_eastern_europe_sept_16_2024",
+    "hurricane_beryl_across_quintana_roo_and_yucatan_mexico",
+    "hurricane_beryl_across_southeastern_texas_us",
+    "hurricane_beryl_pre_landfall_2024",
+    "hurricane_john_across_southeastern_guerrero_mexico",
+    "hurricane_milton_across_florida_us",
+    "moldova_flooding_2024",
+    "the_earthquake_across_central_mexico",
+    "the_flooding_across_bagmati_and_koshi_provinces_nepal",
+    "the_flooding_across_eastern_bangladesh",
+    "the_flooding_across_gujarat_india",
+    "turkiye_earthquake_2023",
+    "typhoon_yagi_across_northeastern_vietnam",
+    "wildfires_in_boise_county_idaho_27_august_2024"
+  ],
+  "peak_window_hours": 24.0,
+  "near_km": 50.0,
+  "far_km": 200.0,
+  "long_distance_km": 50.0,
+  "use_track_center_at_peak": false,
+  "allow_track_extrapolation": false,
+  "return_fit_min_h": 24.0,
+  "return_fit_max_h": 120.0,
+  "require_all_events": true
+}

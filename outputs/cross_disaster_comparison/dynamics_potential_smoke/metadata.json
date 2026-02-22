@@ -1,0 +1,33 @@
+{
+  "output_root": "outputs",
+  "dt_tables_dir": "outputs/cross_disaster_comparison/Dt_decay/tables",
+  "n_events": 3,
+  "events": [
+    "hurricane_beryl_across_southeastern_texas_us",
+    "spain_flood",
+    "the_flooding_across_bagmati_and_koshi_provinces_nepal"
+  ],
+  "use_route_b_selected": false,
+  "r_max_km": 200.0,
+  "min_tiles_overlap": 3,
+  "peak_frac": 0.5,
+  "min_post_points": 4,
+  "near_zero_eps": 0.001,
+  "daily_average_if_high_freq": false,
+  "high_freq_thresh_h": 16.0,
+  "sim_sigma": 0.03,
+  "sim_n_bins": 20,
+  "sim_n_near_bins": 5,
+  "sim_t_max_h": 200,
+  "sim_dt_h": 1.0,
+  "sim_sample_every_h": 8,
+  "sim_events_per_cell": 12,
+  "sim_ratio_min": 0.5,
+  "sim_ratio_max": 2.5,
+  "sim_ratio_n": 4,
+  "sim_gamma_min": -1.0,
+  "sim_gamma_max": 2.0,
+  "sim_gamma_n": 4,
+  "sim_validation_batches": 20,
+  "seed": 7
+}

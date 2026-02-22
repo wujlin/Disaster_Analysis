@@ -1,0 +1,33 @@
+[movement_analysis][ERROR] SystemExit: 0
+
+Traceback (most recent call last):
+  File "/Users/jinlin/Desktop/project/Disaster_Analysis/scripts/movement_analysis.py", line 27, in main
+    cli_main()
+    ~~~~~~~~^^
+  File "/Users/jinlin/Desktop/project/Disaster_Analysis/src/disaster/movement_analysis.py", line 968, in cli_main
+    args = build_arg_parser().parse_args()
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 1898, in parse_args
+    args, argv = self.parse_known_args(args, namespace)
+                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 1908, in parse_known_args
+    return self._parse_known_args2(args, namespace, intermixed=False)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 1937, in _parse_known_args2
+    namespace, args = self._parse_known_args(args, namespace, intermixed)
+                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 2188, in _parse_known_args
+    start_index = consume_optional(start_index)
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 2112, in consume_optional
+    take_action(action, args, option_string)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 2013, in take_action
+    action(self, namespace, argument_values, option_string)
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 1125, in __call__
+    parser.exit()
+    ~~~~~~~~~~~^^
+  File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 2645, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 0
+

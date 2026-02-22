@@ -1,0 +1,4 @@
+slug,short_name,disaster_type,event_type,tau_median_evac,tau_median_infl,ratio,n_evac_bins,n_infl_bins,near_delta,D_peak
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,hurricane,EVAC,50.734705131620416,66.74091188037676,1.3154883172619538,18,3,-0.1686674012421007,0.1182352467469458
+spain_flood,spain_flood,flood,INFL,466.13637231244263,76.50034530478742,0.1641158035475306,2,19,0.1384680031755251,0.1291051378624129
+the_flooding_across_bagmati_and_koshi_provinces_nepal,nepal_fld,flood,EVAC,20.121188258017916,6.4535506963341165,0.32073407462715314,19,1,-0.1036825312156231,0.1846441741699349

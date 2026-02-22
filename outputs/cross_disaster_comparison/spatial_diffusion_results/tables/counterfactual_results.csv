@@ -1,0 +1,7 @@
+scenario,rho,p_value,n_events,note
+observed_empirical,-0.5264705882352941,0.036166514972245475,16,α_emp vs δ_near
+pde_predicted,-0.5529411764705882,0.026314499870666502,16,α_pred(E) vs δ_near
+bootstrap_profile_perturbation,-0.4822352941176471,,16,"mode=E;95%CI=[-0.763,-0.079]"
+counterfactual_shuffle_profiles,-0.00786470588235294,,16,"mode=E;95%CI=[-0.518,0.519], n_iter=500"
+counterfactual_no_diffusion_Ds0,0.0,1.0,16,Ds=0;mode=E
+counterfactual_uniform_profile_only_c0,0.0,1.0,16,仅保留 c0;mode=E

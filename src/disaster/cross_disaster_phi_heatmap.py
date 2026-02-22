@@ -33,6 +33,7 @@ class Config:
     track_dt_default_hours: float = 6.0
     track_gap_factor: float = 1.5
     slugs: tuple[str, ...] = ()
+    on_error: str = "fail"  # fail | skip
 
 
 def _ensure_dir(p: Path) -> None:
@@ -47,6 +48,10 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
     if distance_mode not in {"radial", "path"}:
         raise SystemExit(f"不支持的 distance_mode：{cfg.distance_mode}（仅支持 radial/path）")
 
+    on_error = str(cfg.on_error).strip().lower() or "fail"
+    if on_error not in {"fail", "skip"}:
+        raise SystemExit(f"不支持的 on_error：{cfg.on_error}（仅支持 fail/skip）")
+
     skipped: list[dict] = []
     for spec in specs:
         if cfg.slugs and spec.slug not in set(cfg.slugs):
@@ -57,7 +62,18 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
             continue
 
-        t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec)
+        try:
+            t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec)
+        except (FileNotFoundError, SystemExit, ValueError) as e:
+            msg = str(e)
+            out_dir = cfg.output_root / spec.slug / "phi_heatmap"
+            _ensure_dir(out_dir)
+            (out_dir / "SKIPPED.txt").write_text(msg + "\n", encoding="utf-8")
+            skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
+            print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
+            if on_error == "fail":
+                raise SystemExit(f"[cross_disaster_phi_heatmap] 配置/数据错误并已停止：{spec.slug}\n{msg}")
+            continue
         out_dir = cfg.output_root / spec.slug / "phi_heatmap"
         _ensure_dir(out_dir)
         (cfg.output_root / spec.slug / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -93,6 +109,8 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             (out_dir / "SKIPPED.txt").write_text(msg + "\n", encoding="utf-8")
             skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
             print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
+            if on_error == "fail":
+                raise SystemExit(f"[cross_disaster_phi_heatmap] 计算错误并已停止：{spec.slug}\n{msg}")
             continue
 
     if skipped:
@@ -135,6 +153,13 @@ def cli_main() -> None:
     parser.add_argument("--track-gap-factor", type=float, default=1.5, help="track 连续段判定：gap_thr = dt_est * factor（默认 1.5）")
     parser.add_argument("--max-files", type=int, default=None, help="最多处理多少个窗口文件（每个灾害，冒烟测试用）")
     parser.add_argument("--slugs", type=str, nargs="*", default=[], help="可选：只跑指定 slugs（默认跑全表）")
+    parser.add_argument(
+        "--on-error",
+        type=str,
+        choices=["fail", "skip"],
+        default="fail",
+        help="错误策略：fail=遇到错误立即停止（默认）；skip=写SKIPPED并继续下一个事件",
+    )
     args = parser.parse_args()
 
     cfg = Config(
@@ -154,6 +179,7 @@ def cli_main() -> None:
         track_dt_default_hours=float(args.track_dt_default_hours),
         track_gap_factor=float(args.track_gap_factor),
         slugs=tuple(str(s) for s in args.slugs) if args.slugs else (),
+        on_error=str(args.on_error),
     )
     run(cfg, max_files=int(args.max_files) if args.max_files is not None else None)
 
