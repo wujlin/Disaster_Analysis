@@ -1,0 +1,2 @@
+slug,excluded_from_run,reason_code,reason_summary,evidence
+"the_earthquake_across_central_mexico",true,"INSUFFICIENT_GEO_UNIT_FITS","在 Route-B L10 strict 口径下无可用 geo-unit 拟合结果（n_units_fit=0），触发 require-all-events=1 硬失败，故本轮剔除。","上一次 strict 运行失败日志与可用性表显示该事件 n_windows=4 且 n_units_fit=0，geo_unit_fit_diagnostics 以 short_mono 为主。"
