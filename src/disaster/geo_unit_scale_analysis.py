@@ -18,7 +18,7 @@ except ModuleNotFoundError as e:
     raise SystemExit("缺少依赖：scipy。请先运行 `pip install -r requirements.txt`。") from e
 
 from disaster.cross_disaster_phi_tau import load_catalog
-from disaster.geo import haversine_km
+from disaster.geo import haversine_km, quadkey_to_latlon
 from disaster.population_io import load_population_file, parse_window_start_pt, resolve_subdir
 
 
@@ -33,6 +33,7 @@ class GeoUnitConfig:
     exclude_slugs: tuple[str, ...] = ()
     require_all_events: int = 1
     quadkey_level: int = 10
+    geo_center_mode: str = "quadkey"
     min_hours: float = -16.0
     max_hours: float = 832.0
     min_tiles_per_unit: int = 5
@@ -43,6 +44,8 @@ class GeoUnitConfig:
     min_mono_points: int = 3
     mono_tol_up: float = 1.05
     min_fit_r2: float = 0.0
+    run_mixed_effects: int = 1
+    strict_mixed_effects: int = 1
 
 
 def _ensure_dir(path: Path) -> None:
@@ -140,6 +143,7 @@ def _aggregate_geo_units(
     window_pt: pd.Timestamp,
     hours_since_t0: float,
     quadkey_level: int,
+    geo_center_mode: str,
     min_tiles_per_unit: int,
     center_lat: float,
     center_lon: float,
@@ -201,6 +205,13 @@ def _aggregate_geo_units(
     g = g[g["n_tiles"] >= int(min_tiles_per_unit)].copy()
     if g.empty:
         return g
+
+    if str(geo_center_mode) == "quadkey":
+        centers = g["geo_unit"].astype(str).map(quadkey_to_latlon).tolist()
+        g["lat"] = [float(x[0]) for x in centers]
+        g["lon"] = [float(x[1]) for x in centers]
+    elif str(geo_center_mode) != "mean":
+        raise ValueError(f"不支持的 geo_center_mode：{geo_center_mode}")
 
     g["phi"] = pd.to_numeric(g["n_crisis_sum"], errors="coerce") / pd.to_numeric(g["n_baseline_sum"], errors="coerce")
     g["delta"] = g["phi"] - 1.0
@@ -278,6 +289,70 @@ def _safe_spearman(x: np.ndarray, y: np.ndarray) -> tuple[float, float, int]:
     return float(rho), float(p), int(xx.size)
 
 
+def _fit_mixed_effect_alpha(fit_df: pd.DataFrame, predictor: str) -> dict:
+    out = {
+        "predictor": str(predictor),
+        "status": "failed",
+        "n_obs": 0,
+        "n_events": 0,
+        "coef": float("nan"),
+        "se": float("nan"),
+        "z": float("nan"),
+        "p": float("nan"),
+        "ci_low": float("nan"),
+        "ci_high": float("nan"),
+        "aic": float("nan"),
+        "bic": float("nan"),
+        "message": "",
+    }
+    if predictor not in fit_df.columns:
+        out["message"] = f"missing_column:{predictor}"
+        return out
+
+    data = fit_df[["slug", "alpha_unit", predictor]].copy()
+    data = data.dropna(subset=["slug", "alpha_unit", predictor]).reset_index(drop=True)
+    out["n_obs"] = int(data.shape[0])
+    out["n_events"] = int(data["slug"].nunique())
+    if int(data.shape[0]) < 8:
+        out["status"] = "insufficient_data"
+        out["message"] = "n_obs<8"
+        return out
+    if int(data["slug"].nunique()) < 2:
+        out["status"] = "insufficient_data"
+        out["message"] = "n_events<2"
+        return out
+    if int(pd.to_numeric(data[predictor], errors="coerce").nunique()) < 2:
+        out["status"] = "insufficient_data"
+        out["message"] = f"{predictor}_constant"
+        return out
+
+    try:
+        import statsmodels.formula.api as smf
+    except ModuleNotFoundError as e:
+        raise ModuleNotFoundError("缺少依赖：statsmodels。请先安装 `statsmodels>=0.14`。") from e
+
+    formula = f"alpha_unit ~ {predictor}"
+    try:
+        model = smf.mixedlm(formula, data=data, groups=data["slug"])
+        result = model.fit(reml=False, method="lbfgs", maxiter=400, disp=False)
+        ci = result.conf_int()
+        out["status"] = "ok"
+        out["coef"] = float(result.params.get(predictor, float("nan")))
+        out["se"] = float(result.bse.get(predictor, float("nan")))
+        out["z"] = float(result.tvalues.get(predictor, float("nan")))
+        out["p"] = float(result.pvalues.get(predictor, float("nan")))
+        if predictor in ci.index:
+            out["ci_low"] = float(ci.loc[predictor, 0])
+            out["ci_high"] = float(ci.loc[predictor, 1])
+        out["aic"] = float(result.aic) if np.isfinite(result.aic) else float("nan")
+        out["bic"] = float(result.bic) if np.isfinite(result.bic) else float("nan")
+        out["message"] = "ok"
+    except Exception as e:
+        out["status"] = "fit_failed"
+        out["message"] = f"{type(e).__name__}:{e}"
+    return out
+
+
 def run(cfg: GeoUnitConfig) -> None:
     out = Path(cfg.out_dir)
     tabs = out / "tables"
@@ -318,6 +393,7 @@ def run(cfg: GeoUnitConfig) -> None:
                     window_pt=ts,
                     hours_since_t0=hs,
                     quadkey_level=int(cfg.quadkey_level),
+                    geo_center_mode=str(cfg.geo_center_mode),
                     min_tiles_per_unit=int(cfg.min_tiles_per_unit),
                     center_lat=float(runtime["center_lat"]),
                     center_lon=float(runtime["center_lon"]),
@@ -503,6 +579,19 @@ def run(cfg: GeoUnitConfig) -> None:
     pooled_df = pd.DataFrame(pooled_rows)
     pooled_df.to_csv(tabs / "pooled_unit_correlations.csv", index=False)
 
+    mixed_df = pd.DataFrame(columns=["predictor", "status", "n_obs", "n_events", "coef", "se", "z", "p", "ci_low", "ci_high", "aic", "bic", "message"])
+    if int(cfg.run_mixed_effects) == 1:
+        rows = []
+        for predictor in ["delta_peak_unit", "distance_km", "D_peak_unit"]:
+            rows.append(_fit_mixed_effect_alpha(fit_df, predictor=predictor))
+        mixed_df = pd.DataFrame(rows)
+    mixed_df.to_csv(tabs / "mixed_effects_alpha_unit.csv", index=False)
+    if int(cfg.run_mixed_effects) == 1 and int(cfg.strict_mixed_effects) == 1:
+        bad = mixed_df[mixed_df["status"] != "ok"] if not mixed_df.empty else pd.DataFrame()
+        if not bad.empty:
+            info = "; ".join(f"{r['predictor']}[{r['status']}:{r['message']}]" for _, r in bad.iterrows())
+            raise ValueError(f"mixed-effects 拟合失败：{info}。详见 {tabs/'mixed_effects_alpha_unit.csv'}")
+
     avail_rows: list[dict] = []
     fit_count = fit_df.groupby("slug", observed=True).size().to_dict()
     for slug in selected:
@@ -531,12 +620,15 @@ def run(cfg: GeoUnitConfig) -> None:
         "n_preprocess_ok_events": int((diag_df["status"] == "ok").sum()) if not diag_df.empty else 0,
         "n_fit_events": int((avail_df["n_units_fit"] > 0).sum()) if not avail_df.empty else 0,
         "quadkey_level": int(cfg.quadkey_level),
+        "geo_center_mode": str(cfg.geo_center_mode),
         "min_tiles_per_unit": int(cfg.min_tiles_per_unit),
         "min_hours": float(cfg.min_hours),
         "max_hours": float(cfg.max_hours),
         "fit_min_tprime_hours": float(cfg.fit_min_tprime_hours),
         "min_mono_points": int(cfg.min_mono_points),
         "mono_tol_up": float(cfg.mono_tol_up),
+        "run_mixed_effects": int(cfg.run_mixed_effects),
+        "strict_mixed_effects": int(cfg.strict_mixed_effects),
     }
     (out / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -554,6 +646,7 @@ def run(cfg: GeoUnitConfig) -> None:
 - `tables/geo_unit_fits.csv`：子区域拟合参数（alpha/D_peak/delta_peak/distance）
 - `tables/event_unit_correlations.csv`：事件内相关
 - `tables/pooled_unit_correlations.csv`：跨事件汇总相关（含去均值版本）
+- `tables/mixed_effects_alpha_unit.csv`：Mixed-effects（event 随机截距）结果
 - `tables/event_processing_diagnostics.csv`：预处理诊断
 - `tables/geo_unit_fit_diagnostics.csv`：拟合失败原因
 - `tables/analysis_availability.csv`：事件可用性
@@ -582,6 +675,7 @@ def cli_main() -> None:
     p.add_argument("--exclude-slugs", type=str, default="", help="逗号分隔")
     p.add_argument("--require-all-events", type=int, default=1, choices=[0, 1], help="1=严格模式，任何事件失败即报错")
     p.add_argument("--quadkey-level", type=int, default=10, help="子区域层级（建议 10）")
+    p.add_argument("--geo-center-mode", type=str, default="quadkey", choices=["quadkey", "mean"], help="geo-unit 中心坐标计算方式")
     p.add_argument("--min-hours", type=float, default=-16.0)
     p.add_argument("--max-hours", type=float, default=832.0)
     p.add_argument("--min-tiles-per-unit", type=int, default=5)
@@ -592,6 +686,8 @@ def cli_main() -> None:
     p.add_argument("--min-mono-points", type=int, default=3)
     p.add_argument("--mono-tol-up", type=float, default=1.05)
     p.add_argument("--min-fit-r2", type=float, default=0.0, help="子区域 alpha 拟合最小 R2（默认不过滤）")
+    p.add_argument("--run-mixed-effects", type=int, default=1, choices=[0, 1], help="是否运行 mixed-effects 分析")
+    p.add_argument("--strict-mixed-effects", type=int, default=1, choices=[0, 1], help="1=任一 mixed-effects 失败即报错")
     args = p.parse_args()
 
     cfg = GeoUnitConfig(
@@ -604,6 +700,7 @@ def cli_main() -> None:
         exclude_slugs=_parse_list_arg(args.exclude_slugs),
         require_all_events=int(args.require_all_events),
         quadkey_level=int(args.quadkey_level),
+        geo_center_mode=str(args.geo_center_mode),
         min_hours=float(args.min_hours),
         max_hours=float(args.max_hours),
         min_tiles_per_unit=int(args.min_tiles_per_unit),
@@ -614,10 +711,11 @@ def cli_main() -> None:
         min_mono_points=int(args.min_mono_points),
         mono_tol_up=float(args.mono_tol_up),
         min_fit_r2=float(args.min_fit_r2),
+        run_mixed_effects=int(args.run_mixed_effects),
+        strict_mixed_effects=int(args.strict_mixed_effects),
     )
     run(cfg)
 
 
 if __name__ == "__main__":
     cli_main()
-
