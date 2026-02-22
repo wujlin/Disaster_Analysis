@@ -2,42 +2,42 @@ slug,short_name,name,disaster_type,output_root,n_time_windows,n_time_windows_raw
 cambodia_monsoon_season_study_2024_05_09,cambodia_monsoon_seaso,Cambodia Monsoon Season Study 9 May 2024,monsoon,outputs,36,106,8.0,1,536.0,0.2813058094235828,EVAC,-0.22438986333973152,0.30104830816162287
 flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,Flooding In Central And Eastern Europe Sept 16 2024,flood,outputs,28,81,8.0,1,416.0,0.10059199886783282,INFL,0.06637828175458367,0.8665136001354186
 global_earthquake_model_research_2025_sep_18,global_earthquake_mode,Global Earthquake Model Research 2025 Sep 18,earthquake,outputs,3,6,8.0,1,36.0,0.05385056901479478,EXCLUDED_SHORT,,
-hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,outputs,14,14,24.0,0,-8.0,0.12183737847793855,EVAC,-0.2182305293802359,0.26219576296867736
-hurricane_beryl_across_southeastern_texas_us,beryl_tx,"Hurricane Beryl Across Southeastern Texas, US",hurricane,outputs,15,15,24.0,0,-8.0,0.11823524674694585,EVAC,-0.16866740124210078,0.2020490314191309
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,"Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",hurricane,outputs,2,4,8.0,1,-8.0,0.15463378217519425,EXCLUDED_SHORT,,
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,"Hurricane Beryl Across Southeastern Texas, US",hurricane,outputs,2,4,8.0,1,-8.0,0.18947501908185185,EXCLUDED_SHORT,,
 hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03,beryl_pre,Hurricane Beryl Jamaica And Western Caribbean Pre Landfall July 3 2024,hurricane,outputs,4,7,8.0,1,64.0,0.18906757068541447,EXCLUDED_SHORT,,
-hurricane_beryl_pre_landfall_2024,beryl_pre,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,outputs,32,32,24.0,0,16.0,0.1714251397966239,NEUTRAL,0.00428138280842398,0.4486801646922188
+hurricane_beryl_pre_landfall_2024,beryl_pre,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,outputs,1,1,,0,0.0,0.2956678670136667,EXCLUDED_SHORT,,
 hurricane_debby_across_florida_and_georgia_us,debby_pre,"Hurricane Debby Across Florida and Georgia, US",hurricane,outputs,9,24,8.0,1,172.0,0.05224842952977174,NEUTRAL,-0.017693320859794994,
-hurricane_ernesto_puerto_rico_14_august_2024,ernesto_pr,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,outputs,15,15,24.0,0,-8.0,0.11221423538369692,INFL,0.04443239834579975,0.3940228925345258
-hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,helene_pre,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,outputs,15,15,24.0,0,328.0,0.17415395812046633,INFL,0.11449476753122213,
-hurricane_john_across_southeastern_guerrero_mexico,john_gue,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,outputs,7,7,24.0,0,-8.0,0.10131234143207328,INFL,0.07476547421331281,0.8340106279041756
-hurricane_john_southern_mexico_25_september_2024,john_sm,Hurricane John Southern Mexico 25 September 2024,hurricane,outputs,15,15,24.0,0,136.0,0.11693105353575652,INFL,0.08452853227565481,0.6355443005209976
+hurricane_ernesto_puerto_rico_14_august_2024,ernesto_pr,Hurricane Ernesto Puerto Rico 14 August 2024,hurricane,outputs,0,0,,0,,,EXCLUDED_SHORT,,
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,helene_pre,Hurricane Helene Pre Landfall Gulf Of Mexico 24 September 2024,hurricane,outputs,2,3,8.0,1,-12.0,0.12476695593380707,EXCLUDED_SHORT,,
+hurricane_john_across_southeastern_guerrero_mexico,john_gue,"Hurricane John Across Southeastern Guerrero, Mexico",hurricane,outputs,8,21,8.0,1,80.0,0.10899116369719182,INFL,0.10041425835848737,0.888526033735027
+hurricane_john_southern_mexico_25_september_2024,john_sm,Hurricane John Southern Mexico 25 September 2024,hurricane,outputs,16,45,8.0,1,80.0,0.11053039671451696,INFL,0.10093870345413293,0.8691641345604879
 hurricane_melissa_10_27_2025,melissa,Hurricane Melissa 10 27 2025,hurricane,outputs,6,11,8.0,1,52.0,0.4724414077110588,NEUTRAL,,0.34361243731652263
 hurricane_melissa_aftermath_2025_11_03,melissa_aft,Hurricane Melissa Aftermath 2025 11 03,hurricane,outputs,6,13,8.0,1,36.0,0.32761606105846197,EVAC,-0.5420930463020194,0.6725928596577806
-hurricane_milton_across_florida_us,milton_fl,"Hurricane Milton Across Florida, US",hurricane,outputs,10,10,24.0,0,64.0,0.14026091970829224,INFL,0.11790225271303449,0.7943681594503664
+hurricane_milton_across_florida_us,milton_fl,"Hurricane Milton Across Florida, US",hurricane,outputs,1,1,,0,-8.0,0.1384303841586922,EXCLUDED_SHORT,,
 india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,india_monsoon_season_s,"India Monsoon Season Study (NCT Delhi, UP, Bihar) 9 May 2024",monsoon,outputs,36,106,8.0,1,536.0,0.18148306873830664,INFL,0.07925056582733202,0.3207343844812271
-line_fire_southern_california_9_september_2024,line_fire,Line Fire Southern California 9 September 2024,wildfire,outputs,15,15,24.0,0,280.0,0.11380356812147989,INFL,0.10692956348128577,0.944662965587089
-moldova_flooding_2024,moldova,Moldova Flooding Sept 16 2024,flood,outputs,28,28,24.0,0,448.0,0.06299469886468742,INFL,0.04545334325701815,0.6441664810851007
+line_fire_southern_california_9_september_2024,line_fire,Line Fire Southern California 9 September 2024,wildfire,outputs,16,45,8.0,1,336.0,0.1202653175000561,INFL,0.09280627133026063,
+moldova_flooding_2024,moldova,Moldova Flooding Sept 16 2024,flood,outputs,29,84,8.0,1,344.0,0.0631527023112268,INFL,0.03650953616317475,0.7740437278372516
 mountain_fire_in_california,mountain_fire_in_calif,Mountain fire in California (Ventura County),wildfire,outputs,2,3,8.0,1,-8.0,0.07026450922991515,EXCLUDED_SHORT,,
 pakistan_monsoon_season_study_sindh_2024_05_09,pakistan_monsoon_seaso,Pakistan Monsoon Season Study (Sindh Province) 9 May 2024,monsoon,outputs,36,106,8.0,1,824.0,0.08646891672754135,INFL,0.027424920580333516,
-park_fire_2024,park_fire1,"The Park Fire in Northern California, US",wildfire,outputs,17,17,24.0,0,376.0,0.05971293563843387,INFL,0.035741591833645565,
-park_fire_california_29_july_2024,park_fire2,Park Fire California 29 July 2024,wildfire,outputs,15,15,24.0,0,280.0,0.03320846854836,NEUTRAL,0.017786271876340173,0.9158678848823444
+park_fire_2024,park_fire1,"The Park Fire in Northern California, US",wildfire,outputs,18,51,8.0,1,388.0,0.06267427957325017,INFL,0.05087192990957816,
+park_fire_california_29_july_2024,park_fire2,Park Fire California 29 July 2024,wildfire,outputs,16,45,8.0,1,272.0,0.03133960305118296,NEUTRAL,0.01648782288792705,0.9960980081631389
 spain_flood,spain_flood,Spain Flood (Valencia and Castilla-La Mancha Regions),flood,outputs,11,30,8.0,1,104.0,0.12910513786241298,INFL,0.13846800317552516,0.785070108828101
 the_earthquake_across_central_mexico,the_earthquake_across_,The Earthquake Across Central Mexico,earthquake,outputs,5,13,8.0,1,32.0,0.24759529687456974,INFL,0.25048946838167174,0.3869447158247225
 the_earthquake_across_dhaka_division_bangladesh,the_earthquake_across_,"The Earthquake Across Dhaka Division, Bangladesh",earthquake,outputs,6,13,8.0,1,296.0,0.09190257647023503,INFL,0.0662768405586377,0.7146598544029573
-the_flooding_across_antioquia_and_choc_departments_colombia,the_flooding_across_an,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,outputs,1,1,,0,-8.0,0.12307398646675656,EXCLUDED_SHORT,,
-the_flooding_across_bagmati_and_koshi_provinces_nepal,nepal_fld,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,outputs,15,15,24.0,0,-8.0,0.1846441741699349,EVAC,-0.10368253121562315,0.5439554336665122
-the_flooding_across_eastern_bangladesh,bangladesh_fld,The Flooding Across Eastern Bangladesh,flood,outputs,12,12,24.0,0,16.0,0.08444372699984103,INFL,0.06173985204288176,0.5486530819271915
-the_flooding_across_gujarat_india,gujarat_fld,"The Flooding Across Gujarat, India",flood,outputs,8,8,24.0,0,16.0,0.12486911695932487,EVAC,-0.07816008356582643,0.6516885562177972
+the_flooding_across_antioquia_and_choc_departments_colombia,the_flooding_across_an,"The Flooding Across Antioquia and Chocó Departments, Colombia",flood,outputs,2,3,8.0,1,-8.0,0.17777533817214874,EXCLUDED_SHORT,,
+the_flooding_across_bagmati_and_koshi_provinces_nepal,nepal_fld,"The Flooding Across Bagmati and Koshi Provinces, Nepal",flood,outputs,16,45,8.0,1,320.0,0.1316684230424645,EVAC,-0.031006566077981516,0.9991124820276355
+the_flooding_across_eastern_bangladesh,bangladesh_fld,The Flooding Across Eastern Bangladesh,flood,outputs,13,36,8.0,1,8.0,0.08402106945945663,INFL,0.06262703145731047,0.5248685650853776
+the_flooding_across_gujarat_india,gujarat_fld,"The Flooding Across Gujarat, India",flood,outputs,9,24,8.0,1,128.0,0.10868525430476639,EVAC,-0.07451215041607123,0.7667052772945702
 the_flooding_across_rio_grande_do_sul_state_brazil,the_flooding_across_ri,"The Flooding Across Rio Grande do Sul State, Brazil",flood,outputs,31,88,8.0,1,272.0,0.10380220992425243,INFL,0.08397836838532147,0.39420766450527056
-the_flooding_in_benue_and_kogi_states_nigeria,the_flooding_in_benue_,"The Flooding in Benue and Kogi States, Nigeria",flood,outputs,7,7,24.0,0,136.0,0.18314127430718508,INFL,0.15076063994331462,
-the_flooding_in_conakry_city_conakry_guinea,the_flooding_in_conakr,"The Flooding in Conakry City, Conakry, Guinea",flood,outputs,13,13,24.0,0,160.0,0.09034747846038298,INFL,0.07320680902139885,0.9173450295541722
-the_wildfires_in_quito_pichincha_province_ecuador,quito_fire,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,outputs,15,15,24.0,0,16.0,0.09663185404386196,EVAC,-0.10290066472646175,0.41824612399764854
-tropical_storm_debby_united_states_pre_landfall_4_august_2024,debby_pre,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,outputs,15,15,24.0,0,40.0,0.07972660155025013,INFL,0.08289914576135529,0.5927502410065917
-tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,enteng_ph,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,outputs,12,12,24.0,0,232.0,0.08366572416084497,EVAC,-0.05872901824893788,0.6561106809556074
-tropical_storm_kristine_in_bicol_and_calabarzon_philippines,kristine_ph,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,outputs,12,12,24.0,0,208.0,0.09104245984788825,INFL,0.07289611868172369,0.9243324760614904
-tropical_storm_yagi_philippines_2_september_2024,yagi_ph,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,outputs,15,15,24.0,0,280.0,0.08850171957692196,EVAC,-0.04800929302101292,0.9272355997519359
-turkiye_earthquake_2023,turkiye,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,outputs,36,36,24.0,0,16.0,0.40114008822652447,INFL,0.05663369481729249,0.5693644673300816
-typhoon_krathon_across_taiwan,krathon_tw,Typhoon Krathon Across Taiwan,typhoon,outputs,12,12,24.0,0,-8.0,0.13430304258593542,INFL,0.09670015070573769,0.686813106845663
+the_flooding_in_benue_and_kogi_states_nigeria,the_flooding_in_benue_,"The Flooding in Benue and Kogi States, Nigeria",flood,outputs,8,21,8.0,1,148.0,0.2228333706499669,INFL,0.17016812610744964,
+the_flooding_in_conakry_city_conakry_guinea,the_flooding_in_conakr,"The Flooding in Conakry City, Conakry, Guinea",flood,outputs,14,39,8.0,1,8.0,0.11532596949541375,INFL,0.06305374377725997,0.769049993271456
+the_wildfires_in_quito_pichincha_province_ecuador,quito_fire,"The Wildfires in Quito, Pichincha Province, Ecuador",wildfire,outputs,16,45,8.0,1,8.0,0.10126979022728698,NEUTRAL,0.0004955791073127038,0.38364460668196776
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,debby_pre,Tropical Storm Debby United States Pre-landfall 4 August 2024,tropical_storm,outputs,15,43,8.0,1,8.0,0.06567187701157279,EVAC,-0.02726731128747828,0.8840051101121446
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,enteng_ph,"Tropical Storm Enteng Across Luzon and Visayas Islands, Philippines",tropical_storm,outputs,13,36,8.0,1,268.0,0.10072307092707469,EVAC,-0.07055622096690908,
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,kristine_ph,"Tropical Storm Kristine in Bicol and Calabarzon, Philippines",tropical_storm,outputs,3,5,8.0,1,24.0,0.5020992795598377,EXCLUDED_SHORT,,
+tropical_storm_yagi_philippines_2_september_2024,yagi_ph,Tropical Storm Yagi Philippines 2 September 2024,tropical_storm,outputs,2,3,8.0,1,-8.0,0.04001373517321098,EXCLUDED_SHORT,,
+turkiye_earthquake_2023,turkiye,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,outputs,36,107,8.0,1,8.0,0.3565980804269134,INFL,0.03375628520912457,0.6237477350986944
+typhoon_krathon_across_taiwan,krathon_tw,Typhoon Krathon Across Taiwan,typhoon,outputs,12,34,8.0,1,152.0,0.13138418342702196,INFL,0.10314669142332118,0.5393095670492419
 typhoon_nika_across_northern_luzon_philippines,nika_ph,"Typhoon Nika Across Northern Luzon, Philippines",typhoon,outputs,3,6,8.0,1,28.0,0.10164156332374108,EXCLUDED_SHORT,,
-typhoon_yagi_across_northeastern_vietnam,yagi_vn,Typhoon Yagi Across Northeastern Vietnam,typhoon,outputs,11,11,24.0,0,-8.0,0.25648113051572646,EVAC,-0.2739356164808162,0.24426611879019733
-wildfires_in_boise_county_idaho_27_august_2024,boise_fire,Wildfires In Boise County Idaho 27 August 2024,wildfire,outputs,15,15,24.0,0,136.0,0.13709144407795817,INFL,0.04030056317673647,0.35106560385114505
+typhoon_yagi_across_northeastern_vietnam,yagi_vn,Typhoon Yagi Across Northeastern Vietnam,typhoon,outputs,12,33,8.0,1,21.0,0.2914427860091868,EVAC,-0.4845434252653976,0.2583003130390021
+wildfires_in_boise_county_idaho_27_august_2024,boise_fire,Wildfires In Boise County Idaho 27 August 2024,wildfire,outputs,16,45,8.0,1,152.0,0.08464018342954686,INFL,0.05950839263115021,0.6053716613593298

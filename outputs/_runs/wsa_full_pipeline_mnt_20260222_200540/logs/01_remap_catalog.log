@@ -1,0 +1,10 @@
+
+[2026-02-22 20:05:40] >>> STEP 01_remap_catalog
+CMD: /home/wujlin/miniconda3/bin/python scripts/remap_catalog_data_roots.py --catalog-in Docs/cross_disaster_catalog_extended.csv --catalog-out Docs/cross_disaster_catalog_extended_mnt.csv --existing-only-out Docs/cross_disaster_catalog_extended_mnt_existing_only.csv --report-out Docs/cross_disaster_catalog_extended_mnt_path_check.csv --facebook-root '/mnt/e/newdesktop/archive/facebook/disaster data' --datasets-root /mnt/e/newdesktop/Disaster/datasets --prefer facebook
+[2026-02-22 20:05:42] total=42
+[2026-02-22 20:05:42] exists=42
+[2026-02-22 20:05:42] missing=0
+[2026-02-22 20:05:42] written: Docs/cross_disaster_catalog_extended_mnt.csv
+[2026-02-22 20:05:42] written: Docs/cross_disaster_catalog_extended_mnt_existing_only.csv
+[2026-02-22 20:05:42] written: Docs/cross_disaster_catalog_extended_mnt_path_check.csv
+[2026-02-22 20:05:42] <<< STEP 01_remap_catalog EXIT=0

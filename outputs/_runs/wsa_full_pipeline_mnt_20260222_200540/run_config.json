@@ -1,0 +1,23 @@
+{
+  "project_root": "/mnt/e/newdesktop/Disaster",
+  "facebook_root": "/mnt/e/newdesktop/archive/facebook/disaster data",
+  "datasets_root": "/mnt/e/newdesktop/Disaster/datasets",
+  "prefer": "facebook",
+  "catalog_in": "Docs/cross_disaster_catalog_extended.csv",
+  "catalog_out": "Docs/cross_disaster_catalog_extended_mnt.csv",
+  "catalog_existing_only": "Docs/cross_disaster_catalog_extended_mnt_existing_only.csv",
+  "catalog_report": "Docs/cross_disaster_catalog_extended_mnt_path_check.csv",
+  "allow_missing_events": 0,
+  "output_root": "outputs",
+  "distance_mode": "radial",
+  "min_hours": -16.0,
+  "max_hours": 832.0,
+  "distance_bin_km": 10.0,
+  "max_distance_km": 500.0,
+  "dt_out_dir": "outputs/cross_disaster_comparison/Dt_decay",
+  "dyn_all_out_dir": "outputs/cross_disaster_comparison/dynamics_potential_all",
+  "dyn_routeB_out_dir": "outputs/cross_disaster_comparison/dynamics_potential_routeB",
+  "run_dir": "/mnt/e/newdesktop/Disaster/outputs/_runs/wsa_full_pipeline_mnt_20260222_200540",
+  "resolved_project_root": "/mnt/e/newdesktop/Disaster",
+  "resolved_run_dir": "/mnt/e/newdesktop/Disaster/outputs/_runs/wsa_full_pipeline_mnt_20260222_200540"
+}

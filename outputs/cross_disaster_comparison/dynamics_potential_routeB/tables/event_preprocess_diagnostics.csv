@@ -1,0 +1,14 @@
+slug,short_name,n_bins_used,t_peak_source,t_peak_hours_used,daily_avg_applied,median_step_hours_raw
+cambodia_monsoon_season_study_2024_05_09,cambodia_monsoon_seaso,16,preferred_snap,536.0,1,8.0
+flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,21,preferred_snap,416.0,1,8.0
+hurricane_john_across_southeastern_guerrero_mexico,john_gue,21,preferred_snap,80.0,1,8.0
+hurricane_john_southern_mexico_25_september_2024,john_sm,21,preferred_snap,80.0,1,8.0
+moldova_flooding_2024,moldova,20,preferred_snap,344.0,1,8.0
+spain_flood,spain_flood,21,preferred_snap,104.0,1,8.0
+the_earthquake_across_central_mexico,the_earthquake_across_,21,preferred_snap,32.0,1,8.0
+the_wildfires_in_quito_pichincha_province_ecuador,quito_fire,21,preferred_snap,8.0,1,8.0
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,debby_pre,20,preferred_snap,8.0,1,8.0
+turkiye_earthquake_2023,turkiye,21,preferred_snap,8.0,1,8.0
+typhoon_krathon_across_taiwan,krathon_tw,21,preferred_snap,152.0,1,8.0
+typhoon_yagi_across_northeastern_vietnam,yagi_vn,18,preferred_snap,21.0,1,8.0
+wildfires_in_boise_county_idaho_27_august_2024,boise_fire,21,preferred_snap,152.0,1,8.0

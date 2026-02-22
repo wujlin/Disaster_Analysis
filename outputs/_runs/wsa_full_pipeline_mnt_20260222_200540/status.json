@@ -1,0 +1,33 @@
+{
+  "status": "success",
+  "started_at": "2026-02-22 20:05:40",
+  "finished_at": "2026-02-22 20:13:44",
+  "failed_step": null,
+  "steps": [
+    {
+      "idx": 1,
+      "name": "01_remap_catalog",
+      "exit_code": 0
+    },
+    {
+      "idx": 2,
+      "name": "02_phi_heatmap",
+      "exit_code": 0
+    },
+    {
+      "idx": 3,
+      "name": "03_dt_decay",
+      "exit_code": 0
+    },
+    {
+      "idx": 4,
+      "name": "04_dynamics_all",
+      "exit_code": 0
+    },
+    {
+      "idx": 5,
+      "name": "05_dynamics_routeB",
+      "exit_code": 0
+    }
+  ]
+}

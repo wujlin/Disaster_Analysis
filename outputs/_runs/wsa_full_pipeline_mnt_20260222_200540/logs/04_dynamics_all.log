@@ -1,0 +1,4 @@
+
+[2026-02-22 20:12:34] >>> STEP 04_dynamics_all
+CMD: /home/wujlin/miniconda3/bin/python scripts/dynamics_potential.py --output-root outputs --dt-tables-dir outputs/cross_disaster_comparison/Dt_decay/tables --out-dir outputs/cross_disaster_comparison/dynamics_potential_all --use-route-b-selected 0
+[2026-02-22 20:13:15] <<< STEP 04_dynamics_all EXIT=0

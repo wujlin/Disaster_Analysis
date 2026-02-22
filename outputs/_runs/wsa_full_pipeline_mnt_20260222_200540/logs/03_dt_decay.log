@@ -1,0 +1,8 @@
+
+[2026-02-22 20:12:18] >>> STEP 03_dt_decay
+CMD: /home/wujlin/miniconda3/bin/python scripts/dt_decay.py --output-root outputs --out-dir outputs/cross_disaster_comparison/Dt_decay
+[2026-02-22 20:12:21] /mnt/e/newdesktop/Disaster/src/disaster/dt_decay.py:462: OptimizeWarning: Covariance of the parameters could not be estimated
+[2026-02-22 20:12:21]   popt, _ = curve_fit(
+[2026-02-22 20:12:21] /mnt/e/newdesktop/Disaster/src/disaster/dt_decay.py:462: OptimizeWarning: Covariance of the parameters could not be estimated
+[2026-02-22 20:12:21]   popt, _ = curve_fit(
+[2026-02-22 20:12:34] <<< STEP 03_dt_decay EXIT=0
