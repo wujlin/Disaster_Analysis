@@ -1,0 +1,16 @@
+slug,short_name,disaster_type,event_type,t_peak_hours,D_peak,fit_method,tau50_h,tau50_lower_bound
+flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,flood,INFL,448.0,0.10140977225297246,full_post_peak,168.0,1
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,hurricane,EVAC,-8.0,0.17419228592402028,full_post_peak,24.0,0
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,hurricane,EVAC,0.0,0.24076115611938526,full_post_peak,48.0,0
+hurricane_beryl_pre_landfall_2024,beryl_pre,hurricane,NEUTRAL,16.0,0.2408522972731543,full_post_peak,72.0,0
+hurricane_john_across_southeastern_guerrero_mexico,john_gue,hurricane,INFL,72.0,0.10634443541887714,full_post_peak,144.0,1
+hurricane_john_southern_mexico_25_september_2024,john_sm,hurricane,INFL,168.0,0.1056329999735687,full_post_peak,192.0,1
+hurricane_milton_across_florida_us,milton_fl,hurricane,INFL,0.0,0.19681374167841237,full_post_peak,216.0,1
+moldova_flooding_2024,moldova,flood,INFL,448.0,0.058662951664797056,full_post_peak,192.0,1
+spain_flood,spain_flood,flood,INFL,88.0,0.13305641705151502,full_post_peak,120.0,1
+the_flooding_across_bagmati_and_koshi_provinces_nepal,nepal_fld,flood,EVAC,-8.0,0.18936627469120573,full_post_peak,24.0,0
+the_flooding_across_eastern_bangladesh,bangladesh_fld,flood,INFL,16.0,0.07899557914859343,full_post_peak,24.0,0
+the_flooding_across_gujarat_india,gujarat_fld,flood,EVAC,16.0,0.12328359603960092,full_post_peak,144.0,1
+turkiye_earthquake_2023,turkiye,earthquake,INFL,16.0,0.40114008822652447,full_post_peak,816.0,1
+typhoon_yagi_across_northeastern_vietnam,yagi_vn,typhoon,EVAC,29.0,0.3173934156827427,full_post_peak,72.0,0
+wildfires_in_boise_county_idaho_27_august_2024,boise_fire,wildfire,INFL,136.0,0.13702819190526905,full_post_peak,24.0,0

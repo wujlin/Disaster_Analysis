@@ -35,15 +35,27 @@ class Config:
     slugs: tuple[str, ...] = ()
     on_error: str = "fail"  # fail | skip
     allow_auto_fallback: int = 0
+    require_explicit_t0_center: bool = False
+    require_explicit_sources: bool = False
+    write_provenance: bool = True
 
 
 def _ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
+def _safe_float(x: object) -> float | None:
+    try:
+        v = float(x)
+    except Exception:
+        return None
+    return v if pd.notna(v) else None
+
+
 def run(cfg: Config, *, max_files: int | None = None) -> None:
     specs = load_catalog(cfg.catalog)
     _ensure_dir(cfg.output_root)
+    provenance_rows: list[dict] = []
 
     distance_mode = str(cfg.distance_mode).strip().lower() or "radial"
     if distance_mode not in {"radial", "path"}:
@@ -60,6 +72,18 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
         if distance_mode == "path" and spec.center_track_csv is None:
             msg = "distance_mode=path 需要 catalog 提供 center_track_csv"
             skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
+            provenance_rows.append(
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "status": "skipped",
+                    "skip_reason": msg,
+                    "t0_source": str(spec.t0_source).strip(),
+                    "center_source": str(spec.center_source).strip(),
+                    "exclude_reason": str(spec.exclude_reason).strip(),
+                    "data_root": str(spec.data_root),
+                }
+            )
             print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
             continue
 
@@ -67,6 +91,8 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             t0_pt, center_lat, center_lon, meta = auto_t0_and_center(
                 spec,
                 allow_auto_fallback=bool(cfg.allow_auto_fallback),
+                require_explicit_t0_center=bool(cfg.require_explicit_t0_center),
+                require_explicit_sources=bool(cfg.require_explicit_sources),
             )
         except (FileNotFoundError, SystemExit, ValueError) as e:
             msg = str(e)
@@ -74,6 +100,18 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             _ensure_dir(out_dir)
             (out_dir / "SKIPPED.txt").write_text(msg + "\n", encoding="utf-8")
             skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
+            provenance_rows.append(
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "status": "skipped",
+                    "skip_reason": msg,
+                    "t0_source": str(spec.t0_source).strip(),
+                    "center_source": str(spec.center_source).strip(),
+                    "exclude_reason": str(spec.exclude_reason).strip(),
+                    "data_root": str(spec.data_root),
+                }
+            )
             print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
             if on_error == "fail":
                 raise SystemExit(f"[cross_disaster_phi_heatmap] 配置/数据错误并已停止：{spec.slug}\n{msg}")
@@ -112,13 +150,54 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             msg = str(e)
             (out_dir / "SKIPPED.txt").write_text(msg + "\n", encoding="utf-8")
             skipped.append({"slug": spec.slug, "name": spec.name, "reason": msg})
+            provenance_rows.append(
+                {
+                    "slug": spec.slug,
+                    "name": spec.name,
+                    "status": "skipped",
+                    "skip_reason": msg,
+                    "t0_source": str(spec.t0_source).strip(),
+                    "center_source": str(spec.center_source).strip(),
+                    "exclude_reason": str(spec.exclude_reason).strip(),
+                    "data_root": str(spec.data_root),
+                }
+            )
             print(f"[cross_disaster_phi_heatmap] {spec.slug}: skipped ({msg})")
             if on_error == "fail":
                 raise SystemExit(f"[cross_disaster_phi_heatmap] 计算错误并已停止：{spec.slug}\n{msg}")
             continue
+        provenance_rows.append(
+            {
+                "slug": spec.slug,
+                "name": spec.name,
+                "status": "ok",
+                "skip_reason": "",
+                "data_root": str(spec.data_root),
+                "t0_source": str(spec.t0_source).strip(),
+                "center_source": str(spec.center_source).strip(),
+                "exclude_reason": str(spec.exclude_reason).strip(),
+                "t0_pt": str(meta.get("t0_pt", "")),
+                "t0_method": str(meta.get("t0_method", "")),
+                "t0_snap_delta_hours": _safe_float(meta.get("t0_snap_delta_hours")),
+                "first_population_window_pt": str(meta.get("first_population_window_pt", "")),
+                "center_lat": meta.get("center_lat", ""),
+                "center_lon": meta.get("center_lon", ""),
+                "center_method": str(meta.get("center_method", "")),
+                "center_source_window_pt": str(meta.get("center_source_window_pt", "")),
+                "auto_inference_used": int(meta.get("auto_inference_used", 0)),
+            }
+        )
 
     if skipped:
         pd.DataFrame(skipped).to_csv(cfg.output_root / "_skipped_phi_heatmap.csv", index=False)
+    if bool(cfg.write_provenance):
+        prov = pd.DataFrame(provenance_rows)
+        if not prov.empty:
+            if "t0_pt" in prov.columns and "first_population_window_pt" in prov.columns:
+                t0 = pd.to_datetime(prov["t0_pt"], errors="coerce")
+                first = pd.to_datetime(prov["first_population_window_pt"], errors="coerce")
+                prov["t0_minus_first_window_hours"] = (t0 - first).dt.total_seconds() / 3600.0
+            prov.to_csv(cfg.output_root / "_provenance_phi_heatmap.csv", index=False)
 
 
 def cli_main() -> None:
@@ -169,7 +248,28 @@ def cli_main() -> None:
         type=int,
         choices=[0, 1],
         default=0,
-        help="是否允许 auto t0/center fallback（0=禁用，严格要求 catalog 显式给定；1=允许，默认 0）",
+        help="是否允许 auto t0/center fallback（0=禁用，严格要求显式字段；1=允许）",
+    )
+    parser.add_argument(
+        "--require-explicit-t0-center",
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help="1=严格要求 catalog 显式提供 t0_pt/center_lat/center_lon（可与 --allow-auto-fallback 联用）",
+    )
+    parser.add_argument(
+        "--require-explicit-sources",
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help="1=严格要求 catalog 的 t0_source/center_source 非空，缺失即报错",
+    )
+    parser.add_argument(
+        "--write-provenance",
+        type=int,
+        choices=[0, 1],
+        default=1,
+        help="1=输出 _provenance_phi_heatmap.csv（默认）",
     )
     args = parser.parse_args()
 
@@ -192,6 +292,9 @@ def cli_main() -> None:
         slugs=tuple(str(s) for s in args.slugs) if args.slugs else (),
         on_error=str(args.on_error),
         allow_auto_fallback=int(args.allow_auto_fallback),
+        require_explicit_t0_center=bool(int(args.require_explicit_t0_center) or (int(args.allow_auto_fallback) == 0)),
+        require_explicit_sources=bool(int(args.require_explicit_sources)),
+        write_provenance=bool(int(args.write_provenance)),
     )
     run(cfg, max_files=int(args.max_files) if args.max_files is not None else None)
 

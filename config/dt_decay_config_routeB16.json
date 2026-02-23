@@ -1,0 +1,36 @@
+{
+  "name": "routeB16_main_transparent",
+  "version": "2026-02-23",
+  "description": "Route B 主分析参数冻结配置（用于减少 magic number 黑箱）",
+  "params": {
+    "output_root": "outputs",
+    "out_dir": "outputs/cross_disaster_comparison/Dt_decay",
+    "catalog": "Docs/cross_disaster_catalog_routeB16_frozen.csv",
+    "use_catalog_exclude_reason": 1,
+    "slugs": [],
+    "exclude_slugs": [],
+    "r_max_km": 200.0,
+    "near_r_km": 50.0,
+    "min_tiles_overlap": 3,
+    "min_r_bins": 5,
+    "min_near_bins": 2,
+    "peak_min_hours": null,
+    "peak_max_hours": null,
+    "D_peak_min": 0.03,
+    "min_time_windows": 5,
+    "peak_frac": 0.5,
+    "near_thresh": 0.02,
+    "mono_tol_up": 1.05,
+    "route_b_min_n_mono": 3,
+    "route_b_low_r2_threshold": 0.6,
+    "route_b_exclude_slugs": [],
+    "route_b_teach_highlight_slugs": []
+  },
+  "rationale": {
+    "r_max_km": "主分析近场范围上限，统一 200km 便于跨事件比较。",
+    "near_r_km": "近场定义，默认 50km（通勤与短程响应尺度）。",
+    "mono_tol_up": "单调段允许 5% 噪声上浮，避免把测量噪声误判为结构性反弹。",
+    "D_peak_min": "峰值小于 3% 时信号弱，单独标注为低信号。",
+    "route_b_min_n_mono": "幂律拟合至少需要 3 个有效单调点。"
+  }
+}

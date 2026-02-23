@@ -1,0 +1,2 @@
+n_total_fits,n_base_ok,n_selected,n_selected_plot,spearman_rho,spearman_p,min_n_mono,min_post_peak_steps,fit_method,fit_min_tprime_hours,low_r2_threshold,excluded_slugs,excluded_slugs_from_catalog,excluded_slugs_from_cli
+29,18,18,6,0.15789473684210525,0.5314832784708439,3,4,full_post_peak,24.0,0.6,,,

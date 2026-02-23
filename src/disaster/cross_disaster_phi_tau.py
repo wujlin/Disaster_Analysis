@@ -32,6 +32,9 @@ class DisasterSpec:
     center_track_csv: Path | None = None
     center_track_to_tz: str = "America/Los_Angeles"
     center_track_storm_name: str | None = None
+    t0_source: str = ""
+    center_source: str = ""
+    exclude_reason: str = ""
     only_hour_pt: int = 8
     outflow_phi_threshold: float = 0.9
     inflow_phi_threshold: float = 1.1
@@ -122,6 +125,9 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
         inflow = _safe_float(row.get("inflow_phi_threshold"))
         outflow = 0.9 if outflow is None else float(outflow)
         inflow = 1.1 if inflow is None else float(inflow)
+        t0_source = _safe_str(row.get("t0_source"))
+        center_source = _safe_str(row.get("center_source"))
+        exclude_reason = _safe_str(row.get("exclude_reason"))
         specs.append(
             DisasterSpec(
                 slug=str(row["slug"]).strip(),
@@ -134,6 +140,9 @@ def load_catalog(path: Path) -> list[DisasterSpec]:
                 center_track_csv=Path(track_csv) if track_csv else None,
                 center_track_to_tz=str(track_to_tz),
                 center_track_storm_name=str(track_storm) if track_storm else None,
+                t0_source=str(t0_source),
+                center_source=str(center_source),
+                exclude_reason=str(exclude_reason),
                 only_hour_pt=_safe_int(row.get("only_hour_pt"), 8),
                 outflow_phi_threshold=float(outflow),
                 inflow_phi_threshold=float(inflow),
@@ -283,7 +292,13 @@ def _weighted_centroid(lat: np.ndarray, lon: np.ndarray, w: np.ndarray) -> tuple
     return float(np.sum(lat[mask] * ww) / ww_sum), float(np.sum(lon[mask] * ww) / ww_sum)
 
 
-def auto_t0_and_center(spec: DisasterSpec, *, allow_auto_fallback: bool = True) -> tuple[pd.Timestamp, float, float, dict]:
+def auto_t0_and_center(
+    spec: DisasterSpec,
+    *,
+    allow_auto_fallback: bool = True,
+    require_explicit_t0_center: bool = False,
+    require_explicit_sources: bool = False,
+) -> tuple[pd.Timestamp, float, float, dict]:
     """
     返回：(t0_pt, center_lat, center_lon, metadata_dict)
     """
@@ -302,6 +317,23 @@ def auto_t0_and_center(spec: DisasterSpec, *, allow_auto_fallback: bool = True) 
     windows = _list_population_windows(spec.data_root, only_hour_pt=int(spec.only_hour_pt))
     first = windows[0]
     first_ts = pd.Timestamp(first["window_start_pt"])
+
+    if bool(require_explicit_t0_center):
+        miss: list[str] = []
+        if spec.t0_pt is None:
+            miss.append("t0_pt")
+        if spec.center_lat is None or spec.center_lon is None:
+            miss.append("center_lat/center_lon")
+        if miss:
+            raise SystemExit(f"{spec.slug}: strict 模式要求显式提供 {', '.join(miss)}，禁止 auto-inference")
+    if bool(require_explicit_sources):
+        miss_src: list[str] = []
+        if str(spec.t0_source).strip() == "":
+            miss_src.append("t0_source")
+        if str(spec.center_source).strip() == "":
+            miss_src.append("center_source")
+        if miss_src:
+            raise SystemExit(f"{spec.slug}: strict source 模式要求非空 {', '.join(miss_src)}")
 
     # t0：优先对齐 track anchor（landfall/closest approach），否则退化为“首个可用 population 窗口”（并显式 WARNING）。
     t0_method = "provided_exact"
@@ -448,6 +480,11 @@ def auto_t0_and_center(spec: DisasterSpec, *, allow_auto_fallback: bool = True) 
         "event_type": spec.event_type,
         "data_root": str(spec.data_root),
         "only_hour_pt": int(spec.only_hour_pt),
+        "t0_source": str(spec.t0_source).strip(),
+        "center_source": str(spec.center_source).strip(),
+        "exclude_reason": str(spec.exclude_reason).strip(),
+        "strict_require_explicit_t0_center": int(bool(require_explicit_t0_center)),
+        "strict_require_explicit_sources": int(bool(require_explicit_sources)),
         "t0_pt": str(t0_pt),
         "t0_method": t0_method,
         "t0_file": str(Path(t0_file).name) if t0_file else "",
@@ -461,6 +498,7 @@ def auto_t0_and_center(spec: DisasterSpec, *, allow_auto_fallback: bool = True) 
         "center_source_file": str(center_source_file.name) if center_source_file is not None else "",
         "first_population_window_pt": str(first_ts),
         "first_population_window_file": str(Path(first["path"]).name),
+        "auto_inference_used": int(str(t0_method).startswith("auto_") or str(center_method).startswith("auto_")),
         "allow_auto_fallback": int(bool(allow_auto_fallback)),
         "fallback_used": int(fallback_used),
     }

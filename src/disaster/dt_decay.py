@@ -25,6 +25,13 @@ class EventRef:
     slug: str
 
 
+def _is_missing_text(x: object) -> bool:
+    if x is None:
+        return True
+    s = str(x).strip()
+    return s == "" or s.lower() == "nan"
+
+
 def _ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
@@ -148,6 +155,69 @@ def _short_name(slug: str) -> str:
 
     # fallback: keep it short but unique-ish
     return s[:22]
+
+
+def _load_config(path: Path | None) -> tuple[dict[str, object], dict[str, object], Path | None]:
+    if path is None:
+        return {}, {}, None
+    p = Path(path)
+    if not p.exists():
+        raise SystemExit(f"未找到配置文件：{p}")
+    suffix = p.suffix.lower()
+    if suffix in {".yaml", ".yml"}:
+        try:
+            import yaml  # type: ignore
+        except ModuleNotFoundError as exc:
+            raise SystemExit(f"读取 YAML 需要 PyYAML：{p}（请先安装 pyyaml）") from exc
+        try:
+            cfg = yaml.safe_load(p.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise SystemExit(f"配置文件不是合法 YAML：{p}") from exc
+    else:
+        try:
+            cfg = json.loads(p.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise SystemExit(f"配置文件不是合法 JSON：{p}") from exc
+    if not isinstance(cfg, dict):
+        raise SystemExit(f"配置文件必须是 JSON object：{p}")
+    params = cfg.get("params", cfg)
+    if not isinstance(params, dict):
+        raise SystemExit(f"配置文件中的 params 必须是 object：{p}")
+    return dict(params), dict(cfg), p
+
+
+def _load_catalog_exclude_reasons(catalog: Path | None) -> dict[str, str]:
+    if catalog is None:
+        return {}
+    p = Path(catalog)
+    if not p.exists():
+        raise SystemExit(f"--catalog 指定文件不存在：{p}")
+    df = pd.read_csv(p)
+    if "slug" not in df.columns:
+        raise SystemExit(f"catalog 缺少 slug 列：{p}")
+    if "exclude_reason" not in df.columns:
+        return {}
+    out: dict[str, str] = {}
+    for row in df.to_dict(orient="records"):
+        slug = str(row.get("slug", "")).strip()
+        reason = str(row.get("exclude_reason", "")).strip()
+        if not slug or _is_missing_text(reason):
+            continue
+        out[slug] = reason
+    return out
+
+
+def _load_catalog_slugs(catalog: Path | None) -> list[str]:
+    if catalog is None:
+        return []
+    p = Path(catalog)
+    if not p.exists():
+        raise SystemExit(f"--catalog 指定文件不存在：{p}")
+    df = pd.read_csv(p)
+    if "slug" not in df.columns:
+        raise SystemExit(f"catalog 缺少 slug 列：{p}")
+    slugs = [str(s).strip() for s in df["slug"].tolist() if str(s).strip()]
+    return sorted(dict.fromkeys(slugs))
 
 
 def _discover_events(output_root: Path) -> list[EventRef]:
@@ -304,7 +374,9 @@ def _classify_event(
     ts: pd.DataFrame,
     *,
     D_peak: float,
-    D_peak_min: float,
+    D_peak_min: float | None,
+    D_peak_snr: float | None,
+    snr_threshold: float | None,
     min_time_windows: int,
     peak_frac: float,
     near_thresh: float,
@@ -317,8 +389,13 @@ def _classify_event(
         return "EXCLUDED_SHORT", float("nan")
     if int(ts.shape[0]) < int(min_time_windows):
         return "EXCLUDED_SHORT", float("nan")
-    if not np.isfinite(float(D_peak)) or float(D_peak) < float(D_peak_min):
+    if not np.isfinite(float(D_peak)):
         return "LOW_SIGNAL", float("nan")
+    if D_peak_min is not None and np.isfinite(float(D_peak_min)) and float(D_peak) < float(D_peak_min):
+        return "LOW_SIGNAL", float("nan")
+    if snr_threshold is not None and np.isfinite(float(snr_threshold)):
+        if D_peak_snr is None or (not np.isfinite(float(D_peak_snr))) or float(D_peak_snr) < float(snr_threshold):
+            return "LOW_SIGNAL", float("nan")
 
     cut = float(peak_frac) * float(D_peak)
     peak_w = ts[pd.to_numeric(ts["D"], errors="coerce") >= float(cut)].copy()
@@ -497,6 +574,7 @@ def run(
     *,
     output_root: Path,
     out_dir: Path,
+    catalog: Path | None,
     slugs: list[str],
     exclude_slugs: list[str],
     r_max_km: float,
@@ -506,15 +584,22 @@ def run(
     min_near_bins: int,
     peak_min_hours: float | None,
     peak_max_hours: float | None,
-    D_peak_min: float,
+    D_peak_min: float | None,
+    snr_threshold: float | None,
     min_time_windows: int,
+    min_post_peak_steps: int,
     peak_frac: float,
     near_thresh: float,
+    fit_method: str,
+    fit_min_tprime_hours: float,
     mono_tol_up: float,
     route_b_min_n_mono: int,
     route_b_low_r2_threshold: float,
     route_b_exclude_slugs: list[str],
+    catalog_exclude_reasons: dict[str, str] | None,
     route_b_teach_highlight_slugs: list[str],
+    config_json_path: Path | None,
+    config_payload: dict[str, object] | None,
 ) -> None:
     output_root = Path(output_root)
     out_dir = Path(out_dir)
@@ -527,11 +612,19 @@ def run(
     want = [str(s).strip() for s in (slugs or []) if str(s).strip()]
     if want and len(want) == 1 and want[0].lower() == "all":
         want = []
+    catalog_slugs = _load_catalog_slugs(catalog) if catalog is not None else []
     if not want:
-        want = sorted(refs.keys())
+        if catalog_slugs:
+            want = [s for s in catalog_slugs if s in refs]
+        else:
+            want = sorted(refs.keys())
     exclude = {str(s).strip() for s in (exclude_slugs or []) if str(s).strip()}
     if exclude:
         want = [s for s in want if s not in exclude]
+    catalog_exclude_reasons = dict(catalog_exclude_reasons or {})
+    route_b_exclude_from_catalog = set(catalog_exclude_reasons.keys())
+    route_b_exclude_from_cli = {str(x).strip() for x in (route_b_exclude_slugs or []) if str(x).strip()}
+    route_b_exclude = route_b_exclude_from_catalog | route_b_exclude_from_cli
 
     all_rows: list[dict] = []
     summary_rows: list[dict] = []
@@ -558,10 +651,19 @@ def run(
         ts, median_step_hours_raw, daily_avg_applied = _daily_average_if_high_freq(ts_raw, high_freq_thresh_h=16.0)
 
         t_peak, D_peak = _pick_peak(ts, peak_min_hours=peak_min_hours, peak_max_hours=peak_max_hours)
+        baseline = ts[pd.to_numeric(ts["hours_since_quake"], errors="coerce") <= 0].copy() if not ts.empty else pd.DataFrame()
+        baseline_std = float(np.nanstd(pd.to_numeric(baseline["D"], errors="coerce").to_numpy(dtype=float), ddof=1)) if not baseline.empty else float("nan")
+        D_peak_snr = (
+            float(D_peak) / float(baseline_std)
+            if np.isfinite(float(D_peak)) and np.isfinite(float(baseline_std)) and float(baseline_std) > 0
+            else float("nan")
+        )
         event_type, near_mean = _classify_event(
             ts,
             D_peak=float(D_peak),
-            D_peak_min=float(D_peak_min),
+            D_peak_min=(float(D_peak_min) if D_peak_min is not None else None),
+            D_peak_snr=(float(D_peak_snr) if np.isfinite(float(D_peak_snr)) else None),
+            snr_threshold=(float(snr_threshold) if snr_threshold is not None else None),
             min_time_windows=int(min_time_windows),
             peak_frac=float(peak_frac),
             near_thresh=float(near_thresh),
@@ -599,6 +701,8 @@ def run(
                 "event_type": str(event_type),
                 "near_delta_peak_windows_mean": float(near_mean),
                 "D_inf": float("nan"),
+                "D_baseline_std": float(baseline_std),
+                "D_peak_snr": float(D_peak_snr),
             }
         )
 
@@ -613,6 +717,7 @@ def run(
         post = post.sort_values("hours_since_quake", kind="stable").reset_index(drop=True)
         post["t_prime_h"] = pd.to_numeric(post["hours_since_quake"], errors="coerce") - float(t_peak)
         post["D_norm"] = pd.to_numeric(post["D"], errors="coerce") / float(D_peak)
+        post_fit = post[pd.to_numeric(post["t_prime_h"], errors="coerce") >= float(fit_min_tprime_hours)].copy()
 
         D_inf = float("nan")
         if not post.empty:
@@ -625,11 +730,16 @@ def run(
                 D_inf = float(np.mean(tail))
         summary_rows[-1]["D_inf"] = float(D_inf)
 
-        # Task 2: monotone segment fit（即使 post 为空也写一行，便于全表对齐）
-        mono = _monotone_decay_segment(post[["t_prime_h", "D_norm"]].copy(), tol_up=float(mono_tol_up)) if not post.empty else pd.DataFrame()
+        # 拟合段：full_post_peak | monotone_truncated（均在 t' >= fit_min_tprime_hours 上进行）
+        if str(fit_method) == "full_post_peak":
+            fit_seg = post_fit[["t_prime_h", "D_norm"]].copy() if not post_fit.empty else pd.DataFrame()
+        elif str(fit_method) == "monotone_truncated":
+            fit_seg = _monotone_decay_segment(post_fit[["t_prime_h", "D_norm"]].copy(), tol_up=float(mono_tol_up)) if not post_fit.empty else pd.DataFrame()
+        else:
+            raise SystemExit(f"不支持的 fit_method：{fit_method}（仅支持 full_post_peak / monotone_truncated）")
         alpha, logA, r2 = _fit_powerlaw_loglog(
-            pd.to_numeric(mono["t_prime_h"], errors="coerce").to_numpy(dtype=float) if not mono.empty else np.array([], dtype=float),
-            pd.to_numeric(mono["D_norm"], errors="coerce").to_numpy(dtype=float) if not mono.empty else np.array([], dtype=float),
+            pd.to_numeric(fit_seg["t_prime_h"], errors="coerce").to_numpy(dtype=float) if not fit_seg.empty else np.array([], dtype=float),
+            pd.to_numeric(fit_seg["D_norm"], errors="coerce").to_numpy(dtype=float) if not fit_seg.empty else np.array([], dtype=float),
         )
         fit_rows.append(
             {
@@ -639,25 +749,28 @@ def run(
                 "event_type": str(event_type),
                 "D_peak": float(D_peak),
                 "t_peak_hours": float(t_peak),
-                "n_mono": int(mono.shape[0]) if mono is not None else 0,
+                "fit_method": str(fit_method),
+                "fit_min_tprime_hours": float(fit_min_tprime_hours),
+                "n_mono": int(fit_seg.shape[0]) if fit_seg is not None else 0,
+                "n_post_fit": int(post_fit.shape[0]),
                 "n_total_post": int(post.shape[0]),
                 "alpha": float(alpha),
                 "logA": float(logA),
                 "r2": float(r2),
-                "t_decay_start": float(pd.to_numeric(mono["t_prime_h"], errors="coerce").min()) if mono is not None and not mono.empty else float("nan"),
-                "t_decay_end": float(pd.to_numeric(mono["t_prime_h"], errors="coerce").max()) if mono is not None and not mono.empty else float("nan"),
+                "t_decay_start": float(pd.to_numeric(fit_seg["t_prime_h"], errors="coerce").min()) if fit_seg is not None and not fit_seg.empty else float("nan"),
+                "t_decay_end": float(pd.to_numeric(fit_seg["t_prime_h"], errors="coerce").max()) if fit_seg is not None and not fit_seg.empty else float("nan"),
                 "D_inf": float(D_inf),
                 "D_inf_abs": float(D_inf * D_peak) if np.isfinite(D_inf) and np.isfinite(float(D_peak)) else float("nan"),
             }
         )
 
-        # Task 3: BIC compare on monotone segment（与 alpha 拟合口径一致）
+        # Task 3: BIC compare on selected fit segment（与 alpha 拟合口径一致）
         bic = (
             _fit_models_bic(
-                pd.to_numeric(mono["t_prime_h"], errors="coerce").to_numpy(dtype=float),
-                pd.to_numeric(mono["D_norm"], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(fit_seg["t_prime_h"], errors="coerce").to_numpy(dtype=float),
+                pd.to_numeric(fit_seg["D_norm"], errors="coerce").to_numpy(dtype=float),
             )
-            if mono is not None and not mono.empty
+            if fit_seg is not None and not fit_seg.empty
             else {"ok": 0, "n_pts": 0}
         )
         Bp = float(bic.get("BIC_power", float("nan")))
@@ -679,7 +792,8 @@ def run(
                 "short_name": _short_name(slug),
                 "disaster_type": str(disaster_type),
                 "event_type": str(event_type),
-                "n_pts": int(bic.get("n_pts", int(mono.shape[0]) if mono is not None else 0)),
+                "fit_method": str(fit_method),
+                "n_pts": int(bic.get("n_pts", int(fit_seg.shape[0]) if fit_seg is not None else 0)),
                 "best_model": str(best_model),
                 "BIC_power": float(Bp),
                 "BIC_exp": float(Be),
@@ -711,6 +825,7 @@ def run(
                 "event_type": str(event_type),
                 "t_peak_hours": float(t_peak),
                 "D_peak": float(D_peak),
+                "fit_method": str(fit_method),
                 "tau50_h": float(tau50),
                 "tau50_lower_bound": int(lower_bound),
             }
@@ -737,9 +852,19 @@ def run(
     route_b_r2_strata_df = pd.DataFrame()
     route_b_alpha_dinf_df = pd.DataFrame()
     if not fits_df.empty and not summary_df.empty:
-        route_b_exclude = {str(x).strip() for x in (route_b_exclude_slugs or []) if str(x).strip()}
         route_b_sample_df = fits_df.merge(
-            summary_df[["slug", "near_delta_peak_windows_mean", "short_name", "event_type", "D_inf"]],
+            summary_df[
+                [
+                    "slug",
+                    "near_delta_peak_windows_mean",
+                    "short_name",
+                    "event_type",
+                    "D_inf",
+                    "n_time_windows",
+                    "D_peak",
+                    "D_peak_snr",
+                ]
+            ],
             on=["slug", "short_name", "event_type"],
             how="left",
             suffixes=("", "_summary"),
@@ -749,25 +874,98 @@ def run(
         route_b_sample_df["r2"] = pd.to_numeric(route_b_sample_df["r2"], errors="coerce")
         route_b_sample_df["near_delta_peak_windows_mean"] = pd.to_numeric(route_b_sample_df["near_delta_peak_windows_mean"], errors="coerce")
         route_b_sample_df["D_inf"] = pd.to_numeric(route_b_sample_df["D_inf"], errors="coerce")
+        route_b_sample_df["n_post_fit"] = pd.to_numeric(route_b_sample_df["n_post_fit"], errors="coerce")
+        route_b_sample_df["n_time_windows"] = pd.to_numeric(route_b_sample_df["n_time_windows"], errors="coerce")
+        route_b_sample_df["D_peak"] = pd.to_numeric(route_b_sample_df["D_peak"], errors="coerce")
+        route_b_sample_df["D_peak_snr"] = pd.to_numeric(route_b_sample_df["D_peak_snr"], errors="coerce")
 
-        route_b_sample_df["route_b_base_ok"] = (
-            (route_b_sample_df["n_mono"] >= float(route_b_min_n_mono))
-            & route_b_sample_df["near_delta_peak_windows_mean"].notna()
-            & route_b_sample_df["alpha"].notna()
+        route_b_sample_df["catalog_exclude_reason"] = route_b_sample_df["slug"].astype(str).map(catalog_exclude_reasons).fillna("")
+        route_b_sample_df["route_b_exclude_via_catalog"] = route_b_sample_df["slug"].astype(str).isin(route_b_exclude_from_catalog)
+        route_b_sample_df["route_b_exclude_via_cli"] = route_b_sample_df["slug"].astype(str).isin(route_b_exclude_from_cli)
+
+        route_b_sample_df["quality_short_windows"] = route_b_sample_df["n_time_windows"] < float(min_time_windows)
+        route_b_sample_df["quality_short_post_peak"] = route_b_sample_df["n_post_fit"] < float(min_post_peak_steps)
+        route_b_sample_df["quality_low_signal"] = (
+            (route_b_sample_df["D_peak"] < float(D_peak_min))
+            if D_peak_min is not None
+            else False
         )
+        route_b_sample_df["quality_low_snr"] = (
+            (route_b_sample_df["D_peak_snr"] < float(snr_threshold))
+            if snr_threshold is not None
+            else False
+        )
+        route_b_sample_df["quality_missing_near_delta"] = route_b_sample_df["near_delta_peak_windows_mean"].isna()
+        route_b_sample_df["analysis_n_mono_lt_threshold"] = route_b_sample_df["n_mono"] < float(route_b_min_n_mono)
+        route_b_sample_df["analysis_alpha_nan"] = route_b_sample_df["alpha"].isna()
+        route_b_sample_df["data_quality_ok"] = ~(
+            route_b_sample_df["quality_short_windows"]
+            | route_b_sample_df["quality_short_post_peak"]
+            | route_b_sample_df["quality_low_signal"]
+            | route_b_sample_df["quality_low_snr"]
+            | route_b_sample_df["quality_missing_near_delta"]
+        )
+        route_b_sample_df["analysis_applicability_ok"] = ~(
+            route_b_sample_df["analysis_n_mono_lt_threshold"] | route_b_sample_df["analysis_alpha_nan"]
+        )
+        route_b_sample_df["route_b_base_ok"] = route_b_sample_df["data_quality_ok"] & route_b_sample_df["analysis_applicability_ok"]
         route_b_sample_df["route_b_excluded_slug"] = route_b_sample_df["slug"].astype(str).isin(route_b_exclude)
         route_b_sample_df["route_b_low_r2"] = (
             route_b_sample_df["r2"].notna() & (route_b_sample_df["r2"] < float(route_b_low_r2_threshold))
         )
-        # 主统计样本：只用 n_mono + delta 非空 + 独立排除清单
         route_b_sample_df["route_b_selected"] = (
             route_b_sample_df["route_b_base_ok"]
             & (~route_b_sample_df["route_b_excluded_slug"])
         )
-        # 主图高亮样本：在主统计样本上，再把低R²事件置灰
         route_b_sample_df["route_b_selected_plot"] = (
             route_b_sample_df["route_b_selected"] & (~route_b_sample_df["route_b_low_r2"])
         )
+        drop_reason_primary: list[str] = []
+        drop_reason_class: list[str] = []
+        for row in route_b_sample_df.to_dict(orient="records"):
+            if bool(row.get("route_b_selected", False)):
+                drop_reason_primary.append("selected")
+                drop_reason_class.append("selected")
+                continue
+            if bool(row.get("route_b_excluded_slug", False)):
+                if bool(row.get("route_b_exclude_via_catalog", False)):
+                    drop_reason_primary.append("manual_exclude_catalog")
+                else:
+                    drop_reason_primary.append("manual_exclude_cli")
+                drop_reason_class.append("manual_exclude")
+                continue
+            if bool(row.get("quality_short_windows", False)):
+                drop_reason_primary.append("data_quality_short_windows")
+                drop_reason_class.append("data_quality")
+                continue
+            if bool(row.get("quality_short_post_peak", False)):
+                drop_reason_primary.append("data_quality_short_post_peak")
+                drop_reason_class.append("data_quality")
+                continue
+            if bool(row.get("quality_low_signal", False)):
+                drop_reason_primary.append("data_quality_low_signal")
+                drop_reason_class.append("data_quality")
+                continue
+            if bool(row.get("quality_low_snr", False)):
+                drop_reason_primary.append("data_quality_low_snr")
+                drop_reason_class.append("data_quality")
+                continue
+            if bool(row.get("quality_missing_near_delta", False)):
+                drop_reason_primary.append("data_quality_missing_near_delta")
+                drop_reason_class.append("data_quality")
+                continue
+            if bool(row.get("analysis_n_mono_lt_threshold", False)):
+                drop_reason_primary.append("analysis_n_mono_lt_threshold")
+                drop_reason_class.append("analysis_applicability")
+                continue
+            if bool(row.get("analysis_alpha_nan", False)):
+                drop_reason_primary.append("analysis_alpha_nan")
+                drop_reason_class.append("analysis_applicability")
+                continue
+            drop_reason_primary.append("other")
+            drop_reason_class.append("other")
+        route_b_sample_df["drop_reason_primary"] = drop_reason_primary
+        route_b_sample_df["drop_reason_class"] = drop_reason_class
 
         ss = route_b_sample_df[route_b_sample_df["route_b_selected"]].copy()
         rho, pval = (float("nan"), float("nan"))
@@ -788,8 +986,13 @@ def run(
                     "spearman_rho": float(rho),
                     "spearman_p": float(pval),
                     "min_n_mono": int(route_b_min_n_mono),
+                    "min_post_peak_steps": int(min_post_peak_steps),
+                    "fit_method": str(fit_method),
+                    "fit_min_tprime_hours": float(fit_min_tprime_hours),
                     "low_r2_threshold": float(route_b_low_r2_threshold),
                     "excluded_slugs": ";".join(sorted(route_b_exclude)),
+                    "excluded_slugs_from_catalog": ";".join(sorted(route_b_exclude_from_catalog)),
+                    "excluded_slugs_from_cli": ";".join(sorted(route_b_exclude_from_cli)),
                 }
             ]
         )
@@ -1256,6 +1459,9 @@ def run(
 
     meta = {
         "output_root": str(output_root),
+        "catalog": (str(catalog) if catalog is not None else ""),
+        "config_json": (str(config_json_path) if config_json_path is not None else ""),
+        "config_payload": dict(config_payload or {}),
         "n_events": int(len(want)),
         "r_max_km": float(r_max_km),
         "near_r_km": float(near_r_km),
@@ -1264,14 +1470,21 @@ def run(
         "min_near_bins": int(min_near_bins),
         "peak_min_hours": (float(peak_min_hours) if peak_min_hours is not None else None),
         "peak_max_hours": (float(peak_max_hours) if peak_max_hours is not None else None),
-        "D_peak_min": float(D_peak_min),
+        "D_peak_min": (float(D_peak_min) if D_peak_min is not None else None),
+        "snr_threshold": (float(snr_threshold) if snr_threshold is not None else None),
         "min_time_windows": int(min_time_windows),
+        "min_post_peak_steps": int(min_post_peak_steps),
+        "fit_method": str(fit_method),
+        "fit_min_tprime_hours": float(fit_min_tprime_hours),
         "peak_frac": float(peak_frac),
         "near_thresh": float(near_thresh),
         "mono_tol_up": float(mono_tol_up),
         "route_b_min_n_mono": int(route_b_min_n_mono),
         "route_b_low_r2_threshold": float(route_b_low_r2_threshold),
-        "route_b_exclude_slugs": sorted({str(x).strip() for x in (route_b_exclude_slugs or []) if str(x).strip()}),
+        "route_b_exclude_slugs": sorted(route_b_exclude),
+        "route_b_exclude_slugs_from_catalog": sorted(route_b_exclude_from_catalog),
+        "route_b_exclude_slugs_from_cli": sorted(route_b_exclude_from_cli),
+        "route_b_catalog_exclude_reasons": {k: catalog_exclude_reasons[k] for k in sorted(catalog_exclude_reasons)},
         "route_b_teach_highlight_slugs": [str(x).strip() for x in (route_b_teach_highlight_slugs or []) if str(x).strip()],
         "slugs": want,
         "exclude_slugs": sorted(exclude),
@@ -1280,51 +1493,87 @@ def run(
 
 
 def cli_main() -> None:
+    pre = argparse.ArgumentParser(add_help=False)
+    pre.add_argument("--config", type=Path, default=None)
+    pre.add_argument("--config-json", type=Path, default=None)
+    pre_args, _ = pre.parse_known_args()
+    cfg_path = pre_args.config if pre_args.config is not None else pre_args.config_json
+    cfg_params, cfg_payload, cfg_loaded_path = _load_config(cfg_path)
+
+    def _cfg(name: str, default: object) -> object:
+        return cfg_params.get(name, default)
+
+    def _cfg_path(name: str, default: Path | None) -> Path | None:
+        v = cfg_params.get(name, default)
+        if v is None:
+            return None
+        return Path(str(v))
+
+    def _cfg_list(name: str, default: list[str]) -> list[str]:
+        v = cfg_params.get(name, default)
+        if v is None:
+            return []
+        if isinstance(v, list):
+            return [str(x) for x in v]
+        return [str(v)]
+
     p = argparse.ArgumentParser(description="SVD-free: 计算 D(t) 并做衰减拟合/模型比较/坍缩与可视化")
-    p.add_argument("--output-root", type=Path, default=Path("outputs"), help="输入根目录：包含 <slug>/phi_heatmap/tables/phi_rt_long.csv")
-    p.add_argument("--out-dir", type=Path, default=Path("outputs/cross_disaster_comparison/Dt_decay"))
-    p.add_argument("--slugs", type=str, nargs="*", default=[], help="可选：只跑指定 slugs（空或 all=自动发现）")
-    p.add_argument("--exclude-slugs", type=str, nargs="*", default=[], help="可选：剔除指定 slugs")
+    p.add_argument("--config", type=Path, default=(pre_args.config if pre_args.config is not None else cfg_loaded_path), help="配置文件（推荐，支持 JSON/YAML）")
+    p.add_argument("--config-json", type=Path, default=pre_args.config_json, help="阈值配置 JSON（可选，CLI 参数优先于配置）")
+    p.add_argument("--catalog", type=Path, default=_cfg_path("catalog", None), help="可选：用于读取 exclude_reason 的 catalog")
+    p.add_argument("--use-catalog-exclude-reason", type=int, choices=[0, 1], default=int(_cfg("use_catalog_exclude_reason", 1)))
 
-    p.add_argument("--r-max-km", type=float, default=200.0)
-    p.add_argument("--near-r-km", type=float, default=50.0)
-    p.add_argument("--min-tiles-overlap", type=int, default=3)
-    p.add_argument("--min-r-bins", type=int, default=5)
-    p.add_argument("--min-near-bins", type=int, default=2)
+    p.add_argument("--output-root", type=Path, default=_cfg_path("output_root", Path("outputs")), help="输入根目录：包含 <slug>/phi_heatmap/tables/phi_rt_long.csv")
+    p.add_argument("--out-dir", type=Path, default=_cfg_path("out_dir", Path("outputs/cross_disaster_comparison/Dt_decay")))
+    p.add_argument("--slugs", type=str, nargs="*", default=_cfg_list("slugs", []), help="可选：只跑指定 slugs（空或 all=自动发现）")
+    p.add_argument("--exclude-slugs", type=str, nargs="*", default=_cfg_list("exclude_slugs", []), help="可选：剔除指定 slugs")
 
-    p.add_argument("--peak-min-hours", type=float, default=None, help="peak 搜索的最小 t（小时）。默认不限制（允许灾前 peak）。")
-    p.add_argument("--peak-max-hours", type=float, default=None)
-    p.add_argument("--D-peak-min", type=float, default=0.03)
-    p.add_argument("--min-time-windows", type=int, default=5)
-    p.add_argument("--peak-frac", type=float, default=0.5)
-    p.add_argument("--near-thresh", type=float, default=0.02)
+    p.add_argument("--r-max-km", type=float, default=float(_cfg("r_max_km", 200.0)))
+    p.add_argument("--near-r-km", type=float, default=float(_cfg("near_r_km", 50.0)))
+    p.add_argument("--min-tiles-overlap", type=int, default=int(_cfg("min_tiles_overlap", 3)))
+    p.add_argument("--min-r-bins", type=int, default=int(_cfg("min_r_bins", 5)))
+    p.add_argument("--min-near-bins", type=int, default=int(_cfg("min_near_bins", 2)))
 
-    p.add_argument("--mono-tol-up", type=float, default=1.05, help="单调衰减段允许的上升比例（默认 1.05=5%）")
-    p.add_argument("--route-b-min-n-mono", type=int, default=3, help="Route B: 基础样本最小单调段点数")
-    p.add_argument("--route-b-low-r2-threshold", type=float, default=0.60, help="Route B: 低R²阈值（低于该值的事件在图中置灰）")
+    p.add_argument("--peak-min-hours", type=float, default=_cfg("peak_min_hours", None), help="peak 搜索的最小 t（小时）。默认不限制（允许灾前 peak）。")
+    p.add_argument("--peak-max-hours", type=float, default=_cfg("peak_max_hours", None))
+    p.add_argument("--D-peak-min", type=float, default=_cfg("D_peak_min", 0.03))
+    p.add_argument("--snr-threshold", type=float, default=_cfg("snr_threshold", None))
+    p.add_argument("--min-time-windows", type=int, default=int(_cfg("min_time_windows", 5)))
+    p.add_argument("--min-post-peak-steps", type=int, default=int(_cfg("min_post_peak_steps", 4)))
+    p.add_argument("--peak-frac", type=float, default=float(_cfg("peak_frac", 0.5)))
+    p.add_argument("--near-thresh", type=float, default=float(_cfg("near_thresh", 0.02)))
+    p.add_argument("--fit-method", type=str, choices=["full_post_peak", "monotone_truncated"], default=str(_cfg("fit_method", "monotone_truncated")))
+    p.add_argument("--fit-min-tprime-hours", type=float, default=float(_cfg("fit_min_tprime_hours", 0.0)))
+
+    p.add_argument("--mono-tol-up", type=float, default=float(_cfg("mono_tol_up", 1.05)), help="单调衰减段允许的上升比例（默认 1.05=5%%）")
+    p.add_argument("--route-b-min-n-mono", type=int, default=int(_cfg("route_b_min_n_mono", 3)), help="Route B: 基础样本最小单调段点数")
+    p.add_argument("--route-b-low-r2-threshold", type=float, default=float(_cfg("route_b_low_r2_threshold", 0.60)), help="Route B: 低R²阈值（低于该值的事件在图中置灰）")
     p.add_argument(
         "--route-b-exclude-slugs",
         type=str,
         nargs="*",
-        default=[
-            "hurricane_melissa_aftermath_2025_11_03",
-            "the_flooding_across_rio_grande_do_sul_state_brazil",
-        ],
-        help="Route B: 独立排除的事件 slugs",
+        default=_cfg_list("route_b_exclude_slugs", []),
+        help="Route B: 额外手动排除的事件 slugs（建议改由 catalog.exclude_reason 管理）",
     )
     p.add_argument(
         "--route-b-teach-highlight-slugs",
         type=str,
         nargs="*",
-        default=[],
+        default=_cfg_list("route_b_teach_highlight_slugs", []),
         help="教学版log-log高亮事件（默认自动选低/中/高 alpha）",
     )
 
     args = p.parse_args()
+    config_path_runtime = args.config if args.config is not None else args.config_json
+    cfg_payload_used = cfg_payload if config_path_runtime is not None else {}
+    catalog_exclude_reasons = {}
+    if int(args.use_catalog_exclude_reason) == 1 and args.catalog is not None:
+        catalog_exclude_reasons = _load_catalog_exclude_reasons(Path(args.catalog))
 
     run(
         output_root=Path(args.output_root),
         out_dir=Path(args.out_dir),
+        catalog=(Path(args.catalog) if args.catalog is not None else None),
         slugs=list(args.slugs or []),
         exclude_slugs=list(args.exclude_slugs or []),
         r_max_km=float(args.r_max_km),
@@ -1334,15 +1583,22 @@ def cli_main() -> None:
         min_near_bins=int(args.min_near_bins),
         peak_min_hours=args.peak_min_hours,
         peak_max_hours=(float(args.peak_max_hours) if args.peak_max_hours is not None else None),
-        D_peak_min=float(args.D_peak_min),
+        D_peak_min=(float(args.D_peak_min) if args.D_peak_min is not None else None),
+        snr_threshold=(float(args.snr_threshold) if args.snr_threshold is not None else None),
         min_time_windows=int(args.min_time_windows),
+        min_post_peak_steps=int(args.min_post_peak_steps),
         peak_frac=float(args.peak_frac),
         near_thresh=float(args.near_thresh),
+        fit_method=str(args.fit_method),
+        fit_min_tprime_hours=float(args.fit_min_tprime_hours),
         mono_tol_up=float(args.mono_tol_up),
         route_b_min_n_mono=int(args.route_b_min_n_mono),
         route_b_low_r2_threshold=float(args.route_b_low_r2_threshold),
         route_b_exclude_slugs=list(args.route_b_exclude_slugs or []),
+        catalog_exclude_reasons=dict(catalog_exclude_reasons),
         route_b_teach_highlight_slugs=list(args.route_b_teach_highlight_slugs or []),
+        config_json_path=(Path(config_path_runtime) if config_path_runtime is not None else None),
+        config_payload=cfg_payload_used,
     )
 
 

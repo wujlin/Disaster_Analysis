@@ -1,0 +1,18 @@
+{
+  "catalog": "Docs/cross_disaster_catalog_routeB16_frozen.csv",
+  "phi_root": "outputs/_runs/routeB16_config_main_20260223",
+  "dt_out": "outputs/cross_disaster_comparison/Dt_decay_routeB16_config_main_20260223",
+  "expected_selected": 14,
+  "n_catalog_events": 16,
+  "n_selected": 14,
+  "missing_in_selected": [
+    "hurricane_beryl_pre_landfall_2024",
+    "the_earthquake_across_central_mexico"
+  ],
+  "extra_in_selected": [],
+  "n_extrapolation_events": 0,
+  "ok_center_extrapolation": true,
+  "ok_selected_count": true,
+  "ok_selected_set": false,
+  "ok_all": false
+}

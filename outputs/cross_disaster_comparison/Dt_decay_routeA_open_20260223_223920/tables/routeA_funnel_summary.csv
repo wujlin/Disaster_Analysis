@@ -1,0 +1,6 @@
+stage,n_events
+event_summary_total,42
+has_timeseries_n_time_windows>=1,41
+has_fit_row,41
+route_b_selected_open,18
+route_b_nonselected,23

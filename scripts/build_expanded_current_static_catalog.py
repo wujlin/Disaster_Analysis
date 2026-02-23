@@ -24,6 +24,9 @@ def run(*, catalog_in: Path, catalog_out: Path, report_out: Path) -> None:
         if col not in df.columns:
             df[col] = ""
         df[col] = ""
+    for col in ("t0_source", "center_source", "exclude_reason"):
+        if col not in df.columns:
+            df[col] = ""
 
     catalog_out.parent.mkdir(parents=True, exist_ok=True)
     report_out.parent.mkdir(parents=True, exist_ok=True)

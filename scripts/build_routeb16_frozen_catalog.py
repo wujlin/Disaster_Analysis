@@ -182,6 +182,11 @@ def build_catalog(
 
         outflow = _to_float(row.get("outflow_phi_threshold"))
         inflow = _to_float(row.get("inflow_phi_threshold"))
+        t0_source_in = str(row.get("t0_source", "")).strip()
+        center_source_in = str(row.get("center_source", "")).strip()
+        exclude_reason = str(row.get("exclude_reason", "")).strip()
+        t0_source = t0_source_in if t0_source_in and t0_method == "catalog_provided" else t0_method
+        center_source = center_source_in if center_source_in and center_method == "catalog_provided" else center_method
 
         out_rows.append(
             {
@@ -195,6 +200,9 @@ def build_catalog(
                 "only_hour_pt": int(only_hour),
                 "outflow_phi_threshold": (0.9 if outflow is None else float(outflow)),
                 "inflow_phi_threshold": (1.1 if inflow is None else float(inflow)),
+                "t0_source": str(t0_source),
+                "center_source": str(center_source),
+                "exclude_reason": str(exclude_reason),
                 "center_track_csv": "",
                 "center_track_to_tz": "",
                 "center_track_storm_name": "",
@@ -213,6 +221,9 @@ def build_catalog(
                 "center_lat_frozen": float(center_lat),
                 "center_lon_frozen": float(center_lon),
                 "center_method": center_method,
+                "t0_source": str(t0_source),
+                "center_source": str(center_source),
+                "exclude_reason": str(exclude_reason),
                 "center_source_window_pt": str(nearest_ts),
                 "center_source_file": nearest_fp.name,
             }
@@ -253,4 +264,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

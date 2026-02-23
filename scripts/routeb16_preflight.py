@@ -5,6 +5,7 @@ Route B 16 冻结口径 preflight 检查（跑前必过）。
 检查项：
 - slug 集合必须与 Route B 16 完全一致；
 - 必填字段非空：slug, name, data_root, event_type, t0_pt, center_lat, center_lon, only_hour_pt；
+- 可选严格检查：t0_source/center_source 必须非空；
 - 主分析中 center_track_csv / center_track_storm_name 必须为空；
 - 每个事件 data_root 存在，且 population 目录存在 hour=only_hour_pt 的窗口文件。
 """
@@ -60,6 +61,7 @@ REQUIRED_COLUMNS: tuple[str, ...] = (
     "center_lon",
     "only_hour_pt",
 )
+SOURCE_COLUMNS: tuple[str, ...] = ("t0_source", "center_source")
 
 
 def _is_missing(value: object) -> bool:
@@ -69,7 +71,14 @@ def _is_missing(value: object) -> bool:
     return s == "" or s.lower() == "nan"
 
 
-def run_preflight(catalog: Path, report_csv: Path, strict_slug_set: int = 1) -> None:
+def run_preflight(
+    catalog: Path,
+    report_csv: Path,
+    strict_slug_set: int = 1,
+    require_explicit_t0_center: int = 1,
+    require_source_columns: int = 1,
+    require_nonempty_sources: int = 1,
+) -> None:
     if not catalog.exists():
         raise SystemExit(f"[fail] catalog 不存在：{catalog}")
 
@@ -77,6 +86,10 @@ def run_preflight(catalog: Path, report_csv: Path, strict_slug_set: int = 1) -> 
     miss_cols = sorted(set(REQUIRED_COLUMNS) - set(df.columns))
     if miss_cols:
         raise SystemExit(f"[fail] catalog 缺少列：{miss_cols}")
+    if int(require_source_columns) == 1:
+        miss_src_cols = sorted(set(SOURCE_COLUMNS) - set(df.columns))
+        if miss_src_cols:
+            raise SystemExit(f"[fail] catalog 缺少 source 列：{miss_src_cols}")
 
     errors: list[str] = []
 
@@ -97,6 +110,18 @@ def run_preflight(catalog: Path, report_csv: Path, strict_slug_set: int = 1) -> 
         bad = df[df[col].apply(_is_missing)]
         if not bad.empty:
             errors.append(f"列 {col} 存在空值：{sorted(bad['slug'].astype(str).unique().tolist())}")
+    if int(require_explicit_t0_center) == 1:
+        for col in ("t0_pt", "center_lat", "center_lon"):
+            bad = df[df[col].apply(_is_missing)]
+            if not bad.empty:
+                errors.append(f"strict 模式要求列 {col} 非空：{sorted(bad['slug'].astype(str).unique().tolist())}")
+    if int(require_nonempty_sources) == 1:
+        for col in SOURCE_COLUMNS:
+            if col not in df.columns:
+                continue
+            bad = df[df[col].apply(_is_missing)]
+            if not bad.empty:
+                errors.append(f"strict source 模式要求列 {col} 非空：{sorted(bad['slug'].astype(str).unique().tolist())}")
 
     # 主分析禁用 track
     for col in ("center_track_csv", "center_track_storm_name"):
@@ -145,6 +170,12 @@ def run_preflight(catalog: Path, report_csv: Path, strict_slug_set: int = 1) -> 
             {
                 "slug": slug,
                 "data_root": str(data_root),
+                "t0_pt": str(row.get("t0_pt", "")),
+                "center_lat": row.get("center_lat", ""),
+                "center_lon": row.get("center_lon", ""),
+                "t0_source": str(row.get("t0_source", "")).strip() if "t0_source" in row else "",
+                "center_source": str(row.get("center_source", "")).strip() if "center_source" in row else "",
+                "exclude_reason": str(row.get("exclude_reason", "")).strip() if "exclude_reason" in row else "",
                 "root_exists": int(root_ok),
                 "population_exists": int(pop_ok),
                 "only_hour_pt": only_hour,
@@ -179,10 +210,19 @@ def main() -> None:
         default=Path("outputs/cross_disaster_comparison/routeB16_frozen_preflight.csv"),
     )
     parser.add_argument("--strict-slug-set", type=int, default=1, choices=[0, 1])
+    parser.add_argument("--require-explicit-t0-center", type=int, default=1, choices=[0, 1])
+    parser.add_argument("--require-source-columns", type=int, default=1, choices=[0, 1])
+    parser.add_argument("--require-nonempty-sources", type=int, default=1, choices=[0, 1])
     args = parser.parse_args()
-    run_preflight(args.catalog, args.report_csv, args.strict_slug_set)
+    run_preflight(
+        args.catalog,
+        args.report_csv,
+        args.strict_slug_set,
+        args.require_explicit_t0_center,
+        args.require_source_columns,
+        args.require_nonempty_sources,
+    )
 
 
 if __name__ == "__main__":
     main()
-

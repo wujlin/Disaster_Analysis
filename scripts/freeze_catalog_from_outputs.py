@@ -51,13 +51,25 @@ def run(*, catalog_in: Path, output_root: Path, catalog_out: Path, report_out: P
         upd_center = (mode == "all") or _missing(lat_old) or _missing(lon_old)
 
         out = dict(row)
+        if "t0_source" not in out:
+            out["t0_source"] = ""
+        if "center_source" not in out:
+            out["center_source"] = ""
+        if "exclude_reason" not in out:
+            out["exclude_reason"] = ""
         changed = 0
         if upd_t0 and not _missing(t0_new):
             out["t0_pt"] = t0_new
+            src_t0 = str(md.get("t0_source", "")).strip() or str(md.get("t0_method", "")).strip()
+            if src_t0:
+                out["t0_source"] = src_t0
             changed += int(str(t0_old) != str(t0_new))
         if upd_center and (not _missing(lat_new)) and (not _missing(lon_new)):
             out["center_lat"] = float(lat_new)
             out["center_lon"] = float(lon_new)
+            src_center = str(md.get("center_source", "")).strip() or str(md.get("center_method", "")).strip()
+            if src_center:
+                out["center_source"] = src_center
             changed += int((str(lat_old) != str(lat_new)) or (str(lon_old) != str(lon_new)))
 
         rows.append(out)
@@ -76,6 +88,8 @@ def run(*, catalog_in: Path, output_root: Path, catalog_out: Path, report_out: P
                 "new_center_lon": out.get("center_lon"),
                 "t0_method_from_output": md.get("t0_method"),
                 "center_method_from_output": md.get("center_method"),
+                "t0_source_from_output": md.get("t0_source", ""),
+                "center_source_from_output": md.get("center_source", ""),
             }
         )
 

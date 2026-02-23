@@ -74,6 +74,10 @@ def run(
         new_row["center_track_csv"] = ""
         new_row["center_track_to_tz"] = ""
         new_row["center_track_storm_name"] = ""
+        new_row["t0_source"] = str(old_meta.get("t0_source") or old_meta.get("t0_method") or "legacy_metadata")
+        new_row["center_source"] = str(old_meta.get("center_source") or old_meta.get("center_method") or "legacy_metadata")
+        if "exclude_reason" not in new_row:
+            new_row["exclude_reason"] = ""
         rows.append(new_row)
 
         rep.append(
