@@ -1,0 +1,2 @@
+n_events_total,n_events_ok,pearson_alpha_mono_vs_full,pearson_alpha_mono_vs_full_n,pearson_alpha_mono_vs_full_wls,pearson_alpha_mono_vs_full_wls_n,sign_flip_mono_vs_full,sign_flip_mono_vs_full_wls,max_abs_diff_mono_vs_full,max_abs_diff_mono_vs_full_wls,fit_min_tprime_hours,mono_tol_up
+13,13,0.1594251291568975,6,0.19806640901573458,6,0,0,0.937362624139791,0.9534558650550842,24.0,1.05

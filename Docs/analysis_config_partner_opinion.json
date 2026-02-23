@@ -1,0 +1,29 @@
+{
+  "name": "partner_opinion_repro_config",
+  "version": "2026-02-23",
+  "params": {
+    "output_root": "outputs",
+    "catalog": "Docs/cross_disaster_catalog_routeB16_frozen.csv",
+    "use_catalog_exclude_reason": 1,
+    "r_max_km": 200,
+    "near_r_km": 50,
+    "min_tiles_overlap": 3,
+    "min_r_bins": 5,
+    "min_near_bins": 2,
+    "fit_method": "monotone_truncated",
+    "fit_min_tprime_hours": 24,
+    "mono_tol_up": 1.05,
+    "route_b_min_n_mono": 3,
+    "min_time_windows": 5,
+    "min_post_peak_steps": 4,
+    "D_peak_min": null,
+    "snr_threshold": null,
+    "peak_min_hours": null,
+    "peak_max_hours": null,
+    "peak_frac": 0.5,
+    "near_thresh": 0.02,
+    "route_b_low_r2_threshold": 0.6,
+    "slugs": [],
+    "exclude_slugs": []
+  }
+}

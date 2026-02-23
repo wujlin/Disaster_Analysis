@@ -1,0 +1,3 @@
+subset,n,spearman_rho_alpha_vs_Dinf,spearman_p_alpha_vs_Dinf
+selected,14,-0.832967032967033,0.00021655091041647006
+selected_r2_ge_0p8,10,-0.8545454545454544,0.0016368033159867156

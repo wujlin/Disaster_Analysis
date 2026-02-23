@@ -1,0 +1,16 @@
+slug,short_name,disaster_type,event_type,t_peak_hours,D_peak,fit_method,tau50_h,tau50_lower_bound
+flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,flood,INFL,448.0,0.11597337415204326,monotone_truncated,168.0,1
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,hurricane,EVAC,-8.0,0.1764812144614291,monotone_truncated,24.0,0
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,hurricane,EVAC,0.0,0.2701956855248753,monotone_truncated,24.0,0
+hurricane_beryl_pre_landfall_2024,beryl_pre,hurricane,NEUTRAL,16.0,0.16560318887757747,monotone_truncated,24.0,0
+hurricane_john_across_southeastern_guerrero_mexico,john_gue,hurricane,INFL,72.0,0.11469235259687795,monotone_truncated,144.0,1
+hurricane_john_southern_mexico_25_september_2024,john_sm,hurricane,INFL,168.0,0.10772159942741184,monotone_truncated,192.0,1
+hurricane_milton_across_florida_us,milton_fl,hurricane,INFL,0.0,0.2108908765038638,monotone_truncated,48.0,0
+moldova_flooding_2024,moldova,flood,INFL,448.0,0.06658564805383829,monotone_truncated,72.0,0
+spain_flood,spain_flood,flood,INFL,88.0,0.15131407343508113,monotone_truncated,120.0,1
+the_flooding_across_bagmati_and_koshi_provinces_nepal,nepal_fld,flood,EVAC,-8.0,0.19393916150435295,monotone_truncated,48.0,0
+the_flooding_across_eastern_bangladesh,bangladesh_fld,flood,INFL,232.0,0.07823141512719195,monotone_truncated,24.0,0
+the_flooding_across_gujarat_india,gujarat_fld,flood,EVAC,16.0,0.11128938797973106,monotone_truncated,144.0,1
+turkiye_earthquake_2023,turkiye,earthquake,NEUTRAL,16.0,0.44716643561220276,monotone_truncated,96.0,0
+typhoon_yagi_across_northeastern_vietnam,yagi_vn,typhoon,EVAC,29.0,0.34745282608287953,monotone_truncated,72.0,0
+wildfires_in_boise_county_idaho_27_august_2024,boise_fire,wildfire,INFL,136.0,0.13766124285207226,monotone_truncated,24.0,0

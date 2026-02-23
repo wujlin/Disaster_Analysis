@@ -1,0 +1,82 @@
+Partner opinion rerun checklist (20260223_1725)
+
+[Inclusion flow]
+                     step  n
+               total_fits 15
+          data_quality_ok 14
+analysis_applicability_ok 13
+          route_b_base_ok 12
+         route_b_selected 12
+    route_b_selected_plot 11
+
+[Drop reasons]
+            drop_reason_primary  n
+                       selected 12
+   analysis_n_mono_lt_threshold  2
+data_quality_missing_near_delta  1
+
+[Core metrics]
+                                                  check                                    source            metric         value
+                                    alpha_vs_near_delta        Dt_routeB_alpha_delta_spearman.csv      spearman_rho -6.923077e-01
+                                    alpha_vs_near_delta        Dt_routeB_alpha_delta_spearman.csv        spearman_p  1.259303e-02
+                                    alpha_vs_near_delta        Dt_routeB_alpha_delta_spearman.csv        n_selected  1.200000e+01
+                                        alpha_vs_D_peak                Dt_routeB_sample_flags.csv      spearman_rho  7.272727e-01
+                                        alpha_vs_D_peak                Dt_routeB_sample_flags.csv        spearman_p  7.355029e-03
+                                        alpha_vs_D_peak                Dt_routeB_sample_flags.csv n_selected_non_na  1.200000e+01
+                                         alpha_vs_D_inf         Dt_routeB_alpha_dinf_spearman.csv      spearman_rho -8.741259e-01
+                                         alpha_vs_D_inf         Dt_routeB_alpha_dinf_spearman.csv        spearman_p  2.007131e-04
+                                         alpha_vs_D_inf         Dt_routeB_alpha_dinf_spearman.csv                 n  1.200000e+01
+                      mixed_effects_L10_delta_peak_unit geo_unit_L10/mixed_effects_alpha_unit.csv              beta -5.266523e-01
+                      mixed_effects_L10_delta_peak_unit geo_unit_L10/mixed_effects_alpha_unit.csv                 p  5.391047e-09
+                      mixed_effects_L10_delta_peak_unit geo_unit_L10/mixed_effects_alpha_unit.csv             n_obs  1.770000e+03
+                          mixed_effects_L10_distance_km geo_unit_L10/mixed_effects_alpha_unit.csv              beta  2.010129e-05
+                          mixed_effects_L10_distance_km geo_unit_L10/mixed_effects_alpha_unit.csv                 p  1.329374e-01
+                          mixed_effects_L10_distance_km geo_unit_L10/mixed_effects_alpha_unit.csv             n_obs  1.770000e+03
+                          mixed_effects_L10_D_peak_unit geo_unit_L10/mixed_effects_alpha_unit.csv              beta -6.744714e-03
+                          mixed_effects_L10_D_peak_unit geo_unit_L10/mixed_effects_alpha_unit.csv                 p  9.587597e-01
+                          mixed_effects_L10_D_peak_unit geo_unit_L10/mixed_effects_alpha_unit.csv             n_obs  1.770000e+03
+         pooled_L10_pooled_raw_alpha_vs_delta_peak_unit geo_unit_L10/pooled_unit_correlations.csv               rho -2.177549e-01
+         pooled_L10_pooled_raw_alpha_vs_delta_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 p  1.929243e-20
+         pooled_L10_pooled_raw_alpha_vs_delta_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 n  1.770000e+03
+             pooled_L10_pooled_raw_alpha_vs_D_peak_unit geo_unit_L10/pooled_unit_correlations.csv               rho -6.000105e-02
+             pooled_L10_pooled_raw_alpha_vs_D_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 p  1.157583e-02
+             pooled_L10_pooled_raw_alpha_vs_D_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 n  1.770000e+03
+             pooled_L10_pooled_raw_alpha_vs_distance_km geo_unit_L10/pooled_unit_correlations.csv               rho  1.523073e-01
+             pooled_L10_pooled_raw_alpha_vs_distance_km geo_unit_L10/pooled_unit_correlations.csv                 p  1.187968e-10
+             pooled_L10_pooled_raw_alpha_vs_distance_km geo_unit_L10/pooled_unit_correlations.csv                 n  1.770000e+03
+pooled_L10_within_event_demean_alpha_vs_delta_peak_unit geo_unit_L10/pooled_unit_correlations.csv               rho -2.447573e-01
+pooled_L10_within_event_demean_alpha_vs_delta_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 p  1.475669e-25
+pooled_L10_within_event_demean_alpha_vs_delta_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 n  1.770000e+03
+    pooled_L10_within_event_demean_alpha_vs_D_peak_unit geo_unit_L10/pooled_unit_correlations.csv               rho  1.232861e-02
+    pooled_L10_within_event_demean_alpha_vs_D_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 p  6.042247e-01
+    pooled_L10_within_event_demean_alpha_vs_D_peak_unit geo_unit_L10/pooled_unit_correlations.csv                 n  1.770000e+03
+    pooled_L10_within_event_demean_alpha_vs_distance_km geo_unit_L10/pooled_unit_correlations.csv               rho  8.824007e-02
+    pooled_L10_within_event_demean_alpha_vs_distance_km geo_unit_L10/pooled_unit_correlations.csv                 p  2.015942e-04
+    pooled_L10_within_event_demean_alpha_vs_distance_km geo_unit_L10/pooled_unit_correlations.csv                 n  1.770000e+03
+                       mixed_effects_L8_delta_peak_unit  geo_unit_L8/mixed_effects_alpha_unit.csv              beta -7.100552e-01
+                       mixed_effects_L8_delta_peak_unit  geo_unit_L8/mixed_effects_alpha_unit.csv                 p  5.546497e-03
+                       mixed_effects_L8_delta_peak_unit  geo_unit_L8/mixed_effects_alpha_unit.csv             n_obs  2.750000e+02
+                           mixed_effects_L8_distance_km  geo_unit_L8/mixed_effects_alpha_unit.csv              beta  4.024590e-05
+                           mixed_effects_L8_distance_km  geo_unit_L8/mixed_effects_alpha_unit.csv                 p  3.296207e-01
+                           mixed_effects_L8_distance_km  geo_unit_L8/mixed_effects_alpha_unit.csv             n_obs  2.750000e+02
+                           mixed_effects_L8_D_peak_unit  geo_unit_L8/mixed_effects_alpha_unit.csv              beta  7.319468e-01
+                           mixed_effects_L8_D_peak_unit  geo_unit_L8/mixed_effects_alpha_unit.csv                 p  3.842860e-02
+                           mixed_effects_L8_D_peak_unit  geo_unit_L8/mixed_effects_alpha_unit.csv             n_obs  2.750000e+02
+          pooled_L8_pooled_raw_alpha_vs_delta_peak_unit  geo_unit_L8/pooled_unit_correlations.csv               rho -2.216012e-01
+          pooled_L8_pooled_raw_alpha_vs_delta_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 p  2.120077e-04
+          pooled_L8_pooled_raw_alpha_vs_delta_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 n  2.750000e+02
+              pooled_L8_pooled_raw_alpha_vs_D_peak_unit  geo_unit_L8/pooled_unit_correlations.csv               rho -7.158478e-03
+              pooled_L8_pooled_raw_alpha_vs_D_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 p  9.059324e-01
+              pooled_L8_pooled_raw_alpha_vs_D_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 n  2.750000e+02
+              pooled_L8_pooled_raw_alpha_vs_distance_km  geo_unit_L8/pooled_unit_correlations.csv               rho  2.757306e-01
+              pooled_L8_pooled_raw_alpha_vs_distance_km  geo_unit_L8/pooled_unit_correlations.csv                 p  3.451456e-06
+              pooled_L8_pooled_raw_alpha_vs_distance_km  geo_unit_L8/pooled_unit_correlations.csv                 n  2.750000e+02
+ pooled_L8_within_event_demean_alpha_vs_delta_peak_unit  geo_unit_L8/pooled_unit_correlations.csv               rho -2.365062e-01
+ pooled_L8_within_event_demean_alpha_vs_delta_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 p  7.480003e-05
+ pooled_L8_within_event_demean_alpha_vs_delta_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 n  2.750000e+02
+     pooled_L8_within_event_demean_alpha_vs_D_peak_unit  geo_unit_L8/pooled_unit_correlations.csv               rho  1.139373e-01
+     pooled_L8_within_event_demean_alpha_vs_D_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 p  5.916316e-02
+     pooled_L8_within_event_demean_alpha_vs_D_peak_unit  geo_unit_L8/pooled_unit_correlations.csv                 n  2.750000e+02
+     pooled_L8_within_event_demean_alpha_vs_distance_km  geo_unit_L8/pooled_unit_correlations.csv               rho  2.320014e-02
+     pooled_L8_within_event_demean_alpha_vs_distance_km  geo_unit_L8/pooled_unit_correlations.csv                 p  7.016976e-01
+     pooled_L8_within_event_demean_alpha_vs_distance_km  geo_unit_L8/pooled_unit_correlations.csv                 n  2.750000e+02
