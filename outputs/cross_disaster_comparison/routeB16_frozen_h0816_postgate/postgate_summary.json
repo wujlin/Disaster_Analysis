@@ -1,0 +1,22 @@
+{
+  "catalog": "Docs/cross_disaster_catalog_routeB16_frozen.csv",
+  "phi_root": "outputs/_runs/routeB16_frozen_radial_h0816_20260223_101624",
+  "dt_out": "outputs/cross_disaster_comparison/Dt_decay_routeB16_frozen_h0816_20260223_101624",
+  "expected_selected": 16,
+  "n_catalog_events": 16,
+  "n_selected": 10,
+  "missing_in_selected": [
+    "hurricane_beryl_pre_landfall_2024",
+    "hurricane_john_across_southeastern_guerrero_mexico",
+    "hurricane_milton_across_florida_us",
+    "moldova_flooding_2024",
+    "the_flooding_across_bagmati_and_koshi_provinces_nepal",
+    "the_flooding_across_gujarat_india"
+  ],
+  "extra_in_selected": [],
+  "n_extrapolation_events": 0,
+  "ok_center_extrapolation": true,
+  "ok_selected_count": false,
+  "ok_selected_set": false,
+  "ok_all": false
+}

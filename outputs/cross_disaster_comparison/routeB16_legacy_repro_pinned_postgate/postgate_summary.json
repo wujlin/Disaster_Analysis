@@ -1,0 +1,15 @@
+{
+  "catalog": "Docs/cross_disaster_catalog_routeB16_legacy_repro.csv",
+  "phi_root": "outputs/_runs/routeB16_legacy_repro_pinned",
+  "dt_out": "outputs/cross_disaster_comparison/Dt_decay_routeB16_legacy_repro_pinned",
+  "expected_selected": 16,
+  "n_catalog_events": 16,
+  "n_selected": 16,
+  "missing_in_selected": [],
+  "extra_in_selected": [],
+  "n_extrapolation_events": 0,
+  "ok_center_extrapolation": true,
+  "ok_selected_count": true,
+  "ok_selected_set": true,
+  "ok_all": true
+}

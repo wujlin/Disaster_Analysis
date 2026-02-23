@@ -1,0 +1,43 @@
+slug,status,updated,updated_t0,updated_center,old_t0_pt,new_t0_pt,old_center_lat,old_center_lon,new_center_lat,new_center_lon,t0_method_from_output,center_method_from_output
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,ok,1,1,1,,2024-07-05 08:00:00,,,20.596542532183292,-88.39655605004877,auto_first_population_window,auto_centroid_abs_n_difference
+hurricane_beryl_across_southeastern_texas_us,ok,0,0,0,2024-07-08 08:00:00,2024-07-08 08:00:00,28.6,-96.0,28.6,-96.0,provided_exact,provided
+hurricane_beryl_pre_landfall_2024,ok,1,1,1,,2024-06-30 08:00:00,,,11.563936682959275,-61.08111086853368,auto_first_population_window,auto_centroid_abs_n_difference
+hurricane_ernesto_puerto_rico_14_august_2024,ok,1,1,1,,2024-08-14 08:00:00,,,18.30648127648559,-66.32033915344368,auto_first_population_window,auto_centroid_abs_n_difference
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,ok,0,0,0,2024-09-27 08:00:00,2024-09-27 08:00:00,30.0,-83.8,30.0,-83.8,provided_exact,provided
+hurricane_john_across_southeastern_guerrero_mexico,ok,1,0,1,2024-09-28 08:00:00,2024-09-28 08:00:00,,,18.813432065483827,-98.89601590402513,provided_exact,auto_centroid_abs_n_difference
+hurricane_john_southern_mexico_25_september_2024,ok,1,0,1,2024-09-24 08:00:00,2024-09-24 08:00:00,,,19.09426466914683,-99.25439471974694,provided_exact,auto_centroid_abs_n_difference
+hurricane_milton_across_florida_us,ok,0,0,0,2024-10-10 08:00:00,2024-10-10 08:00:00,27.3,-82.6,27.3,-82.6,provided_exact,provided
+line_fire_southern_california_9_september_2024,ok,0,0,0,2024-09-09 16:00:00,2024-09-09 16:00:00,34.121,-117.155,34.121,-117.155,provided_exact,provided
+moldova_flooding_2024,ok,1,1,1,,2024-09-16 08:00:00,,,47.173213269396584,28.546111231629364,auto_first_population_window,auto_centroid_abs_n_difference
+park_fire_2024,ok,1,1,1,,2024-07-29 08:00:00,,,38.90870115875224,-121.44612068915065,auto_first_population_window,auto_centroid_abs_n_difference
+park_fire_california_29_july_2024,ok,1,1,1,,2024-07-29 08:00:00,,,38.44061484364063,-121.60222168159439,auto_first_population_window,auto_centroid_abs_n_difference
+the_flooding_across_antioquia_and_choc_departments_colombia,ok,1,1,1,,2024-11-13 08:00:00,,,5.776866412004303,-75.60011375705281,auto_first_population_window,auto_centroid_abs_n_difference
+the_flooding_across_bagmati_and_koshi_provinces_nepal,ok,1,1,1,,2024-09-27 08:00:00,,,27.36716613261753,85.30334532923213,auto_first_population_window,auto_centroid_abs_n_difference
+the_flooding_across_eastern_bangladesh,ok,1,1,1,,2024-08-25 08:00:00,,,23.67930441412554,90.5124712237643,auto_first_population_window,auto_centroid_abs_n_difference
+the_flooding_across_gujarat_india,ok,1,1,1,,2024-09-01 08:00:00,,,22.618389574941276,74.6045662210079,auto_first_population_window,auto_centroid_abs_n_difference
+the_flooding_in_benue_and_kogi_states_nigeria,ok,1,1,1,,2024-10-21 08:00:00,,,7.460769683941934,7.035329267004323,auto_first_population_window,auto_centroid_abs_n_difference
+the_flooding_in_conakry_city_conakry_guinea,ok,1,1,1,,2024-08-27 08:00:00,,,9.729388549067876,-13.606025085051735,auto_first_population_window,auto_centroid_abs_n_difference
+the_wildfires_in_quito_pichincha_province_ecuador,ok,0,0,0,2024-09-24 16:00:00,2024-09-24 16:00:00,-0.196,-78.472,-0.196,-78.472,provided_exact,provided
+tropical_storm_debby_united_states_pre_landfall_4_august_2024,ok,1,1,1,,2024-08-04 08:00:00,,,31.350504362827174,-81.84207137612809,auto_first_population_window,auto_centroid_abs_n_difference
+tropical_storm_enteng_across_luzon_and_visayas_islands_philippines,ok,1,1,1,,2024-09-04 08:00:00,,,14.443833071006619,121.239094064734,auto_first_population_window,auto_centroid_abs_n_difference
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,ok,1,1,1,,2024-10-23 08:00:00,,,13.387463160126721,121.95704758632475,auto_first_population_window,auto_centroid_abs_n_difference
+tropical_storm_yagi_philippines_2_september_2024,ok,1,1,1,,2024-09-02 08:00:00,,,15.119827987060109,121.06008490980847,auto_first_population_window,auto_centroid_abs_n_difference
+turkiye_earthquake_2023,ok,0,0,0,2023-02-05 16:00:00,2023-02-05 16:00:00,37.174,37.032,37.174,37.032,provided_exact,provided
+typhoon_krathon_across_taiwan,ok,1,1,1,,2024-10-02 08:00:00,,,24.208458908536482,120.94055729447531,auto_first_population_window,auto_centroid_abs_n_difference
+typhoon_yagi_across_northeastern_vietnam,ok,0,0,0,2024-09-07 03:00:00,2024-09-07 03:00:00,20.9,106.9,20.9,106.9,provided_exact,provided
+wildfires_in_boise_county_idaho_27_august_2024,ok,1,1,1,,2024-08-27 08:00:00,,,43.55895047832528,-116.04712583434068,auto_first_population_window,auto_centroid_abs_n_difference
+global_earthquake_model_research_2025_sep_18,ok,0,0,0,2025-09-18 08:00:00,2025-09-18 08:00:00,38.896118009340654,-9.176124681338374,38.896118009340654,-9.176124681338374,provided_exact,provided
+hurricane_melissa_10_27_2025,ok,0,0,0,2025-10-27 08:00:00,2025-10-27 08:00:00,16.4,-77.8,16.4,-77.8,provided_exact,provided
+hurricane_melissa_aftermath_2025_11_03,ok,0,0,0,2025-11-03 00:00:00,2025-11-03 00:00:00,18.1,-78.0,18.1,-78.0,provided_exact,provided
+the_earthquake_across_central_mexico,ok,0,0,0,2026-01-02 00:00:00,2026-01-02 00:00:00,16.875,-99.336,16.875,-99.336,provided_exact,provided
+the_earthquake_across_dhaka_division_bangladesh,ok,0,0,0,2025-11-21 00:00:00,2025-11-21 00:00:00,23.858,90.54,23.858,90.54,provided_exact,provided
+the_flooding_across_rio_grande_do_sul_state_brazil,ok,1,1,1,,2024-04-30 08:00:00,,,-28.807270278947794,-51.13693027874344,auto_first_population_window,auto_centroid_abs_n_difference
+flooding_in_central_and_eastern_europe_sept_16_2024,ok,1,1,1,,2024-09-16 08:00:00,,,47.707999431105726,20.305215399880904,auto_first_population_window,auto_centroid_abs_n_difference
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03,ok,1,1,1,,2024-07-04 08:00:00,,,23.6065542186387,-93.19027915351009,auto_first_population_window,auto_centroid_abs_n_difference
+hurricane_debby_across_florida_and_georgia_us,ok,1,1,1,,2024-08-07 08:00:00,,,38.74190601428296,-79.40960229714241,auto_first_population_window,auto_centroid_abs_n_difference
+spain_flood,ok,1,1,1,,2024-10-30 08:00:00,,,39.77314944834757,-0.8337316517927877,auto_first_population_window,auto_centroid_abs_n_difference
+mountain_fire_in_california,ok,1,1,1,,2024-11-08 08:00:00,,,34.34460317598315,-118.37343516525412,auto_first_population_window,auto_centroid_abs_n_difference
+cambodia_monsoon_season_study_2024_05_09,ok,1,1,1,,2024-05-09 08:00:00,,,11.729791048085122,105.05276060577853,auto_first_population_window,auto_centroid_abs_n_difference
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,ok,1,1,1,,2024-05-09 08:00:00,,,27.273780769915806,80.47511354806211,auto_first_population_window,auto_centroid_abs_n_difference
+pakistan_monsoon_season_study_sindh_2024_05_09,ok,1,1,1,,2024-05-09 08:00:00,,,25.570588372256466,67.70511451446721,auto_first_population_window,auto_centroid_abs_n_difference
+typhoon_nika_across_northern_luzon_philippines,ok,1,1,1,,2024-11-12 08:00:00,,,14.479763585950538,121.47353063849137,auto_first_population_window,auto_centroid_abs_n_difference
