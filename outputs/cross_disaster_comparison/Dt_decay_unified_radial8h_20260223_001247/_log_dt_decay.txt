@@ -1,0 +1,8 @@
+/mnt/e/newdesktop/Disaster/src/disaster/dt_decay.py:462: OptimizeWarning: Covariance of the parameters could not be estimated
+  popt, _ = curve_fit(
+/mnt/e/newdesktop/Disaster/src/disaster/dt_decay.py:462: OptimizeWarning: Covariance of the parameters could not be estimated
+  popt, _ = curve_fit(
+/mnt/e/newdesktop/Disaster/src/disaster/dt_decay.py:462: OptimizeWarning: Covariance of the parameters could not be estimated
+  popt, _ = curve_fit(
+/mnt/e/newdesktop/Disaster/src/disaster/dt_decay.py:462: OptimizeWarning: Covariance of the parameters could not be estimated
+  popt, _ = curve_fit(

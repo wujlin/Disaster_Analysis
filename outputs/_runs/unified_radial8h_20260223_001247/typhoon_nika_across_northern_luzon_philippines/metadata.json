@@ -1,0 +1,21 @@
+{
+  "slug": "typhoon_nika_across_northern_luzon_philippines",
+  "name": "Typhoon Nika Across Northern Luzon, Philippines",
+  "event_type": "typhoon",
+  "data_root": "datasets/staged/typhoon_nika_across_northern_luzon_philippines",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-11-12 08:00:00",
+  "t0_method": "auto_first_population_window",
+  "t0_file": "population_2024-11-12_0800.csv",
+  "track_anchor_ok": 0,
+  "t0_snap_ok": 0,
+  "t0_snap_window_pt": "",
+  "t0_snap_delta_hours": NaN,
+  "center_lat": 14.479763585950538,
+  "center_lon": 121.47353063849137,
+  "center_method": "auto_centroid_abs_n_difference",
+  "center_source_window_pt": "2024-11-12 08:00:00",
+  "center_source_file": "population_2024-11-12_0800.csv",
+  "first_population_window_pt": "2024-11-12 08:00:00",
+  "first_population_window_file": "population_2024-11-12_0800.csv"
+}

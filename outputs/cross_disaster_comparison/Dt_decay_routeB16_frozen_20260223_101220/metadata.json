@@ -1,0 +1,42 @@
+{
+  "output_root": "outputs/_runs/routeB16_frozen_radial_20260223_101220",
+  "n_events": 16,
+  "r_max_km": 200.0,
+  "near_r_km": 50.0,
+  "min_tiles_overlap": 3,
+  "min_r_bins": 5,
+  "min_near_bins": 2,
+  "peak_min_hours": -16.0,
+  "peak_max_hours": 832.0,
+  "D_peak_min": 0.03,
+  "min_time_windows": 5,
+  "peak_frac": 0.5,
+  "near_thresh": 0.02,
+  "mono_tol_up": 1.05,
+  "route_b_min_n_mono": 3,
+  "route_b_low_r2_threshold": 0.6,
+  "route_b_exclude_slugs": [
+    "hurricane_melissa_aftermath_2025_11_03",
+    "the_flooding_across_rio_grande_do_sul_state_brazil"
+  ],
+  "route_b_teach_highlight_slugs": [],
+  "slugs": [
+    "flooding_in_central_and_eastern_europe_sept_16_2024",
+    "hurricane_beryl_across_quintana_roo_and_yucatan_mexico",
+    "hurricane_beryl_across_southeastern_texas_us",
+    "hurricane_beryl_pre_landfall_2024",
+    "hurricane_john_across_southeastern_guerrero_mexico",
+    "hurricane_john_southern_mexico_25_september_2024",
+    "hurricane_milton_across_florida_us",
+    "moldova_flooding_2024",
+    "spain_flood",
+    "the_earthquake_across_central_mexico",
+    "the_flooding_across_bagmati_and_koshi_provinces_nepal",
+    "the_flooding_across_eastern_bangladesh",
+    "the_flooding_across_gujarat_india",
+    "turkiye_earthquake_2023",
+    "typhoon_yagi_across_northeastern_vietnam",
+    "wildfires_in_boise_county_idaho_27_august_2024"
+  ],
+  "exclude_slugs": []
+}
