@@ -364,6 +364,7 @@ def _prepare_events(
     peak_window_hours: float,
     use_track_center_at_peak: bool,
     allow_track_extrapolation: bool,
+    allow_auto_fallback: bool,
     require_all_events: bool,
 ) -> tuple[list[EventPrepared], pd.DataFrame, list[str]]:
     prepared: list[EventPrepared] = []
@@ -400,7 +401,10 @@ def _prepare_events(
         row["has_catalog"] = 1
 
         try:
-            t0_pt, c_lat, c_lon, auto_meta = auto_t0_and_center(spec)
+            t0_pt, c_lat, c_lon, auto_meta = auto_t0_and_center(
+                spec,
+                allow_auto_fallback=bool(allow_auto_fallback),
+            )
         except Exception as e:
             row["note"] = f"auto_t0_and_center_failed:{type(e).__name__}:{e}"
             avail_rows.append(row)
@@ -890,6 +894,7 @@ def run(
     long_distance_km: float = 50.0,
     use_track_center_at_peak: bool = True,
     allow_track_extrapolation: bool = False,
+    allow_auto_fallback: bool = False,
     return_fit_min_h: float = 24.0,
     return_fit_max_h: float = 120.0,
     require_all_events: bool = False,
@@ -920,6 +925,7 @@ def run(
         peak_window_hours=float(peak_window_hours),
         use_track_center_at_peak=bool(use_track_center_at_peak),
         allow_track_extrapolation=bool(allow_track_extrapolation),
+        allow_auto_fallback=bool(allow_auto_fallback),
         require_all_events=bool(require_all_events),
     )
     avail_df.to_csv(tables_dir / "movement_data_availability.csv", index=False)
@@ -987,6 +993,7 @@ def run(
         "long_distance_km": float(long_distance_km),
         "use_track_center_at_peak": bool(use_track_center_at_peak),
         "allow_track_extrapolation": bool(allow_track_extrapolation),
+        "allow_auto_fallback": bool(allow_auto_fallback),
         "return_fit_min_h": float(return_fit_min_h),
         "return_fit_max_h": float(return_fit_max_h),
         "require_all_events": bool(require_all_events),
@@ -1010,6 +1017,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     p.add_argument("--use-track-center-at-peak", type=int, choices=[0, 1], default=1)
     p.add_argument("--allow-track-extrapolation", type=int, choices=[0, 1], default=0)
+    p.add_argument(
+        "--allow-auto-fallback",
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help="是否允许 auto t0/center fallback（0=禁用，严格要求 catalog 显式给定；1=允许）",
+    )
     p.add_argument("--return-fit-min-h", type=float, default=24.0)
     p.add_argument("--return-fit-max-h", type=float, default=120.0)
     p.add_argument("--require-all-events", type=int, choices=[0, 1], default=0)
@@ -1032,6 +1046,7 @@ def cli_main() -> None:
         long_distance_km=float(args.long_distance_km),
         use_track_center_at_peak=bool(args.use_track_center_at_peak),
         allow_track_extrapolation=bool(args.allow_track_extrapolation),
+        allow_auto_fallback=bool(args.allow_auto_fallback),
         return_fit_min_h=float(args.return_fit_min_h),
         return_fit_max_h=float(args.return_fit_max_h),
         require_all_events=bool(args.require_all_events),

@@ -1,75 +1,132 @@
-Plan: 基于 Quadkey 层级聚合的子区域分析
-核心发现：Quadkey 就是现成的地理区划
-Quadkey 是 Bing Maps 的四叉树编码，14 位字符 = Level 14。截断前缀 = 空间粗化：
+Partner Prompt: 参数整理 + 三 Batch 全量重跑
+一、背景与目标
+我们的核心发现（event-level α vs δ_near）在新数据上崩溃了（ρ 从 −0.53 变成 +0.04），根因是 pipeline 中存在大量隐式决策（auto-inferred t₀/center、15 个硬编码阈值、单调截断策略）。这次重跑的目标不是"让结果变好"，而是建立一条可解释、可复现、对阈值选择不敏感的分析管线。
 
-截断位数	对应 Level	近似尺度	每个父 tile 含子 tile
-14 位（原始）	L14	~2.4 km	1
-12 位	L12	~10 km	4
-10 位	L10	~40 km	16
-8 位	L8	~150 km	256
-实现只需一行：df["geo_unit"] = df["quadkey"].str[:10]——不需要 GADM、不需要 geopandas、不需要空间 join。
+二、任务 A：参数整理
+A1. 创建统一配置文件
+新建 Docs/analysis_config.yaml（或 .json），集中管理所有分析参数。结构建议：
 
-可行性判断
-维度	评估
-数据量	Türkiye 地震单窗口 ~31,000 tiles → Level 10 约 ~1,900 个 geo unit → 其中人口密集区有效单元约数百个。16 个事件合计可能产出 1,000–3,000 个有效子区域
-信噪比	Level 10 (40 km) 每个单元含 ~16 个 L14 tile，人口聚合后噪声可接受；Level 12 (10 km) 只有 4 个 tile，对稀疏区域太小
-代码改动	Pipeline 已有 tile-level 面板处理（population_relaxation.py 做逐 tile φ(t) 拟合），扩展到 quadkey-L10 聚合约 100–200 行新代码
-Quadkey→坐标	需要写一个 ~20 行的 quadkey_to_latlon() 解码函数（Bing Maps 文档有标准算法），用于计算聚合单元的中心坐标
-建议的分析层级：Level 10 (~40 km)
-理由：
+# ── 空间范围 ──
+r_max_km: 200          # D(t) 汇总的最大距离
+near_r_km: 50          # δ_near 近场定义半径
+min_tiles_per_bin: 3   # 每个环带最少 tile 数
+min_r_bins_per_step: 5 # 每个时间步最少环带数
 
-与当前 
-δ
-near
-δ 
-near
-​
-  的 50 km 近场半径在同一数量级，物理直觉一致
-聚合 16 个 L14 tile 后信噪比可接受
-每个事件产出 ~50–200 个有效 geo unit（取决于灾害空间范围和人口密度）
-科学上能回答什么问题？
-这是与当前 event-level 分析互补的视角：
+# ── 时间范围 ──
+t_fit_start_hours: 24  # post-peak 拟合起点
 
-当前分析（event-level）	子区域分析（geo-unit-level）
-"不同灾难之间，空间形态预测恢复速度"	"同一灾难内，不同位置的恢复速度是否系统性地依赖距离/局部位移强度？"
-n
-=
-16
-n=16，跨灾害泛化	
-n
-=
-n=数百–数千，within-event 空间精细结构
-测试宏观 scaling law	测试 PDE 模型的空间预测能力（不仅预测整体 
-α
-α，还预测 
-α
-(
-r
-)
-α(r)）
-最有价值的子区域分析：把 PDE 模型的预测从 event-level 延伸到 spatial-level——模型不仅预测"Türkiye 地震整体恢复慢"，还能预测"距震中 30 km 的区域比 100 km 的区域恢复更慢/更快"。如果这能 work，是一个很强的 validation。
+# ── 拟合策略 ──
+fit_method: "full_post_peak"  # "full_post_peak" | "monotone_truncated"
+# 如果 fit_method == "monotone_truncated"，以下才生效：
+mono_tol_up: 1.05
+min_n_mono: 3
 
-Steps
-写 quadkey_to_latlon() 工具函数：在 geo.py 中添加，~20 行，将 14 位 quadkey 解码为 tile 中心 (lat, lon)。
-写子区域聚合模块：新建 src/disaster/geo_unit_analysis.py，实现 quadkey 截断 → 分组聚合 → 计算每个 geo unit 的 
-D
-(
+# ── 事件筛选（仅数据质量） ──
+min_post_peak_steps: 4   # post-peak 至少 N 个时间步才拟合
+# 注意：不再使用 D_peak_min 硬阈值，改为信噪比标准（见下）
+snr_threshold: null       # 如需启用：D_peak / std(D_baseline) >= k
+
+# ── 以下参数已废弃，不再使用 ──
+# near_thresh: 0.02      → 删除（EVAC/INFL 分类改为描述性语言，不参与统计）
+# peak_frac: 0.5         → 删除（δ_near 只在 peak 时刻计算）
+# r2_plot_threshold: 0.6 → 删除（移到绑图脚本内）
+# route_b_exclude_slugs  → 删除（排除理由写入 catalog 的 exclude_reason 列）
+# high_freq_thresh: 16   → 删除（统一用 only_hour=8）
+
+A2. 修改 dt_decay.py 的入口
+入口函数从函数签名读取参数 → 改为从 config 文件读取
+运行时自动将完整 config dump 到 outputs/.../metadata.json
+关键：禁用所有 auto-fallback。 如果某事件的 t₀ 或 center 在 catalog 中为空，直接报错 raise ValueError(f"{slug}: t0/center missing in catalog")，不再静默推断
+A3. 事件 catalog 整理
+在 cross_disaster_catalog_routeB16_frozen.csv（或新建一份干净的 catalog）中：
+
+为每个事件补全 t0_pt 和 center_lat/center_lon，附上外部来源
+新增以下列：
+t0_source: 如 "USGS event page", "NHC advisory #12", "首个 FBDM 窗口"
+center_source: 如 "USGS epicenter", "NHC best track landfall", "FBDM |n_diff| weighted centroid"
+exclude_reason: 空 = 不排除；非空 = 排除理由（如 "aftermath event, non-independent from melissa_10_27"）
+目标：catalog 中零个缺失字段。 每个值都有明确来源
+三、任务 B：全段拟合 vs 截断拟合对比实验
+这是最关键的方法学决策。在做全量重跑之前，先用当前 13 个 Route B 事件做一个轻量对比：
+
+B1. 实验设计
+对每个事件，用相同的 post-peak 数据（
 t
-)
-D(t)、
-ϕ
-(
+′
+≥
+24
+h
+t 
+′
+ ≥24h 到观测结束）分别计算：
+
+方法	数据段	拟合方式
+α_mono	单调截断段（当前逻辑，tol=1.05）	log-log OLS
+α_full	全部 post-peak（不截断）	log-log OLS
+α_full_wls	全部 post-peak（不截断）	加权 log-log（权重 
+1
+/
 t
-)
-ϕ(t) 时间序列。
-对每个 geo unit 拟合 
-α
-α：复用现有的衰减拟合逻辑（relaxation_fit.py），设定最低 tile 数阈值（如 ≥5 个有效 L14 tile）。
-分析 
-α
-α 的空间分布：
-α
-α vs 距灾害中心距离、vs 局部 
-δ
-δ 值，用 mixed-effects model 控制 event 随机效应以处理非独立性。
-与主分析对接：如果子区域分析支持 event-level 结论，作为 SI 或 Fig S 呈现；如果发现新 pattern，评估是否纳入主文。
+′
+1/t 
+′
+ ，给早期数据更多权重）
+B2. 输出
+生成一张对比表 outputs/.../alpha_truncation_comparison.csv：
+
+slug, alpha_mono, n_mono, alpha_full, n_full, alpha_full_wls, r2_mono, r2_full, r2_full_wls
+
+加上汇总统计：
+
+Pearson(α_mono, α_full), Pearson(α_mono, α_full_wls)
+符号翻转的事件数
+最大绝对差异
+B3. 决策规则
+如果 Pearson(α_mono, α_full) > 0.90 且零符号翻转 → 采用 α_full，删除截断逻辑
+如果差异大 → 检查哪些事件差异最大，分析原因（是否有明显的 rebound？rebound 是真实物理还是噪声？）
+四、任务 C：三 Batch 全量重跑
+在 A 和 B 完成后，用整理好的 config + 干净 catalog + 确定的拟合策略，重跑完整分析。
+
+C1. 运行顺序1. 主分析（event-level）
+   scripts/dt_decay.py --config Docs/analysis_config.yaml --catalog <干净catalog>
+   → 输出：Dt_all_events.csv, sample_flags.csv, alpha_delta_spearman.csv
+
+2. 子区域分析（geo-unit L10）
+   scripts/geo_unit_analysis.py --config ... --catalog ...
+   → 输出：pooled_correlations.csv, mixed_effects.csv
+
+3. 子区域分析（geo-unit L8，作为 sensitivity）
+   同上，quadkey_level=8
+
+4. PDE 实验（如果子区域结果成立）
+   后续再定
+C2. 核心输出检查清单
+重跑完成后，提供以下诊断表：
+
+检查项	文件	关注什么
+事件入选流水	sample_flags.csv	多少事件通过每一步筛选？与旧结果差异？
+Event-level α vs δ_near	alpha_delta_spearman.csv	ρ, p, n
+Event-level α vs D_peak	同上或新表	ρ, p, n
+Event-level α vs D_inf	alpha_dinf_spearman.csv	ρ, p, n
+Geo-unit mixed-effects	mixed_effects_alpha_unit.csv	β(δ_peak_unit), z, p
+Geo-unit pooled + demeaned	pooled_unit_correlations.csv	ρ, p（raw + within-event）
+Config 快照	metadata.json	确认所有参数与 config 一致
+
+C3. Sensitivity analysis（如果核心结果成立）
+对 5 个保留参数做 
+3
+2
+3 
+2
+ （先做最重要的两个）的 sensitivity：
+
+参数	扫描值
+near_r_km	30, 50, 80
+r_max_km	150, 200, 300
+共 9 种组合，对每种重跑 geo-unit mixed-effects，输出 β 和 p 的 9 格表。如果时间允许再加 t_fit_start ∈ {16, 24, 48} 和 min_tiles ∈ {3, 5} 扩展到更多组合。
+
+五、注意事项
+不要追求"让 event-level ρ 变显著"。 如果 n=13 的事件级信号不稳健，那就是不稳健——我们转向子区域分析不是因为它"更好看"，而是因为它有 ~1800 个数据点和 mixed-effects 控制，统计上更可靠
+每步都保留完整中间输出。 不要只存最终表，把 D(t) 时间序列、逐事件的拟合曲线都存下来，方便事后诊断
+如果发现新的 auto-fallback 或 magic number，直接在 config 里加参数并标注，不要在代码里硬编码新的默认值
+Catalog 中的 exclude_reason 只能基于数据质量或物理理由（如"非独立事件"、"多阶段洪水"），不能基于"排除后 p 值变小"

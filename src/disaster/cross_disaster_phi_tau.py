@@ -283,10 +283,21 @@ def _weighted_centroid(lat: np.ndarray, lon: np.ndarray, w: np.ndarray) -> tuple
     return float(np.sum(lat[mask] * ww) / ww_sum), float(np.sum(lon[mask] * ww) / ww_sum)
 
 
-def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, dict]:
+def auto_t0_and_center(spec: DisasterSpec, *, allow_auto_fallback: bool = True) -> tuple[pd.Timestamp, float, float, dict]:
     """
     返回：(t0_pt, center_lat, center_lon, metadata_dict)
     """
+
+    if not bool(allow_auto_fallback):
+        missing_fields: list[str] = []
+        if spec.t0_pt is None:
+            missing_fields.append("t0_pt")
+        if spec.center_lat is None or spec.center_lon is None:
+            missing_fields.append("center_lat/center_lon")
+        if missing_fields:
+            raise ValueError(
+                f"{spec.slug}: strict 模式禁用 auto fallback，catalog 必须显式提供 {', '.join(missing_fields)}"
+            )
 
     windows = _list_population_windows(spec.data_root, only_hour_pt=int(spec.only_hour_pt))
     first = windows[0]
@@ -425,6 +436,12 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
         except Exception:
             pass
 
+    fallback_used = bool(str(t0_method).startswith("auto_") or str(center_method).startswith("auto_"))
+    if (not bool(allow_auto_fallback)) and fallback_used:
+        raise ValueError(
+            f"{spec.slug}: strict 模式禁用 auto fallback，但检测到 t0_method={t0_method}, center_method={center_method}"
+        )
+
     meta = {
         "slug": spec.slug,
         "name": spec.name,
@@ -444,6 +461,8 @@ def auto_t0_and_center(spec: DisasterSpec) -> tuple[pd.Timestamp, float, float, 
         "center_source_file": str(center_source_file.name) if center_source_file is not None else "",
         "first_population_window_pt": str(first_ts),
         "first_population_window_file": str(Path(first["path"]).name),
+        "allow_auto_fallback": int(bool(allow_auto_fallback)),
+        "fallback_used": int(fallback_used),
     }
     return t0_pt, float(center_lat), float(center_lon), meta
 
@@ -496,11 +515,12 @@ def run_one(
     plot_times_hours: tuple[float, ...],
     phase_eps: float,
     phase_times_hours: tuple[float, ...],
+    allow_auto_fallback: bool = True,
 ) -> tuple[pd.DataFrame, dict]:
     out = _output_dirs(output_root, spec.slug)
     _ensure_dir(out.root)
 
-    t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec)
+    t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec, allow_auto_fallback=bool(allow_auto_fallback))
     (out.root / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # Step 1: population redistribution
@@ -604,6 +624,13 @@ def cli_main() -> None:
     parser.add_argument("--plot-times-hours", type=float, nargs="*", default=[16, 40, 88, 160, 832], help="每个灾难输出 φ(r) 曲线的时间点（取 nearest）")
     parser.add_argument("--phase-eps", type=float, default=0.05, help="三相分离判定阈值 eps（phi 与 1 的差）")
     parser.add_argument("--phase-times-hours", type=float, nargs="*", default=[16, 40, 88, 160, 832], help="三相分离判定用的时间点（取 nearest）")
+    parser.add_argument(
+        "--allow-auto-fallback",
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help="是否允许 auto t0/center fallback（0=禁用，严格要求 catalog 显式给定；1=允许）",
+    )
     args = parser.parse_args()
 
     specs = load_catalog(args.catalog)
@@ -621,6 +648,7 @@ def cli_main() -> None:
             plot_times_hours=tuple(float(x) for x in args.plot_times_hours),
             phase_eps=float(args.phase_eps),
             phase_times_hours=tuple(float(x) for x in args.phase_times_hours),
+            allow_auto_fallback=bool(args.allow_auto_fallback),
         )
         all_fit.append(fit_df)
         phases.append(phase)

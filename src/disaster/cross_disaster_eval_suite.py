@@ -136,6 +136,7 @@ def run_suite(
     tau_cont_min_points: int,
     nonparam_bootstrap: int,
     nonparam_permutation: int,
+    allow_auto_fallback: bool,
 ) -> None:
     specs = load_catalog(catalog)
     _ensure_dir(summary_dir)
@@ -182,7 +183,10 @@ def run_suite(
         out = _out_dirs(output_root, spec.slug)
         _ensure_dir(out.root)
 
-        t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec)
+        t0_pt, center_lat, center_lon, meta = auto_t0_and_center(
+            spec,
+            allow_auto_fallback=bool(allow_auto_fallback),
+        )
         (out.root / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
         print(f"[eval_suite] {spec.slug}: population_redistribution")
@@ -477,6 +481,13 @@ def cli_main() -> None:
     parser.add_argument("--tau-cont-min-points", type=int, default=20, help="连续 τ(r) 单 tile 最少点数")
     parser.add_argument("--nonparam-bootstrap-samples", type=int, default=2000, help="非参数检验 bootstrap 次数")
     parser.add_argument("--nonparam-permutation-samples", type=int, default=5000, help="非参数检验 permutation 次数")
+    parser.add_argument(
+        "--allow-auto-fallback",
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help="是否允许 auto t0/center fallback（0=禁用，严格要求 catalog 显式给定；1=允许）",
+    )
     args = parser.parse_args()
 
     run_suite(
@@ -492,6 +503,7 @@ def cli_main() -> None:
         tau_cont_min_points=int(args.tau_cont_min_points),
         nonparam_bootstrap=int(args.nonparam_bootstrap_samples),
         nonparam_permutation=int(args.nonparam_permutation_samples),
+        allow_auto_fallback=bool(args.allow_auto_fallback),
     )
 
 

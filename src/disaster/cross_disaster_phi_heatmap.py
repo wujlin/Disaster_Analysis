@@ -34,6 +34,7 @@ class Config:
     track_gap_factor: float = 1.5
     slugs: tuple[str, ...] = ()
     on_error: str = "fail"  # fail | skip
+    allow_auto_fallback: int = 0
 
 
 def _ensure_dir(p: Path) -> None:
@@ -63,7 +64,10 @@ def run(cfg: Config, *, max_files: int | None = None) -> None:
             continue
 
         try:
-            t0_pt, center_lat, center_lon, meta = auto_t0_and_center(spec)
+            t0_pt, center_lat, center_lon, meta = auto_t0_and_center(
+                spec,
+                allow_auto_fallback=bool(cfg.allow_auto_fallback),
+            )
         except (FileNotFoundError, SystemExit, ValueError) as e:
             msg = str(e)
             out_dir = cfg.output_root / spec.slug / "phi_heatmap"
@@ -160,6 +164,13 @@ def cli_main() -> None:
         default="fail",
         help="错误策略：fail=遇到错误立即停止（默认）；skip=写SKIPPED并继续下一个事件",
     )
+    parser.add_argument(
+        "--allow-auto-fallback",
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help="是否允许 auto t0/center fallback（0=禁用，严格要求 catalog 显式给定；1=允许，默认 0）",
+    )
     args = parser.parse_args()
 
     cfg = Config(
@@ -180,6 +191,7 @@ def cli_main() -> None:
         track_gap_factor=float(args.track_gap_factor),
         slugs=tuple(str(s) for s in args.slugs) if args.slugs else (),
         on_error=str(args.on_error),
+        allow_auto_fallback=int(args.allow_auto_fallback),
     )
     run(cfg, max_files=int(args.max_files) if args.max_files is not None else None)
 

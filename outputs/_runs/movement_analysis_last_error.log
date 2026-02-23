@@ -4,7 +4,7 @@ Traceback (most recent call last):
   File "/Users/jinlin/Desktop/project/Disaster_Analysis/scripts/movement_analysis.py", line 27, in main
     cli_main()
     ~~~~~~~~^^
-  File "/Users/jinlin/Desktop/project/Disaster_Analysis/src/disaster/movement_analysis.py", line 968, in cli_main
+  File "/Users/jinlin/Desktop/project/Disaster_Analysis/src/disaster/movement_analysis.py", line 1034, in cli_main
     args = build_arg_parser().parse_args()
   File "/Users/jinlin/miniconda3/lib/python3.13/argparse.py", line 1898, in parse_args
     args, argv = self.parse_known_args(args, namespace)
