@@ -1,0 +1,15 @@
+slug,short_name,disaster_type,event_type,fit_method,n_pts,best_model,BIC_power,BIC_exp,BIC_strexp,dBIC_power,dBIC_exp,dBIC_strexp,alpha_power,tau_exp,tau_strexp,beta_strexp
+flooding_in_central_and_eastern_europe_sept_16_2024,flooding_in_central_an,flood,INFL,monotone_truncated,6,power_law,-44.469538285320425,-37.6056025406246,-40.42879702359477,0.0,6.863935744695823,4.040741261725657,-0.015295966997931527,1999.9999999875208,1999.999787723375,0.010000000000000002
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,hurricane,EVAC,monotone_truncated,6,stretched_exp,-49.68651509895294,-48.46034695295945,-53.47629416401877,3.7897790650658294,5.01594721105932,0.0,0.6935234005191927,79.65523263949642,22.278084610747523,0.4682648861063458
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,hurricane,EVAC,monotone_truncated,5,stretched_exp,-40.00173680644927,-39.16077874493761,-42.84004676060862,2.8383099541593495,3.6792680156710134,0.0,0.7263683798242553,93.7496521378024,1.1747047511100472,0.27387739065749034
+hurricane_john_across_southeastern_guerrero_mexico,john_gue,hurricane,EVAC,monotone_truncated,1,,,,,,,,,,,
+hurricane_john_southern_mexico_25_september_2024,john_sm,hurricane,EVAC,monotone_truncated,7,power_law,-49.498727221525606,-37.04129679601106,-43.897141005917646,0.0,12.457430425514545,5.601586215607959,0.6366046023991513,102.51266381236465,1.1059343310252103,0.24245756486502537
+hurricane_milton_across_florida_us,milton_fl,hurricane,INFL,monotone_truncated,2,,,,,,,,,,,
+moldova_flooding_2024,moldova,flood,EVAC,monotone_truncated,3,exponential,-19.261707508715432,-20.054343903580786,-18.231606129500726,0.7926363948653545,0.0,1.8227377740800605,0.06664439901224124,547.1830561830576,1999.9999999999998,0.10582630210800029
+spain_flood,spain_flood,flood,INFL,monotone_truncated,4,exponential,-34.36841700274484,-44.99435686069632,-33.955627567859246,10.62593985795148,0.0,11.038729292837075,0.08533903373326233,576.8846221203968,1999.9999999999998,0.15861798400424607
+the_flooding_across_bagmati_and_koshi_provinces_nepal,nepal_fld,flood,EVAC,monotone_truncated,5,stretched_exp,-27.19885997083175,-38.26001575822092,-40.61698234890924,13.418122378077488,2.356966590688316,0.0,0.7258079730000978,48.51706839691229,23.102711624654155,0.6320886595927626
+the_flooding_across_eastern_bangladesh,bangladesh_fld,flood,EVAC,monotone_truncated,6,stretched_exp,-28.971173054320886,-29.21680694698769,-33.46366991408888,4.492496859767996,4.246862967101194,0.0,0.5705468724845298,75.27124104927184,4.881574981564849,0.3365149395681207
+the_flooding_across_gujarat_india,gujarat_fld,flood,EVAC,monotone_truncated,2,,,,,,,,,,,
+turkiye_earthquake_2023,turkiye,earthquake,INFL,monotone_truncated,2,,,,,,,,,,,
+typhoon_yagi_across_northeastern_vietnam,yagi_vn,typhoon,EVAC,monotone_truncated,5,stretched_exp,-31.5261918622732,-48.876907171765914,-49.08002894788508,17.55383708561188,0.20312177611916837,0.0,0.5396973100709748,96.22154089490938,91.31467976979604,0.9119765369928051
+wildfires_in_boise_county_idaho_27_august_2024,boise_fire,wildfire,INFL,monotone_truncated,2,,,,,,,,,,,

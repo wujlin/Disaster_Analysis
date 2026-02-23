@@ -1,0 +1,8 @@
+window_start_pt,hours_since_quake,center_lat,center_lon,center_mode,center_used_for_distance,center_extrapolated,center_extrapolation_side,center_track_time_min_pt,center_track_time_max_pt,distance_mode,center_track_csv,center_track_to_tz,center_track_storm_name,path_track_points_used,path_track_length_km,path_distance_method,path_track_clip_ok,path_track_clip_kind,path_track_clip_start_pt,path_track_clip_end_pt,path_track_clip_pad_hours,path_track_clip_spatial_radius_km,path_track_points_total,path_track_length_total_km,path_track_keep_time_points,path_track_keep_spatial_points,path_track_keep_both_points,path_track_length_ratio_to_rmax,path_track_length_total_ratio_to_rmax,path_track_anchor_ok,path_track_anchor_pt,path_track_anchor_method,path_track_anchor_status
+2024-10-01 08:00:00,179.75,16.6,-98.9,static,1,0,,,,radial,,America/Los_Angeles,,0,,,0,,,,,,0,,0,0,0,,,0,,,
+2024-10-02 08:00:00,203.75,16.6,-98.9,static,1,0,,,,radial,,America/Los_Angeles,,0,,,0,,,,,,0,,0,0,0,,,0,,,
+2024-10-03 08:00:00,227.75,16.6,-98.9,static,1,0,,,,radial,,America/Los_Angeles,,0,,,0,,,,,,0,,0,0,0,,,0,,,
+2024-10-04 08:00:00,251.75,16.6,-98.9,static,1,0,,,,radial,,America/Los_Angeles,,0,,,0,,,,,,0,,0,0,0,,,0,,,
+2024-10-05 08:00:00,275.75,16.6,-98.9,static,1,0,,,,radial,,America/Los_Angeles,,0,,,0,,,,,,0,,0,0,0,,,0,,,
+2024-10-06 08:00:00,299.75,16.6,-98.9,static,1,0,,,,radial,,America/Los_Angeles,,0,,,0,,,,,,0,,0,0,0,,,0,,,
+2024-10-07 08:00:00,323.75,16.6,-98.9,static,1,0,,,,radial,,America/Los_Angeles,,0,,,0,,,,,,0,,0,0,0,,,0,,,
