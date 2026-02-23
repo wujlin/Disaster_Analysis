@@ -1,0 +1,2 @@
+/tmp/disaster_008a4f5/src/disaster/dt_decay.py:462: OptimizeWarning: Covariance of the parameters could not be estimated
+  popt, _ = curve_fit(

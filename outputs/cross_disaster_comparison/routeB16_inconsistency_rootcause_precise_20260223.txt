@@ -1,0 +1,13 @@
+RouteB16 不一致根因（精确定位）
+
+结论：old metadata 回放可复现旧 phi_rt_long（当前数据快照一致）；差异来自输入口径漂移（t0/center/窗口小时集）。
+
+掉队事件（old=selected, frozen失效）：
+- hurricane_beryl_pre_landfall_2024: old=True, f8=False, f0816=False, old_n_mono=6, f8_n_mono=6.0, f0816_n_mono=5, old_t_peak=16.0, f8_t_peak=16.0, f0816_t_peak=32.0, tags=F8:near_delta缺失（近场bin不足）；F0816:near_delta缺失（近场bin不足）；元数据漂移:center变化>=10km
+- hurricane_john_across_southeastern_guerrero_mexico: old=True, f8=True, f0816=False, old_n_mono=3, f8_n_mono=3.0, f0816_n_mono=1, old_t_peak=-8.0, f8_t_peak=72.0, f0816_t_peak=200.0, tags=F0816:n_mono<3；元数据漂移:t0变化>=8h；元数据漂移:center变化>=10km
+- hurricane_milton_across_florida_us: old=True, f8=False, f0816=False, old_n_mono=3, f8_n_mono=2.0, f0816_n_mono=2, old_t_peak=64.0, f8_t_peak=0.0, f0816_t_peak=-8.0, tags=F8:n_mono<3；F0816:n_mono<3；元数据漂移:t0变化>=8h；元数据漂移:center变化>=10km
+- moldova_flooding_2024: old=True, f8=True, f0816=False, old_n_mono=4, f8_n_mono=4.0, f0816_n_mono=0, old_t_peak=448.0, f8_t_peak=448.0, f0816_t_peak=648.0, tags=F0816:n_mono<3
+- the_earthquake_across_central_mexico: old=True, f8=False, f0816=True, old_n_mono=4, f8_n_mono=nan, f0816_n_mono=4, old_t_peak=32.0, f8_t_peak=32.0, f0816_t_peak=32.0, tags=F8:时间窗不足(<5)，由 0/8/16 -> 仅08:00 导致
+- the_flooding_across_bagmati_and_koshi_provinces_nepal: old=True, f8=True, f0816=False, old_n_mono=5, f8_n_mono=5.0, f0816_n_mono=0, old_t_peak=-8.0, f8_t_peak=-8.0, f0816_t_peak=336.0, tags=F0816:n_mono<3；元数据漂移:center变化>=10km
+- the_flooding_across_eastern_bangladesh: old=True, f8=False, f0816=True, old_n_mono=5, f8_n_mono=1.0, f0816_n_mono=5, old_t_peak=16.0, f8_t_peak=16.0, f0816_t_peak=8.0, tags=F8:n_mono<3；元数据漂移:center变化>=10km
+- the_flooding_across_gujarat_india: old=True, f8=True, f0816=False, old_n_mono=6, f8_n_mono=6.0, f0816_n_mono=2, old_t_peak=16.0, f8_t_peak=16.0, f0816_t_peak=128.0, tags=F0816:n_mono<3；元数据漂移:center变化>=10km
