@@ -1,0 +1,18 @@
+{
+  "catalog": "Docs/cross_disaster_catalog_extended_mnt_existing_only.csv",
+  "output_root": "outputs",
+  "dt_flags_csv": "outputs/cross_disaster_comparison/_tmp_flags_all42.csv",
+  "n_selected_events": 42,
+  "n_preprocess_ok_events": 42,
+  "n_fit_events": 34,
+  "quadkey_level": 10,
+  "geo_center_mode": "quadkey",
+  "min_tiles_per_unit": 5,
+  "min_hours": -16.0,
+  "max_hours": 832.0,
+  "fit_min_tprime_hours": 24.0,
+  "min_mono_points": 3,
+  "mono_tol_up": 1.05,
+  "run_mixed_effects": 1,
+  "strict_mixed_effects": 1
+}
