@@ -1,0 +1,4 @@
+t_start_hours,t_end_hours,duration_hours,n_windows
+96.0,96.0,0.0,1
+128.0,128.0,0.0,1
+200.0,200.0,0.0,1

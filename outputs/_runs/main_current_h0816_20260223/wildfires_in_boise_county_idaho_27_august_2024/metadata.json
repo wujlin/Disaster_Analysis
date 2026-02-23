@@ -1,0 +1,21 @@
+{
+  "slug": "wildfires_in_boise_county_idaho_27_august_2024",
+  "name": "Wildfires In Boise County Idaho 27 August 2024",
+  "event_type": "wildfire",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Wildfires In Boise County Idaho 27 August 2024",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-08-27 16:00:00",
+  "t0_method": "provided_exact",
+  "t0_file": "3185865366604215_2024-08-27_0800.csv",
+  "track_anchor_ok": 0,
+  "t0_snap_ok": 1,
+  "t0_snap_window_pt": "2024-08-27 08:00:00",
+  "t0_snap_delta_hours": 8.0,
+  "center_lat": 43.55895047832528,
+  "center_lon": -116.04712583434068,
+  "center_method": "provided",
+  "center_source_window_pt": "2024-08-27 08:00:00",
+  "center_source_file": "3185865366604215_2024-08-27_0800.csv",
+  "first_population_window_pt": "2024-08-27 08:00:00",
+  "first_population_window_file": "3185865366604215_2024-08-27_0800.csv"
+}

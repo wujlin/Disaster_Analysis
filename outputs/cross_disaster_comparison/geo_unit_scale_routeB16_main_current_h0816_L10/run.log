@@ -1,0 +1,35 @@
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:1634: UserWarning: Random effects covariance is singular
+  warnings.warn(msg)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:1634: UserWarning: Random effects covariance is singular
+  warnings.warn(msg)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2054: UserWarning: The random effects covariance matrix is singular.
+  warnings.warn(_warn_cov_sing)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2237: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  warnings.warn(msg, ConvergenceWarning)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2245: UserWarning: The random effects covariance matrix is singular.
+  warnings.warn(_warn_cov_sing)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2261: ConvergenceWarning: The Hessian matrix at the estimated parameter values is not positive definite.
+  warnings.warn(msg, ConvergenceWarning)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:1634: UserWarning: Random effects covariance is singular
+  warnings.warn(msg)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2054: UserWarning: The random effects covariance matrix is singular.
+  warnings.warn(_warn_cov_sing)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2237: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+  warnings.warn(msg, ConvergenceWarning)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2245: UserWarning: The random effects covariance matrix is singular.
+  warnings.warn(_warn_cov_sing)
+/home/wujlin/miniconda3/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2261: ConvergenceWarning: The Hessian matrix at the estimated parameter values is not positive definite.
+  warnings.warn(msg, ConvergenceWarning)
+Traceback (most recent call last):
+  File "/mnt/e/newdesktop/Disaster/scripts/geo_unit_analysis.py", line 20, in <module>
+    main()
+    ~~~~^^
+  File "/mnt/e/newdesktop/Disaster/scripts/geo_unit_analysis.py", line 16, in main
+    cli_main()
+    ~~~~~~~~^^
+  File "/mnt/e/newdesktop/Disaster/src/disaster/geo_unit_scale_analysis.py", line 717, in cli_main
+    run(cfg)
+    ~~~^^^^^
+  File "/mnt/e/newdesktop/Disaster/src/disaster/geo_unit_scale_analysis.py", line 613, in run
+    raise ValueError(f"存在事件无可用 geo-unit 拟合结果：{missing_fit}。详见 {tabs/'analysis_availability.csv'}")
+ValueError: 存在事件无可用 geo-unit 拟合结果：['the_earthquake_across_central_mexico']。详见 outputs/cross_disaster_comparison/geo_unit_scale_routeB16_main_current_h0816_L10/tables/analysis_availability.csv

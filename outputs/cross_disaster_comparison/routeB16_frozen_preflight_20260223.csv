@@ -1,0 +1,17 @@
+slug,data_root,root_exists,population_exists,only_hour_pt,n_hour_windows,first_hour_window_pt,last_hour_window_pt,message
+flooding_in_central_and_eastern_europe_sept_16_2024,datasets/staged/flooding_in_central_and_eastern_europe_sept_16_2024,1,1,8,27,2024-09-16 08:00:00,2024-10-12 08:00:00,ok
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,"/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Beryl Across Quintana Roo and Yucatan, Mexico",1,1,8,14,2024-07-05 08:00:00,2024-07-18 08:00:00,ok
+hurricane_beryl_across_southeastern_texas_us,"/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Beryl Across Southeastern Texas, US",1,1,8,15,2024-07-08 08:00:00,2024-07-22 08:00:00,ok
+hurricane_beryl_pre_landfall_2024,/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,1,1,8,32,2024-06-30 08:00:00,2024-07-31 08:00:00,ok
+hurricane_john_across_southeastern_guerrero_mexico,"/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane John Across Southeastern Guerrero, Mexico",1,1,8,7,2024-10-01 08:00:00,2024-10-07 08:00:00,ok
+hurricane_john_southern_mexico_25_september_2024,/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane John Southern Mexico 25 September 2024,1,1,8,15,2024-09-25 08:00:00,2024-10-09 08:00:00,ok
+hurricane_milton_across_florida_us,"/mnt/e/newdesktop/archive/facebook/disaster data/Hurricane Milton Across Florida, US",1,1,8,10,2024-10-10 08:00:00,2024-10-19 08:00:00,ok
+moldova_flooding_2024,/mnt/e/newdesktop/archive/facebook/disaster data/Moldova Flooding Sept 16 2024,1,1,8,28,2024-09-16 08:00:00,2024-10-13 08:00:00,ok
+spain_flood,datasets/staged/spain_flood,1,1,8,10,2024-10-30 08:00:00,2024-11-08 08:00:00,ok
+the_earthquake_across_central_mexico,datasets/The_Earthquake_Across_Central_Mexico,1,1,8,4,2026-01-03 08:00:00,2026-01-07 08:00:00,ok
+the_flooding_across_bagmati_and_koshi_provinces_nepal,"/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding Across Bagmati and Koshi Provinces, Nepal",1,1,8,15,2024-09-27 08:00:00,2024-10-11 08:00:00,ok
+the_flooding_across_eastern_bangladesh,/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding Across Eastern Bangladesh,1,1,8,12,2024-08-25 08:00:00,2024-09-05 08:00:00,ok
+the_flooding_across_gujarat_india,"/mnt/e/newdesktop/archive/facebook/disaster data/The Flooding Across Gujarat, India",1,1,8,8,2024-09-01 08:00:00,2024-09-08 08:00:00,ok
+turkiye_earthquake_2023,/mnt/e/newdesktop/archive/facebook/disaster data/Turkiye Turkey Earthquake Full Country Version Feb 8 2023,1,1,8,94,2023-02-05 08:00:00,2023-05-09 08:00:00,ok
+typhoon_yagi_across_northeastern_vietnam,/mnt/e/newdesktop/archive/facebook/disaster data/Typhoon Yagi Across Northeastern Vietnam,1,1,8,11,2024-09-08 08:00:00,2024-09-18 08:00:00,ok
+wildfires_in_boise_county_idaho_27_august_2024,/mnt/e/newdesktop/archive/facebook/disaster data/Wildfires In Boise County Idaho 27 August 2024,1,1,8,15,2024-08-27 08:00:00,2024-09-10 08:00:00,ok

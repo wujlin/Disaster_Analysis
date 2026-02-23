@@ -1,0 +1,5 @@
+t_start_hours,t_end_hours,duration_hours,n_windows
+24.0,32.0,8.0,2
+56.0,56.0,0.0,1
+72.0,72.0,0.0,1
+120.0,120.0,0.0,1

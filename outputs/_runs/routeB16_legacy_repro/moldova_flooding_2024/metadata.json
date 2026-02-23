@@ -1,0 +1,21 @@
+{
+  "slug": "moldova_flooding_2024",
+  "name": "Moldova Flooding Sept 16 2024",
+  "event_type": "flood",
+  "data_root": "/mnt/e/newdesktop/archive/facebook/disaster data/Moldova Flooding Sept 16 2024",
+  "only_hour_pt": 8,
+  "t0_pt": "2024-09-16 16:00:00",
+  "t0_method": "provided_exact",
+  "t0_file": "3660584867350809_2024-09-16_0800.csv",
+  "track_anchor_ok": 0,
+  "t0_snap_ok": 1,
+  "t0_snap_window_pt": "2024-09-16 08:00:00",
+  "t0_snap_delta_hours": 8.0,
+  "center_lat": 47.18204882486148,
+  "center_lon": 28.55155692929293,
+  "center_method": "provided",
+  "center_source_window_pt": "2024-09-16 08:00:00",
+  "center_source_file": "3660584867350809_2024-09-16_0800.csv",
+  "first_population_window_pt": "2024-09-16 08:00:00",
+  "first_population_window_file": "3660584867350809_2024-09-16_0800.csv"
+}
