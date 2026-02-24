@@ -1,0 +1,5 @@
+funnel_drop_class,funnel_drop_reason,n
+data_quality,excluded_short_from_event_summary,15
+selected,selected,9
+data_quality,data_quality_short_post_peak,5
+analysis_applicability,analysis_n_mono_lt_threshold,3

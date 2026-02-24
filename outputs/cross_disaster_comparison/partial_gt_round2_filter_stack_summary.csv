@@ -1,0 +1,6 @@
+layer,rule,count_in,count_out,dropped,params
+L0_catalog,exclude_reason为空才纳入,42,32,10,exclude_reason
+L1_dt_event_summary,n_time_windows>=5 否则EXCLUDED_SHORT,32,17,15,min_time_windows=5; r<=200; n_tiles_overlap>=3; min_r_bins=5
+L2_fit_quality,n_post_fit>=4,17,12,5,min_post_peak_steps=4; fit_min_tprime_hours=24
+L3_applicability,n_mono>=3 且alpha非空,12,9,3,fit_method=monotone_truncated; mono_tol_up=1.05; route_b_min_n_mono=3
+L4_selected,route_b_selected,9,9,0,route_b_exclude_slugs=none; route_b_low_r2仅影响plot

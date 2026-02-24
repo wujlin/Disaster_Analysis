@@ -1,0 +1,10 @@
+model,spec,predictor,coef,p,n_obs,n_events,status,note
+univariate,alpha_unit ~ delta_peak_unit,delta_peak_unit,-0.0797772393124163,0.1051535394503092,6336,24,ok,ok
+univariate,alpha_unit ~ distance_km,distance_km,2.0727256381026665e-05,0.0790571978421417,6336,24,ok,ok
+univariate,alpha_unit ~ D_peak_unit,D_peak_unit,0.3097036575735689,1.5237011566595787e-06,6336,24,ok,ok
+multivariable,alpha_unit ~ D_peak_unit + distance_km,D_peak_unit,0.3157011109098952,9.786419331730431e-07,6336,24,ok,conditional_on_distance
+multivariable,alpha_unit ~ D_peak_unit + distance_km,distance_km,2.0285884391501408e-05,0.0850724456067049,6336,24,ok,conditional_on_D_peak_or_delta
+multivariable,alpha_unit ~ delta_peak_unit + distance_km,D_peak_unit,,,6336,24,ok,conditional_on_distance
+multivariable,alpha_unit ~ delta_peak_unit + distance_km,distance_km,2.212305152493732e-05,0.0614010632811447,6336,24,ok,conditional_on_D_peak_or_delta
+multivariable,alpha_unit ~ D_peak_unit + delta_peak_unit + distance_km,D_peak_unit,0.3944195150365219,7.1346147453695235e-09,6336,24,ok,conditional_on_distance
+multivariable,alpha_unit ~ D_peak_unit + delta_peak_unit + distance_km,distance_km,2.3166297433000943e-05,0.0495592118884818,6336,24,ok,conditional_on_D_peak_or_delta
