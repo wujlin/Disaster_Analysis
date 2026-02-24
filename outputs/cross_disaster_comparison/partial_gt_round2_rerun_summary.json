@@ -1,0 +1,16 @@
+{
+  "catalog_total_events": 42,
+  "catalog_excluded_unresolved10": 10,
+  "catalog_included_events": 32,
+  "phi_heatmap_events": 32,
+  "metadata_t0_provided_exact": 32,
+  "metadata_center_provided": 32,
+  "geo_timeseries_rows": 305448,
+  "geo_fit_rows": 6336,
+  "geo_events_with_timeseries": 32,
+  "geo_events_with_fit": 24,
+  "geo_events_without_fit": 8,
+  "dt_event_summary_rows": 32,
+  "dt_routeb_flag_rows": 17,
+  "dt_routeb_selected_events": 9
+}
