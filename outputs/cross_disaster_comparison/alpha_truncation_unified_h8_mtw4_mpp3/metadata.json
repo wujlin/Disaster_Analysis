@@ -1,0 +1,14 @@
+{
+  "output_root": "outputs/_runs/unified_static_h8",
+  "dt_flags_csv": "outputs/cross_disaster_comparison/Dt_decay_unified_h8_mtw4_mpp3/tables/Dt_routeB_sample_flags.csv",
+  "n_selected_slugs": 15,
+  "fit_min_tprime_hours": 24.0,
+  "mono_tol_up": 1.05,
+  "r_max_km": 200.0,
+  "near_r_km": 50.0,
+  "min_tiles_overlap": 3,
+  "min_r_bins": 5,
+  "min_near_bins": 2,
+  "peak_min_hours": null,
+  "peak_max_hours": null
+}

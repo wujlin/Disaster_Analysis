@@ -1,0 +1,14 @@
+slug,short_name,disaster_type,event_type,t_peak_hours,D_peak,fit_method,tau50_h,tau50_lower_bound
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,hurricane,EVAC,4.0,0.11862884746395107,monotone_truncated,24.0,0
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,hurricane,EVAC,0.0,0.11204211324221951,monotone_truncated,48.0,0
+hurricane_beryl_pre_landfall_2024,beryl_pre,hurricane,EVAC,39.0,0.15556528440633555,monotone_truncated,192.0,0
+hurricane_debby_across_florida_and_georgia_us,debby_pre,hurricane,NEUTRAL,220.0,0.04765060965446212,monotone_truncated,,0
+hurricane_ernesto_puerto_rico_14_august_2024,ernesto_pr,hurricane,NEUTRAL,48.0,0.14371511940704396,monotone_truncated,120.0,0
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,helene_pre,hurricane,INFL,192.0,0.12817683894994478,monotone_truncated,72.0,1
+hurricane_john_across_southeastern_guerrero_mexico,john_gue,hurricane,INFL,179.75,0.10854471895634694,monotone_truncated,144.0,1
+hurricane_john_southern_mexico_25_september_2024,john_sm,hurricane,INFL,23.0,0.10925354725485996,monotone_truncated,264.0,1
+hurricane_milton_across_florida_us,milton_fl,hurricane,INFL,72.0,0.13109193990737827,monotone_truncated,144.0,1
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,kristine_ph,tropical_storm,NEUTRAL,300.0,0.234820820631025,monotone_truncated,,0
+tropical_storm_yagi_philippines_2_september_2024,yagi_ph,tropical_storm,EVAC,297.0,0.10125879327362504,monotone_truncated,48.0,1
+typhoon_krathon_across_taiwan,krathon_tw,typhoon,INFL,154.33333333333334,0.115149593729162,monotone_truncated,95.99999999999997,1
+typhoon_yagi_across_northeastern_vietnam,yagi_vn,typhoon,EVAC,29.0,0.3108742616638673,monotone_truncated,72.0,0

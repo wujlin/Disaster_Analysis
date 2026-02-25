@@ -1,0 +1,14 @@
+slug,short_name,disaster_type,event_type,fit_method,n_pts,best_model,BIC_power,BIC_exp,BIC_strexp,dBIC_power,dBIC_exp,dBIC_strexp,alpha_power,tau_exp,tau_strexp,beta_strexp
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico,beryl_qr,hurricane,EVAC,monotone_truncated,2,,,,,,,,,,,
+hurricane_beryl_across_southeastern_texas_us,beryl_tx,hurricane,EVAC,monotone_truncated,7,power_law,-55.22613000453419,-39.472610562802465,-48.794658846820994,0.0,15.753519441731726,6.431471157713197,0.5060101860789672,133.9583635099675,1.0000000000000013,0.21250069871765226
+hurricane_beryl_pre_landfall_2024,beryl_pre,hurricane,EVAC,monotone_truncated,3,power_law,-35.23664944822095,-23.97349290582569,-31.142657467925112,0.0,11.263156542395262,4.09399198029584,0.19225395808865214,223.9773672476361,1.0000000000000262,0.12222411455045121
+hurricane_debby_across_florida_and_georgia_us,debby_pre,hurricane,NEUTRAL,monotone_truncated,0,,,,,,,,,,,
+hurricane_ernesto_puerto_rico_14_august_2024,ernesto_pr,hurricane,NEUTRAL,monotone_truncated,5,stretched_exp,-20.022979710906633,-22.75589463880136,-25.426173353940776,5.403193643034143,2.670278715139414,0.0,0.422028864298559,121.06994212840749,121.92075548824047,2.9999999999999996
+hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024,helene_pre,hurricane,INFL,monotone_truncated,2,,,,,,,,,,,
+hurricane_john_across_southeastern_guerrero_mexico,john_gue,hurricane,INFL,monotone_truncated,6,exponential,-46.87889154805606,-48.98953426590974,-45.64925397148592,2.110642717853679,0.0,3.3402802944238204,0.07561424965209117,857.7291428835607,1999.9999999901527,0.11571331983583798
+hurricane_john_southern_mexico_25_september_2024,john_sm,hurricane,INFL,monotone_truncated,2,,,,,,,,,,,
+hurricane_milton_across_florida_us,milton_fl,hurricane,INFL,monotone_truncated,3,stretched_exp,-14.249345878446428,-15.408948022943205,-17.841088049187906,3.591742170741478,2.432140026244701,0.0,0.1747760077878944,219.17963292417107,113.00023260565116,2.9999999999999996
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines,kristine_ph,tropical_storm,NEUTRAL,monotone_truncated,0,,,,,,,,,,,
+tropical_storm_yagi_philippines_2_september_2024,yagi_ph,tropical_storm,EVAC,monotone_truncated,1,,,,,,,,,,,
+typhoon_krathon_across_taiwan,krathon_tw,typhoon,INFL,monotone_truncated,4,power_law,-28.117771186559292,-27.672480563246715,-27.29345939342821,0.0,0.44529062331257663,0.8243117931310806,0.235967818142132,211.25909014819885,186.5988704911571,0.42350302747266966
+typhoon_yagi_across_northeastern_vietnam,yagi_vn,typhoon,EVAC,monotone_truncated,5,stretched_exp,-31.285593150228074,-47.10691958883428,-47.24903552782378,15.963442377595705,0.14211593898949815,0.0,0.5306765641920923,98.01372959330787,92.38449225122527,0.8998532141006983

@@ -1,0 +1,3 @@
+version,center_mode_counts,center_extrapolated_windows,center_lat_std,center_lon_std
+old_round2,"{'track_extrapolated': 10, 'track': 2}",10,0.3328595117244729,0.2012625866570274
+new_unified_static,{'static': 12},0,0.0,2.968550733539209e-14
