@@ -1,0 +1,1 @@
+the_flooding_across_antioquia_and_choc_departments_colombia: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon

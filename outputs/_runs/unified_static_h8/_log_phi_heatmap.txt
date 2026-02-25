@@ -1,0 +1,130 @@
+[cross_disaster_phi_heatmap] hurricane_beryl_across_quintana_roo_and_yucatan_mexico: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_across_quintana_roo_and_yucatan_mexico/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_across_quintana_roo_and_yucatan_mexico/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_beryl_across_southeastern_texas_us: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_across_southeastern_texas_us/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_across_southeastern_texas_us/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_beryl_pre_landfall_2024: computing heatmap...
+[phi_heatmap] processed 20/30 windows...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_pre_landfall_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_pre_landfall_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] hurricane_ernesto_puerto_rico_14_august_2024: 提供的 t0_pt=2024-08-12 08:00:00 与最近窗口差 48.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] hurricane_ernesto_puerto_rico_14_august_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_ernesto_puerto_rico_14_august_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_ernesto_puerto_rico_14_august_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_helene_pre_landfall_gulf_of_mexico_24_september_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] hurricane_john_across_southeastern_guerrero_mexico: 提供的 t0_pt=2024-09-23 20:15:00 与最近窗口差 179.8h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] hurricane_john_across_southeastern_guerrero_mexico: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_john_across_southeastern_guerrero_mexico/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_john_across_southeastern_guerrero_mexico/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_john_southern_mexico_25_september_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_john_southern_mexico_25_september_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_john_southern_mexico_25_september_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] hurricane_milton_across_florida_us: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_milton_across_florida_us/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_milton_across_florida_us/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] line_fire_southern_california_9_september_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/line_fire_southern_california_9_september_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/line_fire_southern_california_9_september_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] moldova_flooding_2024: skipped (moldova_flooding_2024: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_tau][WARNING] park_fire_2024: 提供的 t0_pt=2024-07-24 14:52:00 与最近窗口差 113.1h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] park_fire_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/park_fire_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/park_fire_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] park_fire_california_29_july_2024: 提供的 t0_pt=2024-07-24 14:52:00 与最近窗口差 113.1h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] park_fire_california_29_july_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/park_fire_california_29_july_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/park_fire_california_29_july_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] the_flooding_across_antioquia_and_choc_departments_colombia: skipped (the_flooding_across_antioquia_and_choc_departments_colombia: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_tau][WARNING] the_flooding_across_bagmati_and_koshi_provinces_nepal: 提供的 t0_pt=2024-09-25 20:00:00 与最近窗口差 36.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] the_flooding_across_bagmati_and_koshi_provinces_nepal: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/the_flooding_across_bagmati_and_koshi_provinces_nepal/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/the_flooding_across_bagmati_and_koshi_provinces_nepal/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] the_flooding_across_eastern_bangladesh: skipped (the_flooding_across_eastern_bangladesh: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_heatmap] the_flooding_across_gujarat_india: skipped (the_flooding_across_gujarat_india: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_heatmap] the_flooding_in_benue_and_kogi_states_nigeria: skipped (the_flooding_in_benue_and_kogi_states_nigeria: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_heatmap] the_flooding_in_conakry_city_conakry_guinea: skipped (the_flooding_in_conakry_city_conakry_guinea: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_heatmap] the_wildfires_in_quito_pichincha_province_ecuador: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/the_wildfires_in_quito_pichincha_province_ecuador/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/the_wildfires_in_quito_pichincha_province_ecuador/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] tropical_storm_debby_united_states_pre_landfall_4_august_2024: 提供的 t0_pt=2024-08-02 08:00:00 与最近窗口差 48.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] tropical_storm_debby_united_states_pre_landfall_4_august_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_debby_united_states_pre_landfall_4_august_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_debby_united_states_pre_landfall_4_august_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] tropical_storm_enteng_across_luzon_and_visayas_islands_philippines: 提供的 t0_pt=2024-09-01 23:00:00 与最近窗口差 57.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] tropical_storm_enteng_across_luzon_and_visayas_islands_philippines: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_enteng_across_luzon_and_visayas_islands_philippines/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_enteng_across_luzon_and_visayas_islands_philippines/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] tropical_storm_kristine_in_bicol_and_calabarzon_philippines: 提供的 t0_pt=2024-10-21 20:00:00 与最近窗口差 36.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] tropical_storm_kristine_in_bicol_and_calabarzon_philippines: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_kristine_in_bicol_and_calabarzon_philippines/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_kristine_in_bicol_and_calabarzon_philippines/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] tropical_storm_yagi_philippines_2_september_2024: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_yagi_philippines_2_september_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/tropical_storm_yagi_philippines_2_september_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] turkiye_earthquake_2023: computing heatmap...
+[phi_heatmap] processed 20/36 windows...
+Done. Wrote: outputs/_runs/unified_static_h8/turkiye_earthquake_2023/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/turkiye_earthquake_2023/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] typhoon_krathon_across_taiwan: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/typhoon_krathon_across_taiwan/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/typhoon_krathon_across_taiwan/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] typhoon_yagi_across_northeastern_vietnam: 提供的 t0_pt=2024-09-07 03:00:00 与最近窗口差 29.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] typhoon_yagi_across_northeastern_vietnam: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/typhoon_yagi_across_northeastern_vietnam/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/typhoon_yagi_across_northeastern_vietnam/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] wildfires_in_boise_county_idaho_27_august_2024: skipped (wildfires_in_boise_county_idaho_27_august_2024: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_tau][WARNING] global_earthquake_model_research_2025_sep_18: 提供的 t0_pt=2025-09-18 08:00:00 与最近窗口差 48.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] global_earthquake_model_research_2025_sep_18: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/global_earthquake_model_research_2025_sep_18/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/global_earthquake_model_research_2025_sep_18/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] hurricane_melissa_10_27_2025: 提供的 t0_pt=2025-10-27 08:00:00 与最近窗口差 24.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] hurricane_melissa_10_27_2025: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_melissa_10_27_2025/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_melissa_10_27_2025/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] hurricane_melissa_aftermath_2025_11_03: 提供的 t0_pt=2025-11-03 00:00:00 与最近窗口差 32.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] hurricane_melissa_aftermath_2025_11_03: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_melissa_aftermath_2025_11_03/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_melissa_aftermath_2025_11_03/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] the_earthquake_across_central_mexico: 提供的 t0_pt=2026-01-02 00:00:00 与最近窗口差 32.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] the_earthquake_across_central_mexico: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/the_earthquake_across_central_mexico/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/the_earthquake_across_central_mexico/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] the_earthquake_across_dhaka_division_bangladesh: 提供的 t0_pt=2025-11-21 00:00:00 与最近窗口差 32.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] the_earthquake_across_dhaka_division_bangladesh: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/the_earthquake_across_dhaka_division_bangladesh/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/the_earthquake_across_dhaka_division_bangladesh/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] the_flooding_across_rio_grande_do_sul_state_brazil: computing heatmap...
+[phi_heatmap] processed 20/30 windows...
+Done. Wrote: outputs/_runs/unified_static_h8/the_flooding_across_rio_grande_do_sul_state_brazil/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/the_flooding_across_rio_grande_do_sul_state_brazil/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] flooding_in_central_and_eastern_europe_sept_16_2024: 提供的 t0_pt=2024-09-13 17:00:00 与最近窗口差 63.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] flooding_in_central_and_eastern_europe_sept_16_2024: computing heatmap...
+[phi_heatmap] processed 20/27 windows...
+Done. Wrote: outputs/_runs/unified_static_h8/flooding_in_central_and_eastern_europe_sept_16_2024/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/flooding_in_central_and_eastern_europe_sept_16_2024/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03: 提供的 t0_pt=2024-07-01 17:00:00 与最近窗口差 63.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] hurricane_debby_across_florida_and_georgia_us: 提供的 t0_pt=2024-08-05 04:00:00 与最近窗口差 52.0h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] hurricane_debby_across_florida_and_georgia_us: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_debby_across_florida_and_georgia_us/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/hurricane_debby_across_florida_and_georgia_us/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] spain_flood: 提供的 t0_pt=2024-10-29 07:30:00 与最近窗口差 24.5h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] spain_flood: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/spain_flood/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/spain_flood/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_tau][WARNING] mountain_fire_in_california: 提供的 t0_pt=2024-11-06 08:51:00 与最近窗口差 47.1h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] mountain_fire_in_california: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/mountain_fire_in_california/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/mountain_fire_in_california/phi_heatmap/tables/phi_rt_matrix.csv
+[cross_disaster_phi_heatmap] cambodia_monsoon_season_study_2024_05_09: skipped (cambodia_monsoon_season_study_2024_05_09: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_heatmap] india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar: skipped (india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_heatmap] pakistan_monsoon_season_study_sindh_2024_05_09: skipped (pakistan_monsoon_season_study_sindh_2024_05_09: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon)
+[cross_disaster_phi_tau][WARNING] typhoon_nika_across_northern_luzon_philippines: 提供的 t0_pt=2024-11-10 16:10:00 与最近窗口差 39.8h；若本意是对齐 landfall，请确认该数据集最早窗口是否晚于灾害发生。
+[cross_disaster_phi_heatmap] typhoon_nika_across_northern_luzon_philippines: computing heatmap...
+Done. Wrote: outputs/_runs/unified_static_h8/typhoon_nika_across_northern_luzon_philippines/phi_heatmap/tables/phi_rt_long.csv
+Done. Wrote: outputs/_runs/unified_static_h8/typhoon_nika_across_northern_luzon_philippines/phi_heatmap/tables/phi_rt_matrix.csv

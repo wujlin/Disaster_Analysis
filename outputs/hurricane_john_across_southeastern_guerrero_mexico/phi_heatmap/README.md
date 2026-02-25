@@ -8,8 +8,8 @@
 
 ## 配置
 
- - center: (18.6000, -103.6000)
- - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
+ - center: (16.6000, -98.9000)
+ - center_track_csv: None
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: John
  - distance_mode: radial
@@ -19,7 +19,7 @@
  - path_sector_n: 0
  - track_dt_default_hours: 6.0
  - track_gap_factor: 1.5
- - t0_pt: 2024-09-28 08:00:00
+ - t0_pt: 2024-09-23 20:15:00
  - hours_pt: [0, 8, 16]
 
 ## 输出

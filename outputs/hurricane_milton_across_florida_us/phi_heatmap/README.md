@@ -9,7 +9,7 @@
 ## 配置
 
  - center: (27.3000, -82.6000)
- - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
+ - center_track_csv: None
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Milton
  - distance_mode: radial
@@ -33,4 +33,4 @@
 
 ## 覆盖时间（PT）
 
-- 2024-10-10 00:00:00 → 2024-10-10 08:00:00
+- 2024-10-10 00:00:00 → 2024-10-19 16:00:00

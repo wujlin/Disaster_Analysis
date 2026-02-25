@@ -1,0 +1,5 @@
+未找到 'population' 数据目录。已检查：
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane John Southern Mexico 25 September 2024\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane John Southern Mexico 25 September 2024\raw\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane John Southern Mexico 25 September 2024\Facebook_Population_During_Crisis\raw
+

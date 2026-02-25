@@ -1,0 +1,1 @@
+wildfires_in_boise_county_idaho_27_august_2024: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon

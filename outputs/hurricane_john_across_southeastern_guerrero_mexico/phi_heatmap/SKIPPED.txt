@@ -1,0 +1,5 @@
+未找到 'population' 数据目录。已检查：
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane John Across Southeastern Guerrero, Mexico\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane John Across Southeastern Guerrero, Mexico\raw\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane John Across Southeastern Guerrero, Mexico\Facebook_Population_During_Crisis\raw
+

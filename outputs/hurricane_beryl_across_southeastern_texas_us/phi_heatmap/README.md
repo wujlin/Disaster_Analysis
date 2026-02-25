@@ -9,7 +9,7 @@
 ## 配置
 
  - center: (28.6000, -96.0000)
- - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
+ - center_track_csv: None
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Beryl
  - distance_mode: radial
@@ -33,4 +33,4 @@
 
 ## 覆盖时间（PT）
 
-- 2024-07-08 00:00:00 → 2024-07-09 08:00:00
+- 2024-07-08 00:00:00 → 2024-07-22 16:00:00

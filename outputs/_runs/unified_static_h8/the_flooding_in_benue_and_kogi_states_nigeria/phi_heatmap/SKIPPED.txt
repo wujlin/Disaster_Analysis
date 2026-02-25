@@ -1,0 +1,1 @@
+the_flooding_in_benue_and_kogi_states_nigeria: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon

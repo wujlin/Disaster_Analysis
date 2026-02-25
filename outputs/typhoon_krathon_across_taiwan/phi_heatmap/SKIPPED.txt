@@ -1,0 +1,5 @@
+未找到 'population' 数据目录。已检查：
+  \mnt\e\newdesktop\archive\facebook\disaster data\Typhoon Krathon Across Taiwan\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Typhoon Krathon Across Taiwan\raw\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Typhoon Krathon Across Taiwan\Facebook_Population_During_Crisis\raw
+

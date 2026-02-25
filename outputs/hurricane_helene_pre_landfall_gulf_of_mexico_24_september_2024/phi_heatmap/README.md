@@ -9,7 +9,7 @@
 ## 配置
 
  - center: (30.0000, -83.8000)
- - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
+ - center_track_csv: None
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Helene
  - distance_mode: radial

@@ -1,0 +1,11 @@
+slug,name,reason
+moldova_flooding_2024,Moldova Flooding Sept 16 2024,"moldova_flooding_2024: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+the_flooding_across_antioquia_and_choc_departments_colombia,"The Flooding Across Antioquia and Chocó Departments, Colombia","the_flooding_across_antioquia_and_choc_departments_colombia: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+the_flooding_across_eastern_bangladesh,The Flooding Across Eastern Bangladesh,"the_flooding_across_eastern_bangladesh: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+the_flooding_across_gujarat_india,"The Flooding Across Gujarat, India","the_flooding_across_gujarat_india: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+the_flooding_in_benue_and_kogi_states_nigeria,"The Flooding in Benue and Kogi States, Nigeria","the_flooding_in_benue_and_kogi_states_nigeria: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+the_flooding_in_conakry_city_conakry_guinea,"The Flooding in Conakry City, Conakry, Guinea","the_flooding_in_conakry_city_conakry_guinea: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+wildfires_in_boise_county_idaho_27_august_2024,Wildfires In Boise County Idaho 27 August 2024,"wildfires_in_boise_county_idaho_27_august_2024: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+cambodia_monsoon_season_study_2024_05_09,Cambodia Monsoon Season Study 9 May 2024,"cambodia_monsoon_season_study_2024_05_09: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar,"India Monsoon Season Study (NCT Delhi, UP, Bihar) 9 May 2024","india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"
+pakistan_monsoon_season_study_sindh_2024_05_09,Pakistan Monsoon Season Study (Sindh Province) 9 May 2024,"pakistan_monsoon_season_study_sindh_2024_05_09: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon"

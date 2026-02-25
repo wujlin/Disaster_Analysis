@@ -1,0 +1,1 @@
+india_monsoon_season_study_2024_05_09_nct_delhi_up_bihar: strict 模式禁用 auto fallback，catalog 必须显式提供 t0_pt, center_lat/center_lon

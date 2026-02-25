@@ -8,8 +8,8 @@
 
 ## 配置
 
- - center: (17.6000, 121.5000)
- - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
+ - center: (16.4000, 122.3000)
+ - center_track_csv: None
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Yagi
  - distance_mode: radial
@@ -19,7 +19,7 @@
  - path_sector_n: 0
  - track_dt_default_hours: 6.0
  - track_gap_factor: 1.5
- - t0_pt: 2024-09-02 08:00:00
+ - t0_pt: 2024-09-01 23:00:00
  - hours_pt: [0, 8, 16]
 
 ## 输出
@@ -33,4 +33,4 @@
 
 ## 覆盖时间（PT）
 
-- 2024-09-02 00:00:00 → 2024-09-04 00:00:00
+- 2024-09-02 00:00:00 → 2024-09-16 16:00:00

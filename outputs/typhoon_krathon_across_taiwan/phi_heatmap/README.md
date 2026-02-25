@@ -8,8 +8,8 @@
 
 ## 配置
 
- - center: (22.5000, 120.3000)
- - center_track_csv: Docs/storm_tracks/nhc_best_track_2024_landfalls.csv
+ - center: (22.5560, 120.3110)
+ - center_track_csv: None
  - center_track_to_tz: America/Los_Angeles
  - center_track_storm_name: Krathon
  - distance_mode: radial
@@ -19,7 +19,7 @@
  - path_sector_n: 0
  - track_dt_default_hours: 6.0
  - track_gap_factor: 1.5
- - t0_pt: 2024-10-03 08:00:00
+ - t0_pt: 2024-10-02 21:40:00
  - hours_pt: [0, 8, 16]
 
 ## 输出
@@ -33,4 +33,4 @@
 
 ## 覆盖时间（PT）
 
-- 2024-10-02 16:00:00 → 2024-10-13 16:00:00
+- 2024-10-02 08:00:00 → 2024-10-13 16:00:00

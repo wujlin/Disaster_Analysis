@@ -1,0 +1,5 @@
+未找到 'population' 数据目录。已检查：
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane Ernesto Puerto Rico 14 August 2024\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane Ernesto Puerto Rico 14 August 2024\raw\population
+  \mnt\e\newdesktop\archive\facebook\disaster data\Hurricane Ernesto Puerto Rico 14 August 2024\Facebook_Population_During_Crisis\raw
+
