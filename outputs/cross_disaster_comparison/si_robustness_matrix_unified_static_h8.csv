@@ -1,0 +1,8 @@
+module,check,setting,n,effect,p_value,result,source,note
+主文配置,event-level Spearman,mtw5_mpp4,14,-0.7758241758241758,0.0011084786677787,通过,outputs/cross_disaster_comparison/unified_static_h8_spearman_summary.csv,主文推荐配置
+SI敏感性,event-level Spearman,mtw4_mpp3,15,-0.7642857142857141,0.0009073101116849,通过,outputs/cross_disaster_comparison/unified_static_h8_spearman_summary.csv,放宽门槛后样本+1，方向一致
+SI稳健性,R strata,"mtw5_mpp4, r2>=0.8",11,-0.6272727272727273,0.0388452536203533,通过,outputs/cross_disaster_comparison/Dt_decay_unified_h8_mtw5_mpp4/tables/Dt_routeB_alpha_delta_r2_strata.csv,eu_flood 低R2影响通过分层展示
+SI稳健性,Beryl leave-two-out,n=12 三组,12,-0.8531468531468533,0.0019003677255282,通过,outputs/cross_disaster_comparison/beryl_independence_unified_h8_mtw5_mpp4/beryl_leave_two_out_spearman.csv,三组均显著，非单一Beryl驱动
+SI方法对照,alpha_mono vs alpha_full,15 events,15,0.358550551201757,,差异明显,outputs/cross_disaster_comparison/alpha_truncation_unified_h8_mtw4_mpp3/tables/alpha_truncation_comparison_summary.csv,full_post_peak 与 monotone 非等价
+SI方法对照,alpha_mono vs alpha_full_wls,15 events,15,0.8676356589205825,,接近,outputs/cross_disaster_comparison/alpha_truncation_unified_h8_mtw4_mpp3/tables/alpha_truncation_comparison_summary.csv,WLS 对照与 monotone 更一致
+SI负结果,path-distance Spearman,path_h8 mtw4_mpp3,6,-0.3142857142857143,0.5440932944606415,不显著,outputs/cross_disaster_comparison/Dt_decay_unified_path_h8_mtw4_mpp3_$(date +%Y%m%d_%H%M%S)/tables/Dt_routeB_alpha_delta_spearman.csv,作为负结果纳入SI

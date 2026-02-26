@@ -1,0 +1,7 @@
+group,path,exists,is_dir,size_bytes,sync_status
+beryl_independence,outputs/cross_disaster_comparison/beryl_independence_unified_h8_mtw5_mpp4,True,True,3400,present
+path_h8,outputs/_runs/unified_path_h8_$(date +%Y%m%d_%H%M%S),True,True,3292748,present
+geo_unit_relaxed,outputs/cross_disaster_comparison/geo_unit_scale_unified_h8_mtw4_mpp3_relaxed_20260225_141630,True,True,48363703,present
+alpha_truncation,outputs/cross_disaster_comparison/alpha_truncation_unified_h8_mtw4_mpp3,True,True,3431,present
+krathon_compare,outputs/cross_disaster_comparison/krathon_unified_vs_round2,True,True,1593,present
+pre_landfall_policy,outputs/cross_disaster_comparison/Dt_decay_unified_h8_mtw4_mpp3/tables/pre_landfall_policy_review.csv,True,False,682,present
