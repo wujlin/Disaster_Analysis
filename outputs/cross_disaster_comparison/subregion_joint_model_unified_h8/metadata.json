@@ -1,0 +1,9 @@
+{
+  "input_csv": "outputs/cross_disaster_comparison/geo_unit_scale_unified_h8_mtw4_mpp3_relaxed_20260225_141630/tables/geo_unit_fits.csv",
+  "output_csv": "outputs/cross_disaster_comparison/subregion_joint_model_unified_h8/mixed_effects_joint_3predictor.csv",
+  "n_obs": 2571,
+  "n_events": 14,
+  "aic": null,
+  "bic": null,
+  "llf": null
+}
