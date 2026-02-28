@@ -1,0 +1,12 @@
+{
+  "fits_csv": "outputs/cross_disaster_comparison/geo_unit_scale_unified_h8_mtw4_mpp3_relaxed_20260225_141630/tables/geo_unit_fits.csv",
+  "event_corr_csv": "outputs/cross_disaster_comparison/geo_unit_scale_unified_h8_mtw4_mpp3_relaxed_20260225_141630/tables/event_unit_correlations.csv",
+  "n_obs": 2571,
+  "n_events": 14,
+  "outputs": {
+    "random_slope_D_peak": "outputs/cross_disaster_comparison/subregion_model_correction_unified_h8/random_slope_D_peak.csv",
+    "random_slope_delta_peak": "outputs/cross_disaster_comparison/subregion_model_correction_unified_h8/random_slope_delta_peak.csv",
+    "mundlak_decomposition": "outputs/cross_disaster_comparison/subregion_model_correction_unified_h8/mundlak_decomposition.csv",
+    "within_event_direction_consistency": "outputs/cross_disaster_comparison/subregion_model_correction_unified_h8/within_event_direction_consistency.csv"
+  }
+}

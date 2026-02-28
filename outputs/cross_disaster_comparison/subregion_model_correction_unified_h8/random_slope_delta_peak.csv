@@ -1,0 +1,2 @@
+predictor,fixed_beta,fixed_se,fixed_p,random_intercept_var,random_slope_var,random_corr,converged,fit_strategy,message
+delta_peak_unit,-0.3001086668051382,0.23142320012344944,0.19470140732933627,0.11258318539115578,0.47314638225622974,0.48088480638554454,True,lbfgs,

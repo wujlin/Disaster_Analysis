@@ -1,0 +1,2 @@
+predictor,fixed_beta,fixed_se,fixed_p,random_intercept_var,random_slope_var,random_corr,converged,fit_strategy,message
+D_peak_unit,0.12761986481700405,0.10481661020508903,0.22339357001758386,0.07529454985979991,0.12197829991571471,0.9949461933870205,True,lbfgs,
