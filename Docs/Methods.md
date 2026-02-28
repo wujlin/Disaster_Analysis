@@ -1,355 +1,415 @@
 # Methods
 
-> **项目**：Disaster Recovery Dynamics  
-> **版本**：v1.0（基于方案 E / Route B 决策链）  
-> **对应代码**：`src/disaster/dt_decay.py` + `scripts/dt_decay.py`
+> **项目**：Disaster Recovery Dynamics
+> **版本**：v2.0
+> **日期**：2026-02-28
+> **数据基准**：unified_static_h8, n=14 事件, 2,571 子区域
 
 ---
 
-## 1. 数据
+## 研究问题
+
+灾后人口恢复速度差异巨大。什么决定了恢复速度？恢复轨迹能否从灾害初期的观测量中预测？
+
+分析在两个独立的空间尺度上展开：
+
+| | 事件级 | 子区域级 |
+|---|---|---|
+| 观测单位 | 14 个灾难事件 | 2,571 个 geo-unit |
+| 问题 | 什么使一场灾难比另一场恢复更快？ | 同一灾难内，什么使某区域比另一区域恢复更快？ |
+| 统计框架 | Spearman 秩相关 | 线性混合效应模型 |
+
+方法路线：**数据构建 → 模式发现 → 物理机制 → 稳健性**。
+
+---
+
+## 1. 数据构建
 
 ### 1.1 数据源
 
-我们使用 **Meta/Facebook Disaster Maps (FBDM)** 提供的 Population 数据。该数据通过匿名化的移动设备定位信号，以 Bing Tile Level 14（约 2.4 km × 2.4 km）的空间分辨率和 8 小时的时间分辨率（00:00, 08:00, 16:00 PT），估计各瓦片（tile）的人口密度。
+Meta/Facebook Disaster Maps (FBDM) Population 数据。Bing Tile Level 14（~2.4 km）空间分辨率，8 小时时间分辨率。
 
 每条记录包含：
 
 | 字段 | 含义 |
-|------|------|
-| `quadkey` | Bing tile 唯一标识（空间索引） |
+|---|---|
+| `quadkey` | Bing tile 唯一标识 |
 | `latitude`, `longitude` | 瓦片中心坐标 |
 | `n_baseline` | 灾前 45 天同时段平均人口 |
 | `n_crisis` | 当前时段观测人口 |
-| `z_score` | 标准化偏离（clipped to $[-4, 4]$） |
 
-### 1.2 样本
+分析覆盖约 38 个灾害事件（2020–2025），涵盖地震、飓风、台风、洪水、野火，跨 11 个国家。
 
-分析覆盖 **38 个自然灾害事件**（地震、飓风、台风、洪水、野火），涵盖全球多个地理区域。每个事件经独立预处理后纳入跨灾难比较。最终统计样本为 **$n = 16$ 个事件**（排除规则见 §4）。
+### 1.2 空间聚合：tile → 径向分箱
 
-### 1.3 空间预处理：tile → 径向距离分箱
+以灾害物理参考点（地震震中坐标 / 飓风登陆点）为中心，Haversine 距离计算，10 km 等宽径向分箱：
 
-对每个事件，以灾害参考点（震中坐标或风暴轨迹）为原点，通过 Haversine 公式计算每个 tile 到参考点的距离 $r$，并以 $\Delta r = 10$ km 为步长离散化：
+$$r_{\text{bin}} = \lfloor r / \Delta r \rfloor \cdot \Delta r, \qquad \Delta r = 10 \text{ km}$$
 
-$$r_{\text{bin}} = \lfloor r / \Delta r \rfloor \cdot \Delta r$$
+每个 $(r_{\text{bin}}, t)$ 格点计算覆盖率加权的 order parameter：
 
-生成 50 个距离分箱（0, 10, 20, ..., 490 km）。在每个 $(r_{\text{bin}}, t)$ 格点上，计算**覆盖率加权的 order parameter**：
+$$\phi(r, t) = \frac{\sum_{i \in \text{tiles}(r)} n_{\text{crisis}, i}(t)}{\sum_{i \in \text{tiles}(r)} n_{\text{baseline}, i}}$$
 
-$$\phi_{\text{overlap}}(r, t) = \frac{\sum_{i \in \text{tiles}(r)} n_{\text{crisis}, i}(t)}{\sum_{i \in \text{tiles}(r)} n_{\text{baseline}, i}}$$
+仅包含在时刻 $t$ 和基线期均有观测的 tile（overlap 条件），每个分箱至少 3 个重叠 tile。
 
-其中求和仅包含在时刻 $t$ 和灾前基线期均有观测的 tile（"overlap"条件），并要求每个分箱内至少有 `min_tiles_overlap = 3` 个重叠 tile。
+产出中间文件 `phi_rt_long.csv`。
 
-此步骤将高维度的瓦片级数据压缩为中间产物 `phi_rt_long.csv`（每行对应一个 $(r_{\text{bin}}, t)$ 格点），保留了径向空间结构与时间动态。
+### 1.3 日均平滑
 
-### 1.4 日均平滑
-
-原始数据的 8 小时分辨率引入了显著的日内周期噪声（commuting pattern）。当原始中位时间步长 $< 16$ 小时时，按 24 小时窗口做日均平均：
+8 小时原始分辨率存在 commuting pattern 的日内周期噪声。按 24 小时窗口做日均平均：
 
 $$D_{\text{daily}}(d) = \frac{1}{|\{t : t \in \text{day } d\}|} \sum_{t \in \text{day } d} D(t)$$
 
-该步骤将 turkiye 等高频事件的时间分辨率从 8h 降至 ~24h，有效抑制日内周期伪影。**敏感性验证**：跳过日均平滑后，所有下游统计量的信号完全消失（$\rho \approx 0$），确认该预处理是必要的。
+此步骤是必要的：跳过日均平滑后信号消失（$\rho \approx 0$）。
+
+### 1.4 子区域数据构建
+
+将 tile 按 Level-10 quadkey 前缀聚合为 geo-unit（每个约 25 km x 25 km），要求至少包含 5 个 L14 tile。每个 unit 独立构建 $D_{\text{unit}}(t)$ 并拟合 $\alpha_{\text{unit}}$。
+
+### 1.5 设计选择
+
+| 选择 | 理由 |
+|---|---|
+| 静态中心（物理参考点） | 震中/登陆点有确定物理意义，避免 data-driven center picking |
+| 10 km 径向分箱 | tile 分辨率（~2.4 km）的自然聚合尺度 |
+| 日均平滑 | 消除 commuting 伪影（实验验证为必要步骤） |
+| 单调截断拟合 | 只拟合持续衰减段，避免反弹污染 |
+
+### 代码路径
+
+| 步骤 | 代码 |
+|---|---|
+| 数据下载与整理 | `scripts/download_datasets.py`, `scripts/collect_event_from_dfg.py` |
+| tile → 径向分箱 + D(t) + alpha 拟合 | `scripts/dt_decay.py` → `src/disaster/dt_decay.py` |
+| geo-unit 构建 + unit 级拟合 | `scripts/geo_unit_scale_analysis.py` → `src/disaster/geo_unit_scale_analysis.py` |
+| 数据 I/O 工具 | `src/disaster/population_io.py` |
+| 距离分箱工具 | `src/disaster/bins.py` |
+| 地理坐标工具 | `src/disaster/geo.py` |
 
 ---
 
 ## 2. 核心观测量
 
-### 2.1 聚合位移幅度 $D(t)$
+### 2.1 聚合位移 D(t)
 
-对每个时刻 $t$，在 $r \leq r_{\max}$ 范围内的所有距离分箱上取绝对偏离的均值：
+$$D(t) = \langle |\delta(r, t)| \rangle_{r \leq r_{\max}}, \qquad \delta(r, t) \equiv \phi(r, t) - 1$$
 
-$$D(t) = \langle |\delta(r, t)| \rangle_{r \leq r_{\max}}, \qquad \delta(r, t) \equiv \phi_{\text{overlap}}(r, t) - 1$$
+$\delta > 0$ 表示人口增加，$\delta < 0$ 表示人口减少。取绝对值后 $D(t)$ 衡量偏离稳态的总幅度。$r_{\max} = 200$ km。
 
-其中 $\delta(r,t) > 0$ 表示人口增加，$\delta(r,t) < 0$ 表示人口减少。取绝对值后，$D(t)$ 衡量系统偏离稳态的**总幅度**，不区分增减方向。
+### 2.2 衰减速率 alpha
 
-**默认参数**：$r_{\max} = 200$ km，每个时刻至少需要 `min_r_bins = 5` 个有效分箱。
-
-### 2.2 近场位移方向 $\delta_{\text{near}}$
-
-在灾害中心附近（$r \leq r_{\text{near}}$），人口偏移的**有符号均值**反映位移的方向性：
-
-$$\delta_{\text{near}} = \langle \delta(r, t) \rangle_{r \leq r_{\text{near}}, \, t \in \mathcal{T}_{\text{peak}}}$$
-
-其中 peak 时间窗口定义为 $\mathcal{T}_{\text{peak}} = \{t : D(t) \geq f_{\text{peak}} \cdot D_{\text{peak}}\}$，$f_{\text{peak}} = 0.5$。
-
-- $\delta_{\text{near}} < 0$：近场人口减少——疏散型（evacuation-dominated）
-- $\delta_{\text{near}} > 0$：近场人口增加——聚集型（influx-dominated）
-
-**默认参数**：$r_{\text{near}} = 50$ km，每个时刻至少需要 `min_near_bins = 2` 个有效近场分箱。
-
-$\delta_{\text{near}}$ 是一个**连续变量**，在正负之间平滑过渡，不做离散分类。
-
-### 2.3 扰动峰值 $D_{\text{peak}}$
-
-$$D_{\text{peak}} = \max_t D(t)$$
-
-衡量灾害引起的最大总位移幅度。$D_{\text{peak}}$ 越大，社会系统偏离稳态越远。
-
-### 2.4 残余位移 $D_\infty$
-
-$$D_\infty = \frac{1}{|\mathcal{T}_{\text{tail}}|} \sum_{t \in \mathcal{T}_{\text{tail}}} D_{\text{norm}}(t), \qquad D_{\text{norm}}(t) = D(t) / D_{\text{peak}}$$
-
-其中 $\mathcal{T}_{\text{tail}}$ 为 post-peak 序列的最后 $1/3$ 时间点。$D_\infty$ 衡量观测窗口结束时系统的残余扰动水平。
-
----
-
-## 3. 初始衰减率 $\alpha$
-
-### 3.1 定义
-
-在 $D(t)$ 达到峰值后，定义 post-peak 时间 $t' = t - t_{\text{peak}}$。在初始单调衰减段上对归一化衰减曲线 $D_{\text{norm}}(t')$ 做 log-log OLS 线性拟合：
+峰值后定义 $t' = t - t_{\text{peak}}$，在初始单调衰减段上做 log-log OLS 拟合：
 
 $$\ln D_{\text{norm}} = -\alpha \cdot \ln t' + \ln A$$
 
-$\alpha$ 即 log-log 空间中的**负斜率**，描述灾后初始阶段扰动衰减的速率。
+$\alpha$ 是 log-log 斜率，描述初始衰减速率。$\alpha$ 大则快速恢复，$\alpha$ 小则扰动持续。
 
-- $\alpha$ 大 → 衰减快（系统快速恢复）
-- $\alpha$ 小 → 衰减慢（扰动持续）
+**单调衰减段**：从 $t' = 24$ h 起，保留 $D_{\text{norm},i+1} \leq 1.05 \cdot D_{\text{norm},i}$ 的连续段，首次 >5% 反弹即截断。终点由数据决定（72–144 h，中位数 96 h）。
 
-单调衰减段的确定方式：从 peak 后第一个数据点（$t' = 24\text{h}$）起，保留满足 $D_{\text{norm},i+1} \leq 1.05 \cdot D_{\text{norm},i}$ 的连续段，首次 >5% 反弹即截断（`tol_up = 1.05`）。窗口起点统一为 $t' = 24\text{h}$（排除峰值附近的混沌动力学），终点 $t'_{\text{end}}$ 由数据决定（范围 72–144 h，中位数 96 h）。
+**不声称函数形式**：$\alpha$ 是 log-log 斜率的经验度量，不假设幂律为真实衰减形式。BIC 比较显示 power-law、exponential、stretched exponential 在短观测段上难以区分。
 
-**关键设计决策**：
+### 2.3 近场位移几何 delta_near
 
-1. **不声称函数形式**：$\alpha$ 纯粹是 log-log 斜率的经验度量，不假设 $D(t') \sim t'^{-\alpha}$ 为真实的幂律衰减。这避免了对函数形式的过度承诺——BIC 比较显示，power-law、exponential、stretched exponential 在短观测段上难以区分。
+$$\delta_{\text{near}} = \langle \delta(r, t) \rangle_{r \leq r_{\text{near}}, \, t \in \mathcal{T}_{\text{peak}}}$$
 
-2. **只拟合衰减段**：确保拟合区间内数据行为一致（持续衰减）。在出现结构性反弹后的时间点上强行拟合会稀释 $\alpha$，模糊初始衰减率的物理含义。
+其中 $\mathcal{T}_{\text{peak}} = \{t : D(t) \geq 0.5 \cdot D_{\text{peak}}\}$。$r_{\text{near}} = 50$ km。
 
-### 3.2 多方法稳健性
+- $\delta_{\text{near}} < 0$：疏散型（人口从近场流出）
+- $\delta_{\text{near}} > 0$：聚集型（人口向近场聚拢）
 
-核心发现在所有合理的 $\alpha$ 计算方法下保持一致。以下四种固定时间窗口拟合与单调截断法之间的 Pearson $r \geq 0.88$：
+$\delta_{\text{near}}$ 是连续变量，不做离散分类。
 
-| 窗口 | $\rho(\alpha, \delta_{\text{near}})$ | $p$ | $\rho(\alpha, D_{\text{peak}})$ | $p$ |
-|------|------|------|------|------|
-| 单调截断 $[24, 72\text{–}144\text{h}]$ | $-0.526$ | $0.036$ | $+0.600$ | $0.014$ |
-| 固定 $[24\text{h}, 72\text{h}]$ | $-0.500$ | $0.049$ | $+0.644$ | $0.007$ |
-| 固定 $[24\text{h}, 96\text{h}]$ | $-0.482$ | $0.059$ | $+0.512$ | $0.043$ |
-| 固定 $[24\text{h}, 120\text{h}]$ | $-0.538$ | $0.032$ | $+0.491$ | $0.053$ |
-| 固定 $[24\text{h}, 144\text{h}]$ | $-0.515$ | $0.041$ | $+0.574$ | $0.020$ |
+### 2.4 扰动峰值 D_peak 与残余位移 D_inf
 
-$\rho(\alpha, \delta_{\text{near}})$ 的符号在**所有方法下 100% 稳定**，显著性波动反映窗口长度对噪声的不同敏感度。$\rho(\alpha, D_{\text{peak}})$ 在五种方法中四种达到 $p < 0.05$。
+$$D_{\text{peak}} = \max_t D(t)$$
 
-### 3.3 OLS vs 稳健估计
+$$D_\infty = \frac{1}{|\mathcal{T}_{\text{tail}}|} \sum_{t \in \mathcal{T}_{\text{tail}}} D_{\text{norm}}(t)$$
 
-在固定窗口或单调段上，OLS 与 Theil-Sen 给出几乎完全相同的 $\alpha$（Pearson $r = 0.9914$，最大差异 0.07）。这是因为在所选数据区间上 $R^2$ 普遍较高（中位数 0.88），不存在杠杆点问题。主分析使用 OLS，SI 中报告 Theil-Sen 作为交叉验证。
+$\mathcal{T}_{\text{tail}}$ 为 post-peak 序列的最后 1/3 时间点。
 
 ---
 
-## 4. 样本选择
+## 3. 样本选择
 
-### 4.1 基础纳入条件
+### 3.1 纳入条件
 
-从全部已处理的事件中，要求：
-- 单调段至少 3 个数据点（`min_n_mono ≥ 3`）——确保拟合最低可靠性
-- $\delta_{\text{near}}$ 非缺失——确保近场有足够 tile 覆盖
+- 单调衰减段至少 3 个数据点（`min_n_mono >= 3`）
+- 单调段至少覆盖 4 个 post-peak 时间步（`min_post_peak_steps >= 4`，主文配置 mtw5_mpp4）
+- $\delta_{\text{near}}$ 非缺失
 - $\alpha$ 非缺失
 
-### 4.2 独立排除
+### 3.2 最终样本（n = 14）
 
-两个事件被预先排除，排除理由与下游统计分析无关（非 post-hoc）：
+权威来源：`outputs/cross_disaster_comparison/Dt_decay_unified_h8_mtw5_mpp4/tables/Dt_routeB_sample_flags.csv`
 
-| 事件 | 排除理由 |
-|------|----------|
-| `hurricane_melissa_aftermath` | 灾后余波数据，非独立灾害事件；与 melissa 主事件存在时间重叠 |
-| `flooding_rio_grande_do_sul` | 多阶段洪水，$D(t)$ 无明确单峰结构，违反"单次淬火→弛豫"分析框架 |
+| slug | alpha | D_peak | delta_near | 类型 | R2 |
+|---|---|---|---|---|---|
+| flooding_eu | -0.015 | 0.143 | +0.101 | INFL | 0.14 |
+| beryl_qr | 0.741 | 0.236 | -0.442 | EVAC | 0.98 |
+| beryl_tx | 0.800 | 0.241 | -0.279 | EVAC | 0.99 |
+| beryl_jamaica | 0.387 | 0.564 | -0.404 | EVAC | 0.89 |
+| park_fire | 0.223 | 0.040 | +0.046 | INFL | 0.71 |
+| spain_flood | 0.058 | 0.127 | +0.203 | INFL | 0.81 |
+| nepal | 1.216 | 0.212 | -0.120 | EVAC | 0.94 |
+| brazil | 0.390 | 0.109 | +0.001 | NEUTRAL | 0.93 |
+| quito | 0.424 | 0.089 | +0.001 | NEUTRAL | 0.68 |
+| kristine_ph | 0.711 | 0.297 | -0.041 | EVAC | 0.94 |
+| yagi_ph | 0.467 | 0.139 | -0.227 | EVAC | 0.93 |
+| turkiye | 0.223 | 0.401 | +0.057 | INFL | 0.96 |
+| krathon_tw | 0.101 | 0.134 | +0.111 | INFL | 0.95 |
+| yagi_vn | 0.522 | 0.317 | -0.547 | EVAC | 0.96 |
 
-排除后最终样本：**$n = 16$**。
+EVAC/INFL/NEUTRAL 是基于 $\delta_{\text{near}}$ 符号的事后描述性标签，不作为分析输入。
 
-### 4.4 Route B 最终样本清单（$n=16$）
+SI 备选配置（`mtw4_mpp3`）纳入 n = 15 个事件，结论不变。
 
-本研究的**唯一权威样本来源**为 `outputs/cross_disaster_comparison/Dt_decay/tables/Dt_routeB_sample_flags.csv` 中 `route_b_selected == True` 的事件。为避免文档漂移，以下仅列出事件标识与方向符号（数值以该表为准）。
+### 代码路径
 
-| slug | short_name | $\delta_{\text{near}}$ 符号 |
-|---|---|---|
-| flooding_in_central_and_eastern_europe_sept_16_2024 | flooding_eu | + |
-| hurricane_beryl_across_quintana_roo_and_yucatan_mexico | beryl_qr | − |
-| hurricane_beryl_across_southeastern_texas_us | beryl_tx | − |
-| hurricane_beryl_pre_landfall_2024 | beryl_pre | 0 |
-| hurricane_john_across_southeastern_guerrero_mexico | john_gue | + |
-| hurricane_john_southern_mexico_25_september_2024 | john_sm | + |
-| hurricane_milton_across_florida_us | milton_fl | + |
-| moldova_flooding_2024 | moldova | + |
-| spain_flood | spain_flood | + |
-| the_earthquake_across_central_mexico | mexico_eq | + |
-| the_flooding_across_bagmati_and_koshi_provinces_nepal | nepal_fld | − |
-| the_flooding_across_eastern_bangladesh | bangladesh_fld | + |
-| the_flooding_across_gujarat_india | gujarat_fld | − |
-| turkiye_earthquake_2023 | turkiye | + |
-| typhoon_yagi_across_northeastern_vietnam | yagi_vn | − |
-| wildfires_in_boise_county_idaho_27_august_2024 | boise_fire | + |
-
-### 4.3 低 $R^2$ 事件处理
-
-$R^2 < 0.6$ 的事件保留在统计分析中，但在散点图中以灰色标记，以区分拟合质量高低。这些事件并不改变相关性方向或显著性（$R^2 \geq 0.8$ 子集：$n = 11$，$\rho = -0.673$，$p = 0.023$）。
+| 步骤 | 代码 |
+|---|---|
+| 样本筛选 + flag 输出 | `scripts/dt_decay.py` → `src/disaster/dt_decay.py` |
+| 输出文件 | `outputs/.../Dt_routeB_sample_flags.csv` |
 
 ---
 
-## 5. 统计分析
+## 4. 事件级分析：空间几何预测恢复速度
 
-### 5.1 核心相关性
+### 4.1 核心发现
 
-使用 **Spearman 秩相关** $\rho$ 作为主统计量（不假设线性关系）。核心检验：
+| 相关对 | rho | p | n |
+|---|---|---|---|
+| alpha vs delta_near | -0.776 | 0.001 | 14 |
+| alpha vs D_peak | +0.341 | 0.233 | 14 |
+| delta_near vs D_peak | -0.525 | 0.054 | 14 |
 
-| 相关对 | $\rho$ | $p$ | 含义 |
-|--------|--------|-----|------|
-|| $\alpha$ vs $\delta_{\text{near}}$ | $-0.526$ | $0.036$ | 疏散型事件恢复更快 |
-| $\alpha$ vs $D_{\text{peak}}$ | $+0.600$ | $0.014$ | 更大扰动恢复更快 |
-|| $D_{\text{peak}}$ vs $\delta_{\text{near}}$ | $-0.129$ | $0.633$ | 两个预测变量统计独立 |
+**几何效应**是事件级的核心发现。Jackknife 95% CI: [-0.852, -0.725]。
 
-散点图中叠加 **Theil-Sen 回归线**（非参数，抗离群值）作为趋势可视化。
+**振幅效应**在事件级不显著。旧样本（n = 16）中曾显著（rho = +0.60, p = 0.014），新样本的变化来自静态中心修正后的事件组成变化。
 
-### 5.2 偏相关
+### 4.2 稳健性
 
-$\alpha$ 的两个预测变量（$\delta_{\text{near}}$ 和 $D_{\text{peak}}$）统计独立（$\rho = -0.129, p = 0.633$），可以分别计算偏相关以确认各自的独立贡献：
+| 检验 | 结果 |
+|---|---|
+| Jackknife | 95% CI [-0.852, -0.725]，不穿越 0 |
+| r_near 扫描 30-100 km | rho in [-0.785, -0.741]，全部 p < 0.003 |
+| r_max 扫描 100-250 km | 全部 p < 0.01 |
+| R2 >= 0.8 子集 | n = 11, rho = -0.627, p = 0.039 |
+| Beryl 家族排除 | 信号增强 |
+| 社会经济指标 | HDI、GDP 与 alpha 无显著关联 |
 
-| 偏相关 | 值 |
-|--------|-----|
-|| $\alpha$ vs $\delta_{\text{near}} \mid D_{\text{peak}}$ | $\rho_{\text{partial}} = -0.566$ |
-|| $\alpha$ vs $D_{\text{peak}} \mid \delta_{\text{near}}$ | $\rho_{\text{partial}} = +0.631$ |
+### 代码路径
 
-两个偏相关均大于对应的零阶相关，表明两个预测变量解释的是 $\alpha$ 的不同维度，彼此不存在混淆。
-
-### 5.3 稳健性检验矩阵
-
-| 检验项 | 方法 | 结果 | 结论 |
-|--------|------|------|------|
-| **留一法 Jackknife** | 逐一移除每个事件，重算 $\rho$ | 95% CI 不穿越 0 | 无单一事件驱动 |
-| **$R^2$ 分层** | 仅保留 $R^2 \geq 0.8$ 的事件 | $n=11$，$\rho=-0.673$，$p=0.023$ | 信号在高质量子集增强 |
-| **$r_{\text{near}}$ 扫描** | 10–200 km 逐步改变 $r_{\text{near}}$ | $\rho$ 始终为负（$[-0.48, -0.34]$） | 符号 100% 稳定 |
-| **$r_{\max}$ 扫描** | 50–400 km 改变 $r_{\max}$ | 100–150 km 处 $\rho$ 更强（~$-0.6$） | 200 km 为保守选择 |
-| **多时间窗口** | 24-72h, 24-96h, 24-120h, 24-144h | ρ 符号在所有窗口一致（$p$ 范围 0.036–0.059） | 窗口选择无影响 |
-| **$D(72)/D(24)$ 比值** | 完全非参数的衰减指标 | $\rho = +0.515$, $p = 0.041$ | 不依赖任何拟合 |
-| **OLS vs Theil-Sen** | 两种估计器对比 | Pearson $r = 0.99$ | OLS 无偏差 |
-| **已排除的候选预测变量** | 空间集中度、恢复梯度、观测窗口长度 | 均 $|\rho| < 0.15$, $p > 0.5$ | 非混淆因素 |
-
-### 5.4 距离分段分析（补充）
-
-将 $\alpha$ 按距离分段计算：近场（0–50 km）、中场（50–100 km）、远场（100–200 km）。中场 $\alpha$ 与 $\delta_{\text{near}}$ 的相关性最强（$\rho = -0.733$, $p = 0.025$），但由于每段合格事件数降至 $n = 9$，该结果仅在 SI 中报告，不作为主论点。
+| 步骤 | 代码 |
+|---|---|
+| Spearman 相关 + 散点图 | `scripts/cross_disaster_comparison.py` → `src/disaster/cross_disaster_comparison.py` |
+| r_near 敏感性 | `scripts/rnear_sensitivity.py` → `src/disaster/rnear_sensitivity.py` |
+| r_max 敏感性 | `scripts/rmax_sensitivity.py` → `src/disaster/rmax_sensitivity.py` |
+| Beryl 独立性检验 | `scripts/beryl_independence.py` → `src/disaster/beryl_independence.py` |
+| 社会经济控制 | `scripts/external_covariates_analysis.py` |
+| 论文图 Fig.2 | `scripts/fig2_shape_predicts_recovery.py` |
+| 输出文件 | `outputs/cross_disaster_comparison/spearman_summary.csv` |
+| 输出文件 | `outputs/cross_disaster_comparison/rmax_sensitivity_spearman_summary.csv` |
+| 输出文件 | `outputs/cross_disaster_comparison/rnear_sensitivity_spearman_summary.csv` |
 
 ---
 
-## 6. 参数默认值汇总
+## 5. 物理机制：扩散-弛豫 PDE 模型
 
-| 参数 | 符号 | 默认值 | 含义 |
-|------|------|--------|------|
-| 最大距离 | $r_{\max}$ | 200 km | $D(t)$ 平均的径向范围 |
-| 近场半径 | $r_{\text{near}}$ | 50 km | $\delta_{\text{near}}$ 的定义范围 |
-| 距离分箱宽度 | $\Delta r$ | 10 km | 空间离散化步长 |
-| Peak 窗口比例 | $f_{\text{peak}}$ | 0.5 | $\delta_{\text{near}}$ 平均所用 peak 窗口 |
-| 最小重叠 tile | — | 3 | 每个 $(r, t)$ 格点的最小 tile 数 |
-| $\alpha$ 时间窗口 | — | [24h, 72–144h] | 单调衰减段 log-log 拟合范围 |
-| 单调容忍度 | `tol_up` | 1.05 | 单调截断的反弹容忍阈值 |
-| PDE 径向边界 | $R$ | 200 km | Bessel 展开的径向域 |
-| Bessel 模态数 | $N$ | 10 | 展开截断阶数（含基模态） |
-| PDE 全局衰减率 | $k$ | 0.00418 h⁻¹ | 网格搜索最优值 |
-| PDE 扩散系数 | $D_s$ | 0.304 km² h⁻¹ | 网格搜索最优值 |
+### 5.1 动机
 
----
+rho(alpha, delta_near) = -0.776 表明初始空间廓线的形状编码了恢复速度信息。PDE 模型检验因果假说：**空间扩散选择性衰减高频空间成分，是否足以让廓线形状决定衰减速率？**
 
-## 7. 软件与可复现性
+### 5.2 控制方程
 
-- **语言**：Python 3.9+
-- **核心依赖**：pandas, numpy, scipy (spearmanr, theilslopes, curve_fit, jn_zeros, j0), matplotlib
-- **经验分析管线**：`python scripts/dt_decay.py --output-root outputs/`
-- **PDE 模型管线**：`python -m scripts.spatial_diffusion --run-until 4 --pred-mode E --t-start 1.0 --exp2-align-to-exp3 1`
-- **中间产物**：`phi_rt_long.csv`（tile→距离分箱聚合）、`Dt_all_events.csv`（日均 D(t) 序列）
-- **经验分析输出**：`Dt_powerlaw_fits.csv`、`Dt_event_summary.csv`、`Dt_routeB_*.csv`
-- **PDE 模型输出**：`pde_optimal_params.csv`、`pde_alpha_predictions.csv`、`counterfactual_results.csv`
+径向对称的扩散-弛豫方程：
 
----
+$$\frac{\partial \delta}{\partial t} = \frac{D_s}{r} \frac{\partial}{\partial r}\left(r \frac{\partial \delta}{\partial r}\right) - k\,\delta$$
 
-## 8. 空间扩散-弛豫 PDE 模型
+$D_s$：空间扩散系数（km^2/h）。$k$：均匀衰减率（1/h）。
 
-### 8.1 动机
+Neumann 边界条件（零通量）：$\partial \delta / \partial r |_{r=0} = \partial \delta / \partial r |_{r=R} = 0$，$R = 200$ km。
 
-§5.1 的经验发现——$\rho(\alpha, \delta_{\text{near}}) = -0.526$——表明初始空间剖面的形状编码了恢复速度的信息。但相关性本身不构成机制解释。本节建立一个最小化的偏微分方程模型，检验以下因果假说：**空间扩散与指数衰减的联合作用，是否足以让初始剖面形状决定后续的衰减速率？**
+### 5.3 Bessel 展开
 
-### 8.2 控制方程
+解在 Neumann 条件下展开为零阶 Bessel 函数 $J_0$：
 
-将灾害参考点视为原点，假设径向对称，人口偏移场 $\delta(r, t)$ 满足扩散-弛豫方程：
+$$\delta(r, t) = \sum_{n=0}^{N-1} c_n \, J_0\!\left(\frac{\mu_n \, r}{R}\right) \exp(-\lambda_n \, t)$$
 
-$$\frac{\partial \delta}{\partial t} = \frac{D_s}{r} \frac{\partial}{\partial r}\left(r \frac{\partial \delta}{\partial r}\right) - k \, \delta$$
+$\mu_0 = 0$，$\mu_n$ ($n \geq 1$) 为 $J_0'(x) = 0$ 的正零点。模态衰减率：
 
-其中 $D_s$ 为空间扩散系数（km² h⁻¹），$k$ 为均匀衰减率（h⁻¹）。
+$$\lambda_n = k + D_s \left(\frac{\mu_n}{R}\right)^2$$
 
-- **扩散项**描述人口偏移沿径向的空间扩展（Fick 定律在柱坐标下的形式）。
-- **衰减项** $-k\delta$ 描述人口向稳态的均匀弛豫（工作恢复、设施重开等驱动力）。
+**核心物理**：高阶模态衰减更快。疏散型廓线高频成分多，整体弛豫更快。事件间 alpha 差异完全来自初始廓线的模态系数 $\{c_n\}$ 差异。
 
-边界条件：Neumann（零通量），$\partial \delta / \partial r |_{r=0} = \partial \delta / \partial r |_{r=R} = 0$，其中 $R = 200$ km。
+### 5.4 初始条件与参数
 
-### 8.3 Bessel 展开与解析解
+取 $t_{\text{peak}}$ 时刻的径向廓线作为初始条件。展开系数通过 Bessel 正交关系投影：
 
-方程的解在 Neumann 边界条件下可用零阶 Bessel 函数 $J_0$ 展开：
+$$c_n = \frac{\int_0^R \delta(r, 0) \, J_0(\mu_n r / R) \, r \, dr}{\int_0^R J_0^2(\mu_n r / R) \, r \, dr}$$
 
-$$\delta(r, t) = \sum_{n=0}^{N-1} c_n \, J_0\!\left(\frac{\alpha_n \, r}{R}\right) \exp(-\lambda_n \, t)$$
+实际操作：10 km 分箱数据插值到 200 点均匀网格，数值梯形积分，N = 10 个模态。
 
-> **符号说明**：这里的 $\alpha_n$ 表示 $J_0'(x) = 0$ 的正零点（Bessel 零点），与经验衰减率 $\alpha$（log-log 斜率）不同。正式论文中将使用 $z_n$ 或 $\mu_n$ 表示 Bessel 零点以避免混淆。
+k 和 D_s 是两个**全局参数**（所有事件共享）。在 30x30 对数均匀网格上搜索，主准则为 min joint rank（Spearman + Pearson + MAE 排名之和最小化）。
 
-其中 $\alpha_0 = 0$，$\alpha_n$（$n \geq 1$）为 $J_0'(x) = 0$ 的正零点，模态衰减率为：
+> **注意**：当前 PDE 参数（k = 0.00418/h, D_s = 0.304 km^2/h）基于旧 n=16 数据拟合，需要在新 n=14 数据上重新估计。
 
-$$\lambda_n = k + D_s \left(\frac{\alpha_n}{R}\right)^2$$
+### 5.5 预测衰减率
 
-**关键物理机制**：高阶模态（$n \gg 1$）具有更大的空间波数 $\alpha_n/R$，因此衰减更快。不同事件的初始剖面 $\delta(r, 0)$ 具有不同的模态系数 $\{c_n\}$——空间结构越复杂（高阶成分越多），总体衰减越快。这正是为什么初始剖面形状能预测 $\alpha$。
+定义能量度量 $E(t) = \int_0^R \delta^2(r,t) \, r \, dr / \int_0^R r \, dr$（Parseval 等式下可解析计算），对 E(t) 在 [1h, 120h] 做 log-log OLS 拟合得到 alpha_pred。
 
-### 8.4 初始条件的确定
+E(t)（L2 范数）与经验 D(t)（L1 范数）是同一廓线的不同大小度量。PDE 使用 E(t) 因为 Bessel 展开下有解析表达式。
 
-对每个事件，取峰值时刻 $t_{\text{peak}}$ 的径向剖面 $\delta(r, t_{\text{peak}})$ 作为 PDE 的初始条件。通过 $r$-加权的最小二乘分解（利用 Bessel 函数的正交关系 $\int_0^R J_0(\alpha_m r/R) J_0(\alpha_n r/R) \, r \, dr = 0, \, m \neq n$）求得展开系数：
-
-$$c_n = \frac{\int_0^R \delta(r, 0) \, J_0(\alpha_n r / R) \, r \, dr}{\int_0^R J_0^2(\alpha_n r / R) \, r \, dr}$$
-
-实际操作中，$\delta(r, 0)$ 先从观测的 10 km 分箱数据插值到 200 点的均匀 $r$ 网格，再用数值梯形积分计算上述投影。展开截断为 $N = 10$ 个模态。
-
-### 8.5 预测衰减率 $\alpha_{\text{pred}}$
-
-给定全局参数 $(k, D_s)$ 和事件特有的系数 $\{c_n\}$，PDE 解可以解析计算任意时刻的空间场 $\delta(r, t)$。定义能量度量：
-
-$$E(t) = \frac{\int_0^R \delta^2(r, t) \, r \, dr}{\int_0^R r \, dr}$$
-
-其中 $r$-加权确保与 Bessel 正交性一致（Parseval 等式）。
-
-> **$E(t)$ 与 $D(t)$ 的关系**：经验指标 $D(t) = \langle |\phi(r,t) - 1| \rangle_r$ 是径向剖面偏移的一阶矩（$L^1$ 范数），$E(t)$ 是二阶矩（$L^2$ 范数的平方）。两者衡量的是同一剖面的不同"大小"度量。PDE 使用 $E(t)$ 而非 $D(t)$ 是因为 Bessel 展开下 $E(t)$ 有解析的 Parseval 表达式（$E(t) = \sum c_n^2 e^{-2\lambda_n t}$），便于理论分析。我们对两者衰减率的排序一致性有信心，但承认这是一个近似。
-
-对 $E(t)$ 在时间窗口 $[1\text{h}, 120\text{h}]$ 做 log-log OLS 拟合，负斜率即为 $\alpha_{\text{pred}}$。
-
-> **注意**：$\alpha_{\text{pred}}$ 的拟合窗口起点（1h）早于经验 $\alpha$ 的起点（24h），因为 PDE 解需要在高阶模态快速衰减的初始阶段捕捉全部动力学。两者的拟合窗口不完全一致，但 $\alpha_{\text{pred}}$ 的主要功能是提供**秩序预测**（$\rho(\alpha_{\text{pred}}, \alpha_{\text{emp}}) = 0.503$），而非绝对值匹配。
-
-**设计要点**：
-- 时间采样在 $[0, 24)$ h 使用 1 h 步长（捕捉高阶模态的快速衰减），$[24, 240]$ h 使用 8 h 步长，共 51 个时间点。
-- $k$ 和 $D_s$ 是两个**全局参数**，所有事件共享同一组值——事件间的 $\alpha_{\text{pred}}$ 差异完全来自初始剖面的空间结构。
-
-### 8.6 参数估计
-
-在对数均匀的二维网格上搜索最优 $(k, D_s)$。对每组候选参数，计算全部 16 个事件的 $\alpha_{\text{pred}}$，评估四个准则：
-
-1. **max Spearman**：最大化 $\rho(\alpha_{\text{pred}}, \alpha_{\text{emp}})$
-2. **max Pearson**：最大化 $r(\alpha_{\text{pred}}, \alpha_{\text{emp}})$
-3. **min MAE**：最小化 $|\alpha_{\text{pred}} - \alpha_{\text{emp}}|$ 的均值
-4. **min joint rank**（主准则）：三个指标排名之和最小化
-
-主准则 (min joint rank) 的最优参数为 $k = 0.00418$ h⁻¹、$D_s = 0.304$ km² h⁻¹。
-
-### 8.7 反事实实验
-
-为验证 PDE 模型复现 $\rho(\alpha, \delta_{\text{near}})$ 的信号确实源于空间扩散 + 剖面形状的联合作用，设计三组反事实实验：
+### 5.6 反事实实验
 
 | 反事实 | 操作 | 预期 | 观测 |
-|--------|------|------|------|
-| **Ds = 0**（无扩散） | 关闭扩散项，所有模态以相同速率 $k$ 衰减 | $\alpha_{\text{pred}}$ 对所有事件相同 → $\rho = 0$ | $\rho = 0.0$, $p = 1.0$ ✓ |
-| **仅基模态** | 只保留 $c_0$（空间均匀成分） | 剖面形状信息被移除 → $\rho = 0$ | $\rho = 0.0$, $p = 1.0$ ✓ |
-| **Shuffle 剖面** | 随机打乱事件-剖面的配对 | 破坏因果关系 → $\rho \approx 0$ | $\rho = -0.008$, 95% CI $[-0.52, 0.52]$ ✓ |
+|---|---|---|---|
+| D_s = 0 | 关闭扩散 | alpha_pred 全同 | rho = 0.0 |
+| 仅 c_0 | 只保留均匀模态 | 空间结构被移除 | rho = 0.0 |
+| Shuffle | 打乱事件-廓线配对 | 因果关系破坏 | rho = -0.008 |
 
-三组反事实均符合预期，排除了以下替代解释：
-- 信号来自 $k$ 本身（Ds=0 排除）
-- 信号来自剖面的整体幅度而非空间结构（c₀-only 排除）
-- 信号来自全局参数偏差的伪关联（shuffle 排除）
+### 代码路径
 
-### 8.8 Bootstrap 稳健性
-
-对初始剖面施加 ±10% 的随机扰动，重复 500 次：
-
-- Bootstrap $\rho$ 均值 = $-0.482$，中位数 = $-0.513$
-- 95% CI = $[-0.763, -0.079]$，**不含零**
-- 98.4% 的 bootstrap 重复中 $\rho < 0$
+| 步骤 | 代码 |
+|---|---|
+| PDE 求解 + 参数搜索 + 反事实 | `scripts/spatial_diffusion.py` → `src/disaster/spatial_diffusion.py` |
+| PDE 可视化 | `scripts/pde_visualization.py` → `src/disaster/pde_visualization.py` |
+| 论文图 Fig.3 | `scripts/fig3_pde_mechanism.py` |
+| 输出文件 | `outputs/.../pde_optimal_params.csv` |
+| 输出文件 | `outputs/.../pde_alpha_predictions.csv` |
+| 输出文件 | `outputs/.../counterfactual_results.csv` |
 
 ---
 
-*文档版本：v2.1*  
-*最后更新：2025-02-18*  
-*变更：§3 α拟合方法描述与代码对齐（单调截断为主方法，新增§3.2五种窗口/方法的完整稳健性表）；§6参数表更新；§8.4 N→10；§8.5 PDE拟合窗口注明[1h, 120h] + E(t)与D(t)关系说明；§8.3 Bessel零点符号注释*
+## 6. 子区域级分析：振幅预测事件内部的恢复差异
+
+### 6.1 问题
+
+同一场灾难内部，什么决定了不同子区域恢复速度的差异？
+
+### 6.2 数据
+
+2,571 个 geo-unit 跨 14 个事件。每个 unit 有独立拟合的 alpha_unit、D_peak_unit、delta_peak_unit、distance_km。
+
+### 6.3 模型
+
+线性混合效应模型（随机截距，事件为 group）：
+
+$$\alpha_{\text{unit}} = \beta_1 \cdot D_{\text{peak,unit}} + \beta_2 \cdot \delta_{\text{peak,unit}} + \beta_3 \cdot \text{distance\_km} + u_{\text{event}} + \varepsilon$$
+
+随机截距 $u_{\text{event}}$ 控制事件间系统性差异。beta 估计 within-event 的 pooled 效应。
+
+### 6.4 结果
+
+| 预测因子 | beta | p |
+|---|---|---|
+| D_peak_unit | +0.212 | 0.018 |
+| delta_peak_unit | +0.003 | 0.967 |
+| distance_km | +2.9e-5 | 0.024 |
+
+n = 2,571 观测, 14 个事件组。
+
+**振幅在事件内部显著**：扰动更大的子区域恢复更快。
+
+**几何方向在子区域尺度无预测力**（p = 0.967）。
+
+### 6.5 稳健性
+
+| 检验 | 结果 |
+|---|---|
+| 随机斜率模型 | fixed beta = 0.128, p = 0.223；随机斜率方差 sigma2 = 0.122（14 group 的随机斜率方差估计功效不足） |
+| Mundlak within-between | within beta = 0.208, p = 0.012（within-event 效应真实） |
+
+### 6.6 两个尺度的关系
+
+| | 事件级 | 子区域级 |
+|---|---|---|
+| 几何 delta | 强预测力（rho = -0.776, p = 0.001） | 无预测力（p = 0.967） |
+| 振幅 D | 不显著（rho = +0.341, p = 0.233） | 显著（beta = +0.212, p = 0.018） |
+
+几何效应是宏观涌现现象（区分灾害类型），振幅效应是微观驱动力（驱动同一灾害内部的差异）。
+
+### 代码路径
+
+| 步骤 | 代码 |
+|---|---|
+| geo-unit 构建 + 拟合 | `scripts/geo_unit_scale_analysis.py` → `src/disaster/geo_unit_scale_analysis.py` |
+| 混合效应联合模型 | `scripts/subregion_joint_model.py` → `src/disaster/subregion_joint_model.py` |
+| 模型修正（随机斜率 + Mundlak） | `scripts/subregion_model_correction.py` → `src/disaster/subregion_model_correction.py` |
+| 输出文件 | `outputs/.../geo_unit_fits.csv` |
+| 输出文件 | `outputs/.../mixed_effects_joint_3predictor.csv` |
+| 输出文件 | `outputs/.../subregion_model_correction_unified_h8/` |
+
+---
+
+## 7. 参数汇总
+
+| 参数 | 符号 | 默认值 | 含义 |
+|---|---|---|---|
+| 最大距离 | r_max | 200 km | D(t) 平均的径向范围 |
+| 近场半径 | r_near | 50 km | delta_near 定义范围 |
+| 距离分箱宽度 | Delta_r | 10 km | 空间离散化步长 |
+| Peak 窗口比例 | f_peak | 0.5 | delta_near 平均所用 peak 窗口 |
+| 最小重叠 tile | - | 3 | 每个 (r, t) 格点的最小 tile 数 |
+| alpha 起点 | - | 24 h | 排除峰值附近混沌 |
+| 单调容忍度 | tol_up | 1.05 | 反弹截断阈值 |
+| 最小单调点数 | min_n_mono | 3 | 事件筛选 |
+| 最小 post-peak 步数 | min_post_peak | 4 (主文) / 3 (SI) | 事件筛选 |
+| PDE 边界半径 | R | 200 km | Bessel 展开径向域 |
+| Bessel 模态数 | N | 10 | 展开截断 |
+| geo-unit 级别 | - | L10 quadkey | 子区域粒度 |
+| geo-unit 最小 tile 数 | - | 5 | 子区域筛选 |
+
+---
+
+## 8. 软件与复现
+
+### 运行命令
+
+```bash
+# 事件级全流程（D(t) + alpha + delta_near + 跨灾难比较）
+python scripts/dt_decay.py --output-root outputs/
+
+# PDE 模型
+python -m scripts.spatial_diffusion --run-until 4 --pred-mode E --t-start 1.0
+
+# 子区域分析
+python scripts/geo_unit_scale_analysis.py
+python scripts/subregion_joint_model.py
+python scripts/subregion_model_correction.py
+
+# 稳健性
+python scripts/rnear_sensitivity.py
+python scripts/rmax_sensitivity.py
+python scripts/beryl_independence.py
+
+# 论文图
+python scripts/fig1_universal_relaxation.py
+python scripts/fig2_shape_predicts_recovery.py
+python scripts/fig3_pde_mechanism.py
+python scripts/fig4_amplitude_orthogonality.py
+```
+
+### 核心依赖
+
+Python 3.9+, pandas, numpy, scipy, statsmodels, matplotlib
+
+### 关键中间产物
+
+| 文件 | 含义 |
+|---|---|
+| phi_rt_long.csv | tile → 径向分箱聚合后的 phi(r,t) |
+| Dt_all_events.csv | 日均 D(t) 序列 |
+| Dt_routeB_sample_flags.csv | 样本筛选 flag（权威样本来源） |
+| geo_unit_fits.csv | 子区域级 alpha_unit 拟合结果 |
+| pde_optimal_params.csv | PDE 全局参数 |
+| pde_alpha_predictions.csv | PDE 预测的 alpha_pred |
+
+---
+
+## 待解决的问题
+
+1. **PDE 参数更新**：当前参数基于旧 n=16 数据，需要在 n=14 数据上重新估计。
+
+2. **振幅效应的尺度依赖性**：D_peak 在事件级不显著（p = 0.233）但在子区域级显著（p = 0.018）。可能是功效问题（n=14 vs n=2,571），也可能是真实的尺度依赖。
+
+3. **delta_near 与 D_peak 的边际相关**：rho = -0.525, p = 0.054。疏散型事件往往扰动更大，物理上合理，但意味着两者共享部分方差。
