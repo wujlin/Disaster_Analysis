@@ -1,0 +1,95 @@
+=================================================================
+Non-linear PDE: State-Dependent Recovery Experiment
+  dD/dt' = -(k₀ + γ·D)·D
+=================================================================
+
+Route B events: 18
+Full post-peak: 18 events, 219 pts
+Monotone segment: 18 events, 93 pts
+
+─────────────────────────────────────────────────────────────────
+Exp-N1: Log-log curvature (full post-peak)
+─────────────────────────────────────────────────────────────────
+  Events with quadratic fit: 18
+  Mean curvature a = 0.1256
+  Fraction a < 0 (concave): 7/18
+  ρ(a, D_peak) = 0.079, p = 0.7540
+  Prediction: ρ < 0 (larger D_peak → more concave)
+
+─────────────────────────────────────────────────────────────────
+Exp-N2: Global ODE fit (full post-peak, with D_inf)
+─────────────────────────────────────────────────────────────────
+
+  Fitted: k₀ = 0.032509 h⁻¹,  γ = 0.0000
+  Null (γ=0): k₀_null = 0.032508 h⁻¹
+
+  ── Goodness of fit ──
+  R²_ODE (total)   = -0.3596
+  SSR_ODE           = 4.995170
+  SSR_PL (per-evt)  = 2.372882
+  SSR_null (γ=0)    = 4.995170
+
+  ── BIC comparison (lower is better) ──
+  BIC_ODE  = -817.17  (k=2)
+  BIC_null = -822.56  (k=1)
+  BIC_PL   = -796.96  (k=36)
+  ΔBIC(ODE − PL)   = -20.21
+  ΔBIC(ODE − null)  = 5.39
+
+  γ > 0 ⟹ recovery rate INCREASES with displacement
+  Effective k_eff at peak (D_peak=0.40) = 0.03251 h⁻¹
+  Effective k_eff at peak (D_peak=0.06) = 0.03251 h⁻¹
+  Ratio: 1.00x
+
+─────────────────────────────────────────────────────────────────
+Exp-N2b: Global ODE fit (monotone segment)
+─────────────────────────────────────────────────────────────────
+  Fitted: k₀ = 0.034430 h⁻¹,  γ = 0.0000
+  BIC_ODE  = -337.18  (k=2)
+  BIC_PL   = -438.36  (k=36)
+  ΔBIC     = 101.18
+
+─────────────────────────────────────────────────────────────────
+Exp-N3: Predict α ranking from ODE (full post-peak)
+─────────────────────────────────────────────────────────────────
+  Events: 18
+  ρ(α_pred, α_emp)   = 0.554, p = 0.0170
+  ρ(k_eff_peak, α_emp) = 0.646, p = 0.0038
+
+  LOO cross-validation (may take a moment)...
+  ρ(α_pred_LOO, α_emp) = 0.521, p = 0.0266
+  γ_LOO range: [0.0000, 0.0049]
+  γ_LOO > 0 in 18/18 folds
+
+─────────────────────────────────────────────────────────────────
+Generating figures...
+─────────────────────────────────────────────────────────────────
+  Saved figure: outputs/cross_disaster_comparison/nonlinear_pde_unified_static_h8_gtfix_mtw5_mpp4/figures/representative_ode_fits.png
+  Saved figure: outputs/cross_disaster_comparison/nonlinear_pde_unified_static_h8_gtfix_mtw5_mpp4/figures/alpha_pred_vs_emp.png
+
+─────────────────────────────────────────────────────────────────
+Per-event summary (sorted by D_peak)
+─────────────────────────────────────────────────────────────────
+                                                             slug  D_peak  D_inf_norm  alpha_emp  alpha_pred  k_eff_peak   r2_ode   r2_pl  n_pts
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03  0.5638      0.2902     0.3873      3.7461      0.0325   0.2898  0.8908     13
+                                          turkiye_earthquake_2023  0.4011      0.5694     0.2228      7.0101      0.0325   0.5836  0.4363     34
+                         typhoon_yagi_across_northeastern_vietnam  0.3174      0.2828     0.5223      3.0668      0.0325   0.6446  0.9453     10
+      tropical_storm_kristine_in_bicol_and_calabarzon_philippines  0.2974      0.5003     0.7109      3.2948      0.0325  -1.1812 -0.0233     11
+                     hurricane_beryl_across_southeastern_texas_us  0.2408      0.1169     0.8001      3.9697      0.0325   0.9347  0.9059     14
+           hurricane_beryl_across_quintana_roo_and_yucatan_mexico  0.2361      0.0832     0.7412      3.7461      0.0325   0.3944  0.9262     13
+            the_flooding_across_bagmati_and_koshi_provinces_nepal  0.2119      0.4338     1.2155      3.9697      0.0325  -1.3603 -0.1167     14
+                   wildfires_in_boise_county_idaho_27_august_2024  0.1444      0.3647     0.0989      2.1314      0.0325 -14.7195  0.8773      6
+              flooding_in_central_and_eastern_europe_sept_16_2024  0.1427      0.8718    -0.0149      2.3695      0.0325  -3.2574  0.3384      7
+                                the_flooding_across_gujarat_india  0.1394      0.6551     0.1595      2.1314      0.0325   0.2529  0.8237      6
+                 tropical_storm_yagi_philippines_2_september_2024  0.1391      0.7174     0.4673      3.9697      0.0325  -0.4747  0.0954     14
+                                    typhoon_krathon_across_taiwan  0.1343      0.6399     0.1013      3.2948      0.0325  -0.3424 -0.0066     11
+                                                      spain_flood  0.1268      0.8643     0.0575      1.8893      0.0325  -0.6140  0.4791      5
+               the_flooding_across_rio_grande_do_sul_state_brazil  0.1087      0.2093     0.3896      6.3158      0.0325  -0.3945  0.5818     18
+                           the_flooding_across_eastern_bangladesh  0.0968      0.4542     0.4721      3.0668      0.0325  -0.4704 -0.0085     10
+                the_wildfires_in_quito_pichincha_province_ecuador  0.0887      0.4345     0.4242      3.7461      0.0325  -0.2753  0.4210     13
+                                            moldova_flooding_2024  0.0537      0.6932     0.0706      2.6045      0.0325  -0.9450  0.0115      8
+                                park_fire_california_29_july_2024  0.0395      0.8604     0.2226      3.5212      0.0325  -0.4559  0.0830     12
+
+=================================================================
+Done. All outputs → outputs/cross_disaster_comparison/nonlinear_pde_unified_static_h8_gtfix_mtw5_mpp4
+=================================================================

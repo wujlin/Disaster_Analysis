@@ -1,0 +1,7 @@
+scope,pair,rho,p,n
+pooled_raw,alpha_vs_delta_peak_unit,-0.3146956166895696,6.527991289173474e-39,1635
+pooled_raw,alpha_vs_D_peak_unit,-0.040721600446886434,0.09976236348297296,1635
+pooled_raw,alpha_vs_distance_km,0.016008834276514054,0.5177188467008874,1635
+within_event_demean,alpha_vs_delta_peak_unit,-0.18057543107004467,1.8870903086930565e-13,1635
+within_event_demean,alpha_vs_D_peak_unit,0.05538124229583675,0.025132894113017796,1635
+within_event_demean,alpha_vs_distance_km,0.14389894789995808,5.078931811879777e-09,1635

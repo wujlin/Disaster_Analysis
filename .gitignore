@@ -6,6 +6,9 @@ __pycache__/
 
 Data/
 
+# Local manuscript workspace (keep local; do not upload)
+Essay/
+
 # Secrets / auth material
 config/cookie.json
 config/_dfg_tokens.json
@@ -16,6 +19,11 @@ datasets/
 # Local one-off catalogs / debug dumps
 datasets_catalog.*
 _debug_*
+legacy/local_debug/
+legacy/local_workspace/
+plot_style.py
+visual_style_guide.md
+Writing_guide.md
 
 outputs/*
 # Curated run artifacts (tracked / shareable)
@@ -150,3 +158,5 @@ outputs/*
 output/
 output_*/
 output_smoke*/
+
+.DS_Store

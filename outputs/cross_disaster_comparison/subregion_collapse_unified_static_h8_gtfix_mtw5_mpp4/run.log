@@ -1,0 +1,25 @@
+
+============================================================
+Analysis: all_events
+============================================================
+  Units: 1210, Events: 16, Obs: 19221
+  Q(S2 global) = 0.7522
+  Q(S2 within-event mean) = 0.3290
+  Master curve power law: β = 0.2601, C = 0.5366, R² = 0.8717
+  Alpha: median=0.856, IQR=[0.399, 1.480]
+  Power-law R² ≥ 0.7: 70.1%
+  Power-law R² ≥ 0.5: 92.7%
+
+============================================================
+Analysis: excl_earthquake
+============================================================
+  Units: 1069, Events: 15, Obs: 15113
+  Q(S2 global) = 0.7807
+  Q(S2 within-event mean) = 0.3914
+  Master curve power law: β = 0.3094, C = 0.5236, R² = 0.8622
+  Alpha: median=0.969, IQR=[0.458, 1.589]
+  Power-law R² ≥ 0.7: 71.2%
+  Power-law R² ≥ 0.5: 93.9%
+Final figure saved.
+
+Final summary saved.

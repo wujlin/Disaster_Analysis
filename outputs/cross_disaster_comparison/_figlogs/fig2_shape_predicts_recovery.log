@@ -1,0 +1,3 @@
+OMP: Warning #179: Function Can't set size of SHM failed:
+Loaded profiles from: outputs/cross_disaster_comparison/spatial_diffusion_unified_static_h8_gtfix_mtw5_mpp4/tables/radial_profiles_at_peak.csv
+Saved: Essay/figures/fig2_shape_predicts_recovery.pdf, Essay/figures/fig2_shape_predicts_recovery.png

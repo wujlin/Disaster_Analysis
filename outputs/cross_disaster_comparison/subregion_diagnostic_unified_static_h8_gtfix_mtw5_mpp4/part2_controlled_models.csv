@@ -1,0 +1,7 @@
+model,beta_D_peak,p_D_peak,AIC,BIC,converged
+M0: alpha ~ D_peak,0.20543323449162001,0.01039655166223338,,,True
+M1: alpha ~ D_peak + n_mono,0.29369677747225675,0.0003159590291911249,,,True
+M1b: alpha ~ D_peak + r2,0.19608190094906341,0.014579128026347553,,,True
+M2: alpha ~ D_peak + n_mono + r2,0.28598887138539175,0.00048448740390982266,,,True
+M3: alpha ~ D_peak + delta + dist,0.20698594039877943,0.01684594847928909,,,True
+M4: alpha ~ D_peak + delta + dist + n_mono + r2,0.34208680334882335,0.0001621966492073798,,,True

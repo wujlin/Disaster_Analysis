@@ -1,9 +1,12 @@
 {
   "input_csv": "outputs/cross_disaster_comparison/geo_unit_scale_unified_h8_mtw4_mpp3_relaxed_20260225_141630/tables/geo_unit_fits.csv",
   "output_csv": "outputs/cross_disaster_comparison/subregion_joint_model_unified_h8/mixed_effects_joint_3predictor.csv",
-  "n_obs": 2571,
-  "n_events": 14,
-  "aic": null,
-  "bic": null,
-  "llf": null
+  "n_obs_all": 2571,
+  "n_events_all": 14,
+  "n_obs_hq": 454,
+  "models": [
+    "M0_all_RI",
+    "M1_quality_controlled",
+    "M2_n_mono_ge5"
+  ]
 }

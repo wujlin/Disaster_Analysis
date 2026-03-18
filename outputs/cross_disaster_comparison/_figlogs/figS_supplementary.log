@@ -1,0 +1,8 @@
+OMP: Warning #179: Function Can't set size of SHM failed:
+Saved: figS1_individual_panels
+Saved: figS2_jackknife
+Saved: figS3_alpha_vs_dinf
+Loaded profiles from: outputs/cross_disaster_comparison/spatial_diffusion_unified_static_h8_gtfix_mtw5_mpp4/tables/radial_profiles_at_peak.csv
+Saved: figS4_profile_gallery
+
+All supplementary figures done.

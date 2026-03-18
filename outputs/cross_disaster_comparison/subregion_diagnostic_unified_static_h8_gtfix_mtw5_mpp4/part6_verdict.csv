@@ -1,0 +1,8 @@
+test,estimate,significance
+Random Intercept (D_peak),beta=0.205,p=0.0104
+Random Slope (D_peak),beta=0.122,p=0.2012
+Mundlak Within (D_peak),beta=0.205,p=0.0104
+RI + n_mono + r2 控制,beta=0.286,p=0.0005
+"RI, n_mono>=5 (n=513)",beta=0.030,p=0.8195
+Demeaned Spearman,rho=0.112,p=2.60e-09
+Direction Consistency,5+ vs 11-,sign p=0.2101

@@ -1,0 +1,6 @@
+analysis,pair,rho,p,n
+bivariate,HDI vs delta_near,0.3390545430948792,0.1989087225977944,16
+bivariate,GDP_per_capita_PPP vs delta_near,0.3313700796074848,0.2099310306651486,16
+partial,delta_near vs alpha (raw),-0.5264705882352941,0.0361665149722454,16
+partial,delta_near vs alpha | HDI,-0.5222326041791197,0.0458242711178435,16
+partial,delta_near vs alpha | GDP_per_capita_PPP,-0.5212345464272629,0.0463149205010014,16

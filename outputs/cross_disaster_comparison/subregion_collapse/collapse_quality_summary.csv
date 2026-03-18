@@ -1,0 +1,5 @@
+strategy,Q,description
+S0_raw,-0.04959281036594221,D vs tau (no rescaling)
+S1_amp,0.03305149975797428,D/D_peak vs tau
+S2_two_param,0.30845018837568394,D/D_peak vs tau/t_half
+S3_alpha_guided,0.0070248189012585005,log(D/D_peak)+alpha*log(tau) vs log(tau)

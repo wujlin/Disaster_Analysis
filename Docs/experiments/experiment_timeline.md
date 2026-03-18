@@ -1,0 +1,86 @@
+# 实验时序（基于结果目录命名日期）
+
+- 统计范围：`outputs/cross_disaster_comparison/` 与 `outputs/_runs/` 顶层条目
+- 共识别：72 条（带日期标识）
+- 生成时间：2026-02-28 14:13:25
+- 说明：本文件仅统计“目录名含日期”的条目；无日期命名实验请查 `Docs/experiments/experiment_timeline_full.md`。
+
+## 2026-02-22
+- `wsa_full_pipeline_mnt_20260222_200540`（outputs/_runs）
+
+## 2026-02-23
+- `expanded_current_h0816_20260223`（outputs/_runs）
+- `expanded_current_static_h0816_20260223`（outputs/_runs）
+- `main_current_h0816_20260223`（outputs/_runs）
+- `routeB16_config_main_20260223`（outputs/_runs）
+- `routeB16_groundtruth_20260223`（outputs/_runs）
+- `routeB16_partner_opinion_main_20260223_1725`（outputs/_runs）
+- `Dt_decay_42audit_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_42audit_fullpost_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_AB_compare_on_h0816_20260223.csv`（outputs/cross_disaster_comparison）
+- `Dt_decay_AB_newHEAD_on_h0816_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_AB_old008a4f5_on_h0816_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_config_main_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_expanded_current_static_h0816_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_main_current_h0816_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_routeB16_config_main_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_routeB16_groundtruth_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_routeB16_partner_opinion_main_20260223_1725`（outputs/cross_disaster_comparison）
+- `Dt_decay_truncation_compare_20260223`（outputs/cross_disaster_comparison）
+- `Dt_decay_truncation_compare_partner_20260223`（outputs/cross_disaster_comparison）
+- `expanded_current_missing_t0_center_list_20260223.csv`（outputs/cross_disaster_comparison）
+- `expanded_current_static_input_coverage_20260223.csv`（outputs/cross_disaster_comparison）
+- `geo_unit_dual_track_summary_20260223.csv`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_expanded_current_static_h0816_20260223_L10`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_main_current_h0816_20260223_L10_excl_mexico`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_config_main_L10_20260223`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_partner_opinion_L10_20260223_1725`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_partner_opinion_L8_20260223_1725`（outputs/cross_disaster_comparison）
+- `partner_opinion_checklist_20260223_1725`（outputs/cross_disaster_comparison）
+- `phi_AB_old_vs_new_h0816_20260223`（outputs/cross_disaster_comparison）
+- `provenance_table_s1_routeB16_config_main_20260223.csv`（outputs/cross_disaster_comparison）
+- `provenance_table_s1_routeB16_partner_opinion_20260223_1725.csv`（outputs/cross_disaster_comparison）
+- `routeB16_event_level_change_audit_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_frozen_compare_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_frozen_preflight_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_groundtruth_availability_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_inconsistency_rootcause_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_inconsistency_rootcause_precise_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_inconsistency_rootcause_precise_20260223.txt`（outputs/cross_disaster_comparison）
+- `routeB16_legacy_repro_window_pin_report_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_main_current_h0816_20260223_postgate`（outputs/cross_disaster_comparison）
+- `routeB16_postgate_config_main_20260223`（outputs/cross_disaster_comparison）
+- `routeB16_postgate_config_main_20260223_expected14`（outputs/cross_disaster_comparison）
+- `routeB16_postgate_partner_opinion_20260223_1725`（outputs/cross_disaster_comparison）
+- `routeB16_preflight_config_main_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB16_preflight_groundtruth_20260223.csv`（outputs/cross_disaster_comparison）
+- `routeB_dual_track_summary_20260223.csv`（outputs/cross_disaster_comparison）
+- `sensitivity_near_r_rmax_partner_20260223_1725`（outputs/cross_disaster_comparison）
+- `track_execution_summary_20260223.csv`（outputs/cross_disaster_comparison）
+- `unified_radial8h_20260223_001247`（outputs/_runs）
+- `Dt_decay_unified_radial8h_20260223_001247`（outputs/cross_disaster_comparison）
+- `routeB16_frozen_radial_20260223_101220`（outputs/_runs）
+- `Dt_decay_routeB16_frozen_20260223_101220`（outputs/cross_disaster_comparison）
+- `routeB16_frozen_postgate_20260223_101220`（outputs/cross_disaster_comparison）
+- `routeB16_frozen_radial_h0816_20260223_101624`（outputs/_runs）
+- `Dt_decay_routeB16_frozen_h0816_20260223_101624`（outputs/cross_disaster_comparison）
+- `routeB16_frozen_postgate_h0816_20260223_101624`（outputs/cross_disaster_comparison）
+- `phi_AB_old008a4f5_routeB16_h0816_20260223_105010`（outputs/_runs）
+- `Dt_decay_routeA_open_20260223_223920`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_groundtruth_L10_20260223_225821`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_groundtruth_L10_allfits_20260223_225954`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_groundtruth_L10_allfits_relaxed_20260223_230121`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_groundtruth_L10_allfits_peak400_20260223_231007`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_42_all_20260223_232244`（outputs/cross_disaster_comparison）
+
+## 2026-02-24
+- `geo_unit_scale_routeB16_groundtruth_all16_peak168_20260224_000712`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_routeB16_groundtruth_all16_peak400_20260224_000852`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_partial_gt_round2_included32_20260224_132836`（outputs/cross_disaster_comparison）
+- `Dt_decay_partial_gt_round2_included32_20260224_133240`（outputs/cross_disaster_comparison）
+- `Dt_decay_partial_gt_round2_included32_fullpost_20260224_153822`（outputs/cross_disaster_comparison）
+
+## 2026-02-25
+- `geo_unit_scale_unified_h8_mtw5_mpp4_20260225_135709`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_unified_h8_mtw4_mpp3_20260225_141504`（outputs/cross_disaster_comparison）
+- `geo_unit_scale_unified_h8_mtw4_mpp3_relaxed_20260225_141630`（outputs/cross_disaster_comparison）

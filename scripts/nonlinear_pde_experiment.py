@@ -30,6 +30,7 @@ Experiments
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -40,13 +41,16 @@ from scipy import optimize, stats
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-OUT = ROOT / "outputs" / "cross_disaster_comparison" / "nonlinear_pde"
+DEFAULT_OUT = ROOT / "outputs" / "cross_disaster_comparison" / "nonlinear_pde"
+DEFAULT_DT_DIR = ROOT / "outputs" / "cross_disaster_comparison" / "Dt_decay" / "tables"
+
+OUT = DEFAULT_OUT
 OUT_TABLES = OUT / "tables"
 OUT_FIGS = OUT / "figures"
 OUT_TABLES.mkdir(parents=True, exist_ok=True)
 OUT_FIGS.mkdir(parents=True, exist_ok=True)
 
-DT_DIR = ROOT / "outputs" / "cross_disaster_comparison" / "Dt_decay" / "tables"
+DT_DIR = DEFAULT_DT_DIR
 
 # ═══════════════════════════════════════════════════════════════
 # Helpers
@@ -596,4 +600,16 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Nonlinear PDE experiment")
+    parser.add_argument("--dt-dir", default=str(DEFAULT_DT_DIR), help="包含 Dt_all_events.csv 与 Dt_routeB_sample_flags.csv 的目录")
+    parser.add_argument("--out-dir", default=str(DEFAULT_OUT))
+    args = parser.parse_args()
+
+    DT_DIR = Path(args.dt_dir)
+    OUT = Path(args.out_dir)
+    OUT_TABLES = OUT / "tables"
+    OUT_FIGS = OUT / "figures"
+    OUT_TABLES.mkdir(parents=True, exist_ok=True)
+    OUT_FIGS.mkdir(parents=True, exist_ok=True)
+
     main()

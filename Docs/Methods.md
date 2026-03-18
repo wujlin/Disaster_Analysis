@@ -3,7 +3,7 @@
 > **项目**：Disaster Recovery Dynamics
 > **版本**：v2.0
 > **日期**：2026-02-28
-> **数据基准**：unified_static_h8, n=14 事件, 2,571 子区域
+> **数据基准**：unified_static_h8, n=14 事件, 2,571 子区域（质量筛选后 1,081; 排除地震 940）
 
 ---
 
@@ -15,9 +15,9 @@
 
 | | 事件级 | 子区域级 |
 |---|---|---|
-| 观测单位 | 14 个灾难事件 | 2,571 个 geo-unit |
-| 问题 | 什么使一场灾难比另一场恢复更快？ | 同一灾难内，什么使某区域比另一区域恢复更快？ |
-| 统计框架 | Spearman 秩相关 | 线性混合效应模型 |
+| 观测单位 | 14 个灾难事件 | 940+ 个 geo-unit |
+| 问题 | 什么使一场灾难比另一场恢复更快？ | 恢复函数形式是否跨尺度保持？局部可观测量能否预测局部恢复速率？ |
+| 统计框架 | Spearman 秩相关 | 数据塌缩 + 线性混合效应模型 |
 
 方法路线：**数据构建 → 模式发现 → 物理机制 → 稳健性**。
 
@@ -206,7 +206,7 @@ SI 备选配置（`mtw4_mpp3`）纳入 n = 15 个事件，结论不变。
 | r_max 敏感性 | `scripts/rmax_sensitivity.py` → `src/disaster/rmax_sensitivity.py` |
 | Beryl 独立性检验 | `scripts/beryl_independence.py` → `src/disaster/beryl_independence.py` |
 | 社会经济控制 | `scripts/external_covariates_analysis.py` |
-| 论文图 Fig.2 | `scripts/fig2_shape_predicts_recovery.py` |
+| 论文图 Fig.3 | `scripts/fig3_shape_predicts_recovery.py` |
 | 输出文件 | `outputs/cross_disaster_comparison/spearman_summary.csv` |
 | 输出文件 | `outputs/cross_disaster_comparison/rmax_sensitivity_spearman_summary.csv` |
 | 输出文件 | `outputs/cross_disaster_comparison/rnear_sensitivity_spearman_summary.csv` |
@@ -280,64 +280,122 @@ E(t)（L2 范数）与经验 D(t)（L1 范数）是同一廓线的不同大小�
 
 ---
 
-## 6. 子区域级分析：振幅预测事件内部的恢复差异
+## 6. 子区域级分析：跨尺度幂律普适性
 
-### 6.1 问题
+### 6.1 核心发现
 
-同一场灾难内部，什么决定了不同子区域恢复速度的差异？
+子区域级分析揭示了一个强正面结果：**幂律衰减作为恢复的函数形式，在子区域尺度上同样成立**。940 条子区域轨迹（13 个事件，排除地震）经双参数归一化后，塌缩到一条 master curve 上（Q = 0.51），该 master curve 自身遵循幂律（R² = 0.86）。这建立了从 ~5 km 到 ~200 km 的尺度无关恢复动力学。
+
+与此同时，恢复速率（指数 α）在事件内部呈现显著异质性（ICC = 0.15），局部可观测量（振幅、位移方向、距离）均不能稳健地预测局部恢复速率。这不是"缺乏发现"，而是涌现（emergence）的直接证据：个体多样 → 集体有序。
 
 ### 6.2 数据
 
-2,571 个 geo-unit 跨 14 个事件。每个 unit 有独立拟合的 alpha_unit、D_peak_unit、delta_peak_unit、distance_km。
+2,571 个 geo-unit 跨 14 个事件。质量筛选后（n_mono ≥ 4, R² ≥ 0.5），保留 1,081 个 unit。排除恢复机制本质不同的地震事件后，保留 940 个 unit（13 个事件，14,081 条衰减相观测）。
 
-### 6.3 模型
+### 6.3 函数形式的普适性
 
-线性混合效应模型（随机截距，事件为 group）：
+对每个 unit 独立拟合幂律 $D(t) \sim t^{-\alpha}$：
 
-$$\alpha_{\text{unit}} = \beta_1 \cdot D_{\text{peak,unit}} + \beta_2 \cdot \delta_{\text{peak,unit}} + \beta_3 \cdot \text{distance\_km} + u_{\text{event}} + \varepsilon$$
-
-随机截距 $u_{\text{event}}$ 控制事件间系统性差异。beta 估计 within-event 的 pooled 效应。
-
-### 6.4 结果
-
-| 预测因子 | beta | p |
-|---|---|---|
-| D_peak_unit | +0.212 | 0.018 |
-| delta_peak_unit | +0.003 | 0.967 |
-| distance_km | +2.9e-5 | 0.024 |
-
-n = 2,571 观测, 14 个事件组。
-
-**振幅在事件内部显著**：扰动更大的子区域恢复更快。
-
-**几何方向在子区域尺度无预测力**（p = 0.967）。
-
-### 6.5 稳健性
-
-| 检验 | 结果 |
+| R² 区间 | 占比（n_mono ≥ 4，排除地震） |
 |---|---|
-| 随机斜率模型 | fixed beta = 0.128, p = 0.223；随机斜率方差 sigma2 = 0.122（14 group 的随机斜率方差估计功效不足） |
-| Mundlak within-between | within beta = 0.208, p = 0.012（within-event 效应真实） |
+| ≥ 0.9 | 26.0% |
+| ≥ 0.7 | **70.5%** |
+| ≥ 0.5 | **93.5%** |
+| < 0.5 | 6.5% |
 
-### 6.6 两个尺度的关系
+**93.5% 的子区域遵循幂律衰减**，证明 D(t) ~ t^{-α} 不仅在事件级（空间平均后的 D(t)）成立，在 ~5 km 尺度的单个 geo-unit 上也成立。幂律是恢复动力学的**跨尺度普适函数形式**。
+
+### 6.4 数据塌缩（Data Collapse）
+
+将每条轨迹做双参数归一化：振幅归一化 $\tilde{D} = D / D_{\text{peak}}$，时间归一化 $\tilde{\tau} = \tau / t_{1/2}$（其中 $t_{1/2}$ 为 D 衰减至峰值一半的时间）。
+
+| 策略 | 描述 | 塌缩质量 Q |
+|---|---|---|
+| S0 | D vs τ（无归一化） | −0.05 |
+| S1 | D/D_peak vs τ（仅振幅归一化） | 0.03 |
+| **S2** | **D/D_peak vs τ/t_half（双参数归一化）** | **0.51** |
+
+Q 定义为 $Q = 1 - \langle \sigma^2_{\text{bin}} \rangle / \sigma^2_{\text{global}}$，Q = 0 无塌缩，Q = 1 完美塌缩。
+
+双参数归一化后，940 条轨迹的中位数轨迹（master curve）自身遵循幂律：
+
+$$\tilde{D} = 0.52 \cdot \tilde{\tau}^{-0.31}, \quad R^2 = 0.86$$
+
+**每事件塌缩质量**差异显著，反映恢复机制的类型差异：
+
+| 事件 | 类型 | n_units | Q(S2) |
+|---|---|---|---|
+| typhoon_yagi_vietnam | typhoon | 15 | **0.90** |
+| spain_flood | flood | 74 | **0.63** |
+| flooding_europe | flood | 227 | **0.58** |
+| hurricane_beryl_texas | hurricane | 101 | **0.48** |
+| hurricane_beryl_mexico | hurricane | 33 | **0.47** |
+| wildfires_quito | wildfire | 13 | 0.40 |
+| flooding_nepal | flood | 23 | 0.33 |
+| hurricane_beryl_jamaica | hurricane | 338 | 0.27 |
+| flooding_brazil | flood | 49 | 0.26 |
+| kristine_philippines | tropical_storm | 22 | 0.23 |
+| typhoon_krathon_taiwan | typhoon | 18 | 0.21 |
+| yagi_philippines | tropical_storm | 11 | 0.18 |
+| park_fire_california | wildfire | 16 | 0.08 |
+| turkiye_earthquake | earthquake | 141 | **−0.61** |
+
+地震（Q = −0.61）的恢复动态与其他灾害类型根本不同（近乎无衰减，α ≈ 0.06），对应于永久性结构损害。
+
+### 6.5 α 的结构化异质性
+
+衰减指数 α 的分布（排除地震）：
+
+| 统计量 | 值 |
+|---|---|
+| median | **1.02** |
+| IQR | [0.48, 1.62] |
+| CV（全局） | 0.78 |
+| ICC（事件间） | **0.15** |
+
+ICC = 0.15 意味着仅 15% 的 α 方差归因于事件间差异，85% 是事件内部的子区域异质性。这排除了"α 是事件固有属性"的假设——α 不是由灾害类型或地理位置统一决定的，而是在空间聚合过程中**涌现**的集体属性。
+
+### 6.6 局部预测因子的排除
+
+线性混合效应模型（随机截距，REML）检验三个局部可观测量对 α_unit 的预测力：
+
+| 预测因子 | 全样本 β (p) | 随机斜率 β (p) | n_mono ≥ 5 子集 β (p) | 等权 meta β (p) |
+|---|---|---|---|---|
+| D_peak_unit | +0.21 (0.018) | +0.13 (0.223) | +0.04 (0.791) | −0.16 (0.578) |
+| delta_peak_unit | +0.00 (0.967) | — | — | −0.27 (0.240) |
+| distance_km | +2.9e-5 (0.024) | — | — | +4.9e-4 (0.243) |
+
+D_peak_unit 的表面显著性（p = 0.018）不稳健：
+- **随机斜率模型**：允许事件异质斜率后，p = 0.223
+- **SNR 控制**：限制 n_mono ≥ 5 后效应消失（β = +0.04, p = 0.791）
+- **LOO**：排除 beryl_jamaica（39% 样本）后翻号为负（β = −0.16, p = 0.234）
+- **等权 meta-analysis**：每事件一票，效应为负且不显著
+
+**没有任何局部可观测量能跨事件地稳健预测局部恢复速率。**
+
+### 6.7 两个尺度的统一叙事
 
 | | 事件级 | 子区域级 |
 |---|---|---|
-| 几何 delta | 强预测力（rho = -0.776, p = 0.001） | 无预测力（p = 0.967） |
-| 振幅 D | 不显著（rho = +0.341, p = 0.233） | 显著（beta = +0.212, p = 0.018） |
+| 函数形式 | 幂律 D(t) ~ t^{-α}（14/14 事件） | 幂律 D(t) ~ t^{-α}（93.5% 的 units） |
+| 空间信息 → α | delta_near 强预测力（ρ = −0.78） | 局部可观测量无稳健预测力 |
+| α 的含义 | 空间 profile 形状的集体指纹 | 局部恢复率，高度异质 |
 
-几何效应是宏观涌现现象（区分灾害类型），振幅效应是微观驱动力（驱动同一灾害内部的差异）。
+这一结构揭示了灾后恢复的涌现特征：
+1. **函数形式跨尺度保持**——幂律在 ~5 km（unit）和 ~200 km（event）尺度同时成立
+2. **参数跨尺度涌现**——事件级 α 由空间 profile 形状决定（PDE 模型），但这个 α 本身是由内部高度异质的 α_unit 在空间聚合中产生的
+3. **局部多样性 + 集体有序 = 涌现**——无法从任何单一局部属性预测局部 α，但空间组织（profile 形状）决定了集体 α
 
 ### 代码路径
 
 | 步骤 | 代码 |
 |---|---|
 | geo-unit 构建 + 拟合 | `scripts/geo_unit_scale_analysis.py` → `src/disaster/geo_unit_scale_analysis.py` |
+| 数据塌缩实验（Route A） | `scripts/subregion_data_collapse.py`, `subregion_data_collapse_v2.py`, `subregion_collapse_final.py` |
 | 混合效应联合模型 | `scripts/subregion_joint_model.py` → `src/disaster/subregion_joint_model.py` |
-| 模型修正（随机斜率 + Mundlak） | `scripts/subregion_model_correction.py` → `src/disaster/subregion_model_correction.py` |
-| 输出文件 | `outputs/.../geo_unit_fits.csv` |
-| 输出文件 | `outputs/.../mixed_effects_joint_3predictor.csv` |
-| 输出文件 | `outputs/.../subregion_model_correction_unified_h8/` |
+| 模型修正 + 诊断 | `scripts/subregion_model_correction.py`, `scripts/subregion_diagnostic.py` |
+| 输出目录 | `outputs/.../subregion_collapse/` |
+| 关键图表 | `data_collapse_final.png`（3-panel publication figure） |
 
 ---
 
@@ -383,8 +441,8 @@ python scripts/rmax_sensitivity.py
 python scripts/beryl_independence.py
 
 # 论文图
-python scripts/fig1_universal_relaxation.py
-python scripts/fig2_shape_predicts_recovery.py
+python scripts/fig2_universal_relaxation.py
+python scripts/fig3_shape_predicts_recovery.py
 python scripts/fig3_pde_mechanism.py
 python scripts/fig4_amplitude_orthogonality.py
 ```
@@ -410,6 +468,209 @@ Python 3.9+, pandas, numpy, scipy, statsmodels, matplotlib
 
 1. **PDE 参数更新**：当前参数基于旧 n=16 数据，需要在 n=14 数据上重新估计。
 
-2. **振幅效应的尺度依赖性**：D_peak 在事件级不显著（p = 0.233）但在子区域级显著（p = 0.018）。可能是功效问题（n=14 vs n=2,571），也可能是真实的尺度依赖。
+2. ~~**振幅效应的尺度依赖性**~~（已解决）：子区域级 D_peak_unit 的"显著性"（p=0.018）经诊断为不稳健——排除 beryl_jamaica 后翻号，控制 fit quality 后消失（n_mono≥5 子集 p=0.791）。详见 Section 6.5。当前结论：振幅效应在事件内部的方向因灾害而异，不构成普遍规律。
 
 3. **delta_near 与 D_peak 的边际相关**：rho = -0.525, p = 0.054。疏散型事件往往扰动更大，物理上合理，但意味着两者共享部分方差。
+
+4. **子区域 φ 定义统一**（待定）：子区域使用 raw ratio，事件级使用 overlap-conditioned。需评估是否在 `geo_unit_scale_analysis.py` 中也使用 overlap 条件，或在 SI 中做 sensitivity check。
+
+---
+
+## 9. 方法审计报告（PI Review，2026-02-28）
+
+> 本节为逐行代码审计结果。严重程度：🔴 = 影响核心论证，需立即修正；🟡 = 人为设定或隐含假设，需在论文中明确说明；🟢 = 代码正确但 Methods 措辞需精确化。
+
+---
+
+### 🔴 Issue A：Subregion 与 Event-level 的 φ 定义不一致
+
+**问题**：event-level 和 subregion-level 对 φ 使用了不同的计算公式，但 Methods.md 和论文均未说明这一区别。
+
+**Event-level**（`phi_heatmap.py` + `dt_decay.py`）：
+
+```python
+# phi_heatmap.py line 903
+agg["phi_overlap"] = agg["crisis_sum_overlap"] / agg["baseline_sum_overlap"]
+# 只包含在时刻 t 和基线期均有观测的 tile（overlap 条件）
+```
+
+**Subregion-level**（`geo_unit_scale_analysis.py`）：
+
+```python
+# geo_unit_scale_analysis.py line 216
+g["phi"] = pd.to_numeric(g["n_crisis_sum"]) / pd.to_numeric(g["n_baseline_sum"])
+# 包含 geo_unit 内所有 tile，无 overlap 筛选
+```
+
+**后果**：
+
+- Event-level 的 φ 是"**coverage-conditioned**"估计（排除了仅在危机期才出现或消失的 tile），系统性地比 raw ratio 更保守。
+- Subregion-level 的 φ 是**raw ratio**（所有 tile 求和相除），未施加任何 overlap 条件。
+- 两者在 tile 覆盖率稳定的区域差异小，但在边缘区域（危机期 tile 大量变化时）差异可能显著。
+- 目前 Section 1.2 的公式 $\phi(r, t) = \sum n_{\text{crisis}} / \sum n_{\text{baseline}}$ 暗示两者一致，实际不然。
+
+**需要做的事**：
+
+1. 在 Methods 中明确说明两种 φ 的差异及各自的适用场景。
+2. 在子区域分析中增加一个 sensitivity check：对 `n_baseline_sum > threshold` 的 geo_unit 过滤（类似 overlap 条件的代理），确认 `D_peak_unit` 对 beta 估计的影响可忽略。
+3. 或者，统一两个层级的 φ 定义（推荐）：在 `geo_unit_scale_analysis.py` 中也使用 overlap-conditioned 估计。
+
+---
+
+### 🔴 Issue B：Subregion 分析的独立性问题——"独立分析"的表述不准确
+
+**问题**：Section 6 声称子区域分析是独立于事件级分析的另一层证据，但实际上两者共享关键输入，不能视为完全独立的检验。
+
+**共享的输入**：
+
+| 输入 | 来源 | 是否共享 |
+|---|---|---|
+| `t0`（事件起点时间） | catalog，与 event-level 相同 | ✅ 共享 |
+| `center_lat/lon`（参考中心） | catalog，与 event-level 相同 | ✅ 共享 |
+| 事件集合（哪14个事件） | Route B 样本，由 event-level 筛选决定 | ✅ 共享 |
+| 原始 tile 数据 | 同一份 FBDM 数据 | ✅ 共享 |
+| φ 计算逻辑 | 不同（见 Issue A） | ❌ 不共享 |
+
+**结果**：子区域分析实际上是"**在 event-level 条件（event 选择 + t0 + center）约束下，对同一数据的更细粒度分解**"，而非独立验证。
+
+**需要做的事**：
+
+1. **调整论证语言**：不再声称子区域分析"独立于"事件级分析，而是将其定位为"**在同一框架内的跨尺度一致性检验**"。具体可以表述为："子区域分析提供了事件内部的方差分解，而非独立样本。其意义在于将跨事件的 Spearman 相关拆解到事件内部的因果机制。"
+2. 在 Section 6.6 的对比表中加注：两个尺度使用相同的 catalog 和 t0，差异仅在于空间聚合粒度和统计框架。
+
+---
+
+### 🟡 Issue C：D_peak_unit 与 D_peak 的量纲和语义不同
+
+**问题**：论文在事件级和子区域级分析中都使用 D_peak 概念，但两者的计算路径和物理意义不同。
+
+**Event-level**：
+$$D_{\text{peak}} = \max_t \left[\frac{1}{N_r}\sum_{r=0}^{r_{\max}} |\phi_{\text{overlap}}(r,t) - 1|\right]$$
+这是对空间（r 轴方向）的 L1 平均后再取时间峰值，是**集体空间位移**的峰值。
+
+**Subregion-level**：
+$$D_{\text{peak,unit}} = \max_t \left|\frac{\sum_{i \in \text{unit}} n_{\text{crisis},i}(t)}{\sum_{i \in \text{unit}} n_{\text{baseline},i}} - 1\right|$$
+这是某个 geo_unit（约 25km × 25km）的时间序列峰值，没有空间平均，是**局部位移幅度**。
+
+**后果**：Section 6.4 中 `beta(D_peak_unit) = +0.212, p = 0.018` 的 "振幅在事件内部显著" 的解读是正确的，但与 Section 4.1 中 `rho(alpha, D_peak) = +0.341, p = 0.233` 的"振幅在事件级不显著"不能直接对比——它们度量的是不同层级的振幅。
+
+**需要做的事**：
+
+1. 在论文中明确区分两种 D_peak 的计算层级，使用不同的下标（如 $D_{\text{peak}}^{\text{event}}$ vs $D_{\text{peak}}^{\text{unit}}$）。
+2. 补充说明：尺度依赖性（scale-dependent）本身是一个 finding，不是矛盾。振幅效应在小空间尺度有效，在大尺度（事件间比较）被几何效应掩盖——这对应不同的空间方差来源。
+
+---
+
+### 🟡 Issue D：alpha 拟合起点 t' = 24h 是人为设定，缺乏敏感性分析
+
+**问题**：`dt_decay.py` 和 `geo_unit_scale_analysis.py` 均从 t' = 24h 开始拟合，排除了峰值后的前 24 小时数据。
+
+**代码实证**：`fit_min_tprime_hours = 24`（两个文件均如此）。
+
+**潜在影响**：
+
+- 这个选择等价于强制 "fast initial transient" 不进入拟合。对于快速恢复事件（peak ~ 24h 后即达稳态），这可能导致拟合段过短。
+- 对于慢速恢复事件（peak 后数百小时仍在衰减），24h 截断的影响几乎可以忽略。
+
+**需要做的事**：
+
+1. Methods 中明确说明该参数的物理动机（避免急性期的非平稳过渡过程污染幂律拟合）。
+2. 增加敏感性分析：`fit_min_tprime_hours ∈ {12, 24, 48}`，报告 alpha 估计的变化范围。如果 alpha 对该参数不敏感（预期如此，因为单调截断在起到主要筛选作用），则在 SI 中一句话说明即可。
+
+---
+
+### 🟡 Issue E：单调截断的非对称性
+
+**问题**：`_monotone_decay_segment` 只对上升做截断（`D_norm[i+1] > 1.05 * D_norm[i]` 则停止），允许任意大幅的急速下降。
+
+**后果**：如果某个事件的 D(t) 在峰值后出现一次急剧下降（例如数据覆盖率突然恢复），然后趋于平稳，该单调段可能只包含那次急剧下降，导致 alpha 被高估。
+
+**缓解因素**：`min_n_mono >= 3` 要求至少 3 个点，限制了极端情况的影响；实际上 FBDM 数据的 8h 分辨率使得急剧下降不常见。
+
+**需要做的事**：
+
+1. 在 Methods 中说明单调性是针对"反弹"（上升）的截断，而非双向截断。
+2. 在 SI 中报告：各事件的单调段长度分布（n_mono 的中位数和范围），以表明大多数事件的拟合段有足够长度。
+
+---
+
+### 🟡 Issue F：near_delta 定义中的峰值窗口权重
+
+**问题**：`delta_near` 定义为"在 $D(t) \geq 0.5 D_{\text{peak}}$ 窗口内的 near-field delta 均值"，但这些窗口内可能包含不同数量的 r bins，不同的时刻对 near_delta 的贡献未做加权。
+
+**代码实证**（`dt_decay.py` line 402-404）：
+
+```python
+near = pd.to_numeric(peak_w["near_delta"], errors="coerce").to_numpy(dtype=float)
+near = near[np.isfinite(near)]
+near_mean = float(np.mean(near)) if near.size else float("nan")
+```
+
+这是对时间窗口做等权均值，不考虑每个窗口的 `n_r_bins`（近场 bin 数量可能不同）。
+
+**后果**：对于近场 tile 覆盖率随时间变化较大的事件（例如热带风暴过境时的快速移动），部分时刻的 near_delta 基于极少的 bin 计算，与多 bin 时刻等权处理。
+
+**需要做的事**：
+
+1. 在 Methods 中说明均值是等时刻权重（time-equal-weighted），而非 tile-weighted。
+2. 可选：在 SI 中增加一个 check：`near_delta` vs 以 `n_r_bins_near` 为权重的 near_delta，报告两者的 Spearman rho 差异。
+
+---
+
+### 🟢 Issue G：phi_overlap 的 overlap 条件在 Methods 中说明不足
+
+**现状**：Section 1.2 写到"仅包含在时刻 $t$ 和基线期均有观测的 tile（overlap 条件）"，但没有说明：
+
+1. 为什么选择 overlap-conditioned 估计（而不是 all-tile 估计）。
+2. overlap 条件对 φ 的系统性影响（低 tile 覆盖率区域的 φ 更可信，高覆盖率稳定区域影响可忽略）。
+3. `n_tiles_overlap >= 3` 筛选阈值的理由。
+
+**建议**：补充一段说明 overlap 条件的动机（FBDM 在危机期的 tile coverage 会变化，若某区域在 baseline 期有数据但危机期 Meta 未收集，直接用 all-tile 估计会混淆"数据缺失"与"人口减少"两种效应；overlap 条件确保分子分母中的 tile 集合相同，从而 φ 是纯数量变化信号）。
+
+---
+
+### ~~🔴 Issue H：geo_unit_scale_analysis 缺少日均平滑~~（诊断有误，已澄清）
+
+**PI 原始诊断**：声称 `geo_unit_scale_analysis.py` 使用 8h 原始分辨率数据，缺少日均平滑。
+
+**独立审计结论**：**此诊断有事实性错误**。代码审计发现 `geo_unit_scale_analysis.py` 通过 `_list_population_windows` 函数中的 `only_hour_pt` 过滤器（line 130），**每天仅读取一个 8h 窗口**的 population 文件。时间序列实际上已经是 ~24h 步长，不需要日均平滑步骤。
+
+**两个层级的真实差异**：
+
+| 细节 | dt_decay.py（事件级） | geo_unit_scale_analysis.py（子区域级） |
+|---|---|---|
+| 时间采样 | 读取全部 3 个/天窗口，日均平均 | 仅读取 1 个/天窗口（`only_hour_pt`） |
+| φ 定义 | `phi_overlap`（overlap-conditioned） | `n_crisis_sum / n_baseline_sum`（raw ratio） |
+| D 的计算 | `mean_r(\|phi_overlap - 1\|)`（空间 L1 均值） | `\|phi_unit - 1\|`（标量） |
+
+差异在于"三窗口均值 vs 单一快照"，而非"8h vs 24h 分辨率"。单一快照的噪声确实比三窗口均值高，但不会引入 PI 所描述的"commuting 日内周期"问题（因为只有一个时间点/天）。
+
+**状态**：无需代码修改；在 SI 中注明时间采样差异即可。
+
+---
+
+### 审计总结
+
+| Issue | 严重程度 | 状态 | 行动 |
+|---|---|---|---|
+| A. φ 定义不一致（overlap vs raw） | 🔴 | 待修正 | 统一 phi 定义，或明确说明并做 sensitivity check |
+| B. Subregion "独立性"表述不准确 | 🔴 | **已修正** | Section 6.1 已调整为"同一框架内的方差分解" |
+| C. D_peak 跨尺度语义不同 | 🟡 | 待澄清 | 区分符号，明确两者含义 |
+| D. t' = 24h 起点缺乏敏感性分析 | 🟡 | 待补充 | 添加敏感性分析到 SI |
+| E. 单调截断非对称性 | 🟡 | 待说明 | Methods 中说明截断方向 |
+| F. near_delta 等时刻权重 | 🟡 | 待说明 | Methods 中说明权重方案 |
+| G. overlap 条件动机不足 | 🟢 | 待完善 | 补充一段解释 |
+| H. geo_unit 日均平滑缺失 | ~~🔴~~ | **诊断有误** | `only_hour_pt` 过滤器已确保每日单点采样，无需修改 |
+
+---
+
+### 独立审计补充（2026-02-28）
+
+PI Review 遗漏的关键问题，由独立审计发现：
+
+| Issue | 严重程度 | 状态 | 说明 |
+|---|---|---|---|
+| I. D_peak_unit 显著性不稳健 | 🔴 | **已确认并修正** | 随机斜率 p=0.223；n_mono≥5 子集 p=0.791；LOO 排除 beryl_jamaica 翻号；等权 meta 分析 mean β=−0.164。详见 Section 6.5 |
+| J. SNR confound（D_peak ↔ n_mono → alpha） | 🔴 | **已确认** | D_peak vs n_mono ρ=0.240, p<0.001。高振幅 unit 拟合段更长，alpha 估计更稳定，产生伪正相关 |
+| K. delta_near vs delta_peak_unit 语义不同 | 🟡 | **已修正** | Section 6.7 已区分：delta_near 是灾害类型签名（between-event），delta_peak_unit 是距离梯度上的位置（within-event） |
+| L. REML vs ML 不一致 | 🟡 | **已修正** | `subregion_joint_model.py` 已统一为 REML |

@@ -227,7 +227,7 @@ $$\text{BIC} = n \ln(\hat{\sigma}^2) + k \ln(n)$$
 3. **时间单位**: hours_since_quake 列（8 小时间隔）
 4. **Power-law α 不是全局普适的**: EVAC 和 INFL 有显著不同的 α
 5. **单调衰减段的识别至关重要**: 很多事件有双峰结构（Nepal = 洪水第二波，Bangladesh = 二次冲击），如果把反弹段也纳入拟合，α 和 R² 都会严重失真
-6. **绘图风格**: 遵循 `Docs/visual_style_guide.md` 和 `plot_style.py`
+6. **绘图风格**: 遵循 `Docs/visual_style_guide.md` 和 `src/disaster/plot_style.py`
 
 ---
 

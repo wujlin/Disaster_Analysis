@@ -1,0 +1,3 @@
+x_metric,y_target,controls,n,partial_spearman_r,p_value
+pos_frac,alpha,delta_near,18,-0.3006672000260349,0.22538059027294607
+E_high_frac,alpha,D_peak,18,0.1597029106283589,0.5267319659132013

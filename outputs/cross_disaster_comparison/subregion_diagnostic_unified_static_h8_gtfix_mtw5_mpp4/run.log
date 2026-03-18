@@ -1,0 +1,153 @@
+============================================================
+Part 0: 数据概览
+============================================================
+总样本: 2836, 事件数: 16
+
+各事件统计:
+                                                                      n  alpha_mean  alpha_std  D_peak_mean  n_mono_median  r2_median
+slug                                                                                                                                 
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03  1000    1.372581   1.044917     0.193860            3.0   0.860694
+flooding_in_central_and_eastern_europe_sept_16_2024                 483    0.862047   0.760450     0.115313            4.0   0.797583
+turkiye_earthquake_2023                                             257    0.655708   0.701387     0.284457            4.0   0.801908
+the_flooding_across_gujarat_india                                   245    0.721583   0.632361     0.114645            4.0   0.862203
+hurricane_beryl_across_southeastern_texas_us                        203    1.384115   1.156283     0.159485            4.0   0.863243
+spain_flood                                                         175    0.719302   0.814868     0.223227            3.0   0.884425
+the_flooding_across_rio_grande_do_sul_state_brazil                  114    1.510728   1.008166     0.160685            3.0   0.887878
+hurricane_beryl_across_quintana_roo_and_yucatan_mexico               97    1.613490   1.044840     0.253260            3.0   0.850447
+tropical_storm_kristine_in_bicol_and_calabarzon_philippines          55    1.563593   0.793632     0.312064            3.0   0.851203
+park_fire_california_29_july_2024                                    53    1.465165   1.283356     0.086431            3.0   0.828158
+the_flooding_across_bagmati_and_koshi_provinces_nepal                38    1.460893   0.573935     0.266666            4.0   0.822571
+the_wildfires_in_quito_pichincha_province_ecuador                    29    1.253868   1.142755     0.163584            4.0   0.744808
+tropical_storm_yagi_philippines_2_september_2024                     29    1.030547   0.600213     0.101526            3.0   0.918791
+typhoon_krathon_across_taiwan                                        22    0.523068   0.354369     0.131058            4.0   0.840176
+moldova_flooding_2024                                                20    1.601699   0.846699     0.099747            3.0   0.861001
+typhoon_yagi_across_northeastern_vietnam                             16    0.972608   0.568689     0.527767            5.0   0.920113
+
+n_mono == 3 占比: 0.540
+n_mono >= 5 占比: 0.181
+r2_unit < 0.3 占比: 0.012
+r2_unit < 0.5 占比: 0.046
+
+============================================================
+Part 1: SNR confound 诊断
+============================================================
+SNR 相关链: D_peak → (n_mono, r2) → alpha
+  D_peak vs n_mono:  rho=0.218, p=0.0000
+  D_peak vs r2:      rho=0.064, p=0.0007
+  n_mono vs alpha:   rho=-0.096, p=0.0000
+  r2 vs alpha:       rho=0.058, p=0.0021
+
+分层 Mundlak + Random Slope 结果:
+            stratum  n_obs  n_events  mundlak_within_beta  mundlak_within_p  mundlak_between_beta  mundlak_between_p  random_slope_beta  random_slope_p  demeaned_spearman_rho  demeaned_spearman_p
+                all   2836        16             0.205433          0.010410         -1.722411e-01                1.0           0.122486        0.201167               0.111528         2.596013e-09
+          n_mono>=5    513        15             0.029908          0.819665         -3.320483e-18                NaN           0.040106        0.877106               0.011826         7.893015e-01
+n_mono>=5 & r2>=0.5    471        15             0.066551          0.636160          1.451827e-01                NaN           0.045544        0.865081               0.011819         7.980798e-01
+n_mono>=4 & r2>=0.3   1286        16             0.220538          0.018432         -2.517368e-01                1.0          -0.069414        0.798914               0.092858         8.563003e-04
+            r2>=0.5   2705        16             0.220026          0.007047         -7.952536e-02                NaN           0.132561        0.285907               0.117385         9.152623e-10
+            r2>=0.7   2160        16             0.207892          0.022316          4.606659e-02                1.0           0.137409        0.233247               0.112570         1.559049e-07
+
+============================================================
+Part 2: 控制 fit quality 的混合效应模型
+============================================================
+模型比较:
+                                          model  beta_D_peak  p_D_peak  AIC  BIC  converged
+                             M0: alpha ~ D_peak     0.205433  0.010397  NaN  NaN       True
+                    M1: alpha ~ D_peak + n_mono     0.293697  0.000316  NaN  NaN       True
+                       M1b: alpha ~ D_peak + r2     0.196082  0.014579  NaN  NaN       True
+               M2: alpha ~ D_peak + n_mono + r2     0.285989  0.000484  NaN  NaN       True
+              M3: alpha ~ D_peak + delta + dist     0.206986  0.016846  NaN  NaN       True
+M4: alpha ~ D_peak + delta + dist + n_mono + r2     0.342087  0.000162  NaN  NaN       True
+
+============================================================
+Part 3: Two-Stage Meta-Analysis
+============================================================
+Stage 1 (per-event OLS):
+                                                             slug  n_units  beta_D_peak  se_D_peak  p_D_peak
+              flooding_in_central_and_eastern_europe_sept_16_2024      483    -0.643329   0.506343  0.204506
+           hurricane_beryl_across_quintana_roo_and_yucatan_mexico       97    -0.487250   0.609215  0.425822
+                     hurricane_beryl_across_southeastern_texas_us      203     1.259495   0.611219  0.040626
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03     1000     0.372214   0.109264  0.000684
+                                            moldova_flooding_2024       20    -3.448491   2.989885  0.263838
+                                park_fire_california_29_july_2024       53     2.397448   2.051621  0.248013
+                                                      spain_flood      175    -0.455530   0.534984  0.395678
+            the_flooding_across_bagmati_and_koshi_provinces_nepal       38    -0.576600   0.789743  0.470047
+                                the_flooding_across_gujarat_india      245     0.192986   0.759020  0.799512
+               the_flooding_across_rio_grande_do_sul_state_brazil      114    -0.064373   0.600455  0.914817
+                the_wildfires_in_quito_pichincha_province_ecuador       29    -1.021945   3.099872  0.744191
+      tropical_storm_kristine_in_bicol_and_calabarzon_philippines       55     0.250958   0.464114  0.590962
+                 tropical_storm_yagi_philippines_2_september_2024       29     0.235221   0.880818  0.791461
+                                          turkiye_earthquake_2023      257    -0.345099   0.152483  0.024464
+                                    typhoon_krathon_across_taiwan       22    -2.006955   2.454504  0.423185
+                         typhoon_yagi_across_northeastern_vietnam       16    -1.209450   0.567873  0.051414
+
+Stage 2 summary:
+  等权平均 beta = -0.3469, t-test p = 0.3035
+  IV加权 beta   = 0.0707, z-test p = 0.3780
+  方向: 6正 vs 10负, sign test p = 0.4545
+  排除 jamaica: mean = -0.3949, p = 0.2707
+  排除 all beryl: mean = -0.5150, p = 0.1950
+
+============================================================
+Part 4: Leave-One-Event-Out 影响力诊断
+============================================================
+Full model: beta=0.2054, p=0.0104
+
+                                                         excluded  n_excluded  n_remaining      beta        p  delta_beta
+              flooding_in_central_and_eastern_europe_sept_16_2024         483         2353  0.220246 0.008303    0.014813
+           hurricane_beryl_across_quintana_roo_and_yucatan_mexico          97         2739  0.221364 0.006071    0.015931
+                     hurricane_beryl_across_southeastern_texas_us         203         2633  0.176385 0.026459   -0.029049
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03        1000         1836 -0.164189 0.213757   -0.369622
+                                            moldova_flooding_2024          20         2816  0.207628 0.009675    0.002194
+                                park_fire_california_29_july_2024          53         2783  0.198928 0.012447   -0.006505
+                                                      spain_flood         175         2661  0.217339 0.007630    0.011906
+            the_flooding_across_bagmati_and_koshi_provinces_nepal          38         2798  0.208631 0.009706    0.003198
+                                the_flooding_across_gujarat_india         245         2591  0.205500 0.012604    0.000066
+               the_flooding_across_rio_grande_do_sul_state_brazil         114         2722  0.211405 0.008822    0.005972
+                the_wildfires_in_quito_pichincha_province_ecuador          29         2807  0.206747 0.009766    0.001313
+      tropical_storm_kristine_in_bicol_and_calabarzon_philippines          55         2781  0.204382 0.011951   -0.001051
+                 tropical_storm_yagi_philippines_2_september_2024          29         2807  0.205324 0.010817   -0.000109
+                                          turkiye_earthquake_2023         257         2579  0.309171 0.000522    0.103738
+                                    typhoon_krathon_across_taiwan          22         2814  0.205790 0.010527    0.000357
+                         typhoon_yagi_across_northeastern_vietnam          16         2820  0.214231 0.007832    0.008798
+                                                        ALL_BERYL        1300         1536 -0.282373 0.033477         NaN
+
+============================================================
+Part 5: delta_peak_unit 与 distance_km 的关系
+============================================================
+                                                             slug    n  rho_delta_vs_dist  p_delta_vs_dist  rho_delta_vs_alpha  p_delta_vs_alpha
+              flooding_in_central_and_eastern_europe_sept_16_2024  483          -0.440543     2.379507e-24           -0.468902      8.968141e-28
+           hurricane_beryl_across_quintana_roo_and_yucatan_mexico   97          -0.033794     7.424461e-01            0.061317      5.507538e-01
+                     hurricane_beryl_across_southeastern_texas_us  203          -0.149638     3.310060e-02           -0.081490      2.477586e-01
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03 1000          -0.171454     4.883334e-08            0.169592      6.837015e-08
+                                            moldova_flooding_2024   20          -0.096241     6.864871e-01            0.180451      4.464646e-01
+                                park_fire_california_29_july_2024   53          -0.171827     2.185974e-01            0.025560      8.558379e-01
+                                                      spain_flood  175           0.286740     1.195104e-04            0.060253      4.283138e-01
+            the_flooding_across_bagmati_and_koshi_provinces_nepal   38          -0.094868     5.710190e-01            0.001204      9.942778e-01
+                                the_flooding_across_gujarat_india  245          -0.140994     2.733803e-02            0.074752      2.437341e-01
+               the_flooding_across_rio_grande_do_sul_state_brazil  114          -0.167380     7.507338e-02           -0.236759      1.120615e-02
+                the_wildfires_in_quito_pichincha_province_ecuador   29          -0.083744     6.658160e-01           -0.150246      4.366030e-01
+      tropical_storm_kristine_in_bicol_and_calabarzon_philippines   55           0.402814     2.295724e-03           -0.081746      5.529708e-01
+                 tropical_storm_yagi_philippines_2_september_2024   29          -0.170443     3.767045e-01            0.052217      7.879219e-01
+                                          turkiye_earthquake_2023  257          -0.289907     2.280840e-06           -0.481093      2.714944e-16
+                                    typhoon_krathon_across_taiwan   22           0.312253     1.571359e-01           -0.345003      1.158403e-01
+                         typhoon_yagi_across_northeastern_vietnam   16           0.705882     2.245901e-03            0.414706      1.102294e-01
+
+Pooled delta_peak vs distance: rho=0.085, p=5.32e-06
+
+============================================================
+Part 6: 综合结论
+============================================================
+
+D_peak_unit → alpha_unit 效应的多重检验汇总:
+----------------------------------------------------------------------
+  Random Intercept (D_peak)                beta=0.205           p=0.0104
+  Random Slope (D_peak)                    beta=0.122           p=0.2012
+  Mundlak Within (D_peak)                  beta=0.205           p=0.0104
+  RI + n_mono + r2 控制                      beta=0.286           p=0.0005
+  RI, n_mono>=5 (n=513)                    beta=0.030           p=0.8195
+  Demeaned Spearman                        rho=0.112            p=2.60e-09
+  Direction Consistency                    5+ vs 11-            sign p=0.2101
+----------------------------------------------------------------------
+
+
+所有输出已写入: outputs/cross_disaster_comparison/subregion_diagnostic_unified_static_h8_gtfix_mtw5_mpp4

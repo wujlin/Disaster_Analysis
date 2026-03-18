@@ -1,0 +1,70 @@
+======================================================================
+MODEL COMPARISON: Power Law vs Exponential (Gao) vs Stretched Exp
+======================================================================
+
+M1 Power Law:
+  R² mean=0.8280, median=0.9486, range=[0.1451, 0.9942]
+  AIC mean=-20.0, BIC mean=-20.8
+
+M2 Exponential (Gao):
+  R² mean=0.8551, median=0.9384, range=[-0.0019, 0.9991]
+  AIC mean=-22.3, BIC mean=-23.1
+
+M3 Stretched Exp:
+  R² mean=0.8853, median=0.9585, range=[-0.2408, 1.0000]
+  AIC mean=-24.5, BIC mean=-25.7
+
+======================================================================
+BIC MODEL PREFERENCE (per event)
+======================================================================
+                                                             slug  n_points  M1_power_law_r2  M2_exponential_r2  M3_stretched_exp_r2      bic_best
+              flooding_in_central_and_eastern_europe_sept_16_2024         6         0.145148          -0.001930            -0.240836     Power Law
+           hurricane_beryl_across_quintana_roo_and_yucatan_mexico         6         0.979699           0.975096             0.991992 Stretched Exp
+                     hurricane_beryl_across_southeastern_texas_us         6         0.994245           0.962781             0.996640 Stretched Exp
+hurricane_beryl_jamaica_western_caribbean_pre_landfall_2024_07_03         9         0.893054           0.981050             0.981059   Exponential
+                                            moldova_flooding_2024         3         0.373173           0.518715             0.879644 Stretched Exp
+                                park_fire_california_29_july_2024         5         0.681623           0.837528             0.897138 Stretched Exp
+                                                      spain_flood         4         0.810823           0.937729             0.823673   Exponential
+            the_flooding_across_bagmati_and_koshi_provinces_nepal         5         0.977042           0.989479             0.992467 Stretched Exp
+                           the_flooding_across_eastern_bangladesh         5         0.951415           0.955888             0.964235   Exponential
+                                the_flooding_across_gujarat_india         6         0.827217           0.939113             0.949275   Exponential
+               the_flooding_across_rio_grande_do_sul_state_brazil         3         0.949318           0.869429             0.937125     Power Law
+                the_wildfires_in_quito_pichincha_province_ecuador         4         0.658441           0.817992             0.991525 Stretched Exp
+      tropical_storm_kristine_in_bicol_and_calabarzon_philippines         4         0.970262           0.881608             0.952681     Power Law
+                 tropical_storm_yagi_philippines_2_september_2024         8         0.947973           0.884597             0.945180     Power Law
+                                          turkiye_earthquake_2023         4         0.963502           0.941963             0.966093     Power Law
+                                    typhoon_krathon_across_taiwan         4         0.949352           0.999145             0.999998 Stretched Exp
+                         typhoon_yagi_across_northeastern_vietnam         5         0.954213           0.998155             0.998289   Exponential
+                   wildfires_in_boise_county_idaho_27_august_2024         6         0.877695           0.902842             0.909767   Exponential
+
+BIC winner counts:
+bic_best
+Stretched Exp    7
+Exponential      6
+Power Law        5
+
+Delta BIC (Power Law - Exponential):
+  Negative = Power Law better, Positive = Exponential better
+  Mean = 2.28
+  Events where Power Law wins: 7/18
+  Events where Exponential wins: 11/18
+    flooding_in_central_and_eastern_europe_sept_1  ΔBIC=-0.95  (PL)
+    hurricane_beryl_across_quintana_roo_and_yucat  ΔBIC=-1.23  (PL)
+    hurricane_beryl_across_southeastern_texas_us   ΔBIC=-11.20  (PL)
+    hurricane_beryl_jamaica_western_caribbean_pre  ΔBIC=+15.57  (EXP)
+    moldova_flooding_2024                          ΔBIC=+0.79  (EXP)
+    park_fire_california_29_july_2024              ΔBIC=+3.36  (EXP)
+    spain_flood                                    ΔBIC=+4.44  (EXP)
+    the_flooding_across_bagmati_and_koshi_provinc  ΔBIC=+3.90  (EXP)
+    the_flooding_across_eastern_bangladesh         ΔBIC=+0.48  (EXP)
+    the_flooding_across_gujarat_india              ΔBIC=+6.26  (EXP)
+    the_flooding_across_rio_grande_do_sul_state_b  ΔBIC=-2.84  (PL)
+    the_wildfires_in_quito_pichincha_province_ecu  ΔBIC=+2.52  (EXP)
+    tropical_storm_kristine_in_bicol_and_calabarz  ΔBIC=-5.53  (PL)
+    tropical_storm_yagi_philippines_2_september_2  ΔBIC=-6.37  (PL)
+    turkiye_earthquake_2023                        ΔBIC=-1.86  (PL)
+    typhoon_krathon_across_taiwan                  ΔBIC=+16.32  (EXP)
+    typhoon_yagi_across_northeastern_vietnam       ΔBIC=+16.06  (EXP)
+    wildfires_in_boise_county_idaho_27_august_202  ΔBIC=+1.38  (EXP)
+
+All outputs saved to outputs/cross_disaster_comparison/gao_baseline_unified_static_h8_gtfix_mtw5_mpp4

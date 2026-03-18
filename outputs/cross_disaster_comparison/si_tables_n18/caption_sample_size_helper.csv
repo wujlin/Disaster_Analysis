@@ -1,0 +1,4 @@
+panel,n_events,n_events_plot,note
+Fig1a,18,16,Global map uses route_b_selected
+Fig1c,16,16,log-log normalized decay
+Fig1d,16,16,alpha vs delta_near scatter
