@@ -21,6 +21,11 @@ datasets_catalog.*
 _debug_*
 legacy/local_debug/
 legacy/local_workspace/
+legacy/local_outputs/
+AGENTS.md
+figures/
+outputs_dfg_batch1/
+outputs_trackpath_v2/
 plot_style.py
 visual_style_guide.md
 Writing_guide.md
