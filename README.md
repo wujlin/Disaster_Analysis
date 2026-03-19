@@ -1,194 +1,84 @@
 # Disaster Recovery Dynamics
 
-> **研究主题**：灾难后社会系统恢复动力学的普适性  
-> **核心视角**：非平衡态统计物理  
-> **数据基础**：Facebook Disaster Maps - 土耳其2023地震
+This repository studies how population displacement relaxes after disasters, with a focus on whether post-disaster recovery exhibits reproducible scaling patterns and which spatial signatures are most informative about recovery speed. The project combines Facebook Disaster Maps–based measurements with cross-disaster comparison, mechanism-oriented modeling, and event-level as well as geo-unit–level analysis.
 
----
+## Project scope
 
-## 项目概述
+The repository is organized around three linked questions:
 
-本项目从**非平衡态统计物理**的视角研究灾难后社会系统的恢复动力学，旨在揭示恢复过程是否存在**普适的 scaling law**。
+1. What functional form best describes post-peak recovery?
+2. Which peak-time spatial features are associated with subsequent recovery speed?
+3. Which mechanisms are consistent with the observed recovery patterns across disasters and spatial scales?
 
-### 核心科学问题
+The current workflows include single-event diagnostics, cross-disaster comparison, robustness checks, and manuscript-facing figure generation.
 
-1. **What**：恢复过程的函数形式是什么？（指数/幂律/stretched exponential？）
-2. **Why**：什么微观机制导致这种恢复形式？（反常扩散？异质性？）
-3. **Universality**：不同区域/量的恢复是否属于同一 universality class？
+## Data and analysis focus
 
-### 研究框架
+- **Primary data source:** Facebook Disaster Maps / Data for Good products
+- **Core measurements:** population redistribution, movement, network coverage, and related recovery indicators
+- **Spatial units:** Bing-tile-based products, with many pipelines operating on Level 14 tiles and derived geo-units
+- **Analysis modes:** event-level recovery, spatial-profile diagnostics, geo-unit heterogeneity, and mechanism validation
 
-```
-                    ┌─────────────────────────────────┐
-                    │  核心问题：                       │
-                    │  社会系统恢复动力学的普适性        │
-                    └───────────────┬─────────────────┘
-                                    │
-            ┌───────────────────────┼───────────────────────┐
-            │                       │                       │
-    ┌───────▼───────┐      ┌───────▼───────┐      ┌───────▼───────┐
-    │  支撑工具 1    │      │  支撑工具 2    │      │  支撑工具 3    │
-    │  反常扩散分析  │      │  相变框架      │      │  时空关联     │
-    │  (微观机制)    │      │  (Order Parameter) │  │  (临界性验证)  │
-    └───────────────┘      └───────────────┘      └───────────────┘
-```
+## Repository layout
 
----
-
-## 数据集
-
-### 来源
-Facebook Data for Good - Disaster Maps
-
-### 事件
-2023年土耳其大地震（Mw 7.8，2023年2月6日）
-
-### 数据类型
-
-| 类型 | 描述 | 时间范围 |
-|------|------|----------|
-| **Population** | 每8小时人口分布 | 2023-02-05 至 2023-05-10 |
-| **Movement** | Origin-Destination 流动矩阵 | 同上 |
-| **Network Coverage** | 网络连通性 | 同上 |
-| **Business Activity** | 商业活动 | 同上 |
-
-### 空间分辨率
-Bing Tile Level 14（约 2.4km × 2.4km）
-
----
-
-## 项目结构
-
-```
+```text
 Disaster/
-├── README.md                 # 本文件
-├── AGENTS.md                 # AI 助手规则
-│
-├── Data/                     # 原始数据（不进 git；见 .gitignore）
-│   └── Turkiye Turkey Earthquake.../  # 数据文件
-│
-├── Docs/                     # 项目文档
-│   ├── research_framework.md        # 研究框架与思路
-│   ├── data_pipeline.md             # 数据处理 Pipeline
-│   └── literature_review_requirements.md  # 文献检索需求
-│
-├── src/                      # 可复用代码（库）
-│   └── disaster/
-│       ├── plot_style.py
-│       ├── population_relaxation.py
-│       ├── population_io.py
-│       ├── geo.py
-│       ├── viz.py
-│       └── relaxation_fit.py
-│
-├── scripts/                  # 可复现入口（CLI）
-│   └── population_relaxation.py
-│
-├── analysis/                 # 临时探索（保留兼容入口）
-│   └── population_relaxation.py
-│
-└── output_population/        # 生成物（不进 git；示例目录名）
+├── README.md                  # Project overview
+├── Data/                      # Local raw data (gitignored)
+├── Docs/                      # Project documentation, catalogs, methods, and experiment notes
+├── src/disaster/              # Reusable library code
+├── scripts/                   # Reproducible CLI entry points
+├── analysis/                  # Legacy or exploratory entry points kept for compatibility
+├── outputs/                   # Curated shareable run artifacts
+├── Essay/                     # Local manuscript workspace (gitignored)
+├── legacy/                    # Local archived assets and local-only outputs (gitignored)
+└── config/                    # Local configuration and authentication material
 ```
 
----
+## Key documentation
 
-## 当前进展
+- `Docs/research_framework.md` — research framing and scientific questions
+- `Docs/data_pipeline.md` — data flow and processing logic
+- `Docs/Methods.md` — method notes, diagnostics, and design decisions
+- `Docs/cross_disaster_catalog.md` — event catalog and cross-disaster bookkeeping
+- `Docs/visual_style_guide.md` — project-facing figure style reference
 
-### ✅ 已完成
-- [x] 项目初始化
-- [x] 数据概览与理解
-- [x] 研究框架设计
-- [x] 数据处理 Pipeline 设计
-- [x] 文献检索需求清单
-
-### 🔄 进行中
-- [ ] 文献检索与梳理
-- [ ] 数据探索脚本编写
-
-### 📋 待完成
-- [ ] Phase 1：数据探索与现象发现
-- [ ] Phase 2：机制分析与理论联系
-- [ ] Phase 3：普适性验证与论文撰写
-
----
-
-## 关键文档
-
-| 文档 | 内容 | 路径 |
-|------|------|------|
-| **研究框架** | 科学问题、理论框架、研究策略 | `Docs/research_framework.md` |
-| **数据 Pipeline** | 数据处理流程、代码框架 | `Docs/data_pipeline.md` |
-| **文献需求** | 检索清单、AI Prompt | `Docs/literature_review_requirements.md` |
-
----
-
-## 目标期刊
-
-| 优先级 | 期刊 | 匹配理由 |
-|--------|------|----------|
-| 1 | Nature Physics | 社会物理学 + 普适性 |
-| 2 | Physical Review X | 跨学科物理 |
-| 3 | Nature Communications | 广泛影响力 |
-| 4 | PNAS | 跨学科 + 政策相关 |
-| 5 | Physical Review Letters | 短篇物理发现 |
-
----
-
-## 环境配置
+## Environment setup
 
 ```bash
-# 推荐使用 conda 环境
 conda create -n disaster python=3.10
 conda activate disaster
-
-# 安装依赖
 pip install -r requirements.txt
 ```
 
----
+## Quick start
 
-## 快速开始：Population relaxation
-
-PI 决策参数：PT 时间轴，`t=0 = 2023-02-05 16:00 PT` 窗口；主指标 `z_score`，`phi` 做鲁棒性检验。
+For the population-relaxation workflow:
 
 ```bash
-# 冒烟测试（只跑前 3 个文件）
+# Smoke test
 python scripts/population_relaxation.py --max-files 3
 
-# 全量运行（生成 heatmap + relaxation curves + 汇总表）
+# Full run
 python scripts/population_relaxation.py
 ```
 
-输出默认写入 `outputs/population_relaxation/`（已在 `.gitignore` 里忽略）。
+Outputs are written to `outputs/population_relaxation/`.
 
-兼容：旧入口 `analysis/population_relaxation.py` 仍可运行，但不再承载核心逻辑。
-
-### 拟合后分析与稳健性检查
+For post-fit diagnostics:
 
 ```bash
-# 生成 τ(r)（log-log）与新稳态偏移 C(r) 图 + 汇总表
 python scripts/population_postfit_analysis.py
-
-# 检查 0-50km 的 stretched exponential 拟合是否稳定（β 分布 + 最优拟合叠加）
 python scripts/beta_robustness.py
 ```
 
-## 团队分工
+## Local-only material
 
-| 角色 | 负责内容 |
-|------|----------|
-| **PhD 研究者** | 核心分析、理论建模、论文撰写 |
-| **Partner** | 文献检索、代码实现 |
-| **AI PI** | 研究策略、框架设计、问题诊断 |
+The following content is intentionally kept out of version control:
 
----
+- manuscript files under `Essay/`
+- archived local workspace assets under `legacy/local_workspace/`
+- archived local output folders under `legacy/local_outputs/`
+- local secrets and downloaded datasets configured through `.gitignore`
 
-## 更新日志
-
-| 日期 | 更新内容 |
-|------|----------|
-| 2026-01-29 | 项目初始化，完成研究框架设计 |
-
----
-
-*Last updated: 2026-01-29*
+This separation keeps the repository focused on reusable code, shareable outputs, and project documentation.

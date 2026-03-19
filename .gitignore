@@ -26,6 +26,10 @@ AGENTS.md
 figures/
 outputs_dfg_batch1/
 outputs_trackpath_v2/
+outputs_centerfix/
+outputs_dfg_batch1_anchor/
+outputs_trackpath/
+outputs_trackpath_v3/
 plot_style.py
 visual_style_guide.md
 Writing_guide.md
