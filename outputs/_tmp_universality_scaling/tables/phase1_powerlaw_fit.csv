@@ -1,4 +1,0 @@
-slug,name,event_type,time_min_hours,time_max_hours,fit_ok,alpha,r2_loglog,n_points_fit,r_min_fit,r_max_fit,y_min_fit,y_max_fit
-turkiye_earthquake_2023,Turkiye Turkey Earthquake Full Country Version Feb 8 2023,earthquake,24.0,72.0,1,0.6109794101329543,0.2188036682529837,49,15.0,495.0,0.006277193670267689,0.796668733380969
-hurricane_beryl_pre_landfall_2024,Hurricane Beryl Pre Landfall Disaster Maps June 30 2024,hurricane,24.0,72.0,1,-1.353806317279992,0.1407448158767235,25,45.0,315.0,0.000265694556050855,0.8825024142458459
-moldova_flooding_2024,Moldova Flooding Sept 16 2024,flood,24.0,72.0,1,0.004004834033841797,9.046560146330762e-06,19,15.0,195.0,0.0014748212620118162,0.07364150497231081

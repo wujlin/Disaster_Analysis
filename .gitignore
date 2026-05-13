@@ -152,14 +152,10 @@ outputs/*
 !outputs/typhoon_nika_across_northern_luzon_philippines/**
 !outputs/cross_disaster_comparison/
 !outputs/cross_disaster_comparison/**
-!outputs/_tmp_two_phase_dynamics/
-!outputs/_tmp_two_phase_dynamics/**
-!outputs/_tmp_universality_scaling/
-!outputs/_tmp_universality_scaling/**
-!outputs/_tmp_universality_scaling_all/
-!outputs/_tmp_universality_scaling_all/**
-!outputs/_tmp_phi_data_quality_all/
-!outputs/_tmp_phi_data_quality_all/**
+
+# Local scratch under outputs/ stays ignored via outputs/* above.
+# Deprecated manuscript figure stash (regenerable / archival only)
+Essay/figures_deprecated/
 
 output/
 output_*/
