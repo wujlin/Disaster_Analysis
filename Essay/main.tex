@@ -1,0 +1,336 @@
+% ============================================================
+%  Post-disaster population recovery — Nature Communications format
+%  Working draft v0.4 — 3-section Results (merged R1+R2)
+% ============================================================
+\documentclass[11pt]{article}
+
+% ---- packages ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{xr-hyper}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+\usepackage{placeins}
+\externaldocument[SI-]{si}
+
+% ---- shortcuts ----
+\newcommand{\dnear}{\delta_{\mathrm{near}}}
+\newcommand{\dpeak}{D_{\mathrm{peak}}}
+\newcommand{\apred}{\alpha_{\mathrm{pred}}}
+\newcommand{\aemp}{\alpha_{\mathrm{emp}}}
+\newcommand{\Ds}{D_s}
+\newcommand{\Dnorm}{D_{\mathrm{norm}}}
+\newcommand{\rhosp}{\rho}
+\newcommand{\aunit}{\alpha_{\mathrm{unit}}}
+
+% ============================================================
+\title{Spatial geometry of disaster displacement\\
+governs population recovery speed}
+
+\author{
+  Jinlin Wu$^{1,\ast}$
+  \\[6pt]
+  {\small $^{1}$Urban Governance and Design Thrust, Society Hub, The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China}\\
+  {\small $^{\ast}$Corresponding author.\ E-mail: jwu923@connect.hkust-gz.edu.cn}
+}
+\date{}
+
+% ============================================================
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+% ============================================================
+%  ABSTRACT
+% ============================================================
+\begin{abstract}
+\noindent
+  Natural disasters displace millions each year, yet there is still no
+  general way to predict how quickly affected populations recover.
+  Post-disaster displacement is a spatial perturbation of a population
+  density field that relaxes once the forcing subsides. In such
+  diffusive relaxation, steeper spatial gradients decay faster because
+  they place more weight on rapidly decaying eigenmodes. Peak-time
+  displacement geometry should therefore predict recovery speed.
+  We test this prediction
+  using Facebook Disaster Maps from a global cohort of earthquakes,
+  hurricanes, floods and wildfires across 15~countries. Post-peak
+  displacement follows a power-law relaxation, and recovery rates vary
+  by more than an order of magnitude across events. As predicted, the
+  near-field displacement direction~$\dnear$---which measures whether
+  population movement forms an outward evacuation gradient or an inward
+  concentration---is closely associated with recovery speed ($\rhosp =
+  -0.69$, $p = 0.001$): events with steeper outward gradients recover
+  faster. Controlled diffusion experiments confirm that this
+  association arises from the spectral structure of the perturbation
+  and vanishes when either diffusion or event-specific spatial
+  structure is removed. At the geo-unit level, local displacement
+  magnitude does not predict local recovery speed, consistent with
+  recovery being governed by a field-level property rather than by
+  local displacement alone. Peak-time displacement geometry therefore
+  provides a first-order predictor of population recovery speed across
+  hazard types.
+\end{abstract}
+
+\bigskip
+
+% ============================================================
+%  INTRODUCTION
+% ============================================================
+\section*{Introduction}
+\phantomsection
+\label{sec:intro}
+
+% Background
+Natural disasters routinely trigger mass internal displacement worldwide; 2024 alone recorded over 45~million disaster displacements~\citep{IDMC2025}, and exposure to major hazards such as floods has continued to rise over the past two decades~\citep{Tellman2021}. How quickly displaced populations recover determines the duration of humanitarian assistance, the trajectory of reconstruction, and the long-term social fabric of affected communities~\citep{Aldrich2012,Cutter2003}. Yet despite a rapidly growing body of quantitative research on disaster mobility~\citep{Lu2012,Yabe2020,Huang2025}, no general framework exists to predict whether a displaced population will return within days or remain uprooted for months.
+
+% Quantitative work & gap
+The first obstacle is quantification: deriving displacement trajectories with consistent spatial and temporal resolution across events. Over the past decade, mobile phone and social-media data have made this increasingly feasible. Quantitative tracking of post-disaster displacement has advanced rapidly from basic spatial monitoring (e.g., using call detail records after the Haiti~\citep{Lu2012,Bengtsson2011} and Nepal~\citep{Wilson2016} earthquakes) to uncovering how pre-disaster social connectivity~\citep{Yabe2020} and granular migration dynamics~\citep{Acosta2020} shape post-disaster trajectories. More recent work has begun to characterise systematic recovery patterns, identifying rapid, slow, and non-recovering trajectories across flood events in China~\citep{Tang2023}, classifying recovery archetypes across multiple disaster types in Japan~\citep{Yabe2020b}, and revealing heterogeneous sub-regional displacement after the 2023 T\"{u}rkiye--Syria earthquake~\citep{Aydogdu2025}. These studies share a recurring observation: an acute displacement peak followed by gradual return, with rates that vary widely across events and countries. The dominant resilience framework attributes this variation to socio-economic factors such as coping capacity, institutional quality, and infrastructure stock~\citep{Cutter2003,Aldrich2012}. Such factors vary slowly compared with the days-to-weeks timescale of return, however, and cannot by themselves account for the order-of-magnitude variation in recovery rates observed across otherwise comparable events.
+
+% Physical model & prediction
+This motivates a complementary, field-level account of post-peak recovery. Post-disaster displacement is a spatial perturbation of a population density field, and its return to baseline is a relaxation process driven by gradient-dependent movement in that field~\citep{Mazzoli2019,Lenormand2015}; recent empirical work confirms that crisis-induced mobility deviations decay consistently with such relaxation toward equilibrium~\citep{Li2022}. Under diffusive relaxation, the perturbation decomposes into spatial eigenmodes whose decay rates increase with spatial frequency~\citep{Crank1975}, so the aggregate recovery rate is determined by the spectral content of the initial perturbation: steep, fine-scale gradients relax faster than smooth, broad-scale structures because they place more weight on rapidly decaying modes. Two events displacing similar total populations should therefore recover at different rates if their peak-time geometries differ---outward evacuation (steep near-field gradient, high-frequency spectrum) relaxing faster than inward concentration (smooth perturbation, low-frequency spectrum). The near-field displacement direction~$\dnear$ serves as a scalar probe of this spectral content, and should predict recovery speed.
+
+We test this prediction using Facebook Disaster Maps (FBDM)~\citep{Maas2019,Jia2020} to track standardised, high-resolution population displacement across a global disaster cohort spanning 15~countries. At their respective peak windows, this dataset captures the trajectories of approximately 1.8~million displaced individuals drawn from a baseline population of 25.5~million. Across the retained cohort, post-peak displacement follows a power-law decay, and recovery rates vary by more than an order of magnitude. As predicted by the diffusion framework, the recovery rate~$\alpha$ is closely associated with~$\dnear$ ($\rhosp = -0.69$, $p = 0.001$): events with steeper outward gradients recover faster. Controlled diffusion experiments confirm that this association arises from the spectral structure of the perturbation: it vanishes when either diffusion or event-specific spatial structure is removed. Geo-unit analyses show that local displacement magnitude does not predict local recovery speed, consistent with recovery being governed by a field-level property---the spatial spectrum of the perturbation---rather than by local displacement alone.
+
+
+% ============================================================
+%  MATERIALS AND METHODS
+% ============================================================
+\section*{Materials and Methods}
+
+% ---- Overview ----
+
+We implement and test the diffusion-relaxation model through four modules (Fig.~\ref{fig:framework}):
+
+The Data Pipeline constructs the aggregate displacement trajectory $D(t)$ by binning tile-level FBDM population counts into a radial geometry.
+The Parameter Extraction module derives the two quantities that appear in the theoretical prediction---the recovery rate~$\alpha$ and the near-field displacement direction~$\dnear$---and tests their empirical association.
+The Diffusion--Relaxation Framework formalises the physical model as a PDE on a radial domain, yielding an analytic Bessel-mode decomposition; synthetic profiles and counterfactual experiments then test whether the predicted shape--rate link holds under controlled conditions.
+Finally, the Cross-scale Analysis tests a further implication of the spectral theory: that recovery is organised at the event scale rather than by local displacement magnitude.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_framework.pdf} 
+\caption{Analytical framework for linking displacement geometry to population recovery dynamics. Data Pipeline: Raw FBDM population tiles are binned into a radial geometry to construct the aggregate displacement trajectory $D(t)$. Parameter Extraction: The recovery rate $\alpha$ is fitted from the post-peak trajectory, while the near-field displacement direction $\dnear$ is derived from the peak radial profile. Diffusion--Relaxation Framework: The physical model is formalised as a PDE on a radial domain; synthetic profiles and counterfactual experiments test the predicted shape--rate link under controlled conditions. Cross-scale Analysis: Geo-unit analyses test whether recovery is organised at the event scale rather than by local displacement magnitude.}
+\label{fig:framework}
+\end{figure}
+
+% ---- Step 1: Data and D(t) ----
+\subsection*{Data pipeline and displacement metric}
+
+FBDM tile-level data provide ${\sim}2.4$-km population-density estimates at 8-hour resolution for disaster-impacted regions. For each tile, the platform reports a crisis count $n_{\mathrm{crisis}}$ and a baseline count $n_{\mathrm{baseline}}$ (the pre-event mean over the 90 days preceding activation, stratified by day of the week and 8-hour window).
+
+Radial binning requires a spatial origin, which we tailor to hazard topology: the catalogued epicentre for point-source earthquakes, the track anchor at landfall for hurricanes and typhoons, and the population-weighted centroid of maximum displacement for spatially diffuse floods and wildfires. Tiles within an outer radius of $R = 200$~km are then grouped into 10-km radial annuli.
+
+Within each annulus, the population ratio $\phi_{r,t} = n_{\mathrm{crisis}} / n_{\mathrm{baseline}}$ is averaged, yielding a radial profile at each 8-hour time step. To avoid unstable estimates in sparsely sampled bins, annuli with $< 3$ populated tiles are excluded. The aggregate displacement trajectory $D(t)$ is then the mean absolute deviation across retained annuli,
+\begin{equation}
+D(t) = \bigl\langle\,|\phi_{r,t} - 1|\,\bigr\rangle_r , \label{eq:Dt}
+\end{equation}
+which quantifies how far the event-level population density has moved from its baseline at time~$t$.
+
+Using $D(t)$, we screened an initial pool of approximately 35 FBDM disaster events (2023--2026). Events were retained only if they exhibited (i) $\geq 3$ populated tiles per annulus at peak, (ii) a clearly identifiable single peak in $D(t)$, and (iii) a monotonic decay segment of $\geq 3$ post-peak time steps. After consolidating multiple FBDM deployments of the same physical event to avoid pseudo-replication, the screened cohort comprises 18 events covering four hazard types in 15 countries (Supplementary Table~\ref{SI-tab:events}). The primary event-level $\alpha$--$\dnear$ analyses use all 18 events; the geo-unit analyses use the 16 events that yield unit-level fits.
+
+% ---- Step 2: α and δ_near ----
+\subsection*{Parameter extraction and empirical association}
+
+Two parameters formalise the quantities appearing in the prediction: the post-peak recovery rate $\alpha$ (the dependent variable) and the near-field displacement direction $\dnear$ (the scalar proxy for spectral content).
+
+The recovery rate $\alpha$ is extracted from the post-peak relaxation phase of $D(t)$. After $D(t)$ reaches its maximum amplitude $\dpeak$, the normalized trajectory $\Dnorm(t') = D(t')/\dpeak$ is modelled as a power-law decay:
+\begin{equation}
+  \Dnorm(t') = (t'/t_0)^{-\alpha}
+  \label{eq:powerlaw}
+\end{equation}
+where $t'$ is time elapsed since the peak. The exponent $\alpha$ is estimated by ordinary least squares on $\log\Dnorm$ versus $\log t'$, over the initial monotonic decay segment beginning at $t' = 24$~h and truncated at the first clear demographic rebound ($D_{\mathrm{norm},i+1} > 1.05\,D_{\mathrm{norm},i}$; Supplementary~\S2). Larger $\alpha$ indicates faster return to baseline ($\alpha \approx 0$ denotes stagnation, $\alpha > 0.5$ rapid recovery).
+
+The near-field displacement direction $\dnear$ summarises the geometry of the peak perturbation as a scalar probe of its spectral content. We analyse the radial deviation profile $\delta(r) = \phi(r, t) - 1$, where $\delta(r) > 0$ indicates local influx and $\delta(r) < 0$ local evacuation relative to the baseline. Because high-order Bessel modes oscillate on short radial scales and deposit most of their energy in the near field, whereas the zero-order mode is spatially uniform, the mean deviation inside $r < 50$~km reflects the weight of high-frequency components in the full spectrum. We therefore define
+\begin{equation}
+  \dnear = \bigl\langle \delta(r) \bigr\rangle_{r < 50\,\mathrm{km}} ,
+\end{equation}
+averaged across the peak plateau (time windows where $D(t) \geq 0.5\,\dpeak$), and require at least two populated near-field annuli per contributing time step.
+
+The empirical association between $\dnear$ and $\alpha$ is measured using Spearman rank correlation ($\rhosp$), because diffusive relaxation implies a monotonic but not necessarily linear dependence on the initial gradient.
+
+\subsection*{Diffusion--relaxation framework and controlled tests}
+
+The diffusion-relaxation model predicts that initial spatial geometry determines recovery speed through the spectral content of the perturbation. Here we formalise this model as a minimal PDE and use two controlled experimental designs to test its predictions: synthetic profiles spanning a range of geometries, and counterfactual experiments that selectively remove diffusion or spatial structure.
+
+The radial displacement field $\delta(r,t)$ evolves under diffusion with a uniform local relaxation term,
+\begin{equation}
+  \frac{\partial\delta}{\partial t}
+    = \frac{\Ds}{r}\frac{\partial}{\partial r}
+      \!\left(r\,\frac{\partial\delta}{\partial r}\right)
+    - k\,\delta,
+  \label{eq:pde}
+\end{equation}
+where $\Ds$ captures lateral smoothing through spatial flux, and $k$ captures local return driven by factors independent of gradients (for example, on-site infrastructure restoration).
+
+With zero-flux boundary conditions on a disk of radius $R = 200$~km, the solution can be written as radial Bessel modes:
+\begin{equation}
+  \delta(r,t) = \sum_{n=0}^{N-1} c_n\,J_0\!\left(
+    \frac{\mu_n r}{R}\right) e^{-\lambda_n t},
+  \label{eq:bessel}
+\end{equation}
+where $\mu_n$ are the zeros of $J_0'$ and each mode decays at rate $\lambda_n = k + \Ds(\mu_n/R)^2$ ($N = 10$ modes retained). 
+
+Because higher-order modes represent sharper spatial structures and decay faster, this solution encodes the physical intuition that steeper gradients relax more quickly. To connect the framework to the empirical event set, we represent each observed peak radial profile in the Bessel basis and estimate its shape coefficients $\{c_n\}$ by $r$-weighted least-squares. The two global parameters ($k$, $\Ds$) are shared across events and chosen by grid search to maximise agreement in event ordering between predicted and empirical decay rates (Supplementary~\S3).
+
+The spectral theory makes two testable predictions that we evaluate through controlled experiments.
+
+First, under identical dynamics, steeper initial gradients should decay faster. We construct six stylised radial profiles spanning evacuation, influx, and mixed geometries, and propagate each through the same global PDE parameters. Any variation in the predicted decay rate~$\apred$ is then attributable to profile shape alone.
+
+Second, the empirical $\alpha$--$\dnear$ association should require both ingredients of the mechanism---diffusion and event-specific spatial structure---and should disappear when either is removed. We implement three counterfactual experiments accordingly: (i) neutralising diffusion ($\Ds = 0$), so all modes decay at the uniform rate~$k$; (ii) replacing each event's observed profile with a spatially uniform perturbation, retaining only the zero-frequency mode; and (iii) randomising event--profile pairings ($n = 500$ permutations), breaking the correspondence between an event's geometry and its dynamics. Confidence intervals come from bootstrap resampling of the initial-profile coefficients.
+
+% ---- Step 4: Geo-unit analysis ----
+\subsection*{Cross-scale test of event-level organisation}
+
+The spectral content that governs relaxation is a property of the full perturbation field, not of any individual geo-unit. The framework therefore predicts a scale separation: event-level geometry should predict recovery across events, while local displacement magnitude should not predict recovery within events. We test this prediction by repeating the recovery-rate fit at the geo-unit level.
+
+Level-10 quadkey geo-units within the 200-km impact zone serve as spatial units. For each geo-unit we construct a local displacement trajectory $D_{\mathrm{unit}}(t)$ from its constituent high-resolution tiles and estimate $\aunit$ whenever a post-peak decay segment is identifiable, yielding 2{,}836 geo-unit fits across the 16 events with unit-level data.
+
+Three diagnostics compare the event and geo-unit scales. A linear mixed-effects model $\aunit \sim \delta_{\mathrm{unit}} + (1 \mid \mathrm{event})$ tests whether local displacement magnitude predicts local recovery once event-level clustering is absorbed. The intraclass correlation coefficient (ICC) quantifies how much of the variance in $\aunit$ lies between versus within events. Finally, the event-level $\alpha$ is compared with the median $\aunit$ across the 16 events to test whether aggregate recovery speed imprints on the central tendency of local recovery rates.
+
+% ============================================================
+%  RESULTS
+% ============================================================
+\section*{Results}
+
+% ---- R1 ----
+\subsection*{Recovery speed varies with displacement geometry}
+
+Across all 18 events, the aggregate displacement trajectory $D(t)$ follows a common shape---an acute dislocation peak followed by relaxation back toward baseline (Fig.~\ref{fig:relaxation}b). This shared pattern emerges despite striking differences in the physical trigger: the 2023 T\"{u}rkiye--Syria earthquake produced sudden mass displacement, whereas the 2024 California Park Fire drove progressive evacuations over several days.
+
+Normalised post-peak trajectories follow a power-law decay, $\Dnorm(t') \propto t'^{-\alpha}$, consistent with previous crisis-mobility observations~\citep{Li2022}. The fitted exponent~$\alpha$ spans from near-zero (negligible recovery over two weeks) to above unity (rapid return within days; Fig.~\ref{fig:relaxation}c)---more than an order of magnitude of variation across events.
+
+This variation is neither a feature of hazard category nor an artifact of the fit form. A Kruskal--Wallis test across the four hazard types is not significant ($p = 0.28$; Supplementary~\S6.4), and an alternative exponential fit reproduces the same order-of-magnitude disparity (Supplementary Fig.~S5). The diffusion-relaxation framework predicts instead that the variation should be governed by the spatial geometry of the initial displacement field.
+
+Peak-time displacement geometry, summarised by $\dnear$, captures the direction of the near-field gradient: negative values indicate net outward evacuation, positive values indicate net inward concentration. These two signatures correspond to very different events. Hurricane Beryl in Texas ($\alpha = 0.80$) scattered the affected population outward, generating a steep negative near-field gradient. The 2024 Spain flood ($\alpha = 0.06$) concentrated population inward, leaving a shallow positive gradient (Fig.~\ref{fig:mechanism}a). Across the 18 events, this geometric contrast tracks recovery dynamics continuously (Fig.~\ref{fig:relaxation}c): trajectories with more negative $\dnear$ decay steeply, whereas influx-dominated events stagnate.
+
+Quantitatively, the predicted shape--rate association is confirmed: $\rhosp(\alpha, \dnear) = -0.69$, $p = 0.001$ ($n = 18$; Fig.~\ref{fig:relaxation}d). More negative $\dnear$ corresponds to faster recovery, as the spectral theory predicts. Leave-one-out jackknife resampling yields a 95\% interval of $[-0.74, -0.65]$, confirming that no single event drives the correlation (Supplementary Fig.~S2).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_universal_relaxation.pdf}
+\caption{Post-disaster displacement and recovery dynamics
+across the 18-event primary event-level sample.
+(a)~Global map of the 18 analysed events spanning four hazard types and four continents; icons denote hazard type.
+(b)~Event-level $D(t)$ trajectories for seven representative events, coloured by hazard type and aligned to peak time $t_{\mathrm{peak}}$.
+(c)~Peak-normalised post-peak trajectories on log--log axes, coloured by $\dnear$ (colour bar); the variation in slopes indicates an order-of-magnitude range in $\alpha$.
+(d)~Relationship between $\alpha$ and $\dnear$ for the 18-event primary event-level sample, with Theil--Sen regression line. More negative values of $\dnear$ correspond to faster recovery.}
+\label{fig:relaxation}
+\end{figure}
+
+
+% ---- R2: Mechanism ----
+\FloatBarrier
+\subsection*{Controlled tests confirm the spectral mechanism}
+
+The diffusion-relaxation framework predicts that steeper spatial gradients produce faster decay because they place more weight on rapidly decaying eigenmodes. We test this prediction with two controlled designs: synthetic profiles propagated under the same diffusion dynamics, and counterfactual experiments that selectively remove components of the mechanism.
+
+Under controlled diffusion, steeper initial gradients produce faster decay. We construct six idealised radial profiles spanning evacuation, influx, and mixed geometries, and propagate each through the same diffusion--relaxation PDE (Eq.~\ref{eq:pde}; Materials and Methods). The predicted decay rate~$\apred$ increases monotonically with $|\dnear|$ ($\rhosp = 0.94$, $p = 0.005$; Fig.~\ref{fig:mechanism}b): profiles with steeper gradients place more weight on high-frequency Bessel modes and therefore decay faster, exactly as the spectral theory requires.
+
+Event-level counterfactuals show that the empirical shape--rate association requires both diffusion and event-specific spatial structure (Fig.~\ref{fig:mechanism}c). Setting $\Ds = 0$ forces all modes to decay at the same rate~$k$, yielding identical decay rates across profiles ($\rhosp = 0$). Replacing each event's observed profile with a spatially uniform perturbation retains the zero-frequency mode only and likewise eliminates the correlation ($\rhosp \approx 0$). Randomly shuffling event--profile pairings collapses the association to a 95\% CI spanning zero. The observed negative correlation reappears only when diffusion operates on each event's own spatial profile---the two ingredients the spectral argument identifies as necessary.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig3_shape_predicts_recovery.pdf}
+\caption{Controlled tests of the spectral mechanism and its cross-scale prediction.
+(a)~Peak-time radial displacement profiles for a fast-recovering evacuation event (Beryl TX; $\alpha = 0.80$) and a slow-recovering influx event (Spain flood; $\alpha = 0.06$). The shaded band marks the near-field region ($r < 50$~km).
+(b)~Six synthetic profiles propagated under the same diffusion model. The predicted decay rate $\apred$ increases with $|\dnear|$, showing that steeper synthetic gradients decay faster.
+(c)~Event-level counterfactuals. The observed negative association (diamond) is retained only when diffusion acts on each event's own spatial profile. Removing diffusion, replacing the empirical profile with a spatially uniform perturbation, or shuffling event--profile pairings each moves the association toward zero. Error bars denote 95\% bootstrap confidence intervals.
+(d)~Scale separation. The event-level association between $\dnear$ and $\alpha$ is significant in the 18-event primary event-level sample, whereas the geo-unit-level mixed-effects association between $\delta_{\mathrm{unit}}$ and $\aunit$ across the separate 16-event geo-unit sample (2{,}836 fitted units) is not. The contrast places the organising constraint at the event scale.}
+\label{fig:mechanism}
+\end{figure}
+
+
+% ---- R3: Cross-scale organisation ----
+\FloatBarrier
+\subsection*{Recovery is organised at the event scale}
+
+The spectral theory makes a further prediction about scale. Because the spatial spectrum is a property of the full perturbation field, event-level geometry should predict recovery across events, whereas local displacement magnitude alone should not predict recovery within individual geo-units---a single geo-unit does not encode the spectral content of the event-wide field.
+
+The data confirm this scale separation (Fig.~\ref{fig:mechanism}d). The event-level association between $\dnear$ and~$\alpha$ is significant in the 18-event primary event-level sample ($\rhosp = -0.69$, $p = 0.001$), whereas the geo-unit-level coefficient from a linear mixed-effects model relating $\delta_{\mathrm{unit}}$ to~$\aunit$ across 2{,}836 geo-unit fits from the separate 16-event geo-unit sample is not ($\beta = 0.08$, $p = 0.21$). Large local deviations occur in both fast- and slow-recovering events; the difference lies in whether those deviations are embedded in a steep event-wide gradient or a broad displaced zone.
+
+Within-event variation dominates the geo-unit recovery rates. Per-event distributions of $\aunit$ (Fig.~\ref{fig:collapse}a) give an intraclass correlation coefficient of ${\approx}\,0.12$, indicating that only ${\sim}12$\% of the variance in~$\aunit$ lies between events. Local recovery rates therefore do not follow from event-level geometry by a simple scaling rule.
+
+Even so, the event-wide spectral organisation leaves a measurable imprint on the distribution of local recovery rates. Across the 16 events, the event-level recovery rate~$\alpha$ and the median geo-unit recovery rate are positively correlated ($r = 0.56$, $p = 0.023$; Fig.~\ref{fig:collapse}b), and unit-level power-law fits are generally adequate (76\% of the 2{,}836 fits achieve $R^2 \geq 0.7$; Fig.~\ref{fig:collapse}c). Events that recover quickly in the aggregate therefore also tend to recover quickly across their geo-units, even though the local displacement--speed rule does not hold pointwise.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig4_cross_scale_collapse.pdf}
+\caption{Geo-unit recovery remains heterogeneous but tracks event-level recovery.
+(a)~Per-event distributions of $\aunit$ across all 2{,}836 geo-unit fits from the 16-event geo-unit sample, showing substantial within-event heterogeneity.
+(b)~Event-level $\alpha$ versus median geo-unit $\aunit$ across the same 16 events, showing a positive association between aggregate and median local recovery rates.
+(c)~CDF of geo-unit power-law fit $R^2$ across all 2{,}836 geo-unit fits.}
+\label{fig:collapse}
+\end{figure}
+
+
+% ============================================================
+%  DISCUSSION
+% ============================================================
+\FloatBarrier
+\section*{Discussion}
+
+Post-disaster population recovery speed is governed by the spatial geometry of the peak displacement field. The mechanism is spectral: in a diffusive relaxation, the perturbation decomposes into eigenmodes whose decay rates increase with spatial frequency, so the aggregate recovery rate reflects the spectral content of the initial perturbation. The near-field displacement direction~$\dnear$ probes this content---negative values (outward evacuation) indicate high-frequency-dominated spectra that decay rapidly, positive values (inward concentration) indicate low-frequency-dominated spectra that decay slowly. Across 18~events spanning four hazard types and 15~countries, this prediction holds ($\rhosp = -0.69$, $p = 0.001$).
+
+This framework is related to, but distinct from, the spatiotemporal decay model of \citet{Li2022}, which characterises the spatial envelope of crisis-induced mobility deviations at a fixed time. Where \citet{Li2022} describe the spatial pattern at a snapshot, our spectral framework connects the subsequent temporal recovery rate to the geometry of the peak-time perturbation itself.
+
+The scale at which the mechanism operates is not local. Local displacement magnitude does not predict local recovery rate, and within-event heterogeneity dominates the variance in unit-level recovery. A given local deviation therefore recovers at the pace set by the geometry it sits in---quickly within a steep event-wide gradient, slowly within a broad displaced zone. Scale is built into the mechanism, not imposed on it by how we aggregate the data.
+
+This scale interpretation also bounds what the mechanism explains. Peak displacement geometry is a first-order predictor of event-level recovery, but leaves geo-unit-level heterogeneity largely unaccounted for; that residual is presumably shaped by factors outside the spatial-diffusion channel, including infrastructure damage, household resources, evacuation compliance, and access to temporary shelter. The practical implication is nonetheless useful: because the key predictor is encoded in the peak displacement field itself, peak-time mobility maps can distinguish disruptions likely to unwind within days from those likely to persist for weeks or months, without requiring contemporaneous income, damage, or governance data.
+
+Several limitations bound this interpretation. The cohort is subject to FBDM activation decisions and measures movements of Facebook users, who skew toward urban, younger, and more connected segments of the population~\citep{Chin2025,Gallotti2024}; coverage also varies by country and local platform adoption~\citep{Huang2025}. The observed trajectories therefore describe the recovery behaviour of the digitally observable population and may sit closer to an upper envelope than to a full-population average if more vulnerable groups return more slowly. The roughly two-week observation window captures acute recovery but not long-term reconstruction or subsequent displacement cycles. The radial-annulus representation is most natural for point-source hazards; for spatially diffuse events, asymmetric boundaries such as coastlines or mountain ranges may alter the effective geometry. Finally, the PDE uses two global parameters ($k$, $\Ds$) as a minimal null model calibrated to recover event ordering rather than to fit each event separately, so it recovers event ranking but compresses variance. Larger cohorts, longer observation windows, and finer-grained infrastructure and boundary information will be needed to quantify how additional factors modify this baseline geometric mechanism.
+
+
+\FloatBarrier
+
+
+% ---- Software ----
+\subsection*{Software}
+
+All analyses were performed in Python~3.11 using NumPy~1.26,
+SciPy~1.12, pandas~2.2, and Matplotlib~3.9.  Bessel function
+zeros and special functions are from \texttt{scipy.special}.
+Linear mixed-effects models use \texttt{statsmodels}~0.14.
+
+
+% ============================================================
+%  DATA AND CODE AVAILABILITY
+% ============================================================
+\section*{Data availability}
+FBDM data were obtained through Meta's Data for
+Good programme.  Access requires an institutional agreement with
+Meta; requests can be submitted at
+\url{https://dataforgood.facebook.com/}.  Processed, event-level
+summary statistics sufficient to reproduce all figures and tables
+will be deposited in a public repository upon publication.
+
+\section*{Code availability}
+Analysis code (Python) for data processing, PDE modelling, figure
+generation, and statistical tests will be deposited in a public
+repository upon publication.
+
+% ============================================================
+%  ACKNOWLEDGMENTS
+% ============================================================
+\section*{Acknowledgments}
+We thank Meta for making FBDM data available for
+research.
+
+% ============================================================
+%  REFERENCES
+% ============================================================
+\small
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

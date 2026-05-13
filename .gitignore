@@ -6,9 +6,6 @@ __pycache__/
 
 Data/
 
-# Local manuscript workspace (keep local; do not upload)
-Essay/
-
 # Secrets / auth material
 config/cookie.json
 config/_dfg_tokens.json
@@ -23,7 +20,7 @@ legacy/local_debug/
 legacy/local_workspace/
 legacy/local_outputs/
 AGENTS.md
-figures/
+/figures/
 outputs_dfg_batch1/
 outputs_trackpath_v2/
 outputs_centerfix/

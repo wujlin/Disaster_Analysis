@@ -1,0 +1,455 @@
+% ============================================================
+%  Supplementary Information
+%  Spatial geometry of disaster displacement is linked to
+%  population recovery speed
+% ============================================================
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{array}
+\usepackage{xcolor}
+
+% ---- macros (same as main.tex) ----
+\newcommand{\dnear}{\delta_{\mathrm{near}}}
+\newcommand{\dpeak}{D_{\mathrm{peak}}}
+\newcommand{\apred}{\alpha_{\mathrm{pred}}}
+\newcommand{\aemp}{\alpha_{\mathrm{emp}}}
+\newcommand{\Ds}{D_s}
+\newcommand{\Dnorm}{D_{\mathrm{norm}}}
+\newcommand{\rhosp}{\rho}
+\newcommand{\aunit}{\alpha_{\mathrm{unit}}}
+
+\title{Supplementary Information\\[4pt]
+Spatial geometry of disaster displacement governs\\
+population recovery speed}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+% ============================================================
+%  S1  Event Catalogue
+% ============================================================
+\section{Event catalogue and sample selection}
+\label{sec:si_events}
+
+The screened cohort comprises 18~events, and all 18 enter the
+primary event-level analysis. Table~\ref{tab:events} lists this
+full 18-event event-level sample, ordered by hazard type and then by
+descending~$\aemp$. Events were selected from the
+Facebook Disaster Maps archive using
+the following quality criteria: (i) at least three consecutive
+post-peak time steps showing monotone decay ($n_{\mathrm{mono}} \geq 3$),
+so that a power-law slope can be estimated; (ii) a clearly identifiable
+peak in $D(t)$ with no ambiguity arising from multiple activation
+periods or overlapping events; and (iii) sufficient tile coverage within
+the 200-km analysis disk ($\geq 3$ populated tiles per annulus at peak).
+Duplicate activations of the same physical event and activations with
+fewer than two near-field tiles were excluded. Two events (the eastern
+Bangladesh floods and the Boise County wildfire) yield no unit-level
+fits and therefore do not enter the geo-unit analyses.
+
+\begin{table}[h]
+\centering
+\caption{Event catalogue.  $\dpeak$: aggregated peak displacement
+(dimensionless population ratio deviation).  $\aemp$: empirical
+log--log decay rate (monotone-truncation method, window
+$[t_{\mathrm{start}},\,t_{\mathrm{end}}]$~h).
+$\dnear$: mean near-field displacement at peak time.
+$D_\infty$: normalised residual displacement.}
+\label{tab:events}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llllrrrrcr@{}}
+\toprule
+Event & Country & Hazard & Type
+  & $\dpeak$ & $\aemp$ & $R^2$ & $\dnear$
+  & Window (h) & $D_\infty$ \\
+\midrule
+\multicolumn{10}{l}{\textit{Earthquake}} \\[2pt]
+2023 T\"{u}rkiye--Syria EQ    & T\"{u}rkiye & EQ & INFL & 0.401 & 0.223 & 0.959 &  0.057 & 24--96  & 0.569 \\
+\midrule
+\multicolumn{10}{l}{\textit{Tropical cyclone}} \\[2pt]
+Hurricane Beryl (Texas, US)       & USA         & TC & EVAC & 0.241 & 0.800 & 0.990 & $-0.279$ & 24--144 & 0.117 \\
+Hurricane Beryl (QR, Mexico)      & Mexico      & TC & EVAC & 0.236 & 0.741 & 0.979 & $-0.442$ & 24--144 & 0.083 \\
+Tropical Storm Kristine (PH)      & Philippines & TC & EVAC & 0.297 & 0.711 & 0.943 & $-0.041$ & 24--96  & 0.500 \\
+Typhoon Yagi (N.~Vietnam)         & Vietnam     & TC & EVAC & 0.317 & 0.522 & 0.955 & $-0.547$ & 24--120 & 0.283 \\
+Tropical Storm Yagi (Philippines) & Philippines & TC & EVAC & 0.139 & 0.467 & 0.934 & $-0.227$ & 24--192 & 0.717 \\
+Hurricane Beryl (Pre-landfall)    & Jamaica     & TC & EVAC & 0.564 & 0.387 & 0.894 & $-0.404$ & 24--216 & 0.290 \\
+Typhoon Krathon (Taiwan)          & Taiwan      & TC & INFL & 0.134 & 0.101 & 0.949 &  0.111 & 24--96  & 0.640 \\
+\midrule
+\multicolumn{10}{l}{\textit{Flood}} \\[2pt]
+2024 Nepal Floods (Bagmati/Koshi) & Nepal      & FL & EVAC & 0.212 & 1.215 & 0.944 & $-0.120$ & 24--120 & 0.434 \\
+2024 E.~Bangladesh Floods         & Bangladesh & FL & INFL & 0.097 & 0.472 & 0.940 &  0.028 & 24--120 & 0.454 \\
+2024 Rio Grande do Sul Floods     & Brazil     & FL & NEUT & 0.109 & 0.390 & 0.932 &  0.001 & 24--72  & 0.209 \\
+2024 Gujarat Floods               & India      & FL & EVAC & 0.139 & 0.159 & 0.832 & $-0.133$ & 24--144 & 0.655 \\
+2024 Moldova Floods               & Moldova    & FL & EVAC & 0.054 & 0.071 & 0.393 & $-0.029$ & 24--72  & 0.693 \\
+2024 Spain Floods (DANA)          & Spain      & FL & INFL & 0.127 & 0.058 & 0.813 &  0.203 & 24--96  & 0.864 \\
+2024 C.--E.~Europe Floods         & Poland     & FL & INFL & 0.143 & $-0.015$ & 0.141 &  0.101 & 24--144 & 0.872 \\
+\midrule
+\multicolumn{10}{l}{\textit{Wildfire}} \\[2pt]
+2024 Quito Wildfires              & Ecuador    & WF & NEUT & 0.089 & 0.424 & 0.681 &  0.001 & 24--96  & 0.435 \\
+2024 Park Fire (California)       & USA        & WF & INFL & 0.040 & 0.223 & 0.711 &  0.046 & 24--120 & 0.860 \\
+2024 Boise Wildfire (Idaho)       & USA        & WF & INFL & 0.144 & 0.099 & 0.876 &  0.169 & 24--144 & 0.365 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+Abbreviations.  EQ = earthquake; TC = tropical cyclone
+(hurricane, typhoon, or tropical storm); FL = flood; WF = wildfire.
+EVAC = net near-field population loss ($\dnear < 0$);
+INFL = net influx ($\dnear > 0$);
+NEUT = near-zero near-field signal ($|\dnear| < 0.01$).
+
+
+% ============================================================
+%  S2  Decay-rate fitting rule
+% ============================================================
+\section{Decay-rate fitting rule}
+\label{sec:si_robustness}
+
+The post-peak power-law exponent $\aemp$ is estimated by OLS on
+$\log \Dnorm$ versus $\log t'$ over a window that starts at
+$t' = 24$~h to avoid the first post-peak time step (where displacement
+is still being resolved at the radial bin level) and terminates at the
+first clear demographic rebound, defined as the time index~$i$ at which
+$D_{\mathrm{norm},i+1} > 1.05\,D_{\mathrm{norm},i}$.  Fit windows for
+each event are listed in Table~\ref{tab:events}.  An alternative
+exponential fit produces the same order-of-magnitude spread in recovery
+rates (Supplementary Fig.~\ref{fig:S5}), so the qualitative conclusion
+that recovery speed varies widely across events does not depend on the
+power-law functional form.
+
+
+% ============================================================
+%  S3  PDE Model Details
+% ============================================================
+\section{PDE model: derivation, Bessel decomposition, and parameter
+search}
+\label{sec:si_pde}
+
+\subsection*{S3.1 Governing equation}
+
+We model the post-peak evolution of the radial displacement field
+$\delta(r,t)$ by a diffusion--relaxation equation in cylindrical
+coordinates under radial symmetry:
+\begin{equation}
+  \frac{\partial\delta}{\partial t}
+    = \frac{\Ds}{r}\frac{\partial}{\partial r}
+      \!\left(r\,\frac{\partial\delta}{\partial r}\right)
+    - k\,\delta, \quad 0 \leq r \leq R,
+  \label{si:eq:pde}
+\end{equation}
+where $\Ds$~[km$^2$\,h$^{-1}$] is a lateral diffusion coefficient
+and $k$~[h$^{-1}$] is a uniform first-order relaxation rate.  The
+domain radius $R = 200$~km matches the analysis window.
+
+\noindent\textbf{Boundary conditions.}
+Neumann (zero-flux) conditions are imposed at both boundaries:
+\[
+  \left.\frac{\partial\delta}{\partial r}\right|_{r=0} = 0, \qquad
+  \left.\frac{\partial\delta}{\partial r}\right|_{r=R} = 0 .
+\]
+
+\subsection*{S3.2 Analytical Bessel-series solution}
+
+Because $\delta(r,t)$ satisfies a separable linear PDE with Neumann
+boundaries on a disk, the general solution is a superposition of
+Bessel-$J_0$ modes~\citep{Crank1975}:
+\begin{equation}
+  \delta(r,t) = \sum_{n=0}^{N-1} c_n\,J_0\!\left(\frac{\mu_n r}{R}\right)
+    e^{-\lambda_n (t-t_{\mathrm{peak}})},
+  \label{si:eq:bessel}
+\end{equation}
+where:
+\begin{itemize}
+  \item $\mu_n$ are the non-negative zeros of $J_0'(x) = -J_1(x)$
+        ($\mu_0 = 0$, $\mu_1 = 3.832$, $\mu_2 = 7.016$, \ldots),
+  \item $N = 10$ modes (convergence verified; adding modes
+        $n > 10$ changes $\apred$ by $< 0.3\%$),
+  \item $\lambda_n = k + \Ds\,(\mu_n/R)^2$ is the modal decay rate.
+\end{itemize}
+
+The key physics: higher-order modes (larger $\mu_n$, finer spatial
+structure) decay exponentially faster than the fundamental mode.
+An initial profile rich in high-order components therefore relaxes
+faster in aggregate than a smooth, low-mode profile.
+
+\subsection*{S3.3 Projection of observed profiles onto Bessel basis}
+
+At $t = t_{\mathrm{peak}}$, the expansion coefficients $\{c_n\}$
+are determined by $r$-weighted least squares from the observed
+10-km-binned radial profile $\hat\delta(r_i)$:
+\begin{equation}
+  \{c_n\} = \arg\min_{\{c_n\}} \sum_i r_i\,
+  \left[\hat\delta(r_i)
+        - \sum_{n=0}^{N-1} c_n\,J_0\!\left(\frac{\mu_n r_i}{R}\right)
+  \right]^2 .
+  \label{si:eq:lsq}
+\end{equation}
+The weight $r_i$ reflects the area of each annular bin and ensures
+that outer bins (larger $r$, more tiles) do not numerically dominate
+the fit.
+
+\subsection*{S3.4 Computation of $\apred$}
+
+Rather than tracking $\delta(r,t)$ directly, we use an energy-type
+metric:
+\begin{equation}
+  E(t) = \frac{\int_0^R [\delta(r,t)]^2\,r\,\mathrm{d}r}
+               {\int_0^R r\,\mathrm{d}r}
+       \;\approx\; \sum_{n=0}^{N-1} c_n^2\,e^{-2\lambda_n
+               (t-t_{\mathrm{peak}})}
+  \quad\text{(Parseval approximation)}.
+  \label{si:eq:energy}
+\end{equation}
+$E(t)$ is the $L^2$ energy norm, whereas the empirical $D(t)$ is an
+$L^1$ mean-absolute-deviation.  Both summarize aggregate relaxation,
+but $E(t)$ has an exact Parseval representation that facilitates
+interpretation.  We fit $\log E$ vs.\ $\log(t - t_{\mathrm{peak}})$
+by OLS over $[1,\,120]$~h to obtain~$\apred$.  The starting point
+$1$~h (versus $24$~h for~$\aemp$) is chosen to capture the rapid
+initial decay of high-order modes; the model's role is to predict the
+ranking of recovery rates, not their absolute magnitude.
+
+\subsection*{S3.5 Global parameter estimation}
+
+Parameters $k$ and $\Ds$ are shared across all 18~events.  We search
+a log-uniform $30 \times 30$ grid ($k \in [10^{-4},\,10^{0}]$~h$^{-1}$,
+$\Ds \in [10^{-2},\,10^{1}]$~km$^2$\,h$^{-1}$), then refine with a
+$30 \times 30$ sub-grid around the coarse optimum (grid spacing reduced
+by $10\times$).  The joint optimisation criterion minimises the sum of
+three normalised rank statistics:
+\begin{equation}
+  \mathcal{L}(k, \Ds)
+    = \mathrm{rank}\!\left[-\rho_{\mathrm{S}}(\apred,\aemp)\right]
+    + \mathrm{rank}\!\left[-r(\apred,\aemp)\right]
+    + \mathrm{rank}\!\left[\mathrm{MAE}(\apred,\aemp)\right] ,
+  \label{si:eq:criterion}
+\end{equation}
+where $\rho_{\mathrm{S}}$ denotes Spearman rank correlation,
+$r$~Pearson correlation, and MAE is mean absolute error.  The optimal parameters under this criterion are:
+\[
+  k^* = 0.00418\;\mathrm{h}^{-1}, \quad
+  \Ds^* = 0.304\;\mathrm{km}^2\,\mathrm{h}^{-1} .
+\]
+
+\subsection*{S3.6 Counterfactual experiments}
+
+Three counterfactual conditions test the necessity of diffusion and
+spatial profile structure (Table~\ref{tab:counterfactual}):
+
+\begin{enumerate}
+  \item No diffusion ($\Ds = 0$): all modes collapse to the
+        same rate~$k$; $E(t) \propto e^{-2kt}$ is profile-independent,
+        so $\apred$ is identical for all events and
+        $\rho(\apred,\dnear) = 0.0$.
+  \item $c_0$-only: only the uniform (zero-wavenumber) mode
+        is retained; the spatially heterogeneous structure of the
+        profile is erased, again yielding $\rho(\apred,\dnear) = 0.0$.
+  \item Shuffled profiles: the observed profile of event~$j$
+        is assigned to event~$k$ at random (500~permutations).
+        The median $\rho = -0.008$ with 95\% CI $[-0.518,\,+0.519]$
+        confirms that the signal requires each event's own
+        spatial profile.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\caption{Counterfactual experiment results.}
+\label{tab:counterfactual}
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Scenario & $\rho(\apred,\dnear)$ & $p$ & 95\% CI \\
+\midrule
+Baseline PDE (observed) & $-0.356$ & 0.147 & --- \\
+No diffusion ($\Ds = 0$) & $0.000$ & 1.000 & --- \\
+$c_0$-only & $0.000$ & 1.000 & --- \\
+Shuffled profiles & $-0.014$ & --- & $[-0.478,\;+0.445]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{S3.7 Bootstrap robustness of $\rho(\apred, \dnear)$}
+
+To assess sensitivity to the observed radial profiles, we perturb
+each event's profile by multiplicative Gaussian noise ($\pm 10\%$)
+and refit $\{c_n\}$ for 500~realisations.  The resulting bootstrap
+distribution of $\rho(\apred,\dnear)$ remains negatively centred but
+is substantially broader than the empirical event-level correlation:
+\begin{itemize}
+  \item median $\rho = -0.303$,
+  \item 95\% CI $= [-0.719,\,+0.270]$,
+  \item 87.0\% of realisations yield $\rho < 0$.
+\end{itemize}
+The bootstrap therefore preserves a negative central tendency, but it
+also shows that the mechanistic correlation is sensitive to profile
+measurement uncertainty.
+
+
+% ============================================================
+%  S4  Scope: socioeconomic factors
+% ============================================================
+\section{Scope: socioeconomic factors}
+\label{sec:si_socio}
+
+The present study tests a geometric prediction of the diffusion--relaxation
+framework and does not jointly model socioeconomic determinants of
+recovery (income, institutional quality, infrastructure stock).
+Isolating the contribution of these factors would require a harmonised
+country- and event-level covariate panel aligned with the current
+18-event catalogue; this lies outside the scope of the geometric
+analysis reported here.
+
+
+% ============================================================
+%  S5  Distance-Segment Analysis
+% ============================================================
+\section{Distance-segment robustness of the shape--rate correlation}
+\label{sec:si_distance}
+
+To test whether the shape--rate signal is driven by a specific radial
+zone, we compute $\rho(\aemp,\bar\delta_{\mathrm{zone}})$ separately
+for near-field ($r < 50$~km), mid-field (50--100~km), and far-field
+($100$--$200$~km) segments.  $\bar\delta_{\mathrm{zone}}$ is the
+spatial mean of the displacement field within each zone at
+$t_{\mathrm{peak}}$.
+
+\begin{itemize}
+  \item Near-field ($r < 50$~km, $n = 18$):
+        $\rho = -0.672$, $p = 0.002$.
+  \item Mid-field (50--100~km, $n = 18$):
+        $\rho = -0.686$, $p = 0.002$.  This segment remains strongly
+        associated with recovery speed, consistent with a coherent
+        mesoscale evacuation shadow around fast-recovering events.
+  \item Far-field ($100$--$200$~km, $n = 18$):
+        $\rho = -0.556$, $p = 0.017$.  The association weakens with
+        distance but remains negative, indicating that the clearest
+        shape--rate signal originates near the event centre.
+\end{itemize}
+
+The primary predictor $\dnear$ (near-field average) is chosen because
+it maximises sample coverage while remaining physically interpretable
+as the net population flux near the disaster epicenter.
+
+
+% ============================================================
+%  S6  Additional Robustness Results
+% ============================================================
+\section{Additional robustness results}
+\label{sec:si_additional}
+
+\subsection*{S6.1 Leave-one-out jackknife}
+
+Jackknife resampling (leave-one-out, $n=18$ iterations) yields a
+95\% CI for $\rho(\aemp,\dnear)$ that does not cross zero: the
+leave-one-out replicate distribution spans $[-0.743,\,-0.650]$,
+confirming that no single event drives the correlation.
+
+\subsection*{S6.2 Residual displacement vs.\ decay rate}
+
+The residual displacement $D_\infty$ (mean of normalised $D(t)$
+over the post-peak tail) is strongly anticorrelated with~$\aemp$:
+$\rho(\aemp, D_\infty) = -0.674$, $p = 0.002$.  Events with
+faster decay also reach lower residual levels, consistent with the
+interpretation that $\aemp$ captures genuine recovery rather than a
+transient fluctuation.
+
+\subsection*{S6.3 Excluded candidate predictors}
+
+Two additional candidate predictors of $\aemp$ were tested but produced
+$|\rho| < 0.15$ and $p > 0.5$ in bivariate analysis: the recovery
+gradient $\mathrm{d}D/\mathrm{d}t$ at $t_{\mathrm{peak}}$, and the
+observation window length (time between $t_{\mathrm{peak}}$ and the
+last retained post-peak step). Neither enters the main analysis.
+
+\subsection*{S6.4 Hazard-type grouping test}
+
+To assess whether recovery speed varies systematically by hazard type,
+we group the 18-event primary event-level sample into four broad
+categories: earthquake ($n = 1$), tropical cyclone ($n = 7$; hurricanes,
+typhoons, and tropical storms combined), flood ($n = 7$), and wildfire
+($n = 3$). A Kruskal--Wallis rank-sum test across these four groups
+gives $H = 3.80$, $p = 0.28$, indicating no significant difference in
+recovery speed across broad hazard categories. As a sensitivity check,
+excluding the singleton earthquake group and retaining only categories
+with $n \geq 2$ (tropical cyclone, flood, wildfire) gives
+$H = 3.44$, $p = 0.18$. In both cases, within-group variation in
+$\aemp$ exceeds between-group variation, indicating that hazard type
+alone does not explain the observed diversity of recovery speeds.
+
+
+% ============================================================
+%  Supplementary Figures
+% ============================================================
+\section{Supplementary figures}
+\label{sec:si_figures}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{%
+  figures_supp/figS1_individual_panels}
+\caption{Individual $D(t)$ curves for all selected events.  Each panel
+shows aggregated displacement and event-level fit diagnostics
+($\alpha$, $R^2$).}
+\label{fig:S1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\linewidth]{%
+  figures_supp/figS2_jackknife}
+\caption{Leave-one-out jackknife distribution of
+$\rho(\aemp,\dnear)$, with full-sample baseline marked.}
+\label{fig:S2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.60\linewidth]{%
+  figures_supp/figS3_alpha_vs_dinf}
+\caption{$\alpha$ versus residual displacement $D_\infty$.
+This panel is retained as a supplementary validation of decay-rate
+interpretability.}
+\label{fig:S3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{%
+  figures_supp/figS4_profile_gallery}
+\caption{Peak-time radial displacement profiles
+$\delta(r,t_{\mathrm{peak}})$ for selected events.}
+\label{fig:S4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.70\linewidth]{%
+  figures_supp/figS5_gao_delta_bic}
+\caption{Model-selection support figure:
+$\Delta$BIC (power law minus exponential) by event.}
+\label{fig:S5}
+\end{figure}
+
+\bibliographystyle{pnas2009}
+\bibliography{references}
+
+\end{document}
