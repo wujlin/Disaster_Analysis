@@ -6,6 +6,9 @@ __pycache__/
 
 Data/
 
+# Partner manuscript bundle (local handoff; regenerate from Essay/)
+Essay_partner_*.zip
+
 # Secrets / auth material
 config/cookie.json
 config/_dfg_tokens.json
